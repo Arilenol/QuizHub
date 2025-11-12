@@ -1,0 +1,29 @@
+# sourcemaps généré
+*.map
+
+# fichier d'environnement (au cas où)
+.env
+.env.local
+.env.*.local
+
+# artefacts de construction
+node_modules/
+dist/
+build/
+
+# Logs et caches
+*.log
+logs/
+cache/
+tmp/
+*.cache
+
+# PHPUnit
+phpunit.result.cache
+phpunit.xml.cache
+
+# IDE / configuration d'environnements de développement
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace

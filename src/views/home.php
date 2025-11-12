@@ -7,6 +7,27 @@
     <title>Accueil</title>
 </head>
 <body>
-    <h1>Accueil<h1>
+    <h1>Créations populaires</h1>
+    <div class=popCreations>
+            <?php
+
+            ?>
+    </div>
+    <h1>Vos créations</h1>
+    <div class=newCreations>
+            <?php
+                // foreach ($quiz as $q) {
+                //     echo '<article></article>';
+                // }
+                for ($i=0; $i < 12; $i++) { 
+                    echo '<article>';
+                    echo '<span clas = title>'.$quiz[$i]['title'].'</span>';
+                    echo '<span clas = title>'.$quiz[$i]['description'].'</span>';
+                    echo '<span clas = title>'.$quiz[$i]['title'].'</span>';
+                    echo '<span clas = title>'.$quiz[$i]['title'].'</span>';
+                    echo '</article>';
+                }
+            ?>
+    </div>
 </body>
 </html>

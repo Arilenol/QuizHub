@@ -7,7 +7,8 @@ class HomeModel {
     }
 
     public function getAll() {
-        return $this->db->query("SELECT * FROM quiz")->fetchAll();
+        $stmt = $this->db->query("SELECT * FROM quiz");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getById($id) {
