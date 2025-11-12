@@ -1,0 +1,57 @@
+// Variables
+$primary-color: #222;
+$accent-color: #4a90e2;
+$text-color: #333;
+$bg-color: #fafafa;
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+// Titre principal
+h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: $primary-color;
+  margin-bottom: 1.5rem;
+
+}
+
+.newCreations {
+    display: flex;
+    flex-direction : row;
+    gap: 1.5rem;
+    justify-content: flex-start;
+    align-items: stretch;
+
+    article {
+        display: flex;
+        flex-direction: column;
+        background-color: white;
+        padding: 1.5rem 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        width: 250px;          
+
+        &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: $accent-color;
+        margin-bottom: 0.5rem;
+        }
+
+        .description {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: $text-color;
+        }
+    }
+}
+
