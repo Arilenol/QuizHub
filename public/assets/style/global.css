@@ -18,10 +18,12 @@ header{
 	display: flex;
 	position: relative;
 	align-items: center;
-	justify-content: center;
-	padding: 30px 50px;
-	gap: 10px;
+	padding: 25px 35px;
+	justify-content: flex-start;
+	gap: 20px;
 	width: fit-content;
+	height: fit-content;
+}
 }
 
 .button > span, .searchbar > span {
