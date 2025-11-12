@@ -21,7 +21,8 @@ class CatalogueModel {
 
     public function searchQuizByAll($recherche_cat,$recherche_contenu,$recherche_auteur,$tris = null): mixed{
         try{
-            $baseSql = "SELECT DISTINCT quiz.id,title,quiz.description,difficulty,quiz.user_id,date,genre FROM quiz 
+            $baseSql = "SELECT DISTINCT quiz.id, title, quiz.description, difficulty, quiz.user_id, date, genre,
+            quiz.nbjaime,quiz.nbjaimepas FROM quiz 
             INNER JOIN categorie_quiz ON categorie_quiz.quiz_id = quiz.id 
             INNER JOIN categories ON categories.id = categorie_quiz.category_id 
             INNER JOIN users ON users.id = quiz.user_id
@@ -76,7 +77,8 @@ class CatalogueModel {
     }
     public function searchQuizByContentAndAuthor($recherche_contenu,$recherche_auteur,$tris = null): mixed{
         try{
-            $baseSql = "SELECT DISTINCT quiz.id,title,quiz.description,difficulty,quiz.user_id,date,genre FROM quiz 
+            $baseSql = "SELECT DISTINCT quiz.id, title, quiz.description, difficulty, quiz.user_id, date, genre,
+            quiz.nbjaime,quiz.nbjaimepas FROM quiz 
             INNER JOIN categorie_quiz ON categorie_quiz.quiz_id = quiz.id 
             INNER JOIN categories ON categories.id = categorie_quiz.category_id 
             INNER JOIN users ON users.id = quiz.user_id

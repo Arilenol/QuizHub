@@ -123,8 +123,8 @@ function constructionBD(PDO $conn){
                 description TEXT,
                 difficulty INTEGER,
                 disponibilite TEXT,
-                nbjaime INTEGER DEFAULT 0,
-                nbjaimepas INTEGER DEFAULT 0,
+                nbjaime INTEGER NOT NULL DEFAULT 0,
+                nbjaimepas INTEGER NOT NULL DEFAULT 0,
                 date DATE,
                 genre TEXT NOT NULL,
                 FOREIGN KEY (user_id) REFERENCES users(id),
@@ -362,7 +362,7 @@ function constructionBD(PDO $conn){
 
             $conn->exec($sql);
 
-            $sql = "CREATE OR REPLACE TRIGGER trg_bef_insert_battleParticipants
+            $sql = "CREATE TRIGGER trg_bef_insert_battleParticipants
             BEFORE INSERT ON BattleParticipants
             BEGIN
                 SELECT
@@ -372,7 +372,8 @@ function constructionBD(PDO $conn){
                         WHERE new.user_id = user1_id OR new.user_id = user2_id
                     ) THEN
                         RAISE(ABORT, 'L''utilisateur n''est pas ami avec le défieur.')
-                END;";
+                END;
+            END;";
             $conn->exec($sql);
 
              // Insertions de données fictives
