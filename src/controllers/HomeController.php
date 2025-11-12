@@ -7,7 +7,7 @@ class HomeController {
         $db = getDbConnection();
         $model = new HomeModel($db);
          // récupère les données
-        $quiz = $model->getAll();
+        $quiz = $model->getAllInfo();
         // afficher la vue
         require ROOT . '/src/views/home.php';
     }
