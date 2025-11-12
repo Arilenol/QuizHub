@@ -54,6 +54,11 @@ header{
   	transition: color ease-out 0.2s;
 }
 
+.button > img, .searchbar > img {
+	z-index: 1;
+	pointer-events: none;
+}
+
 .button:has(span:hover) p {
   	color: #0AB1BD;
 }
