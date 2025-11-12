@@ -7,6 +7,7 @@
     <title>Accueil</title>
 </head>
 <body>
+    <?php include 'header.php'; ?>
     <h1>Créations populaires</h1>
     <div class=popCreations>
             <?php
