@@ -1,0 +1,14 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /sae3.01/
+    
+    # Rediriger les accès directs aux fichiers PHP des vues
+    RewriteCond %{REQUEST_URI} ^/sae3.01/src/views/(.+)\.php$
+    RewriteRule ^src/views/(.+)\.php$ public/index.php?page=$1 [QSA,L]
+    
+    # Rediriger les autres requêtes vers public/
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} !^/sae3.01/public/
+    RewriteRule ^(.*)$ public/index.php?page=$1 [QSA,L]
+</IfModule>

@@ -123,6 +123,8 @@ function constructionBD(PDO $conn){
                 description TEXT,
                 difficulty INTEGER,
                 disponibilite TEXT,
+                nbjaime INTEGER DEFAULT 0,
+                nbjaimepas INTEGER DEFAULT 0,
                 date DATE,
                 genre TEXT NOT NULL,
                 FOREIGN KEY (user_id) REFERENCES users(id),
@@ -263,6 +265,28 @@ function constructionBD(PDO $conn){
 
             $conn->exec($sql);
 
+            $sql = "CREATE TABLE IF NOT EXISTS BattleQuiz (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                defiant_id INTEGER NOT NULL,
+                quiz_id INTEGER NOT NULL,
+                dateBattle DATE,
+                FOREIGN KEY (quiz_id) REFERENCES quiz(id),
+                FOREIGN KEY (defiant_id) REFERENCES users(id)
+            );";
+            $conn->exec($sql);
+
+            $sql = "CREATE TABLE IF NOT EXISTS BattleParticipants (
+                battle_id INTEGER NOT NULL,
+                user_id INTEGER NOT NULL,
+                fini BOOLEAN NOT NULL,
+                score INTEGER,
+                PRIMARY KEY (battle_id, user_id),
+                FOREIGN KEY (battle_id) REFERENCES BattleQuiz(id),
+                FOREIGN KEY (user_id) REFERENCES users(id)
+            );";
+
+            $conn->exec($sql);
+
             //trigger pour le check (il faut que le quiz soit de genre 'test')
             $sql = "CREATE TABLE IF NOT EXISTS TestStatistiques (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -336,6 +360,19 @@ function constructionBD(PDO $conn){
                 END;
             END;";
 
+            $conn->exec($sql);
+
+            $sql = "CREATE OR REPLACE TRIGGER trg_bef_insert_battleParticipants
+            BEFORE INSERT ON BattleParticipants
+            BEGIN
+                SELECT
+                CASE
+                    WHEN NOT EXISTS (
+                        SELECT 1 FROM Amis
+                        WHERE new.user_id = user1_id OR new.user_id = user2_id
+                    ) THEN
+                        RAISE(ABORT, 'L''utilisateur n''est pas ami avec le défieur.')
+                END;";
             $conn->exec($sql);
 
              // Insertions de données fictives

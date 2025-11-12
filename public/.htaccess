@@ -1,0 +1,11 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /sae3.01/public/
+    
+    # Ne pas réécrire les fichiers et dossiers existants
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    
+    # Rédiriger toutes les requêtes vers index.php
+    RewriteRule ^(.*)$ index.php?page=$1 [QSA,L]
+</IfModule>
