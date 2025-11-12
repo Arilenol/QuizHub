@@ -1,6 +1,7 @@
 <?php
     require_once ROOT . '/src/models/CatalogueModel.php';
     require_once ROOT . '/config/config.php';
+    require_once ROOT . '/config/construction.php';
 
 
     class CatalogueController {
@@ -8,6 +9,7 @@
 
         public function index(){
             $db = getDbConnection();
+            //constructionBD($db);
             $this->model = new CatalogueModel($db);
             // afficher la vue
             
@@ -29,6 +31,9 @@
             foreach ($quizzes as &$quiz){
                 $quiz['categories'] = $this->model->getCategoriesFromQuiz($quiz['id']);
                 $quiz['nom_auteur'] = $this->model->getNomAuteur($quiz['user_id']);
+                // likes/dislikes are now selected directly by the search queries (likes/dislikes)
+                $quiz['likes'] = isset($quiz['likes']) ? (int)$quiz['likes'] : 0;
+                $quiz['dislikes'] = isset($quiz['dislikes']) ? (int)$quiz['dislikes'] : 0;
             }
             require ROOT . '/src/views/catalogue.php';
         }

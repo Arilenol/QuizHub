@@ -12,7 +12,7 @@
     echo '<div class="catalogue">';
 
     
-    //constructionBD($conn);
+    //constructionBD($bd);
 
 
     echo '<div class="search-author">';
@@ -91,7 +91,14 @@
         echo '<br><p class="quiz-title">' . htmlspecialchars($quiz['title'] ?? '') . '</p>';
         echo '<br><p class="quiz-description">' . htmlspecialchars($quiz['description'] ?? '') . '</p>';
         echo '<br><p class="quiz-auteur">Par : '.htmlspecialchars($quiz['nom_auteur'] ?? '') . '</p>';
-        echo '<br><p class="quiz-date">publié le : ' . htmlspecialchars($quiz['date'] ?? '') . '</p>';
+        // footer row with date on left and reactions on right
+        echo '<div class="quiz-footer">';
+        echo '<p class="quiz-date">publié le : ' . htmlspecialchars($quiz['date'] ?? '') . '</p>';
+        echo '<div class="quiz-reactions">';
+        echo '<span class="reaction like">♥ ' . htmlspecialchars($quiz['likes'] ?? 0) . '</span>';
+        echo '<span class="reaction dislike">♡ ' . htmlspecialchars($quiz['dislikes'] ?? 0) . '</span>';
+        echo '</div>';
+        echo '</div>';
         echo '</article>';
         echo '</div>';
     }
