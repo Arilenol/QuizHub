@@ -1,7 +1,7 @@
 
 <?php 
 $title = "Accueil";
-include 'header.php'; ?>
+include 'partials/header.php'; ?>
     <h1>Créations populaires</h1>
     <div class=popCreations>
             <?php
