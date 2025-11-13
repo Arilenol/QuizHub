@@ -4,10 +4,8 @@
 
     require_once ROOT . '/config/construction.php';
 
-
-    // Use BASE_URL (computed in public/index.php) so URLs work regardless of server path
-    echo '<link rel="stylesheet" href="' . BASE_URL . '/assets/style/global.css">';
-    echo '<link rel="stylesheet" href="' . BASE_URL . '/assets/style/catalogue.css">';
+    echo '<link rel="stylesheet" href="./assets/style/global.css">';
+    echo '<link rel="stylesheet" href="./assets/style/catalogue.css">';
     // corrected opening div (previously malformed which broke subsequent HTML parsing)
     echo '<div class="catalogue">';
 
@@ -76,7 +74,7 @@
     foreach ($quizzes as $quiz) {
         echo '<div class="quiz">';
         
-        echo '<article onclick="window.location.href=\'' . BASE_URL . '/QuizPage.php?quiz_id=' . $quiz['id'] . '\'">';
+        echo '<article onclick="window.location.href=\'./QuizPage.php?quiz_id=' . $quiz['id'] . '\'">';
         echo '<div class="quiz-cat">';
            
             if (!empty($quiz['categories']) && is_array($quiz['categories'])) {
