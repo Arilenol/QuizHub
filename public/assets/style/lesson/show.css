@@ -1,0 +1,52 @@
+.lesson-page {
+  margin: 20px auto;
+  width: 90%;
+  padding: 30px;
+  border-radius: 8px;
+}
+.lesson-page .back-btn {
+  background-color: #00bcd4;
+  border: none;
+  color: white;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+.lesson-page .lesson-header {
+  text-align: center;
+}
+.lesson-page .lesson-header h2 {
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+.lesson-page .lesson-header p {
+  margin-top: 0;
+  font-size: 16px;
+  color: #333;
+}
+.lesson-page .lesson-part {
+  margin-top: 30px;
+  text-align: center;
+}
+.lesson-page .lesson-part h3 {
+  font-weight: 600;
+}
+.lesson-page .lesson-part p {
+  font-size: 16px;
+  margin: 10px 0;
+}
+.lesson-page .lesson-part .example-box {
+  background-color: #00bcd4;
+  border-radius: 15px;
+  padding: 20px;
+  width: 250px;
+  margin: 20px auto;
+}
+.lesson-page .lesson-part .example-box p {
+  color: white;
+  margin: 0;
+}
+
+/*# sourceMappingURL=show.css.map */
