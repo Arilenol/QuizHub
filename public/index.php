@@ -22,6 +22,15 @@ switch ($page) {
         //header('Location: catalogue.php');
         break;
 
+    case 'profil':
+        header('Location: ../src/views/profil.html');
+        break;
+    
+    case 'flashcard':
+        header('Location: ../src/views/flashcard.html');
+        break;
+
+
     default:
         echo "404 - Page non trouvée";
         break;
