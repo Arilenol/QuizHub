@@ -1,14 +1,7 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../public/assets/style/home.css">
-    <link rel="stylesheet" href="./assets/style/global.css">
-    <title>Accueil</title>
-</head>
-<body>
-    <?php include 'header.php'; ?>
+
+<?php 
+$title = "Accueil";
+include 'header.php'; ?>
     <h1>Créations populaires</h1>
     <div class=popCreations>
             <?php
