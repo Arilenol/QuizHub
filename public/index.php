@@ -48,6 +48,30 @@ switch ($page) {
             break;
         }
         break;
+    case 'log':
+        $logtype = $_GET['typelog'] ?? null;
+        switch ($logtype) {
+            //formulaire d'inscription
+            case 'register':
+                require_once ROOT . '/src/controllers/LogController.php';
+                $controller = new LogController();
+                // va charger views/log/connection.php
+                $controller->showRegister();
+                break;
+
+            //page de connexion
+            case 'connection':
+                require_once ROOT . '/src/controllers/LogController.php';
+                $controller = new LogController();
+                // va charger views/log/connection.php
+                $controller->showConnection();
+                break;
+
+            default:
+                echo "Erreur : catégorie de leçon invalide";
+            break;
+        }
+        break;
     default:
         echo "404 - Page non trouvée";
         break;
