@@ -1,7 +1,7 @@
 <?php
 $title = "profil";
-include 'header.php'; ?>
-<link rel="stylesheet" href="../../public/assets/style/profil.css" />
+$style = "./assets/style/profil.css";
+require_once 'partials/header.php'; ?>
 </head>
 
 <body>
@@ -11,7 +11,7 @@ include 'header.php'; ?>
     <div class="container">
 
         <div class="profile-card">
-            <img src="../../public/assets/images/profil.jpg" alt="Photo de profil" class="avatar" />
+            <img src="./assets/images/profil.jpg" alt="Photo de profil" class="avatar" />
 
             <div class="info">
                 <h2>COULON-DEPUCCIO Kilian</h2>
@@ -30,6 +30,7 @@ include 'header.php'; ?>
                 </div>
 
                 <button class="btn edit">Modifier le profil</button>
+                <button class="btn edit" onclick="window.location.href='?page=deconnexion'">Déconnexion</button>
             </div>
         </div>
 

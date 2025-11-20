@@ -1,38 +1,34 @@
 <?php
 class QuizModel {
-    private $db;
+    private PDO $db;
 
-    public function __construct($db) {
+    public function __construct(PDO $db) {
         $this->db = $db;
     }
 
-    private function getAll() : array {
-        $stmt = $this->db->query("SELECT * FROM quiz");
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    /**
+     * Récupère tous les IDs des questions d'une flashcard par l'ID du quiz
+     *
+     * @param int $quizId Identifiant du quiz
+     * @return array Tableau des IDs des questions (vide si aucune)
+     */
+    public function getFlashCardById(int $quizId): array {
+        $stmt = $this->db->prepare("SELECT id FROM carte WHERE quiz_id = ? ORDER BY numeroCarte ASC");
+        $stmt->execute([$quizId]);
+        return $stmt->fetchAll(PDO::FETCH_COLUMN, 0); // retourne un tableau d'IDs
     }
 
     /**
-     * Récupère un quiz par son ID
+     * Récupère les informations complètes d'une question par son ID
      *
-     * @param int $id Identifiant du quiz
-     * @return array|false Tableau associatif du quiz, ou false si non trouvé
+     * @param int $id Identifiant de la question
+     * @return array|null Tableau associatif des infos de la question ou null si non trouvé
      */
-    public function getById($id) : array|false {
-        $stmt = $this->db->prepare("SELECT * FROM quiz WHERE id = ?");
+    public function getInfoFlashCardById(int $id): ?array {
+        $stmt = $this->db->prepare("SELECT * FROM carte WHERE id = ?");
         $stmt->execute([$id]);
-        return $stmt->fetch();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result ?: null;
     }
-
-    /**
-     * Récupère les ID des questions de la flashcard par l'id Flashcard 
-     *
-     * @param int $id Identifiant de la flashcard
-     * @return array|false Tableau de tous les ID des questions/réponses de la flashcard
-     */
-    public function getFlashCardById($id) : array|false {
-        $stmt = $this->db->prepare("SELECT id FROM carte WHERE quiz_id = ? ORDER BY id");
-        $stmt->execute([$id]);
-        return $stmt->fetch(PDO::FETCH_COLUMN,0);
-    }
-    
 }
+?>

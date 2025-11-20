@@ -21,29 +21,46 @@
         <p>Rechercher des créations...</p>
     </div>
     <div style="display: flex; flex-direction: row; gap: 25px;">
-        <div class="button">
-            <span></span>
-            <p>S'inscrire</p>
-        </div>
-        <div class="button">
-            <span></span>
-            <p>Connexion</p>
-        </div>
+        <?php session_start(); ?>
+        
+        <?php if (!isset($_SESSION['email'])): ?>
+            <div class="button" data-action="register">
+                <span></span>
+                <p>S'inscrire</p>
+            </div>
+            <div class="button" data-action="login">
+                <span></span>
+                <p>Connexion</p>
+            </div>
+        <?php else: ?>
+            <div class="button" data-action="account">
+                <span></span>
+                <p>Mon compte</p>
+            </div>
+        <?php endif; ?>
     </div>
 </header>
 <!-- Création des listeners des boutons du header -->
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    const buttons = document.querySelectorAll('header .button');
-    const registerDiv = buttons[0]; // S'inscrire
-    const loginDiv = buttons[1];    // Connexion
+    document.querySelectorAll('header .button').forEach(btn => {
+        const action = btn.dataset.action;
 
-    registerDiv.addEventListener('click', () => {
-        window.location.href = '?page=log&typelog=register';
-    });
+        if (!action) return;
 
-    loginDiv.addEventListener('click', () => {
-        window.location.href = '?page=log&typelog=connection';
+        btn.addEventListener('click', () => {
+            switch(action) {
+                case 'register':
+                    window.location.href = '?page=log&typelog=register';
+                    break;
+                case 'login':
+                    window.location.href = '?page=log&typelog=connection';
+                    break;
+                case 'account':
+                    window.location.href = '?page=profil';
+                    break;
+            }
+        });
     });
 });
 </script>

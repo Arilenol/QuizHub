@@ -23,6 +23,20 @@ class LogModel{
         return $stmt->execute([$username, $email, $hashedPassword]);
     }
 
+    /**
+     * Récupère un utilisateur via son adresse email.
+     *
+     * Cette méthode interroge la base de données afin de retrouver
+     * les informations d’un utilisateur à partir de son email.  
+     * Si un utilisateur correspond, ses données sont retournées sous forme de tableau
+     * associatif. Sinon, la méthode retourne false.
+     *
+     * @param string $email L’adresse email de l’utilisateur recherché.
+     * 
+     * @return array|false Un tableau associatif contenant les informations de l’utilisateur
+     *                     (id, username, email, password, etc.) ou false si aucun
+     *                     utilisateur ne correspond.
+     */
     public function getUserByEmail(string $email): array|false {
         $stmt = $this->db->prepare("SELECT * FROM users WHERE email = ?");
         $stmt->execute([$email]);

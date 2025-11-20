@@ -1,9 +1,10 @@
 <?php
-require_once ROOT . '/src/models/LessonModel.php';
+require_once ROOT . '/src/models/LogModel.php';
 require_once ROOT . '/config/config.php';
-class LogController{
 
-    public function showRegister(){
+class LogController {
+
+    public function showRegister() {
         require ROOT . '/src/views/log/register.php';
     }
 
@@ -11,40 +12,82 @@ class LogController{
         require ROOT . '/src/views/log/connection.php';
     }
 
-    public function loginUser(){
+    public function createUser() {
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $error = "Méthode invalide";
+            require ROOT . '/src/views/log/register.php';
+            return;
+        }
+        // Récupération + nettoyage
+        $email    = trim($_POST['email'] ?? '');
+        $username = trim($_POST['username'] ?? '');
+        $password = trim($_POST['password'] ?? '');
+
+        // Vérification des champs obligatoires
+        if ($email === '' || $username === '' || $password === '') {
+            $error = "Tous les champs doivent être remplis.";
+            require ROOT . '/src/views/log/register.php';
+            return;
+        }
+
+        // Vérification du mail
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $error = "Format d’email invalide.";
+            require ROOT . '/src/views/log/register.php';
+            return;
+        }
+
         $db = getDbConnection();
-        $model = new HomeModel($db);
+        $model = new LogModel($db);
+
+        // Vérifier si l’utilisateur existe déjà
+        if ($model->getUserByEmail($email)) {
+            $error = "Un compte existe déjà avec cet email.";
+            require ROOT . '/src/views/log/register.php';
+            return;
+        }
+
+        // Création du compte
+        $created = $model->createUser($username, $email, $password);
+
+        if ($created) {
+            session_start();
+            $_SESSION['user_email'] = $email;
+            header("Location: ?page=home");
+            exit;
+        } else {
+            $error = "Erreur lors de la création du compte.";
+            require ROOT . '/src/views/log/register.php';
+            return;
+        }
     }
 
-    public function createUser(){
-        if ($_SERVER['REQUEST_METHOD']==='POST'){
-            if (isset($_POST['email']) && !str_contains($_POST['email'],'@')){
-                $error = "Le mail doit être sous la forme 'xxx@xx.'";
-                require ROOT . '/src/views/log/register.php';
-            }
+    public function loginUser() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $error = "Méthode invalide";
+            require ROOT . '/src/views/log/connection.php';
+            return;
+        }
+        $email = trim($_POST['email'] ?? '');
+        $password = trim($_POST['password'] ?? '');
+        if ($email === '' || $password === '') {
+            $error = "Tous les champs doivent être remplis.";
+            require ROOT . '/src/views/log/connection.php';
+            return;
+        }
 
-            //Tous les champs nécéssaires à la création du compte
-            $fields = ['email', 'username', 'password'];
-            // On regarde si pour chaque champ on a une variable associée
-            foreach ($fields as $f) {
-            if (isset($_POST[$f]) || !trim($_POST[$f]) === "") {
-                $email = htmlspecialchars($_POST['email']);
-                $password = htmlspecialchars($_POST['password']);
-                $username = htmlspecialchars($_POST['username']);
-                $db = getDbConnection();
-                $model = new LogModel($db);
-                if ($this->userModel->verifyPassword($email, $password)) {
-                    // Connexion réussie
-                    session_start();
-                    $_SESSION['user_email'] = $email;
-                    header('Location: ?page=home');
-                    exit;
-            }
-            } else {
-                $error = "Problème dans la saisie des identifiants";
-                require ROOT . '/src/views/log/register.php';
-            }
-            }
+        $db = getDbConnection();
+        $model = new LogModel($db);
+
+        if ($model->verifyPassword($email, $password)) {
+            session_start();
+            $_SESSION['email'] = $email;
+            header("Location: ?page=home");
+            exit;
+        } else {
+            $error = "Identifiants incorrects.";
+            require ROOT . '/src/views/log/connection.php';
         }
     }
 }

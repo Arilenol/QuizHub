@@ -3,13 +3,53 @@ require_once ROOT . '/src/models/QuizModel.php';
 require_once ROOT . '/config/config.php';
 
 class FlashCardController {
-    public function index($id) {
+    private QuizModel $model;
+
+    public function __construct() {
+        session_start();
         $db = getDbConnection();
-        $model = new QuizModel($db);
-        // récupère les différents ID des questions de la flashcard et les mets en session
-        $_SESSION['remainingQuestion'] = $model->getFlashCardById($id);
+        $this->model = new QuizModel($db);
+    }
+
+    // Charge la première question du quiz
+    public function preload(int $quizId) {
+        $_SESSION['remainingQuestions'] = $this->model->getFlashCardById($quizId) ?: [];
+        if (empty($_SESSION['remainingQuestions'])) {
+            echo "Aucune question disponible";
+            return;
+        }
+        $firstId = $_SESSION['remainingQuestions'][0];
+        $this->showQuestion($firstId);
+    }
+
+    // Affiche une question spécifique
+    public function questionById(int $id) {
+        $remaining = $_SESSION['remainingQuestions'] ?? [];
+        if (!in_array($id, $remaining)) {
+            echo "Question invalide";
+            return;
+        }
+
+        $this->showQuestion($id);
+    }
+    // Méthode privée pour centraliser l’affichage
+    private function showQuestion(int $id) {
+        $question = $this->model->getInfoFlashCardById($id);
+        $viewData = $this->prepareViewData($question);
         require ROOT . '/src/views/flashcard.php';
     }
-}
 
+    private function prepareViewData(array $question): array {
+        $remaining = $_SESSION['remainingQuestions'] ?? [];
+        $currentIndex = array_search($question['id'], $remaining);
+
+        return [
+            'question'   => $question,
+            'quizId'     => $question['quiz_id'],
+            'showAnswer' => ($_GET['reponse'] ?? '') === 'visible',
+            'prevId'     => $remaining[$currentIndex - 1] ?? null,
+            'nextId'     => $remaining[$currentIndex + 1] ?? null,
+        ];
+    }
+}
 ?>
