@@ -4,7 +4,6 @@ define('ROOT', dirname(__DIR__));
 
 // par défaut page d’accueil
 $page = isset($_GET['page']) ? htmlspecialchars($_GET['page']) : 'home';
-
 switch ($page) {
     case 'home':
         require_once ROOT . '/src/controllers/HomeController.php';
@@ -51,21 +50,28 @@ switch ($page) {
         break;
     case 'log':
         $logtype = $_GET['typelog'] ?? null;
+        require_once ROOT . '/src/controllers/LogController.php';
         switch ($logtype) {
             //formulaire d'inscription
             case 'register':
-                require_once ROOT . '/src/controllers/LogController.php';
                 $controller = new LogController();
-                // va charger views/log/connection.php
-                $controller->showRegister();
+                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                    $controller->createUser();
+                } else {
+                    // va charger views/log/connection.php
+                    $controller->showRegister();
+                }
                 break;
 
             //page de connexion
             case 'connection':
-                require_once ROOT . '/src/controllers/LogController.php';
                 $controller = new LogController();
-                // va charger views/log/connection.php
-                $controller->showConnection();
+                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                    $controller->loginUser();
+                } else {
+                    // va charger views/log/connection.php
+                    $controller->showConnection();
+                }
                 break;
 
             default:
@@ -73,6 +79,44 @@ switch ($page) {
             break;
         }
         break;
+        case 'flashcard':
+            $action = $_GET['action'] ?? null; // start, ongoing, end
+            require_once ROOT . '/src/controllers/FlashCardController.php';
+            $controller = new FlashCardController();
+
+            switch($action) {
+                case 'start':
+                    $id = $_GET['id'] ?? null;
+                    $controller->preload($id);
+                    break;
+
+                case 'ongoing':
+                    $questionId = $_GET['question'] ?? null;
+                    $controller->questionById($questionId);
+                    break;
+
+                case 'end':
+                    echo "Fin du quiz";
+                    break;
+
+                default:
+                    echo "Action flashcard invalide";
+            }
+            break;
+        case 'profil':
+            require_once ROOT . '/src/controllers/ProfileController.php';
+            $controller = new ProfileController();
+            $controller->showProfile();
+            break;
+        case 'deconnexion':
+            // On démarre l'ancienne session
+            session_start();
+            // On la supprime du navigateur
+            session_unset();
+            session_destroy();
+            header("Location: ?page=home");
+            exit;
+            break;
 
     default:
         echo "404 - Page non trouvée";

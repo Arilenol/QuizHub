@@ -1,14 +1,5 @@
-body {
-  margin: 0;
-  padding: 0;
-  background-color: #f8b65d;
-  font-family: "Poppins", sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-}
-
 .container {
+  justify-self: center;
   position: relative;
   width: 90%;
   max-width: 1000px;

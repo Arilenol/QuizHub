@@ -1,18 +1,8 @@
-body {
-  margin: 0;
-  padding: 0;
-  background-color: #f8b65d;
-  font-family: "Poppins", sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .container {
+  justify-self: center;
   position: relative;
   text-align: center;
   width: 80%;
-  max-width: 900px;
 }
 
 .btn {

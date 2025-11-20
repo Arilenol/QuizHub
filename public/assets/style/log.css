@@ -64,3 +64,7 @@ button:hover {
 .connexion:hover {
     text-decoration: underline;
 }
+
+h3 {
+    color: rgb(128, 0, 0);
+}
