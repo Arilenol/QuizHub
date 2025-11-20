@@ -56,8 +56,12 @@ switch ($page) {
             case 'register':
                 require_once ROOT . '/src/controllers/LogController.php';
                 $controller = new LogController();
-                // va charger views/log/connection.php
-                $controller->showRegister();
+                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                    $controller->loginUser();
+                } else {
+                    // va charger views/log/connection.php
+                    $controller->showRegister();
+                }
                 break;
 
             //page de connexion

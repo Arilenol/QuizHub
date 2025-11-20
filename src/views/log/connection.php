@@ -5,6 +5,9 @@ require_once '../src/views/partials/header.php';
 ?>
     <div class="log-container">
         <h2>Se connecter</h2>
+        <?php if (isset($error) && !empty($error)) : ?>
+            <h3><?=$error;?></h3>
+        <?php endif;?>
         <form action="?page=log&typelog=register" method="POST">
             <input type="email" name="email" placeholder="Email" required>
             <input type="password" name="password" placeholder="Mot de passe" required>
