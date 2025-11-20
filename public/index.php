@@ -3,7 +3,7 @@
 define('ROOT', dirname(__DIR__));
 
 // par défaut page d’accueil
-$page = $_GET['page'] ?? 'home';
+$page = isset($_GET['page']) ? htmlspecialchars($_GET['page']) : 'home';
 
 switch ($page) {
     case 'home':
@@ -22,14 +22,57 @@ switch ($page) {
         //header('Location: catalogue.php');
         break;
 
-    case 'profil':
-        header('Location: ../src/views/profil.html');
-        break;
-    
-    case 'flashcard':
-        header('Location: ../src/views/flashcard.html');
-        break;
 
+    case 'lesson':
+        $categorie = $_GET['categorie'] ?? null;
+        switch ($categorie) {
+
+            //créé une leçon
+            case 'create':
+                require_once ROOT . '/src/controllers/LessonController.php';
+                $controller = new LessonController();
+                // va charger views/lesson/createLesson.php
+                $controller->createLesson();
+                break;
+
+            //voir une leçon
+            case 'view':
+                require_once ROOT . '/src/controllers/LessonController.php';
+                isset($_GET['id']) ? $id = $_GET['id'] : exit;
+                $controller = new LessonController();
+                // va charger views/lesson/show.php
+                $controller->index($id);
+                break;
+
+            default:
+                echo "Erreur : catégorie de leçon invalide";
+            break;
+        }
+        break;
+    case 'log':
+        $logtype = $_GET['typelog'] ?? null;
+        switch ($logtype) {
+            //formulaire d'inscription
+            case 'register':
+                require_once ROOT . '/src/controllers/LogController.php';
+                $controller = new LogController();
+                // va charger views/log/connection.php
+                $controller->showRegister();
+                break;
+
+            //page de connexion
+            case 'connection':
+                require_once ROOT . '/src/controllers/LogController.php';
+                $controller = new LogController();
+                // va charger views/log/connection.php
+                $controller->showConnection();
+                break;
+
+            default:
+                echo "Erreur : catégorie de leçon invalide";
+            break;
+        }
+        break;
 
     default:
         echo "404 - Page non trouvée";
