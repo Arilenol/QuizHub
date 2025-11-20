@@ -26,8 +26,7 @@ class CatalogueModel {
             INNER JOIN categorie_quiz ON categorie_quiz.quiz_id = quiz.id 
             INNER JOIN categories ON categories.id = categorie_quiz.category_id 
             INNER JOIN users ON users.id = quiz.user_id
-            WHERE categories.id = ? AND (quiz.title LIKE ? OR quiz.description LIKE ?) AND users.username LIKE ?
-            GROUP BY quiz.id";
+            WHERE categories.id = ? AND (quiz.title LIKE ? OR quiz.description LIKE ?) AND users.username LIKE ?";
 
             
             $allowedOrder = [
