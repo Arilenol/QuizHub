@@ -22,6 +22,7 @@ switch ($page) {
         //header('Location: catalogue.php');
         break;
 
+
     case 'lesson':
         $categorie = $_GET['categorie'] ?? null;
         switch ($categorie) {
@@ -72,6 +73,7 @@ switch ($page) {
             break;
         }
         break;
+
     default:
         echo "404 - Page non trouvée";
         break;
