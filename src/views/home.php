@@ -40,5 +40,3 @@ include 'partials/header.php';
         </div>
     <?php endfor; ?>
 </div>
-</body>
-</html>

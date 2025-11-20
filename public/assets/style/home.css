@@ -10,7 +10,7 @@ h1 {
   margin-bottom: 1.5rem;
 }
 
-.newCreations {
+.quiz .newCreations, .quiz .popCreations {
   display: flex;
   flex-direction: row;
   gap: 1.5rem;
@@ -107,3 +107,41 @@ p.quiz-genre {
   color: #666;
   background-color: rgba(0, 0, 0, 0.03);
 }/*# sourceMappingURL=catalogue.css.map */
+
+.quiz .newCreations article, .quiz .popCreations article {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  padding: 1.5rem 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  width: 250px;
+  position: relative;
+}
+.quiz .newCreations article:hover, .quiz .popCreations article:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+.quiz .newCreations article .title, .quiz .popCreations article .title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #4a90e2;
+  margin-bottom: 0.5rem;
+}
+.quiz .newCreations article .description, .quiz .popCreations article .description {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #333;
+  margin-bottom: 1rem;
+}
+.quiz .newCreations article .username, .quiz .newCreations article .date, .quiz .popCreations article .username, .quiz .popCreations article .date {
+  font-size: 0.85rem;
+  color: gray;
+  margin-top: 0.25rem;
+}
+.quiz .newCreations article .date, .quiz .popCreations article .date {
+  font-style: italic;
+}
+
+/*# sourceMappingURL=home.css.map */

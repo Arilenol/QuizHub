@@ -117,6 +117,7 @@ switch ($page) {
             header("Location: ?page=home");
             exit;
             break;
+
     default:
         echo "404 - Page non trouvée";
         break;
