@@ -8,7 +8,7 @@ class CatalogueModel {
 
     public function getCategories(): mixed{
         try{
-            $sql = $this->db->prepare("SELECT id,CategorieName FROM categories;");
+            $sql = $this->db->prepare("SELECT DISTINCT id,CategorieName FROM categories;");
             $sql->execute();
             $categories = $sql->fetchAll(PDO::FETCH_ASSOC);
             return $categories;
@@ -26,7 +26,8 @@ class CatalogueModel {
             INNER JOIN categorie_quiz ON categorie_quiz.quiz_id = quiz.id 
             INNER JOIN categories ON categories.id = categorie_quiz.category_id 
             INNER JOIN users ON users.id = quiz.user_id
-            WHERE categories.id = ? AND (quiz.title LIKE ? OR quiz.description LIKE ?) AND users.username LIKE ?";
+            WHERE categories.id = ? AND (quiz.title LIKE ? OR quiz.description LIKE ?) AND users.username LIKE ?
+            GROUP BY quiz.id";
 
             
             $allowedOrder = [
@@ -117,7 +118,7 @@ class CatalogueModel {
     }
     public function getCategoriesFromQuiz( $quiz_id): mixed{
         try{
-            $sql = $this->db->prepare("SELECT categories.id, categories.categorieName FROM categories 
+            $sql = $this->db->prepare("SELECT DISTINCT categories.id, categories.categorieName FROM categories 
             INNER JOIN categorie_quiz ON categorie_quiz.category_id = categories.id 
             WHERE categorie_quiz.quiz_id = ?;");
             $sql->bindParam(1,$quiz_id);
