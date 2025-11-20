@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?php 
-
-        echo "<link rel='stylesheet' href='./assets/style/home.css'>";
+        if (isset($style)){
+            echo "<link rel='stylesheet' href='$style'>";
+        }
         echo "<link rel='stylesheet' href='./assets/style/global.css'>";
 
     ?>
@@ -30,3 +31,19 @@
         </div>
     </div>
 </header>
+<!-- Création des listeners des boutons du header -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const buttons = document.querySelectorAll('header .button');
+    const registerDiv = buttons[0]; // S'inscrire
+    const loginDiv = buttons[1];    // Connexion
+
+    registerDiv.addEventListener('click', () => {
+        window.location.href = '?page=log&typelog=register';
+    });
+
+    loginDiv.addEventListener('click', () => {
+        window.location.href = '?page=log&typelog=connection';
+    });
+});
+</script>

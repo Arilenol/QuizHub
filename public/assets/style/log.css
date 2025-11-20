@@ -1,0 +1,66 @@
+.log-container {
+    background-color: #fff;
+    padding: 3rem;
+    border-radius: 1.2rem;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    width: 400px;
+    margin: 80px auto;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+h2{
+    justify-self: center;
+    color: #0AB1BD;;
+}
+
+input {
+    padding: 0.75rem;
+    font-size: 1.1rem; 
+    border: 1px solid #ccc;
+    border-radius: 0.6rem;
+}
+
+button {
+    padding: 0.75rem;
+    background-color: #0AB1BD;
+    color: white;
+    border: none;
+    border-radius: 0.6rem;
+    cursor: pointer;
+    font-size: 1.1rem;
+}
+
+button:hover {
+    background-color: #007881;
+}
+
+.back-link {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.back-link a {
+    color: #0AB1BD;
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+.back-link a:hover {
+    text-decoration: underline;
+}
+
+.connexion {
+    text-decoration: none;
+    color: blue;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.connexion:hover {
+    text-decoration: underline;
+}
