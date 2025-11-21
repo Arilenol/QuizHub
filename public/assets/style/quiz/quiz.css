@@ -1,14 +1,4 @@
 @charset "UTF-8";
-body {
-  background-color: #FFC067;
-  font-family: Arial, Helvetica, sans-serif;
-  margin: 0;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 60px;
-}
 body .quiz-réalisation {
   display: flex;
   flex-direction: column;
@@ -38,7 +28,6 @@ body .quiz-réalisation button.retour {
 }
 body .quiz-réalisation .question {
   width: 100%;
-  padding: 48px;
   border-radius: 0; /* enlever l'arrondi pour ne pas ressembler à une sous-page */
   text-align: center;
 }

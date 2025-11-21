@@ -117,6 +117,9 @@ switch ($page) {
         $controller = new ProfileController();
         $controller->showProfile();
         break;
+    case 'quiz':
+        require_once ROOT . '/src/views/quiz/show.php';
+        break;
     default:
         echo "404 - Page non trouvée";
         break;
