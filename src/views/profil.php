@@ -20,17 +20,17 @@ require_once 'partials/header.php'; ?>
 
                 <div class="stats">
                     <div>
-                        <span class="number">4</span>
+                        <span class="number"><?= $creation ?></span>
                         <span class="label">Quiz créés</span>
                     </div>
                     <div>
-                        <span class="number">18</span>
+                        <span class="number"><?= $played ?></span>
                         <span class="label">Quiz joués</span>
                     </div>
                 </div>
 
                 <button class="btn edit">Modifier le profil</button>
-                <button class="btn edit" onclick="window.location.href='?page=deconnexion'">Déconnexion</button>
+                <button class="btn edit" onclick="window.location.href='?page=log&typelog=logout'">Déconnexion</button>
             </div>
         </div>
 

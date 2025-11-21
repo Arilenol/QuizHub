@@ -2,17 +2,20 @@
 require_once ROOT . '/src/models/QuizModel.php';
 require_once ROOT . '/config/config.php';
 
-class FlashCardController {
+class FlashCardController
+{
     private QuizModel $model;
 
-    public function __construct() {
+    public function __construct()
+    {
         session_start();
         $db = getDbConnection();
         $this->model = new QuizModel($db);
     }
 
     // Charge la première question du quiz
-    public function preload(int $quizId) {
+    public function preload(int $quizId)
+    {
         $_SESSION['remainingQuestions'] = $this->model->getFlashCardById($quizId) ?: [];
         if (empty($_SESSION['remainingQuestions'])) {
             echo "Aucune question disponible";
@@ -23,7 +26,8 @@ class FlashCardController {
     }
 
     // Affiche une question spécifique
-    public function questionById(int $id) {
+    public function questionById(int $id)
+    {
         $remaining = $_SESSION['remainingQuestions'] ?? [];
         if (!in_array($id, $remaining)) {
             echo "Question invalide";
@@ -33,13 +37,15 @@ class FlashCardController {
         $this->showQuestion($id);
     }
     // Méthode privée pour centraliser l’affichage
-    private function showQuestion(int $id) {
+    private function showQuestion(int $id)
+    {
         $question = $this->model->getInfoFlashCardById($id);
         $viewData = $this->prepareViewData($question);
-        require ROOT . '/src/views/flashcard.php';
+        require ROOT . '/src/views/quiz/flashcard.php';
     }
 
-    private function prepareViewData(array $question): array {
+    private function prepareViewData(array $question): array
+    {
         $remaining = $_SESSION['remainingQuestions'] ?? [];
         $currentIndex = array_search($question['id'], $remaining);
 
@@ -52,4 +58,3 @@ class FlashCardController {
         ];
     }
 }
-?>
