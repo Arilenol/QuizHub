@@ -45,7 +45,7 @@ switch ($page) {
 
             default:
                 echo "Erreur : catégorie de leçon invalide";
-            break;
+                break;
         }
         break;
     case 'log':
@@ -73,51 +73,50 @@ switch ($page) {
                     $controller->showConnection();
                 }
                 break;
+            case 'logout':
+                // On démarre l'ancienne session
+                session_start();
+                // On la supprime du navigateur
+                session_unset();
+                session_destroy();
+                header("Location: ?page=home");
+                exit;
+                break;
 
             default:
-                echo "Erreur : catégorie de leçon invalide";
-            break;
+                echo "Erreur : type d'action de sesson non identifié";
+                break;
         }
         break;
-        case 'flashcard':
-            $action = $_GET['action'] ?? null; // start, ongoing, end
-            require_once ROOT . '/src/controllers/FlashCardController.php';
-            $controller = new FlashCardController();
+    case 'flashcard':
+        $action = $_GET['action'] ?? null; // start, ongoing, end
+        require_once ROOT . '/src/controllers/FlashCardController.php';
+        $controller = new FlashCardController();
 
-            switch($action) {
-                case 'start':
-                    $id = $_GET['id'] ?? null;
-                    $controller->preload($id);
-                    break;
+        switch ($action) {
+            case 'start':
+                $id = $_GET['id'] ?? null;
+                $controller->preload($id);
+                break;
 
-                case 'ongoing':
-                    $questionId = $_GET['question'] ?? null;
-                    $controller->questionById($questionId);
-                    break;
+            case 'ongoing':
+                $questionId = $_GET['question'] ?? null;
+                $controller->questionById($questionId);
+                break;
 
-                case 'end':
-                    echo "Fin du quiz";
-                    break;
+            case 'end':
+                echo "Fin du quiz";
+                break;
 
-                default:
-                    echo "Action flashcard invalide";
-            }
-            break;
-        case 'profil':
-            require_once ROOT . '/src/controllers/ProfileController.php';
-            $controller = new ProfileController();
-            $controller->showProfile();
-            break;
-        case 'deconnexion':
-            // On démarre l'ancienne session
-            session_start();
-            // On la supprime du navigateur
-            session_unset();
-            session_destroy();
-            header("Location: ?page=home");
-            exit;
-            break;
-
+            default:
+                echo "Action flashcard invalide";
+        }
+        break;
+    case 'profil':
+        require_once ROOT . '/src/controllers/ProfileController.php';
+        $controller = new ProfileController();
+        $controller->showProfile();
+        break;
     default:
         echo "404 - Page non trouvée";
         break;
