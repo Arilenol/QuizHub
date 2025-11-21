@@ -6,7 +6,7 @@ require_once 'partials/header.php'; ?>
 
 <body>
 
-    <button class="btn retour">&lt; Retour</button>
+    <button onclick="window.location.href='?page=home'" class="btn retour">&lt; Retour</button>
 
     <div class="container">
 

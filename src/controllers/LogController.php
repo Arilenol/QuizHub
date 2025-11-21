@@ -53,7 +53,7 @@ class LogController {
 
         if ($created) {
             session_start();
-            $_SESSION['user_email'] = $email;
+            $_SESSION['email'] = $email;
             header("Location: ?page=home");
             exit;
         } else {
@@ -79,8 +79,10 @@ class LogController {
 
         $db = getDbConnection();
         $model = new LogModel($db);
-
+        var_dump($email);
+        var_dump($password);
         if ($model->verifyPassword($email, $password)) {
+            
             session_start();
             $_SESSION['email'] = $email;
             header("Location: ?page=home");

@@ -12,7 +12,7 @@ require_once '../src/views/partials/header.php';
             <input type="email" name="email" placeholder="Email" required>
             <input type="password" name="password" placeholder="Mot de passe" required>
             <p>Vous n'avez pas de compte ? <a href="?page=log&typelog=register" class=connexion>Inscrivez-vous.</a></p>
-            <button type="submit">S'inscrire</button>
+            <button type="submit">Se connecter</button>
         </form>
         <div class="back-link">
             <a href="?page=home">← Retour à l'accueil</a>
