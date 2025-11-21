@@ -23,7 +23,14 @@ body .quiz-réalisation button {
   -moz-appearance: none;
   appearance: none;
 }
+.valider:hover{
+  background-color: #fff;
+  color: #087b86;
+  box-shadow: 0px 8px 2px #CACACABF;
+}
 body .quiz-réalisation button.retour {
+  margin-top: 1%;
+  margin-left: 1%;
   align-self: flex-start;
 }
 body .quiz-réalisation .question {
@@ -81,9 +88,20 @@ body .quiz-réalisation .question .ensemble-réponse .réponse input[type=checkb
   opacity: 0.96;
 }
 body .quiz-réalisation .question .ensemble-réponse .réponse label:hover {
-  transform: translateY(-4.5px);
+  transform: translateY(-8.5px);
   box-shadow: 0 15px 0 rgba(8, 123, 134, 0.9);
 }
 body .quiz-réalisation .question > button {
-  margin: auto;
-}/*# sourceMappingURL=quiz.css.map */
+  margin: 1% auto;
+}
+.correct {
+    background-color: #b6f7b6; 
+    border: 2px solid #3cb43c;
+}
+
+.wrong {
+    background-color: #ffb3b3; 
+    border: 2px solid #d62828;
+}
+
+/*# sourceMappingURL=quiz.css.map */
