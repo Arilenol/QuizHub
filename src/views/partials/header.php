@@ -21,8 +21,11 @@
         <p>Rechercher des créations...</p>
     </div>
     <div style="display: flex; flex-direction: row; gap: 25px;">
-        <?php session_start(); ?>
-        
+        <?php
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        ?>
         <?php if (!isset($_SESSION['email'])): ?>
             <div class="button" data-action="register">
                 <span></span>
