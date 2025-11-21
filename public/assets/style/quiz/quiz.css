@@ -76,7 +76,8 @@ body .quiz-réalisation .question .ensemble-réponse .réponse label {
 }
 body .quiz-réalisation .question .ensemble-réponse .réponse input[type=checkbox]:checked + label {
   transform: translateY(9px);
-  box-shadow: 0 4.5px 0 #087b86;
+  background-color: #067178;
+  box-shadow: 0 4.5px 0 #0cabb7;
   opacity: 0.96;
 }
 body .quiz-réalisation .question .ensemble-réponse .réponse label:hover {
