@@ -1,0 +1,99 @@
+@charset "UTF-8";
+body {
+  background-color: #FFC067;
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px;
+}
+body .quiz-réalisation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 36px;
+  width: 100%;
+  max-width: none; /* enlever la contrainte pour éviter l'effet sous-page */
+}
+body .quiz-réalisation button {
+  border-radius: 75px;
+  background-color: #0AB1BD;
+  color: white;
+  border: none;
+  padding: 21px 36px;
+  font-size: 1.575rem;
+  min-height: 69px;
+  cursor: pointer;
+  outline: none;
+  box-shadow: 0 12px 0 #087b86;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+body .quiz-réalisation button.retour {
+  align-self: flex-start;
+}
+body .quiz-réalisation .question {
+  width: 100%;
+  padding: 48px;
+  border-radius: 0; /* enlever l'arrondi pour ne pas ressembler à une sous-page */
+  text-align: center;
+}
+body .quiz-réalisation .question h2 {
+  font-size: 3.15rem;
+  margin: 0 0 27px;
+  color: #222;
+}
+body .quiz-réalisation .question .ensemble-réponse {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 33px; /* plus d'espace entre les cases */
+  justify-items: center;
+  margin: 0 auto 30px;
+  max-width: none; /* laisser la grille occuper l'espace disponible */
+}
+body .quiz-réalisation .question .ensemble-réponse .réponse {
+  width: 80%;
+  display: flex;
+  align-items: stretch; /* permettre aux labels d'occuper toute la hauteur */
+  justify-content: center;
+  /* état sélectionné — effet "pressé" */
+  /* léger hover pour l'indication visuelle */
+}
+body .quiz-réalisation .question .ensemble-réponse .réponse input[type=checkbox] {
+  display: none;
+}
+body .quiz-réalisation .question .ensemble-réponse .réponse label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 95%; /* légèrement plus large que la colonne */
+  cursor: pointer;
+  border-radius: 38px;
+  background-color: #0AB1BD;
+  color: white;
+  padding: 30px 33px; /* plus de padding pour augmenter la hauteur */
+  min-height: 132px; /* hauteur beaucoup plus grande */
+  font-size: 1.688rem; /* texte beaucoup plus grand */
+  text-align: center;
+  box-shadow: 0 12px 0 #087b86;
+  transition: transform 0.08s ease, box-shadow 0.08s ease, opacity 0.12s ease;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+body .quiz-réalisation .question .ensemble-réponse .réponse input[type=checkbox]:checked + label {
+  transform: translateY(9px);
+  box-shadow: 0 4.5px 0 #087b86;
+  opacity: 0.96;
+}
+body .quiz-réalisation .question .ensemble-réponse .réponse label:hover {
+  transform: translateY(-4.5px);
+  box-shadow: 0 15px 0 rgba(8, 123, 134, 0.9);
+}
+body .quiz-réalisation .question > button {
+  margin: auto;
+}/*# sourceMappingURL=quiz.css.map */
