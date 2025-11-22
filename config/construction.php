@@ -68,6 +68,9 @@ function constructionBD(PDO $conn){
             $sql = "DROP TRIGGER IF EXISTS trg_before_insert_Carte;";
             $conn->exec($sql);
 
+            $sql = "DROP TRIGGER IF EXISTS trg_bef_insert_battleParticipants;";
+            $conn->exec($sql);
+
             
 
 
