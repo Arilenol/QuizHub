@@ -68,6 +68,9 @@ function constructionBD(PDO $conn){
             $sql = "DROP TRIGGER IF EXISTS trg_before_insert_Carte;";
             $conn->exec($sql);
 
+            $sql = "DROP TRIGGER IF EXISTS trg_bef_insert_battleParticipants;";
+            $conn->exec($sql);
+
             
 
 
@@ -87,6 +90,7 @@ function constructionBD(PDO $conn){
                 username TEXT NOT NULL,
                 password TEXT NOT NULL,
                 email TEXT NOT NULL,
+                description TEXT DEFAULT '',
                 UNIQUE(email)
             );";
 
@@ -154,6 +158,7 @@ function constructionBD(PDO $conn){
 
             $sql = "CREATE TABLE IF NOT EXISTS Lecon(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
                 quiz_id INTEGER,
                 title TEXT NOT NULL,
                 description TEXT,
@@ -443,7 +448,7 @@ function constructionBD(PDO $conn){
             $stmtParam = $conn->prepare("INSERT OR REPLACE INTO parametreQuiz (quiz_id, afficherAvancement, minuterie, afficherScore, recapitulatifFin, ordreAleatoire, repasserErreurs) VALUES (?, ?, ?, ?, ?, ?, ?)");
             $stmtTestStat = $conn->prepare("INSERT INTO TestStatistiques (quiz_id, difficulty, moyenne) VALUES (?, ?, ?)");
             $stmtCatQuiz = $conn->prepare("INSERT INTO categorie_quiz (category_id, quiz_id) VALUES (?, ?)");
-            $stmtLecon = $conn->prepare("INSERT INTO Lecon (quiz_id, title, description) VALUES (?, ?, ?)");
+            $stmtLecon = $conn->prepare("INSERT INTO Lecon (user_id, quiz_id, title, description) VALUES (?, ?, ?, ?)");
             $stmtPartie = $conn->prepare("INSERT INTO Partie (numeroPartie, lecon_id, title, content) VALUES (?, ?, ?, ?)");
             $stmtEx = $conn->prepare("INSERT INTO Exemple (numeroExemple, partie_id, consigne, reponse) VALUES (?, ?, ?, ?)");
             $stmtCarte = $conn->prepare("INSERT INTO Carte (quiz_id, numeroCarte, question, reponse) VALUES (?, ?, ?, ?)");
@@ -506,7 +511,7 @@ function constructionBD(PDO $conn){
 
                 // Leçon + Partie + Exemple for some quizzes (to ensure Lecon/Partie/Exemple have data)
                 if ($q <= 10) { // create for first 10 quizzes
-                    $stmtLecon->execute([$quiz_id, "Leçon du quiz {$q}", "Description leçon {$q}"]);
+                    $stmtLecon->execute([$owner, $quiz_id, "Leçon du quiz {$q}", "Description leçon {$q}"]);
                     $lecon_id = $conn->lastInsertId();
                     // 2 parties
                     for ($pnum = 1; $pnum <= 2; $pnum++) {
