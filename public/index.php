@@ -118,16 +118,16 @@ switch ($page) {
         $controller->showProfile();
         break;
     case 'quiz':
-        $id = $_GET['id'] ?? null; // id du quiz
-        $idQuestion = $_GET['idQuestion'] ?? null; // id de la question 
+        $id = $_GET['id'] ?? null;
+        $idQuestion = $_GET['idQuestion'] ?? 1;
+        $showAnswer = isset($_GET['reponse']) && $_GET['reponse'] === 'visible';
+
         require_once ROOT . '/src/controllers/QuizController.php';
         $controller = new QuizController();
-        if ($idQuestion === null) {
-            $controller->showQuiz($id);
-        } else {
-            $controller->showQuiz($id, $idQuestion);
-        }
+
+        $controller->showQuiz($id, $idQuestion, $showAnswer);
         break;
+
     default:
         echo "404 - Page non trouvée";
         break;

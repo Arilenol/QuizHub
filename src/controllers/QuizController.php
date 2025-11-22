@@ -11,12 +11,26 @@ class QuizController
         $this->model = new QuizModel($db);
     }
 
-    public function showQuiz(int $id, ?int $idQuestion = 1)
+    public function showQuiz(int $id, int $idQuestion = 1, bool $showAnswer = false)
     {
-        if ($idQuestion <= $this->model->getMaxNbQuestion(htmlspecialchars($id))) {
-            $question = $this->model->getQuestion(htmlspecialchars($id), htmlspecialchars($idQuestion));
-            $reponse = $this->model->getReponses($question['id']);
+        $id = htmlspecialchars($id);
+        $idQuestion = htmlspecialchars($idQuestion);
+
+        $max = $this->model->getMaxNbQuestion($id);
+
+        // Fin du quiz
+        if ($idQuestion > $max) {
+            $question = null;
+            $reponse = [];
+            require ROOT . '/src/views/quiz/show.php';
+            return;
         }
+
+        // Récupère question + réponses
+        $showAnswer = $showAnswer;
+        $question = $this->model->getQuestion($id, $idQuestion);
+        $reponse  = $this->model->getReponses($question['id']);
+
         require ROOT . '/src/views/quiz/show.php';
     }
 }

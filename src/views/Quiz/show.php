@@ -10,7 +10,7 @@ require_once '../src/views/partials/header.php';
 
     <?php if (empty($question)) : ?>
 
-        <!-- PAGE FIN DE QUIZ -->
+        <!-- FIN DU QUIZ -->
         <div class="question fin-quiz">
             <h2>🎉 Félicitations !</h2>
             <p>Vous avez terminé le quiz.</p>
@@ -23,39 +23,60 @@ require_once '../src/views/partials/header.php';
 
     <?php else : ?>
 
-        <!-- PAGE QUESTION -->
+        <!-- QUESTION -->
         <div class="question">
 
             <h2><?= htmlspecialchars($question['question']) ?></h2>
 
             <div class="ensemble-réponse">
-                <form action="?page=quiz&reponse=visible" method="get">
+                <form method="get">
+
+
                     <?php foreach ($reponse as $rep) : ?>
-                        <?php $inputId = "reponse_" . $rep['id']; ?>
+                        <?php
+                        $inputId = "rep_" . $rep['id'];
+                        $isCorrect = (int)$rep['estCorrecte'] === 1;
+                        ?>
 
                         <div class="réponse">
                             <input type="checkbox"
                                 id="<?= $inputId ?>"
-                                name="answer"
+                                name="answer[]"
                                 value="<?= $rep['id'] ?>"
-                                required>
+                                <?= $showAnswer ? 'disabled' : '' ?>>
 
-                            <label for="<?= $inputId ?>">
-                                <?= htmlspecialchars($rep['reponse']) ?>
-                            </label>
+                            <?php if ($showAnswer): ?>
+                                <?php if ($isCorrect): ?>
+                                    <label for="<?= $inputId ?>" class="correct"><?= htmlspecialchars($rep['reponse']) ?></label>
+                                <?php else: ?>
+                                    <label for="<?= $inputId ?>" class="wrong"><?= htmlspecialchars($rep['reponse']) ?></label>
+                                <?php endif; ?>
+                            <?php else: ?>
+                                <label for="<?= $inputId ?>"><?= htmlspecialchars($rep['reponse']) ?></label>
+                            <?php endif; ?>
                         </div>
+
                     <?php endforeach; ?>
-                    <input type="hidden" name="id" value=<?= $question['quiz_id'] ?>>
-                    <input type="hidden" name="idQuestion" value=<?= $question['id'] ?>>
-                    <button type="submit">Envoyer</button>
+
+
+                <?php endif; ?>
+                <?php if (!$showAnswer): ?>
+                    <button class="submit" type="submit">Valider</button>
+                <?php else: ?>
+                    <button class="valider"
+                        onclick="window.location.href='?page=quiz&id=<?= $question['quiz_id'] ?>&idQuestion=<?= $question['numeroQuiz'] + 1 ?>'">
+                        Continuer
+                    </button>
+
                 </form>
             </div>
-            <button class="valider" onclick="window.location.href='?page=quiz&id=<?= $question['quiz_id'] ?>&idQuestion=<?= (int) $question['id'] + 1 ?>'">Valider</button>
+
         </div>
 
     <?php endif; ?>
 
 </div>
+
 </body>
 
 </html>
