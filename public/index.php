@@ -29,9 +29,10 @@ switch ($page) {
             //créé une leçon
             case 'create':
                 require_once ROOT . '/src/controllers/LessonController.php';
+                isset($_GET['id']) ? $id = $_GET['id'] : exit;
                 $controller = new LessonController();
                 // va charger views/lesson/createLesson.php
-                $controller->createLesson();
+                $controller->createLesson($id);
                 break;
 
             //voir une leçon

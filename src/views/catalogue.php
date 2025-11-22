@@ -3,11 +3,8 @@
     $style = './assets/style/catalogue.css';
     error_reporting(E_ALL);
     ini_set('display_errors', 1);
-    include 'partials/header.php'; 
-    //require_once ROOT . '/config/construction.php';
+    require 'partials/header.php'; 
 ?>
-<link rel="stylesheet" href="./assets/style/global.css">
-<link rel="stylesheet" href="./assets/style/catalogue.css">
 <div class="catalogue">
 
     <form method="GET" action = index.php>
