@@ -6,7 +6,7 @@
     require __DIR__ . '/../partials/header.php';
 ?>
 <button type = "submit" name = "Retour" value = "yes"><span> < </span>Retour</button>
-<h1>Créer une leçon</h1>
+<h1>Créer un Quiz</h1>
 <form method = "post" action = "index.php?page=quiz&categorie=create">
     <input type = "hidden" name="page" value="quiz">
     <input type="hidden" name ="categorie" value = "create">
@@ -36,12 +36,15 @@
 
         }
         echo '<button name= "delReponse'.$i.'" value="yes" type="submit"> Supprimer une réponse</button>
-        <button type = "submit" name="addReponse" value='.$i.'>Ajouter une réponse</button>
-        <button name = "DelQuestion" type="submit" value='.$i.'>Supprimer cette question</button>
-        </div>';
+        <button type = "submit" name="addReponse" value='.$i.'>Ajouter une réponse</button>';
+        if ($i != 0){
+            echo '<button name = "DelQuestion" type="submit" value='.$i.'>Supprimer cette question</button>';
+        }
+        echo '</div>';
     }
-    echo '<button type = "submit" name = "addQuestion" value = "yes">Ajouter une question</button>'
     ?>
+    <button type = "submit" name = "addQuestion" value = "yes">Ajouter une question</button>
+    
     </div>
     
     <h2>Paramètres</h2>
@@ -61,4 +64,4 @@
     </div>
 
     <button type = "submit" name = "create" value = "yes">Créer le quiz</button>
-<form></form>
+</form>

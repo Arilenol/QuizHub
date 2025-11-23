@@ -13,7 +13,8 @@ class QuizController {
 
         session_start();
 
-
+        //unset($_POST);
+        //unset($_SESSION);
         //------------------------à changer-------------------------
         $_SESSION['id'] = 1;
         //------------------------à changer-------------------------
@@ -36,12 +37,13 @@ class QuizController {
             // array where each index is number of answers for that question
             $_SESSION['nbReponse'] = array(0 => 2);
         }
-        var_dump($_SESSION);
-        var_dump($_POST);
+
+        
         // Handle form actions: Retour, addQuestion, addReponse, DelQuestion, delReponseX
         if (isset($_POST['Retour']) && $_POST['Retour'] === "yes"){
             unset($_SESSION['nbReponse']);
             unset($_SESSION['nbQuestions']);
+            unset($_POST);
             // redirect back to content creation or other appropriate page
             header('Location: index.php?page=createContent');
             exit;
@@ -51,17 +53,12 @@ class QuizController {
             $_SESSION['nbQuestions']++;
             // new question starts with minimum allowed responses
             $_SESSION['nbReponse'][$_SESSION['nbQuestions']-1] = 2;
+            header('Location: ' . $_SERVER['REQUEST_URI']);
         }
 
         if (isset($_POST['addReponse']) && $_POST['addReponse'] !== ''){
-            $qIdx = (int)$_POST['addReponse'];
-            if (!isset($_SESSION['nbReponse'][$qIdx])){
-                $_SESSION['nbReponse'][$qIdx] = 2;
-            }
-            // cap responses at 6
-            if ($_SESSION['nbReponse'][$qIdx] < 6) {
-                $_SESSION['nbReponse'][$qIdx]++;
-            }
+            $_SESSION['nbReponse'][(int)$_POST['addReponse']]++;
+            header('Location: ' . $_SERVER['REQUEST_URI']);
         }
 
         // Delete a question (shift subsequent questions up)
@@ -71,75 +68,57 @@ class QuizController {
                 $oldNb = $_SESSION['nbQuestions'];
                 for ($i = $idx; $i < $oldNb - 1; $i++) {
                     $_SESSION['nbReponse'][$i] = $_SESSION['nbReponse'][$i + 1];
-                    // shift posted fields so the view re-populates correctly
-                    if (isset($_POST['question'.($i+1)])){
-                        $_POST['question'.$i] = $_POST['question'.($i+1)];
-                    }
-                    for ($k = 0; $k < ($_SESSION['nbReponse'][$i] ?? 0); $k++){
-                        if (isset($_POST['reponse'.$k.'-question'.($i+1)])){
-                            $_POST['reponse'.$k.'-question'.$i] = $_POST['reponse'.$k.'-question'.($i+1)];
-                        }
-                        if (isset($_POST['reponse'.$k.'-question'.($i+1)])){
-                            $_POST['reponse'.$k.'-question'.$i] = $_POST['reponse'.$k.'-question'.($i+1)];
-                        }
+                    $_POST['question'.$i] = $_POST['question'.($i + 1)];
+                    
+                    for ($k = 0; $k < $_SESSION['nbExemple'][$i]; $k++) {
+                        $_POST['reponse'.$k.'-question'.$i] = $_POST['reponse'.$k.'-question'.($i + 1)];
+                        $_POST['checkbox'.$k.'-question'.$i] = $_POST['checkbox'.$k.'-question'.($i + 1)];
                     }
                 }
+                
                 $last = $oldNb - 1;
                 unset($_SESSION['nbReponse'][$last]);
-                for ($k = 0; $k < 20; $k++){
+                unset($_POST['question'.$last]);
+                for ($k = 0; $k < 10; $k++) { 
                     unset($_POST['reponse'.$k.'-question'.$last]);
                     unset($_POST['checkbox'.$k.'-question'.$last]);
                 }
-                unset($_POST['question'.$last]);
                 $_SESSION['nbQuestions']--;
             }
-            
+            header('Location: ' . $_SERVER['REQUEST_URI']);
         }
 
-        // Delete a response for a specific question: view posts a button named like 'delReponse{qIndex}'
         for ($i = 0; $i < $_SESSION['nbQuestions']; $i++){
-            if (isset($_POST['delReponse'.$i]) && $_POST['delReponse'.$i] === 'yes'){
+            if (isset($_POST['delReponse'.$i]) && $_POST['delReponse'.$i] == "yes"){
                 if ($_SESSION['nbReponse'][$i] > 2){
-                    $idxToRemove = $_SESSION['nbReponse'][$i] - 1; // remove last by default
-                    for ($e = $idxToRemove; $e < $_SESSION['nbReponse'][$i] - 1; $e++){
-                        $_POST['reponse'.$e.'-question'.$i] = $_POST['reponse'.($e+1).'-question'.$i] ?? '';
-                        $_POST['reponse'.$e.'-question'.$i] = $_POST['reponse'.($e+1).'-question'.$i] ?? '';
-                    }
-                    unset($_POST['reponse'.($_SESSION['nbReponse'][$i]-1).'-question'.$i]);
-                    unset($_POST['checkbox'.($_SESSION['nbReponse'][$i]-1).'-question'.$i]);
                     $_SESSION['nbReponse'][$i]--;
+                    unset($_POST['reponse'.$_SESSION['nbReponse'][$i].'-question'.$i]);
+                    unset($_POST['nbReponse'][$_SESSION['nbReponse'][$i]]);
+                    header('Location: ' . $_SERVER['REQUEST_URI']);
                 }
+                
             }
         }
-
+        
+        
         // Build TAB_CONTENU structure from POST so view can re-populate fields
         $TAB_CONTENU = array();
-        for ($i = 0; $i < $_SESSION['nbQuestions']; $i++) {
-            $question = array(
+        for ($i = 0; $i < $_SESSION['nbQuestions'] ; $i++){
+            $qContent = array(
                 'name' => isset($_POST['question'.$i]) ? $_POST['question'.$i] : '',
                 'reponses' => array()
             );
-            $nbEx = isset($_SESSION['nbReponse'][$i]) ? intval($_SESSION['nbReponse'][$i]) : 0;
-
-            
-            if ($nbEx < 2) $nbEx = 2;
-            if ($nbEx > 6) $nbEx = 6;
-            for ($k = 0; $k < $nbEx; $k++) {
-                
-                $reponse = isset($_POST['reponse'.$k.'-question'.$i])
-                    ? $_POST['reponse'.$k.'-question'.$i]
-                    : '';
-                $isValid = isset($_POST['checkbox'.$k.'-question'.$i]) ? 1 : 0;
-
-                $question['reponses'][$k] = array(
-                    'texte' => $reponse,
-                    'valide' => $isValid
+            for ($k = 0; $k < $_SESSION['nbReponse'][$i] ; $k++){
+                $reponseContent = array(
+                    'texte' => isset($_POST['reponse'.$k.'-question'.$i]) ? $_POST['reponse'.$k.'-question'.$i] : '',
+                    'valide' => isset($_POST['checkbox'.$k.'-question'.$i]) ? $_POST['checkbox'.$k.'-question'.$i] : ''
                 );
+                $qContent['reponses'][] = $reponseContent;
             }
-
-            $TAB_CONTENU[$i] = $question;
+            $TAB_CONTENU[] = $qContent;
         }
-
+        
+        
         // Placeholder for parameters presented as checkboxes in the view
         //------------informations à remplir---------------------
         $tabParametres = array();
@@ -179,7 +158,9 @@ class QuizController {
 
         // Provide any auxiliary data the view might need (e.g., existing quizzes by author)
         // $quizzes = $model->getQuizByAuthor($authorId); // implement in QuizModel if useful
-
+        var_dump($_SESSION);
+        var_dump($_POST);
+        var_dump($TAB_CONTENU);
         require ROOT . '/src/views/Quiz/createQuiz.php';
     }
 
