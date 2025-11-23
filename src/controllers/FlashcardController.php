@@ -6,7 +6,6 @@ class FlashCardController
 {
 
     private FlashCardModel $model;
-    private QuizModel $model;
 
     public function __construct()
     {
