@@ -1,6 +1,7 @@
 <?php
 $title = "Quiz";
 $style = './assets/style/quiz/quiz.css';
+<<<<<<< src/views/Quiz/show.php
 require_once '../src/views/partials/header.php';
 ?>
 
@@ -102,3 +103,4 @@ require_once '../src/views/partials/header.php';
 </body>
 
 </html>
+
