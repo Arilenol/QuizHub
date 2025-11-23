@@ -13,7 +13,7 @@ include 'partials/header.php';
 <div class="newCreations">
     <?php for ($i = 0; $i < 7; $i++): ?>
         <div class="quiz">
-            <article onclick="window.location.href='./QuizPage.php?quiz_id=<?= $quiz[$i]['id'] ?>'">
+            <article onclick="window.location.href='./?page=<?= $quiz[$i]['genre'] ?>&id=<?= $quiz[$i]['id'] ?> <?= $quiz[$i]['genre']=='flashcard' ? '&action=start' : '' ?>'">
                 <div class="quiz-cat">
                     <?php if (!empty($quiz[$i]['categories'])): ?>
                         <?php foreach ($quiz[$i]['categories'] as $cat): ?>
