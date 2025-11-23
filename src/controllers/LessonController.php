@@ -59,7 +59,7 @@ class LessonController {
         if (isset($_POST['Retour']) && $_POST['Retour'] === "yes"){
             unset($_SESSION['nbExemple']);
             unset($_SESSION['nbParts']);
-            header('Location: index.php?createContent&id='.$id.'');
+            header('Location: index.php?page=createContent');
         }
         if (isset($_POST['addPart']) && !empty($_POST['addPart'])){
             $_SESSION['nbParts']++;

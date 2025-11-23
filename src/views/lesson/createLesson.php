@@ -5,9 +5,10 @@
     ini_set('display_errors', 1);
     require __DIR__ . '/../partials/header.php';
 ?>
-<button type = "submit" name = "Retour" value = "yes"><span> < </span>Retour</button>
-<h1>Créer une leçon</h1>
+
 <form method = "post" action = "index.php?page=lesson&categorie=create">
+    <button type = "submit" name = "Retour" value = "yes"><span> < </span>Retour</button>
+    <h1>Créer une leçon</h1>
     <input type = "hidden" name="page" value="lesson">
     <input type="hidden" name ="categorie" value = "create">
     <h2>Nom de la leçon</h2>

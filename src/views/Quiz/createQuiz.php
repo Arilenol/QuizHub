@@ -5,9 +5,10 @@
     ini_set('display_errors', 1);
     require __DIR__ . '/../partials/header.php';
 ?>
-<button type = "submit" name = "Retour" value = "yes"><span> < </span>Retour</button>
-<h1>Créer un Quiz</h1>
+
 <form method = "post" action = "index.php?page=quiz&categorie=create">
+    <button type = "submit" name = "Retour" value = "yes"><span> < </span>Retour</button>
+    <h1>Créer un Quiz</h1>
     <input type = "hidden" name="page" value="quiz">
     <input type="hidden" name ="categorie" value = "create">
     <h2>Nom du quiz</h2>
@@ -26,11 +27,9 @@
             echo '<div class="reponse">
             <p>Réponse '.($k+1).' :</p>
             <textarea name ="reponse'.$k.'-question'.$i.'" value = "">'.$TAB_CONTENU[$i]['reponses'][$k]['texte'].'</textarea>
-            <script src="../../../public/assets/js/script.js">
             <div class="checkbox">
-                <input type="checkbox" name="checkbox'.$k.'-question'.$i.'" '.($TAB_CONTENU[$i]['reponses'][$k]['valide'] ? 'checked':'').' hidden>
+                <input type="checkbox" name="checkbox'.$k.'-question'.$i.'" '.($TAB_CONTENU[$i]['reponses'][$k]['valide'] ? 'checked':'').'>
             </div>
-            </script>
             </div>';
             //----------------------------------------faudra demander à kilian---------------------------------------
 
@@ -52,12 +51,10 @@
         <?php
             foreach ($tabParametres as $indice => $param){
                 //----------------------------------------faudra demander à kilian---------------------------------------
-                echo '<p>'.$param['nom'].'</p>
-                <script src="../../../public/assets/js/script.js">
+                echo '<p>'.$param['name'].'</p>
                 <div class="checkbox">
-                    <input type="checkbox" name="param'.$indice.'" hidden>
-                </div>
-                </script>';
+                    <input type="checkbox" name="param'.$indice.'">
+                </div>';
             }
 
         ?>

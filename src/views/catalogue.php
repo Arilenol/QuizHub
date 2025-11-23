@@ -5,8 +5,9 @@
     ini_set('display_errors', 1);
     require 'partials/header.php'; 
 ?>
-<div class="catalogue">
 
+<div class="catalogue">
+    <button onclick = "window.location.href='index.php?page=home'" type="submit"> < Retour </button>
     <form method="GET" action = index.php>
         <input type="hidden" name = "page" value = "catalogue">
         <div class="search-author">

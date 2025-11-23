@@ -26,6 +26,7 @@ class QuizController {
         else{
             header('Location: index.php?page=home');
         }
+        
 
         $title = isset($_POST['QuizTitle']) ? $_POST['QuizTitle'] : '';
         $desc = isset($_POST['QuizDescription']) ? $_POST['QuizDescription'] : '';
@@ -43,6 +44,7 @@ class QuizController {
         if (isset($_POST['Retour']) && $_POST['Retour'] === "yes"){
             unset($_SESSION['nbReponse']);
             unset($_SESSION['nbQuestions']);
+            unset($_SESSION['POST']);
             unset($_POST);
             // redirect back to content creation or other appropriate page
             header('Location: index.php?page=createContent');
@@ -53,12 +55,21 @@ class QuizController {
             $_SESSION['nbQuestions']++;
             // new question starts with minimum allowed responses
             $_SESSION['nbReponse'][$_SESSION['nbQuestions']-1] = 2;
+            // Sauvegarde complète du formulaire
+            foreach ($_POST as $key => $value) {
+                $_SESSION['POST'][$key] = $value;
+            }
             header('Location: ' . $_SERVER['REQUEST_URI']);
+            exit;
         }
 
         if (isset($_POST['addReponse']) && $_POST['addReponse'] !== ''){
             $_SESSION['nbReponse'][(int)$_POST['addReponse']]++;
+            foreach ($_POST as $key => $value) {
+                $_SESSION['POST'][$key] = $value;
+            }
             header('Location: ' . $_SERVER['REQUEST_URI']);
+            exit;
         }
 
         // Delete a question (shift subsequent questions up)
@@ -70,7 +81,7 @@ class QuizController {
                     $_SESSION['nbReponse'][$i] = $_SESSION['nbReponse'][$i + 1];
                     $_POST['question'.$i] = $_POST['question'.($i + 1)];
                     
-                    for ($k = 0; $k < $_SESSION['nbExemple'][$i]; $k++) {
+                    for ($k = 0; $k < $_SESSION['nbReponse'][$i]; $k++) {
                         $_POST['reponse'.$k.'-question'.$i] = $_POST['reponse'.$k.'-question'.($i + 1)];
                         $_POST['checkbox'.$k.'-question'.$i] = $_POST['checkbox'.$k.'-question'.($i + 1)];
                     }
@@ -85,7 +96,11 @@ class QuizController {
                 }
                 $_SESSION['nbQuestions']--;
             }
+            foreach ($_POST as $key => $value) {
+                $_SESSION['POST'][$key] = $value;
+            }
             header('Location: ' . $_SERVER['REQUEST_URI']);
+            exit;
         }
 
         for ($i = 0; $i < $_SESSION['nbQuestions']; $i++){
@@ -94,14 +109,22 @@ class QuizController {
                     $_SESSION['nbReponse'][$i]--;
                     unset($_POST['reponse'.$_SESSION['nbReponse'][$i].'-question'.$i]);
                     unset($_POST['nbReponse'][$_SESSION['nbReponse'][$i]]);
+                    foreach ($_POST as $key => $value) {
+                        $_SESSION['POST'][$key] = $value;
+                    }
                     header('Location: ' . $_SERVER['REQUEST_URI']);
+                    exit;
                 }
                 
             }
         }
         
         
-        // Build TAB_CONTENU structure from POST so view can re-populate fields
+        if (!empty($_SESSION['POST'])) {
+            foreach ($_SESSION['POST'] as $key => $value) {
+                $_POST[$key] = $value;
+            }
+        }
         $TAB_CONTENU = array();
         for ($i = 0; $i < $_SESSION['nbQuestions'] ; $i++){
             $qContent = array(
@@ -119,48 +142,36 @@ class QuizController {
         }
         
         
-        // Placeholder for parameters presented as checkboxes in the view
+        
         //------------informations à remplir---------------------
-        $tabParametres = array();
+        $tabParametres = array(
+            array('name' => 'minuterie'),
+            array('name' => 'rééssayer les questions échouées'),
+            array('name' => 'faire dans le désordre par défaut'),
+            array('name' => 'afficher le score')
+        );
         //------------informations à remplir---------------------
-        // Handle final creation: validate and call model methods to persist
+        
         if (isset($_POST['create']) && $_POST['create'] === 'yes'){
             // basic validation: ensure a title is provided
             if (isset($_POST['QuizTitle']) && !empty($_POST['QuizTitle'])){
                 $title = $_POST['QuizTitle'];
                 $desc = isset($_POST['QuizDescription']) ? $_POST['QuizDescription'] : '';
 
-                // --- MODEL INTERACTION POINTS ---
-                // 1) Create the quiz record and obtain its ID
-                //    Example (to implement in QuizModel): $quizId = $model->createQuiz($authorId, $title, $desc, ...);
-
-                // 2) Insert each question for the quiz
-                //    Example: foreach ($TAB_CONTENU as $qIndex => $q) { $model->createQuestion($quizId, $qIndex, $q['name']); }
-
-                // 3) Insert each answer/card for each question
-                //    Example: foreach ($q['reponses'] as $aIndex => $ans) { $model->createAnswer($quizId, $qIndex, $aIndex, $ans['consigne'], $ans['reponse']); }
-
-                // 4) Insert any quiz-category relationships if applicable
-                //    Example: if categories are posted, call $model->attachCategory($quizId, $categoryId)
-
-                // Note: I intentionally do NOT call these model methods here because your QuizModel currently
-                //       only contains flashcard helpers. Please implement the persistence methods in
-                //       `src/models/QuizModel.php` (createQuiz, createQuestion, createAnswer, attachCategory, etc.)
-                //       Then uncomment and adapt the calls above to persist the submitted quiz.
-
-                // after successful creation, clear session and redirect
+                
                 unset($_SESSION['nbReponse']);
                 unset($_SESSION['nbQuestions']);
+                unset($_SESSION['POST']);
                 header('Location: index.php?page=home');
                 exit;
             }
         }
 
-        // Provide any auxiliary data the view might need (e.g., existing quizzes by author)
-        // $quizzes = $model->getQuizByAuthor($authorId); // implement in QuizModel if useful
-        var_dump($_SESSION);
-        var_dump($_POST);
-        var_dump($TAB_CONTENU);
+        
+        //var_dump($_SESSION);
+        //var_dump($_POST);
+        //var_dump($TAB_CONTENU);
+        //unset($_SESSION['POST']);
         require ROOT . '/src/views/Quiz/createQuiz.php';
     }
 
