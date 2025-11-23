@@ -1,7 +1,6 @@
 <?php
 $title = "Quiz";
 $style = './assets/style/quiz/quiz.css';
-<<<<<<< src/views/Quiz/show.php
 require_once '../src/views/partials/header.php';
 ?>
 
@@ -34,7 +33,7 @@ require_once '../src/views/partials/header.php';
 
                 <form method="get" id="quizForm">
 
-                    <input type="hidden" name="page" value="quiz">
+                    <input type="hidden" name="page" value="standard">
                     <input type="hidden" name="id" value="<?= $question['quiz_id'] ?>">
                     <input type="hidden" name="idQuestion" value="<?= $question['numeroQuiz'] ?>">
                     <input type="hidden" name="reponse" value=<?= !$showAnswer ? 'visible' : '' ?>>
@@ -88,7 +87,7 @@ require_once '../src/views/partials/header.php';
 
                 <div class="bouton-container">
                     <button class="valider"
-                        onclick="window.location.href='?page=quiz&id=<?= $question['quiz_id'] ?>&idQuestion=<?= $question['numeroQuiz'] + 1 ?>'">
+                        onclick="window.location.href='?page=standard&id=<?= $question['quiz_id'] ?>&idQuestion=<?= $question['numeroQuiz'] + 1 ?>'">
                         Continuer
                     </button>
                 </div>
