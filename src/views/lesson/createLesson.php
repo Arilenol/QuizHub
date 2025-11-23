@@ -7,13 +7,12 @@
 ?>
 <button type = "submit" name = "Retour" value = "yes"><span> < </span>Retour</button>
 <h1>Créer une leçon</h1>
-<form method = "post" action = "index.php?page=lesson&categorie=create&id=<?php echo $id ?>">
+<form method = "post" action = "index.php?page=lesson&categorie=create">
     <input type = "hidden" name="page" value="lesson">
     <input type="hidden" name ="categorie" value = "create">
-    <input type="hidden" name = "id" value = <?php echo $id ?>>
     <h2>Nom de la leçon</h2>
     <input type="text" name ="LessonTitle" value = "<?php echo $title ?>">
-    <p class="LessonDescription">Description</p>
+    <p class="description">Description</p>
     <input type="text" name ="LessonDescription" value = "<?php echo $desc ?>">
     <div class = "newLesson">
     <p class = "LessonParts">Parties</p>

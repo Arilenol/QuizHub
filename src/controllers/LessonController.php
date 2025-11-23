@@ -27,7 +27,7 @@ class LessonController {
     }
 
     //A DEVELOPPER
-    public function createLesson($id){
+    public function createLesson(){
         error_reporting(E_ALL);
         ini_set('display_errors', 1);
 
@@ -35,11 +35,18 @@ class LessonController {
         $model = new LessonModel($db);
 
         session_start();
+        if (isset($_SESSION['id'])){
+            $id = $_SESSION['id'];
+        }
+        else{
+            header('Location: index.php?page=home');
+        }
         //var_dump($_SESSION);
         //var_dump($_POST);
         $title = isset($_POST['LessonTitle']) ? $_POST['LessonTitle'] : '';
         $desc = isset($_POST['LessonDescription']) ? $_POST['LessonDescription'] : '';
         // afficher la vue
+        
         if (!isset($_SESSION['nbParts']) && empty($_SESSION['nbParts'])){
             $_SESSION['nbParts'] = 1;
         }
