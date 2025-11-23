@@ -10,7 +10,7 @@ extract($viewData);
 
 <div class="container">
 
-  <button class="btn retour" onclick="window.location.href='?page=home'">&lt; Retour</button>
+  <button class="retour" onclick="window.location.href='?page=home'">← Retour</button>
 
   <div class="card">
     <h2><?= $showAnswer ? htmlspecialchars($question['reponse']) : htmlspecialchars($question['question']) ?></h2>
@@ -33,10 +33,10 @@ extract($viewData);
 
   <div class="arrows">
     <?php if ($prevId): ?>
-      <a href="?page=flashcard&action=ongoing&id=<?= $quizId ?>&question=<?= $prevId ?>" class="btn nav left">&lt;</a>
+      <a href="?page=flashcard&action=ongoing&id=<?= $quizId ?>&question=<?= $prevId ?>" class="btnNavLeft">Précédent;</a>
     <?php endif; ?>
     <?php if ($nextId): ?>
-      <a href="?page=flashcard&action=ongoing&id=<?= $quizId ?>&question=<?= $nextId ?>" class="btn nav right">&gt;</a>
+      <a href="?page=flashcard&action=ongoing&id=<?= $quizId ?>&question=<?= $nextId ?>" class="btnNavRight">Suivant;</a>
     <?php endif; ?>
   </div>
 

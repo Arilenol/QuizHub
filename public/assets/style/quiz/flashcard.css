@@ -5,19 +5,41 @@
   width: 80%;
 }
 
-.btn {
+.btn,
+.retour {
+  text-decoration: none;
+  border-radius: 75px;
+  background-color: #0AB1BD;
+  color: white;
+  border: none;
+  padding: 21px 36px;
+  font-size: 1.575rem;
+  min-height: 69px;
+  cursor: pointer;
+  box-shadow: 0 12px 0 #087b86;
+}
+
+a.btnNavLeft,
+a.btnNavRight {
   background-color: #10b3c6;
   color: white;
   border: none;
   border-radius: 40px;
-  padding: 1.2% 3%;
+  padding: 5% 5%;
   font-size: 1rem;
   cursor: pointer;
   transition: all 0.2s ease;
+  text-decoration: none;
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.25);
 }
-.btn:hover {
-  background-color: rgb(12.9495327103, 144.8728971963, 160.2504672897);
+
+.btn:hover,
+.retour:hover,
+a.btnNavLeft:hover,
+a.btnNavRight:hover {
+  background-color: #fff;
+  color: #087b86;
+  box-shadow: 0px 8px 2px #CACACABF;
 }
 
 .retour {
@@ -36,6 +58,7 @@
   padding: 6% 0;
   text-align: center;
 }
+
 .card h2 {
   margin: 0;
   font-size: 1.8rem;
@@ -54,6 +77,7 @@
   gap: 20%;
   margin-bottom: 5%;
 }
+
 .answers .answer {
   padding: 1.5% 5%;
 }
@@ -66,10 +90,13 @@
   margin: 0 auto;
   gap: 200%;
 }
+
 .arrows .nav {
   background-color: #10b3c6;
   border-radius: 50%;
   padding: 3% 4%;
   font-size: 1.2rem;
   font-weight: bold;
-}/*# sourceMappingURL=flashcard.css.map */
+}
+
+/*# sourceMappingURL=flashcard.css.map */
