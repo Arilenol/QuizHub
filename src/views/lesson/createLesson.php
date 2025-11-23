@@ -16,12 +16,13 @@
     <p class="LessonDescription">Description</p>
     <input type="text" name ="LessonDescription" value = "<?php echo $desc ?>">
     <div class = "newLesson">
+    <p class = "LessonParts">Parties</p>
     <?php
     for($i = 0; $i < $_SESSION['nbParts'] ; $i = $i +1){
         echo '<div class="LessonPart">
         <p>Partie '.($i+1).'</p>
         <input type = "text" name ="namePart'.$i.'" value = "'.$TAB_CONTENU[$i]['name'].'" placeholder="nom de la partie">
-        <p>Contenu :</p>
+        <p>Leçon :</p>
         <textarea name = "contentPart'.$i.'" value = "">'.$TAB_CONTENU[$i]['content'].'</textarea>';
         
         for ($k = 0; $k < $_SESSION['nbExemple'][$i];$k = $k +1){
@@ -39,7 +40,7 @@
         <button name = "DelPart" type="submit" value='.$i.'>Supprimer cette partie</button>
         </div>';
     }
-    echo '<button type = "submit" name = "addPart" value = "yes">Ajouter une partie</button>'
+    echo '<button type = "submit" name = "addPart" value = "yes">Ajouter une nouvelle partie</button>'
     ?>
     </div>
 
