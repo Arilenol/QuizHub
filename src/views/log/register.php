@@ -4,7 +4,7 @@ $style = "./assets/style/log.css";
 require_once '../src/views/partials/header.php'; 
 ?>
     <div class="log-container">
-        <h2>S'inscrire</h2>
+        <h1>S'inscrire</h1>
         <?php if (isset($error) && !empty($error)) : ?>
             <h3><?=$error;?></h3>
         <?php endif;?>
