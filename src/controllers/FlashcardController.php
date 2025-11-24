@@ -1,16 +1,17 @@
 <?php
-require_once ROOT . '/src/models/QuizModel.php';
+require_once ROOT . '/src/models/FlashCardModel.php';
 require_once ROOT . '/config/config.php';
 
 class FlashCardController
 {
-    private QuizModel $model;
+
+    private FlashCardModel $model;
 
     public function __construct()
     {
         session_start();
         $db = getDbConnection();
-        $this->model = new QuizModel($db);
+        $this->model = new FlashCardModel($db);
     }
 
     // Charge la première question du quiz

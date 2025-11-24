@@ -4,16 +4,28 @@ $style = "./assets/style/log.css";
 require_once '../src/views/partials/header.php'; 
 ?>
     <div class="log-container">
-        <h2>S'inscrire</h2>
+        <h1>S'inscrire</h1>
         <?php if (isset($error) && !empty($error)) : ?>
             <h3><?=$error;?></h3>
         <?php endif;?>
         <form action="?page=log&typelog=register" method="POST">
-            <input type="text" name="username" placeholder="Nom d'utilisateur" required>
-            <input type="email" name="email" placeholder="Email" required>
-            <input type="password" name="password" placeholder="Mot de passe" required>
+            <div class="flatinput">
+                <span></span>
+                <input type="text" name="username" placeholder="Nom d'utilisateur" required>
+            </div>
+            <div class="flatinput">
+                <span></span>
+                <input type="email" name="email" placeholder="Email" required>
+            </div>
+            <div class="flatinput">
+                <span></span>
+                <input type="password" name="password" placeholder="Mot de passe" required>
+            </div>
             <p>Vous avez un compte ? <a href="?page=log&typelog=connection" class=connexion>Connectez-vous.</a></p>
-            <button type="submit">S'inscrire</button>
+            <button type="submit" class="button">
+                <span></span>
+                <p>S'inscrire</p>
+            </button>
         </form>
         <div class="back-link">
             <a href="?page=home">← Retour à l'accueil</a>

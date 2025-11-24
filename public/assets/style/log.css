@@ -1,5 +1,8 @@
 .log-container {
-    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #FFC067;
     padding: 3rem;
     border-radius: 1.2rem;
     box-shadow: 0 6px 20px rgba(0,0,0,0.25);
@@ -11,9 +14,10 @@ form {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+    align-items: center;
 }
 
-h2{
+h1{
     justify-self: center;
     color: #0AB1BD;;
 }
@@ -23,20 +27,6 @@ input {
     font-size: 1.1rem; 
     border: 1px solid #ccc;
     border-radius: 0.6rem;
-}
-
-button {
-    padding: 0.75rem;
-    background-color: #0AB1BD;
-    color: white;
-    border: none;
-    border-radius: 0.6rem;
-    cursor: pointer;
-    font-size: 1.1rem;
-}
-
-button:hover {
-    background-color: #007881;
 }
 
 .back-link {
