@@ -25,7 +25,7 @@ header > *:nth-child(3){
 	all: unset;
 }
 
-.button, .searchbar {
+.button, .searchbar, .input, .flatinput {
 	display: flex;
 	position: relative;
 	align-items: center;
@@ -43,7 +43,7 @@ header > *:nth-child(3){
 	gap: 20px;
 }
 
-.button > span, .searchbar > span {
+.button > span, .searchbar > span, .input > span, .flatinput > span {
 	position: absolute;
 	inset: 0;
 	background: #0AB1BD;
@@ -92,4 +92,49 @@ header > *:nth-child(3){
 }
 .checkbox > svg rect, .checkbox > svg circle, .checkbox > svg filter{
 	transition: all ease-in-out 0.2s;
+}
+.input{
+	height: 100px;
+	padding: 0 20px;
+}
+.input > input{
+	all: unset;
+	z-index: 2;
+	color: white;
+	font-size: min(1.7vw, 25px);
+}
+.input > img{
+	z-index: 2;
+	height: 50%;
+}
+
+.input > input::-webkit-input-placeholder{
+	color: white;
+}
+
+.flatinput{
+	height: 80px;
+	padding: 0 35px;
+	cursor: default;
+}
+
+.flatinput > span{
+	box-shadow: none;
+	cursor: default;
+}
+
+.flatinput > input{
+	all: unset;
+	z-index: 2;
+	color: white;
+	font-size: min(1.7vw, 25px);
+	cursor:text;
+}
+.flatinput > img{
+	z-index: 2;
+	height: 50%;
+}
+
+.flatinput > input::-webkit-input-placeholder{
+	color: white;
 }
