@@ -9,7 +9,7 @@
 <button type = "submit" name = "Retour" value = "yes"><span> < </span>Retour</button>
 <h1>Que souhaitez-vous créer aujourd'hui ?</h1>
 <div class = "createCategories">
-    <div class = "category" onclick = "window.location.href= 'index.php?page=quiz&categorie=create'" >
+    <div class = "category" onclick = "window.location.href= 'index.php?page=standard&categorie=create'" >
         <img alt="icône pour les quizs/test">
         <p class = "nameCategory">Quiz/Test</p>
         <p class = "descriptionCategory">

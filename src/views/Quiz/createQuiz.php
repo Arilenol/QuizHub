@@ -6,10 +6,10 @@
     require __DIR__ . '/../partials/header.php';
 ?>
 
-<form method = "post" action = "index.php?page=quiz&categorie=create">
+<form method = "post" action = "index.php?page=standard&categorie=create">
     <button type = "submit" name = "Retour" value = "yes"><span> < </span>Retour</button>
     <h1>Créer un Quiz</h1>
-    <input type = "hidden" name="page" value="quiz">
+    <input type = "hidden" name="page" value="standard">
     <input type="hidden" name ="categorie" value = "create">
     <h2>Nom du quiz</h2>
     <input type="text" name ="QuizTitle" value = "<?php echo htmlspecialchars($title) ?>">

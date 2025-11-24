@@ -15,9 +15,7 @@ class QuizController {
 
         //unset($_POST);
         //unset($_SESSION);
-        //------------------------à changer-------------------------
-        $_SESSION['id'] = 1;
-        //------------------------à changer-------------------------
+
 
 
         if (isset($_SESSION['id'])){
@@ -25,8 +23,14 @@ class QuizController {
         }
         else{
             header('Location: index.php?page=home');
+            exit;
         }
-        
+        if (!isset($_SESSION['POST'])){
+            $_SESSION['POST'] = [];
+        }
+        if (!isset($_SESSION['bouton'])){
+            $_SESSION['bouton'] = false;
+        }
 
         $title = isset($_POST['QuizTitle']) ? $_POST['QuizTitle'] : '';
         $desc = isset($_POST['QuizDescription']) ? $_POST['QuizDescription'] : '';
@@ -38,7 +42,8 @@ class QuizController {
             // array where each index is number of answers for that question
             $_SESSION['nbReponse'] = array(0 => 2);
         }
-
+        //var_dump($_POST);
+        
         
         // Handle form actions: Retour, addQuestion, addReponse, DelQuestion, delReponseX
         if (isset($_POST['Retour']) && $_POST['Retour'] === "yes"){
@@ -56,18 +61,22 @@ class QuizController {
             // new question starts with minimum allowed responses
             $_SESSION['nbReponse'][$_SESSION['nbQuestions']-1] = 2;
             // Sauvegarde complète du formulaire
-            foreach ($_POST as $key => $value) {
-                $_SESSION['POST'][$key] = $value;
-            }
+
+            unset($_POST['addQuestion']);
+            $this->contentFusionSessionPost();
+            
+            $_SESSION['bouton'] = true;
             header('Location: ' . $_SERVER['REQUEST_URI']);
             exit;
         }
 
         if (isset($_POST['addReponse']) && $_POST['addReponse'] !== ''){
             $_SESSION['nbReponse'][(int)$_POST['addReponse']]++;
-            foreach ($_POST as $key => $value) {
-                $_SESSION['POST'][$key] = $value;
-            }
+
+            unset($_POST['addReponse']);
+            $this->contentFusionSessionPost();
+            
+            $_SESSION['bouton'] = true;
             header('Location: ' . $_SERVER['REQUEST_URI']);
             exit;
         }
@@ -96,9 +105,10 @@ class QuizController {
                 }
                 $_SESSION['nbQuestions']--;
             }
-            foreach ($_POST as $key => $value) {
-                $_SESSION['POST'][$key] = $value;
-            }
+            unset($_POST['DelQuestion']);
+            $this->contentFusionSessionPost();
+            
+            $_SESSION['bouton'] = true;
             header('Location: ' . $_SERVER['REQUEST_URI']);
             exit;
         }
@@ -109,32 +119,37 @@ class QuizController {
                     $_SESSION['nbReponse'][$i]--;
                     unset($_POST['reponse'.$_SESSION['nbReponse'][$i].'-question'.$i]);
                     unset($_POST['nbReponse'][$_SESSION['nbReponse'][$i]]);
-                    foreach ($_POST as $key => $value) {
-                        $_SESSION['POST'][$key] = $value;
-                    }
-                    header('Location: ' . $_SERVER['REQUEST_URI']);
-                    exit;
+
+                    
                 }
+                unset($_POST['delReponse'.$i]);
+                $this->contentFusionSessionPost();
+                
+                $_SESSION['bouton'] = true;
+                header('Location: ' . $_SERVER['REQUEST_URI']);
+                exit;
                 
             }
         }
-        
-        
-        if (!empty($_SESSION['POST'])) {
-            foreach ($_SESSION['POST'] as $key => $value) {
-                $_POST[$key] = $value;
-            }
+        if ($_SESSION['bouton'] === false){
+            $this->contentFusionSessionPost();
         }
+        
+        
+        /*if (!empty($_SESSION['POST'])) {
+            $_POST = array_merge($_POST,$_SESSION['POST']);
+        }*/
+        
         $TAB_CONTENU = array();
         for ($i = 0; $i < $_SESSION['nbQuestions'] ; $i++){
             $qContent = array(
-                'name' => isset($_POST['question'.$i]) ? $_POST['question'.$i] : '',
+                'name' => isset($_SESSION['POST']['question'.$i]) ? $_SESSION['POST']['question'.$i] : '',
                 'reponses' => array()
             );
             for ($k = 0; $k < $_SESSION['nbReponse'][$i] ; $k++){
                 $reponseContent = array(
-                    'texte' => isset($_POST['reponse'.$k.'-question'.$i]) ? $_POST['reponse'.$k.'-question'.$i] : '',
-                    'valide' => isset($_POST['checkbox'.$k.'-question'.$i]) ? $_POST['checkbox'.$k.'-question'.$i] : ''
+                    'texte' => isset($_SESSION['POST']['reponse'.$k.'-question'.$i]) ? $_SESSION['POST']['reponse'.$k.'-question'.$i] : '',
+                    'valide' => isset($_SESSION['POST']['checkbox'.$k.'-question'.$i]) ? $_SESSION['POST']['checkbox'.$k.'-question'.$i] : ''
                 );
                 $qContent['reponses'][] = $reponseContent;
             }
@@ -167,12 +182,31 @@ class QuizController {
             }
         }
 
+        $_SESSION['bouton'] = false;
         
-        //var_dump($_SESSION);
+        //var_dump($_SESSION['POST']);
         //var_dump($_POST);
         //var_dump($TAB_CONTENU);
         //unset($_SESSION['POST']);
         require ROOT . '/src/views/Quiz/createQuiz.php';
+    }
+
+    public function contentFusionSessionPost(){
+        for ($i = 0; $i < $_SESSION['nbQuestions'] ; $i ++){
+            for ($k = 0; $k < $_SESSION['nbReponse'][$i] ; $k++){
+                if (isset($_POST['question'.$i])){
+                    $_SESSION['POST']['question'.$i] = $_POST['question'.$i];
+                }
+                if (isset($_POST['reponse'.$k.'-question'.$i])){
+                    $_SESSION['POST']['reponse'.$k.'-question'.$i] = $_POST['reponse'.$k.'-question'.$i];
+                }
+                if (isset($_POST['checkbox'.$k.'-question'.$i])){
+                    $_SESSION['POST']['checkbox'.$k.'-question'.$i] = 1;
+                } else{
+                    $_SESSION['POST']['checkbox'.$k.'-question'.$i] = 0;
+                }
+            }
+        }
     }
 
 }
