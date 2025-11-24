@@ -20,6 +20,9 @@ header > *:nth-child(2){
 header > *:nth-child(3){
 	justify-self: end;
 }
+
+.button{
+	all: unset;
 }
 
 .button, .searchbar {
