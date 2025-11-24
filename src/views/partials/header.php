@@ -14,11 +14,11 @@
 </head>
 <body>
 <header>
-    <img src="./assets/images/logo.svg" alt="Logo">
-    <div class="searchbar">
+    <img onclick="window.location.href='/'" style="cursor: pointer;" src="./assets/images/logo.svg" alt="Logo">
+    <div class="input">
         <span></span>
         <img src="./assets/images/loupe.svg" alt="Search Icon">
-        <p>Rechercher des créations...</p>
+        <input type="text" placeholder="Rechercher des créations..."/>
     </div>
     <div style="display: flex; flex-direction: row; gap: 25px;">
         <?php
