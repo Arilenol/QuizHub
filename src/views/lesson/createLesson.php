@@ -23,15 +23,15 @@
         <p>Partie '.($i+1).'</p>
         <input type = "text" name ="namePart'.$i.'" value = "'.$TAB_CONTENU[$i]['name'].'" placeholder="nom de la partie">
         <p>Leçon :</p>
-        <textarea name = "contentPart'.$i.'" value = "">'.$TAB_CONTENU[$i]['content'].'</textarea>';
+        <textarea name = "contentPart'.$i.'">'.$TAB_CONTENU[$i]['content'].'</textarea>';
         
         for ($k = 0; $k < $_SESSION['nbExemple'][$i];$k = $k +1){
             echo '<div class="exemple">
             <p>Exemple '.($k+1).' :</p>
             <p>consigne : <p>
-            <textarea name ="exemple'.$k.'-part'.$i.'" value = "">'.$TAB_CONTENU[$i]['exemples'][$k]['consigne'].'</textarea>
+            <textarea name ="exemple'.$k.'-part'.$i.'">'.$TAB_CONTENU[$i]['exemples'][$k]['consigne'].'</textarea>
             <p>réponse : <p>
-            <textarea name ="reponse'.$k.'-part'.$i.'" value = "">'.$TAB_CONTENU[$i]['exemples'][$k]['reponse'].'</textarea>
+            <textarea name ="reponse'.$k.'-part'.$i.'">'.$TAB_CONTENU[$i]['exemples'][$k]['reponse'].'</textarea>
             <button name= "delExemple'.$k.'-part'.$i.'" value="yes" type="submit"> Supprimer cet exemple</button>
             </div>';
 
@@ -57,4 +57,4 @@
         ?>
     </select>
     <button type = "submit" name = "create" value = "yes">Créer la leçon</button>
-<form>
+</form>
