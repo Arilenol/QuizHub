@@ -56,6 +56,7 @@ class QuizController {
         
         // Handle form actions: Retour, addQuestion, addReponse, DelQuestion, delReponseX
         if (isset($_POST['Retour']) && $_POST['Retour'] === "yes"){
+            unset($_SESSION['bouton']);
             unset($_SESSION['nbReponse']);
             unset($_SESSION['nbQuestions']);
             unset($_SESSION['POST']);
@@ -186,6 +187,7 @@ class QuizController {
                 unset($_SESSION['nbReponse']);
                 unset($_SESSION['nbQuestions']);
                 unset($_SESSION['POST']);
+                unset($_POST);
                 header('Location: index.php?page=home');
                 exit;
             }
