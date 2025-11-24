@@ -11,13 +11,17 @@
 }
 
 .card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: #10b3c6;
   color: white;
   border-radius: 40px;
-  width: 60%;
-  margin: 8% auto 3% auto;
-  padding: 6% 0;
+  width: 40%;
+  aspect-ratio: 2;
   text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
 }
 
 .card h2 {
