@@ -65,9 +65,17 @@ header > *:nth-child(3){
   	transition: color ease-out 0.2s;
 }
 
-.button > img, .searchbar > img {
+.button > img, .button > svg, .searchbar > img {
 	z-index: 1;
 	pointer-events: none;
+}
+
+.button > svg > path {
+  	transition: fill ease-in-out 0.2s;
+}
+
+.button:has(span:hover) svg > path {
+  	fill: #0AB1BD;
 }
 
 .button:has(span:hover) p {
