@@ -102,7 +102,11 @@ switch ($page) {
         $action = $_GET['action'] ?? null; // start, ongoing, end
         require_once ROOT . '/src/controllers/FlashCardController.php';
         $controller = new FlashCardController();
-
+        if (isset($_GET['categorie'])) {
+            //routine pour créer le controlleur
+            $controlleur->createFlashcard();
+            break;
+        }
         switch ($action) {
             case 'start':
                 $id = $_GET['id'] ?? null;

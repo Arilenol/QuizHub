@@ -6,7 +6,7 @@ require_once '../src/views/partials/header.php';
 
 <div class="quiz-réalisation">
     <?php if (isset($_GET['test'])): ?>
-        <button onclick="history.back()">Retour</button>
+        <button class="retour" onclick="history.back()">← Retour</button>
     <?php else: ?>
         <button class="retour" onclick="window.location.href='?page=home'">← Retour</button>
     <?php endif; ?>

@@ -21,7 +21,7 @@ class QuizController
         $max = $this->model->getMaxNbQuestion($quizId);
 
         // Initialisation au début du quiz (juste une fois)
-        if ($idQuestion === 1 && empty($_SESSION['answers'])) {
+        if (!isset($_SESSION['answers'])) {
             $_SESSION['answers'] = [];
         }
 
@@ -43,6 +43,7 @@ class QuizController
             if ($_GET['page'] === 'standard') {
                 require ROOT . '/src/views/quiz/show.php';
             } else {
+                ksort($_SESSION['answers']);
                 require ROOT . '/src/views/quiz/endTest.php';
             }
             return;
@@ -57,14 +58,19 @@ class QuizController
 
     public function isCorrect(int $idQuestion, array $reponses): bool
     {
+        // Récupère les bonnes réponses (tableaux associatifs)
         $correctAnswers = $this->model->getCorrectAnswers($idQuestion);
 
-        // Extraire uniquement les IDs
-        $correctIds = array_column($correctAnswers, 'id');
+        // Extraire uniquement les IDs et normaliser en entiers
+        $correctIds = array_map('intval', array_column($correctAnswers, 'id'));
 
+        // Normaliser les réponses utilisateurs en entiers (au cas où)
+        $userIds = array_map('intval', $reponses);
+
+        // Trier les deux tableaux pour comparer l'ordre indépendamment
         sort($correctIds);
-        sort($reponses);
+        sort($userIds);
 
-        return $correctIds === $reponses;
+        return $correctIds === $userIds;
     }
 }
