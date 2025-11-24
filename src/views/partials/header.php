@@ -27,16 +27,16 @@
         }
         ?>
         <?php if (!isset($_SESSION['email'])): ?>
-            <div class="button" data-action="register">
+            <button class="button" data-action="register">
                 <span></span>
                 <p>S'inscrire</p>
-            </div>
-            <div class="button" data-action="login">
+        </button>
+            <button class="button" data-action="login">
                 <span></span>
                 <p>Connexion</p>
-            </div>
+            </button>
         <?php else: ?>
-            <div class="button" data-action="account">
+            <button class="button" style="padding: 15px;" data-action="account">
                 <span></span>
                 <p>Mon compte</p>
             </div>
