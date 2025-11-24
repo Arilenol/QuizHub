@@ -14,8 +14,13 @@ extract($viewData);
     	<p>← Retour</p>
     </div>
 
-  <div class="card">
-    <h2><?= $showAnswer ? htmlspecialchars($question['reponse']) : htmlspecialchars($question['question']) ?></h2>
+  <div class="card" style="grid-column-start: 1; grid-column-end: 8; grid-row-start: 2; grid-row-end: 3;">
+	<div class="card-face card-front">
+		<h2><?= htmlspecialchars($question['question']) ?>
+	</div>
+	<div class="card-face card-back">
+		<h2><?= htmlspecialchars($question['reponse']) ?>
+	</div>
   </div>
 
   <?php if (!$showAnswer): ?>
