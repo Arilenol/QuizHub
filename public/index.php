@@ -4,6 +4,15 @@ define('ROOT', dirname(__DIR__));
 
 // par défaut page d’accueil
 $page = isset($_GET['page']) ? htmlspecialchars($_GET['page']) : 'home';
+
+if (session_status() === PHP_SESSION_ACTIVE) {
+    foreach ($_SESSION as $key => $value) {
+        if ($key !== 'id') {   // on ne garde que "id"
+            unset($_SESSION[$key]);
+        }
+    }
+}
+
 switch ($page) {
     case 'home':
         require_once ROOT . '/src/controllers/HomeController.php';
@@ -119,7 +128,8 @@ switch ($page) {
         $controller->showProfile();
         break;
     case 'standard':
-        if (isset($_GET['categorie'])){
+    case 'test':
+        if (isset($_GET['categorie'])) {
             require_once ROOT . '/src/controllers/QuizController.php';
             $controller = new QuizController();
             // $controller->createQuiz();

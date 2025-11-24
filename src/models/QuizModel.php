@@ -43,7 +43,6 @@ class QuizModel
      * @return array|false Retourne un tableau associatif contenant la question,
      *                     ou false si aucune question ne correspond.
      */
-
     public function getQuestion(int $idQuiz, ?int $idQuestion = 1): array|false
     {
         $stmt = $this->db->prepare("
@@ -68,10 +67,29 @@ class QuizModel
      * @return array|false  Retourne un tableau contenant toutes les réponses sous forme
      *                      de tableaux associatifs, ou false si aucune réponse n'est trouvée.
      */
-
     public function getReponses(int $idQuestion): array|false
     {
         $stmt = $this->db->prepare("SELECT * FROM reponse WHERE question_id = ?");
+        $stmt->execute([$idQuestion]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Récupère toutes les réponses justes associées à une question.
+     *
+     * Cette méthode retourne l'ensemble des réponses justes liées à une question
+     * spécifique, identifiée par son ID. Chaque réponse est renvoyée sous
+     * forme de tableau associatif contenant ses informations (texte,
+     * validité, identifiant, etc.).
+     *
+     * @param int $idQuestion  Identifiant de la question dont on veut obtenir les réponses.
+     *
+     * @return array|false  Retourne un tableau contenant toutes les réponses justes sous forme
+     *                      de tableaux associatifs, ou false si aucune réponse n'est trouvée.
+     */
+    public function getCorrectAnswers(int $idQuestion): array|false
+    {
+        $stmt = $this->db->prepare("SELECT * FROM reponse WHERE question_id = ? and estCorrecte = 1");
         $stmt->execute([$idQuestion]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

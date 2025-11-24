@@ -1,0 +1,17 @@
+h2{
+    justify-self: center;
+    margin-top: 4%;
+    margin-bottom: 4%;
+}
+
+article {
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(255, 255, 255, 0.85);
+    padding: 20px;
+    margin: 20px auto;
+    border-radius: 10px;
+    max-width: 800px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
