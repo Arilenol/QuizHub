@@ -27,7 +27,7 @@ class LessonController {
     }
 
     //A DEVELOPPER
-    public function createLesson($id){
+    public function createLesson(){
         error_reporting(E_ALL);
         ini_set('display_errors', 1);
 
@@ -35,11 +35,18 @@ class LessonController {
         $model = new LessonModel($db);
 
         session_start();
+        if (isset($_SESSION['id'])){
+            $id = $_SESSION['id'];
+        }
+        else{
+            header('Location: index.php?page=home');
+        }
         //var_dump($_SESSION);
         //var_dump($_POST);
         $title = isset($_POST['LessonTitle']) ? $_POST['LessonTitle'] : '';
         $desc = isset($_POST['LessonDescription']) ? $_POST['LessonDescription'] : '';
         // afficher la vue
+
         if (!isset($_SESSION['nbParts']) && empty($_SESSION['nbParts'])){
             $_SESSION['nbParts'] = 1;
         }
@@ -52,15 +59,17 @@ class LessonController {
         if (isset($_POST['Retour']) && $_POST['Retour'] === "yes"){
             unset($_SESSION['nbExemple']);
             unset($_SESSION['nbParts']);
-            header('Location: index.php?createContent&id='.$id.'');
+            header('Location: index.php?page=createContent');
         }
         if (isset($_POST['addPart']) && !empty($_POST['addPart'])){
             $_SESSION['nbParts']++;
             $_SESSION['nbExemple'][$_SESSION['nbParts']-1] = 0;
+            header('Location: ' . $_SERVER['REQUEST_URI']);
         }
         if (isset($_POST['addExemple']) && $_POST['addExemple'] != ''){
             
             $_SESSION['nbExemple'][(int)$_POST['addExemple']]++;
+            header('Location: ' . $_SERVER['REQUEST_URI']);
         }
 
         if (isset($_POST['DelPart']) && $_POST['DelPart'] !== '') {
@@ -90,6 +99,7 @@ class LessonController {
 
             
             $_SESSION['nbParts']--;
+            header('Location: ' . $_SERVER['REQUEST_URI']);
         }
 
 
@@ -103,6 +113,7 @@ class LessonController {
                     }
                     unset($_POST['exemple'.$_SESSION['nbExemple'][$i].'-part'.$i]);
                     unset($_POST['reponse'.$_SESSION['nbExemple'][$i].'-part'.$i]);
+                    header('Location: ' . $_SERVER['REQUEST_URI']);
                 }
             }
         }

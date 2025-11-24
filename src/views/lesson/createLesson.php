@@ -5,23 +5,24 @@
     ini_set('display_errors', 1);
     require __DIR__ . '/../partials/header.php';
 ?>
-<button type = "submit" name = "Retour" value = "yes"><span> < </span>Retour</button>
-<h1>Créer une leçon</h1>
-<form method = "post" action = "index.php?page=lesson&categorie=create&id=<?php echo $id ?>">
+
+<form method = "post" action = "index.php?page=lesson&categorie=create">
+    <button type = "submit" name = "Retour" value = "yes"><span> < </span>Retour</button>
+    <h1>Créer une leçon</h1>
     <input type = "hidden" name="page" value="lesson">
     <input type="hidden" name ="categorie" value = "create">
-    <input type="hidden" name = "id" value = <?php echo $id ?>>
     <h2>Nom de la leçon</h2>
     <input type="text" name ="LessonTitle" value = "<?php echo $title ?>">
-    <p class="LessonDescription">Description</p>
+    <p class="description">Description</p>
     <input type="text" name ="LessonDescription" value = "<?php echo $desc ?>">
     <div class = "newLesson">
+    <p class = "LessonParts">Parties</p>
     <?php
     for($i = 0; $i < $_SESSION['nbParts'] ; $i = $i +1){
         echo '<div class="LessonPart">
         <p>Partie '.($i+1).'</p>
         <input type = "text" name ="namePart'.$i.'" value = "'.$TAB_CONTENU[$i]['name'].'" placeholder="nom de la partie">
-        <p>Contenu :</p>
+        <p>Leçon :</p>
         <textarea name = "contentPart'.$i.'" value = "">'.$TAB_CONTENU[$i]['content'].'</textarea>';
         
         for ($k = 0; $k < $_SESSION['nbExemple'][$i];$k = $k +1){
@@ -39,7 +40,7 @@
         <button name = "DelPart" type="submit" value='.$i.'>Supprimer cette partie</button>
         </div>';
     }
-    echo '<button type = "submit" name = "addPart" value = "yes">Ajouter une partie</button>'
+    echo '<button type = "submit" name = "addPart" value = "yes">Ajouter une nouvelle partie</button>'
     ?>
     </div>
 
