@@ -1,4 +1,12 @@
 .container {
+  display: grid;
+  gap: 20px;
+  width: 100vw;
+  max-width: 1500px;
+  margin-top: 1%;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: max-content;
+  justify-items: center;
   justify-self: center;
   position: relative;
   text-align: center;
