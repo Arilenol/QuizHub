@@ -56,6 +56,7 @@ class QuizController {
         
         // Handle form actions: Retour, addQuestion, addReponse, DelQuestion, delReponseX
         if (isset($_POST['Retour']) && $_POST['Retour'] === "yes"){
+            unset($_SESSION['bouton']);
             unset($_SESSION['nbReponse']);
             unset($_SESSION['nbQuestions']);
             unset($_SESSION['POST']);
@@ -158,7 +159,7 @@ class QuizController {
             for ($k = 0; $k < $_SESSION['nbReponse'][$i] ; $k++){
                 $reponseContent = array(
                     'texte' => isset($_SESSION['POST']['reponse'.$k.'-question'.$i]) ? $_SESSION['POST']['reponse'.$k.'-question'.$i] : '',
-                    'valide' => isset($_SESSION['POST']['checkbox'.$k.'-question'.$i]) ? $_SESSION['POST']['checkbox'.$k.'-question'.$i] : ''
+                    'valide' => isset($_SESSION['POST']['checkbox'.$k.'-question'.$i]) ? $_SESSION['POST']['checkbox'.$k.'-question'.$i] : 0
                 );
                 $qContent['reponses'][] = $reponseContent;
             }
@@ -181,11 +182,12 @@ class QuizController {
             if (isset($_POST['QuizTitle']) && !empty($_POST['QuizTitle'])){
                 $title = $_POST['QuizTitle'];
                 $desc = isset($_POST['QuizDescription']) ? $_POST['QuizDescription'] : '';
-
-                
+                $model->createQuiz($id, $tabParametres, $TAB_CONTENU, $desc, $title, $_SESSION['nbQuestion'], $_SESSION['nbReponse']);
+                unset($_SESSION['bouton']);
                 unset($_SESSION['nbReponse']);
                 unset($_SESSION['nbQuestions']);
                 unset($_SESSION['POST']);
+                unset($_POST);
                 header('Location: index.php?page=home');
                 exit;
             }
@@ -232,8 +234,6 @@ class QuizController {
             return;
         }
 
-        // Récupère question + réponses
-        $showAnswer = $showAnswer;
         $question = $this->model->getQuestion($id, $idQuestion);
         $reponse  = $this->model->getReponses($question['id']);
 

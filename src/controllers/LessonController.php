@@ -30,16 +30,26 @@ class LessonController {
     public function createLesson(){
         error_reporting(E_ALL);
         ini_set('display_errors', 1);
+        ini_set('display_startup_errors', 1);
+        error_reporting(E_ALL);
 
         $db = getDbConnection();
         $model = new LessonModel($db);
 
         session_start();
+
         if (isset($_SESSION['id'])){
             $id = $_SESSION['id'];
         }
         else{
             header('Location: index.php?page=home');
+            exit;
+        }
+        if (!isset($_SESSION['POST'])){
+            $_SESSION['POST'] = [];
+        }
+        if (!isset($_SESSION['bouton'])){
+            $_SESSION['bouton'] = false;
         }
         //var_dump($_SESSION);
         //var_dump($_POST);
@@ -47,7 +57,7 @@ class LessonController {
         $desc = isset($_POST['LessonDescription']) ? $_POST['LessonDescription'] : '';
         // afficher la vue
 
-        if (!isset($_SESSION['nbParts']) && empty($_SESSION['nbParts'])){
+        if (!isset($_SESSION['nbParts']) || empty($_SESSION['nbParts'])){
             $_SESSION['nbParts'] = 1;
         }
         //$nbParts = isset($_POST['nbPart'])&& !empty($_POST['nbPart']) ? $_POST['nbPart'] : 1;
@@ -60,16 +70,23 @@ class LessonController {
             unset($_SESSION['nbExemple']);
             unset($_SESSION['nbParts']);
             header('Location: index.php?page=createContent');
+            exit;
         }
         if (isset($_POST['addPart']) && !empty($_POST['addPart'])){
             $_SESSION['nbParts']++;
             $_SESSION['nbExemple'][$_SESSION['nbParts']-1] = 0;
+            $this->contentFusionSessionPost();
+            $_SESSION['bouton'] = true;
             header('Location: ' . $_SERVER['REQUEST_URI']);
+            exit;
         }
         if (isset($_POST['addExemple']) && $_POST['addExemple'] != ''){
             
             $_SESSION['nbExemple'][(int)$_POST['addExemple']]++;
+            $this->contentFusionSessionPost();
+            $_SESSION['bouton'] = true;
             header('Location: ' . $_SERVER['REQUEST_URI']);
+            exit;
         }
 
         if (isset($_POST['DelPart']) && $_POST['DelPart'] !== '') {
@@ -99,7 +116,10 @@ class LessonController {
 
             
             $_SESSION['nbParts']--;
+            $this->contentFusionSessionPost();
+            $_SESSION['bouton'] = true;
             header('Location: ' . $_SERVER['REQUEST_URI']);
+            exit;
         }
 
 
@@ -113,24 +133,31 @@ class LessonController {
                     }
                     unset($_POST['exemple'.$_SESSION['nbExemple'][$i].'-part'.$i]);
                     unset($_POST['reponse'.$_SESSION['nbExemple'][$i].'-part'.$i]);
+                    $this->contentFusionSessionPost();
+                    $_SESSION['bouton'] = true;
                     header('Location: ' . $_SERVER['REQUEST_URI']);
+                    exit;
                 }
             }
         }
 
         $quizSelected = (isset($_POST['linkedQuiz']) && !empty($_POST['linkedQuiz']) && $_POST['linkedQuiz'] != 'Aucun') ? (int)$_POST['linkedQuiz'] : null;
+        
+        if ($_SESSION['bouton'] === false){
+            $this->contentFusionSessionPost();
+        }
         //var_dump($quizSelected);
         $TAB_CONTENU = array();
         for ($i = 0; $i < $_SESSION['nbParts'] ; $i++){
             $partContent = array(
-                'name' => isset($_POST['namePart'.$i]) ? $_POST['namePart'.$i] : '',
-                'content' => isset($_POST['contentPart'.$i]) ? $_POST['contentPart'.$i] : '',
+                'name' => isset($_SESSION['POST']['namePart'.$i]) ? $_SESSION['POST']['namePart'.$i] : '',
+                'content' => isset($_SESSION['POST']['contentPart'.$i]) ? $_SESSION['POST']['contentPart'.$i] : '',
                 'exemples' => array()
             );
             for ($k = 0; $k < $_SESSION['nbExemple'][$i] ; $k++){
                 $exampleContent = array(
-                    'consigne' => isset($_POST['exemple'.$k.'-part'.$i]) ? $_POST['exemple'.$k.'-part'.$i] : '',
-                    'reponse' => isset($_POST['reponse'.$k.'-part'.$i]) ? $_POST['reponse'.$k.'-part'.$i] : ''
+                    'consigne' => isset($_SESSION['POST']['exemple'.$k.'-part'.$i]) ? $_SESSION['POST']['exemple'.$k.'-part'.$i] : '',
+                    'reponse' => isset($_SESSION['POST']['reponse'.$k.'-part'.$i]) ? $_SESSION['POST']['reponse'.$k.'-part'.$i] : ''
                 );
                 $partContent['exemples'][] = $exampleContent;
             }
@@ -155,7 +182,28 @@ class LessonController {
 
         $quizzes = $model->getQuizByAuthor($id);
 
+        $_SESSION['bouton'] = false;
+
         require ROOT . '/src/views/lesson/createLesson.php';
+    }
+
+    public function contentFusionSessionPost(){
+        for ($i = 0; $i < $_SESSION['nbParts'] ; $i ++){
+            if (isset($_POST['namePart'.$i])){
+                $_SESSION['POST']['namePart'.$i] = $_POST['namePart'.$i];
+            }
+            if (isset($_POST['contentPart'.$i])){
+                $_SESSION['POST']['contentPart'.$i] = $_POST['contentPart'.$i];
+            }
+            for ($k = 0; $k < $_SESSION['nbExemple'][$i] ; $k++){
+                if (isset($_POST['exemple'.$k.'-part'.$i])){
+                    $_SESSION['POST']['exemple'.$k.'-part'.$i] = $_POST['exemple'.$k.'-part'.$i];
+                }
+                if (isset($_POST['reponse'.$k.'-part'.$i])){
+                    $_SESSION['POST']['reponse'.$k.'-part'.$i] = $_POST['reponse'.$k.'-part'.$i];
+                }
+            }
+        }
     }
 
 }
