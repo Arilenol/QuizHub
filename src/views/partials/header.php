@@ -29,6 +29,10 @@
             }
             ?>
             <?php if (!isset($_SESSION['id'])): ?>
+                <button class="button" style="height: 60px; width: 60px; justify-content: center;" data-action="create" onclick="window.location.href='?page=createContent'">
+                    <span></span>
+                    <p style="font-size: 40px;">+</p>
+                </button>
                 <button class="button" data-action="register">
                     <span></span>
                     <p>S'inscrire</p>
