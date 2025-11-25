@@ -1,0 +1,38 @@
+body > h1{
+    text-align: center;
+}
+
+.category{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #FFC067;
+    width: calc(25% - 40px);
+    max-width: 300px;
+    aspect-ratio: 9/13;
+    padding: 0 20px;
+    text-align: center;
+    border-radius: 50px;
+    box-shadow: 0px 8px 2px #E38D15BF;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+}
+.category:hover{
+    background-color: #FFCE8B;
+    box-shadow: 0px 8px 2px #CFA05EBF;
+}
+.category:active{
+    background-color: #FFCE8B;
+    box-shadow: none;
+    transform: translateY(8px);
+}
+
+.category > img{
+    width: 40%;
+}
+
+.createCategories{
+    display: flex;
+    justify-content: space-around;
+}
