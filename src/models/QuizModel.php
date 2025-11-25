@@ -20,13 +20,19 @@ class QuizModel
      * @return int  Nombre total de questions du quiz. 0 si aucune question n’est trouvée.
      */
 
-    public function getMaxNbQuestion(int $idQuiz): int
+    public function getMaxNbQuestion(int $quizId): int
     {
-        $stmt = $this->db->prepare("SELECT COUNT(id) AS max_questions FROM question WHERE quiz_id = ?");
-        $stmt->execute([$idQuiz]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $result ? (int) $result['max_questions'] : 0;
+        $stmt = $this->db->prepare("
+        SELECT MAX(numeroQuiz) AS maxi
+        FROM question
+        WHERE quiz_id = ?
+    ");
+        $stmt->execute([$quizId]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return intval($row['maxi']);
     }
+
 
 
     /**
@@ -43,9 +49,11 @@ class QuizModel
      * @return array|false Retourne un tableau associatif contenant la question,
      *                     ou false si aucune question ne correspond.
      */
-
-    public function getQuestion(int $idQuiz, ?int $idQuestion = 1): array|false
+    public function getQuestion(int $idQuiz, ?int $idQuestion = null): array|false
     {
+        if ($idQuestion === null) {
+            $idQuestion = $this->getMiniQuestionId($idQuiz);
+        }
         $stmt = $this->db->prepare("
         SELECT *
         FROM question
@@ -68,13 +76,55 @@ class QuizModel
      * @return array|false  Retourne un tableau contenant toutes les réponses sous forme
      *                      de tableaux associatifs, ou false si aucune réponse n'est trouvée.
      */
-
     public function getReponses(int $idQuestion): array|false
     {
         $stmt = $this->db->prepare("SELECT * FROM reponse WHERE question_id = ?");
         $stmt->execute([$idQuestion]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+
+    /**
+     * Récupère toutes les réponses justes associées à une question.
+     *
+     * Cette méthode retourne l'ensemble des réponses justes liées à une question
+     * spécifique, identifiée par son ID. Chaque réponse est renvoyée sous
+     * forme de tableau associatif contenant ses informations (texte,
+     * validité, identifiant, etc.).
+     *
+     * @param int $idQuestion  Identifiant de la question dont on veut obtenir les réponses.
+     *
+     * @return array|false  Retourne un tableau contenant toutes les réponses justes sous forme
+     *                      de tableaux associatifs, ou false si aucune réponse n'est trouvée.
+     */
+    public function getCorrectAnswers(int $quizId, int $idQuestion): array
+    {
+        $stmt = $this->db->prepare("
+        SELECT r.id 
+        FROM reponse r
+        JOIN question q ON r.question_id = q.id
+        WHERE q.quiz_id = ?
+        AND q.numeroQuiz = ?
+        AND r.estCorrecte = 1
+    ");
+
+        $stmt->execute([$quizId, $idQuestion]);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return array_map('intval', array_column($results, 'id'));
+    }
+
+    public function getMiniQuestionId(int $quizId): int
+    {
+        $stmt = $this->db->prepare("
+        SELECT MIN(numeroQuiz) AS mini
+        FROM question
+        WHERE quiz_id = ?
+    ");
+        $stmt->execute([$quizId]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return intval($row['mini']);
 
 
     public function createQuiz(int $user_id, array $params, array $TAB_CONTENU, string $desc, string $title , int $nbQuestion, array $nbReponse){

@@ -1,8 +1,10 @@
 <?php
-class ProfileModel{
+class ProfileModel
+{
     private $db;
 
-    public function __construct($db) {
+    public function __construct($db)
+    {
         $this->db = $db;
     }
 
@@ -20,9 +22,10 @@ class ProfileModel{
      *                     (id, username, email, password, etc.) ou false si aucun
      *                     utilisateur ne correspond.
      */
-    public function getIdUserFromEmail(string $email){
-        $stmt = $this->db->prepare("SELECT * FROM users WHERE email = ?");
-        $stmt->execute([$email]);
+    public function getIdUserFromEmail(string $id)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE id = ?");
+        $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
@@ -36,7 +39,8 @@ class ProfileModel{
      *
      * @return int Le nombre total de quiz créés par l'utilisateur.
      */
-    public function getCreationsNumber(int $id) : int {
+    public function getCreationsNumber(int $id): int
+    {
         $stmt = $this->db->prepare("SELECT COUNT(id) AS total FROM quiz WHERE user_id = ?");
         $stmt->execute([$id]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -53,11 +57,11 @@ class ProfileModel{
      *
      * @return int Le nombre total de quiz jouées par l'utilisateur.
      */
-    public function getGamesNumber(int $id) : int{
+    public function getGamesNumber(int $id): int
+    {
         $stmt = $this->db->prepare("SELECT COUNT(id) AS resultat FROM quiz WHERE user_id = ?");
         $stmt->execute([$id]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return (int)$result['resultat'];
     }
 }
-?>

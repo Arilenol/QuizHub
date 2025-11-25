@@ -2,17 +2,21 @@
 require_once ROOT . '/src/models/LogModel.php';
 require_once ROOT . '/config/config.php';
 
-class LogController {
+class LogController
+{
 
-    public function showRegister() {
+    public function showRegister()
+    {
         require ROOT . '/src/views/log/register.php';
     }
 
-    public function showConnection() {
+    public function showConnection()
+    {
         require ROOT . '/src/views/log/connection.php';
     }
 
-    public function createUser() {
+    public function createUser()
+    {
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $error = "Méthode invalide";
@@ -53,7 +57,8 @@ class LogController {
 
         if ($created) {
             session_start();
-            $_SESSION['email'] = $email;
+            $user = $model->getUserByEmail($email);
+            $_SESSION['id'] = $user['id'];
             header("Location: ?page=home");
             exit;
         } else {
@@ -63,7 +68,8 @@ class LogController {
         }
     }
 
-    public function loginUser() {
+    public function loginUser()
+    {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $error = "Méthode invalide";
             require ROOT . '/src/views/log/connection.php';
@@ -80,9 +86,10 @@ class LogController {
         $db = getDbConnection();
         $model = new LogModel($db);
         if ($model->verifyPassword($email, $password)) {
-            
+
             session_start();
-            $_SESSION['email'] = $email;
+            $user = $model->getUserByEmail($email);
+            $_SESSION['id'] = $user['id'];
             header("Location: ?page=home");
             exit;
         } else {
@@ -91,4 +98,3 @@ class LogController {
         }
     }
 }
-?>

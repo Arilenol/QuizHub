@@ -218,26 +218,66 @@ class QuizController {
                 }
             }
         }
-    }
+            public function showQuiz(int $quizId, ?int $idQuestion = 1, bool $showAnswer = false)
+    {
+        if (session_status() === PHP_SESSION_NONE && ($_GET['page'] === 'test')) {
+            session_start();
+        }
 
-    public function showQuiz(int $id, int $idQuestion = 1, bool $showAnswer = false){
-        $id = htmlspecialchars($id);
-        $idQuestion = htmlspecialchars($idQuestion);
+        $max = $this->model->getMaxNbQuestion($quizId);
 
-        $max = $this->model->getMaxNbQuestion($id);
+        // initialisation des réponses si vide
+        if (!isset($_SESSION['answers'])) {
+            $_SESSION['answers'] = [];
+        }
 
-        // Fin du quiz
+        // si utilisateur a envoyé une réponse
+        if (!empty($_GET['answer'])) {
+
+            $answers = array_map('intval', $_GET['answer']);
+
+            // on stocke pour LA QUESTION COURANTE
+            $_SESSION['answers'][$idQuestion] = array($this->isCorrect($quizId, $idQuestion, $answers), $answers);
+
+            // on passe à la question suivante
+            $idQuestion++;
+        }
+
+        // fin du quiz
         if ($idQuestion > $max) {
             $question = null;
             $reponse = [];
-            require ROOT . '/src/views/quiz/show.php';
+
+            if ($_GET['page'] === 'standard') {
+                require ROOT . '/src/views/quiz/show.php';
+            } else {
+                ksort($_SESSION['answers']);
+                require ROOT . '/src/views/quiz/endTest.php';
+            }
             return;
         }
-
-        $question = $this->model->getQuestion($id, $idQuestion);
+        // récupération de la question actuelle
+        $question = $this->model->getQuestion($quizId, $idQuestion);
         $reponse  = $this->model->getReponses($question['id']);
 
         require ROOT . '/src/views/quiz/show.php';
     }
-}
+
+
+    public function isCorrect(int $quizId, int $idQuestion, array $reponses): bool
+    {
+        // Récupère les bonnes réponses sous forme de tableau d'IDs
+        $correctAnswers = $this->model->getCorrectAnswers($quizId, $idQuestion);
+
+        // Normaliser les réponses de l'utilisateur en entiers
+        $userIds = array_map('intval', $reponses);
+
+        // Trier les deux tableaux pour comparer indépendamment de l'ordre
+        sort($correctAnswers);
+        sort($userIds);
+
+        // Retourner true si les deux tableaux sont identiques
+        return $correctAnswers === $userIds;
+    }
+    }
 ?>

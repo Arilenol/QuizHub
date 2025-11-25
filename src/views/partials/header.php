@@ -26,7 +26,7 @@
             session_start();
         }
         ?>
-        <?php if (!isset($_SESSION['email'])): ?>
+        <?php if (!isset($_SESSION['id'])): ?>
             <button class="button" data-action="register">
                 <span></span>
                 <p>S'inscrire</p>
