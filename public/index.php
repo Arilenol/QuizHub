@@ -47,10 +47,9 @@ switch ($page) {
             //créé une leçon
             case 'create':
                 require_once ROOT . '/src/controllers/LessonController.php';
-                isset($_GET['id']) ? $id = $_GET['id'] : exit;
                 $controller = new LessonController();
                 // va charger views/lesson/createLesson.php
-                $controller->createLesson($id);
+                $controller->createLesson();
                 break;
 
             //voir une leçon
@@ -113,7 +112,7 @@ switch ($page) {
         $controller = new FlashCardController();
         if (isset($_GET['categorie'])) {
             //routine pour créer le controlleur
-            $controlleur->createFlashcard();
+            $controller->createFlashcard();
             break;
         }
         switch ($action) {
