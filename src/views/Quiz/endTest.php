@@ -5,7 +5,7 @@ require_once '../src/views/partials/header.php';
 ?>
 
 <div class="quiz-réalisation">
-    <button class ="retour" onclick="history.back()">← Retour</button>
+    <button class="retour" onclick="history.back()">← Retour</button>
     <h2>Vos réponses</h2>
     <div class="answers">
         <?php var_dump($_SESSION) ?>
@@ -21,4 +21,9 @@ require_once '../src/views/partials/header.php';
     </div>
 </div>
 
-</html>
+<div class="actions-fin">
+    <button class="valider" onclick="window.location.href='?page=home'">Recommencer le quiz</button>
+    <button class="valider" onclick="window.location.href='?page=catalogue'">Voir d’autres quiz</button>
+    <button class="valider" onclick="window.location.href='?page=home'">Retour à l’accueil</button>
+</div>
+</div>

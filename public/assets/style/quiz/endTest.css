@@ -15,3 +15,39 @@ article {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     cursor: pointer;
 }
+
+.retour {
+  align-self: flex-start;
+  margin-left: 1%;
+  margin-top: 1%;
+}
+
+button {
+    border-radius: 75px;
+    background-color: #0AB1BD;
+    color: white;
+    border: none;
+    padding: 21px 36px;
+    font-size: 1.575rem;
+    min-height: 69px;
+    cursor: pointer;
+    box-shadow: 0 12px 0 #087b86;
+}
+
+.actions-fin {
+    display: flex;
+    flex-direction: row;
+    margin-top: 4%;
+    justify-self: center;
+}
+
+.actions-fin button {
+    margin-right: 3%;
+    margin-bottom: 7%;
+}
+
+button:hover{
+    background-color: #fff;
+    color: #087b86;
+    box-shadow: 0px 8px 2px #CACACABF;
+}

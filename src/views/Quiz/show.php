@@ -89,12 +89,17 @@ require_once '../src/views/partials/header.php';
                 </div>
 
             <?php else: ?>
-
                 <div class="bouton-container">
-                    <button class="valider"
-                        onclick="window.location.href='?page=<?= $_GET['page'] ?>&id=<?= $question['quiz_id'] ?>&idQuestion=<?= $question['numeroQuiz'] + 1 ?>'">
-                        Continuer
-                    </button>
+                    <?php if ($_GET['page'] === 'test'): ?>
+                        <button class="valider" type="submit" form="quizForm">
+                            Continuer
+                        </button>
+                    <?php else: ?>
+                        <button class="valider"
+                            onclick="window.location.href='?page=<?= $_GET['page'] ?>&id=<?= $question['quiz_id'] ?>&idQuestion=<?= $question['numeroQuiz'] + 1 ?>'">
+                            Continuer
+                        </button>
+                    <?php endif; ?>
                 </div>
 
             <?php endif; ?>
