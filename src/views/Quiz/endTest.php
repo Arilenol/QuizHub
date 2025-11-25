@@ -8,7 +8,6 @@ require_once '../src/views/partials/header.php';
     <button class="retour" onclick="history.back()">← Retour</button>
     <h2>Vos réponses</h2>
     <div class="answers">
-        <?php var_dump($_SESSION) ?>
         <?php foreach ($_SESSION['answers'] as $questionNumber => $a) : ?>
             <article onclick="window.location.href='?page=standard&id=<?= $quizId ?>&idQuestion=<?= $questionNumber ?>&reponse=visible&test=test'">
                 <p><?= ($a[0]) ? 'Bonne réponse' : 'Mauvaise réponse' ?></p>
@@ -22,7 +21,7 @@ require_once '../src/views/partials/header.php';
 </div>
 
 <div class="actions-fin">
-    <button class="valider" onclick="window.location.href='?page=home'">Recommencer le quiz</button>
+    <button class="valider" onclick="window.location.href='?page=test&id=<?= $quizId ?>'">Recommencer le quiz</button>
     <button class="valider" onclick="window.location.href='?page=catalogue'">Voir d’autres quiz</button>
     <button class="valider" onclick="window.location.href='?page=home'">Retour à l’accueil</button>
 </div>
