@@ -5,34 +5,46 @@ body{
 }
 
 header{
-	display: flex;
+	display: grid;
 	height: 150px;
 	background-color: #FFC067;
 	box-shadow: 0px 4px 4px 0px #00000040;
 	padding: 0px 65px;
 	align-items: center;
-	justify-content: space-between;
+	grid-template-columns: 1fr 1fr 1fr;
 }
 
-.button, .searchbar {
+header > *:nth-child(2){
+	justify-self: center;
+}
+header > *:nth-child(3){
+	justify-self: end;
+}
+
+.button{
+	all: unset;
+}
+
+.button, .searchbar, .input, .flatinput {
 	display: flex;
 	position: relative;
 	align-items: center;
-	padding: 25px 35px;
+	padding: 20px;
 	justify-content: flex-start;
 	gap: 20px;
-	width: fit-content;
-	height: fit-content;
+	width: max-content;
+	height: max-content;
 }
 
 .searchbar{
-	width: 600px;
-	padding: 25px 35px;
+	width: 31.25%;
+	height: 100px;
+	padding: 0 35px;
 	justify-content: flex-start;
 	gap: 20px;
 }
 
-.button > span, .searchbar > span {
+.button > span, .searchbar > span, .input > span, .flatinput > span {
 	position: absolute;
 	inset: 0;
 	background: #0AB1BD;
@@ -43,8 +55,29 @@ header{
 	transition: background ease-out 0.2s;
 }
 
+.button.disabled > span{
+	background: #8b8b8b;
+	box-shadow: 0px 8px 2px #2e2e2ebf;
+	cursor: no-drop;
+}
+
+.button.disabled > span:hover{
+	background: #8b8b8b;
+	box-shadow: 0px 8px 2px #2e2e2ebf;
+}
+
+.button.disabled:has(span:hover) p {
+  	color: white;
+}
+
+.button.disabled:has(span:active){
+	transition: none;
+  	filter: none;
+  	transform: none;
+}
+
 .button > p, .searchbar > p {
-	font-size: 32px;
+	font-size: min(1.7vw, 25px);
 	line-height: 39px;
 	color: #fff;
 	margin: 0;
@@ -54,9 +87,17 @@ header{
   	transition: color ease-out 0.2s;
 }
 
-.button > img, .searchbar > img {
+.button > img, .button > svg, .searchbar > img {
 	z-index: 1;
 	pointer-events: none;
+}
+
+.button > svg > path {
+  	transition: fill ease-in-out 0.2s;
+}
+
+.button:has(span:hover) svg > path {
+  	fill: #0AB1BD;
 }
 
 .button:has(span:hover) p {
@@ -81,4 +122,49 @@ header{
 }
 .checkbox > svg rect, .checkbox > svg circle, .checkbox > svg filter{
 	transition: all ease-in-out 0.2s;
+}
+.input{
+	height: 100px;
+	padding: 0 20px;
+}
+.input > input{
+	all: unset;
+	z-index: 2;
+	color: white;
+	font-size: min(1.7vw, 25px);
+}
+.input > img{
+	z-index: 2;
+	height: 50%;
+}
+
+.input > input::-webkit-input-placeholder{
+	color: white;
+}
+
+.flatinput{
+	height: 80px;
+	padding: 0 35px;
+	cursor: default;
+}
+
+.flatinput > span{
+	box-shadow: none;
+	cursor: default;
+}
+
+.flatinput > input{
+	all: unset;
+	z-index: 2;
+	color: white;
+	font-size: min(1.7vw, 25px);
+	cursor:text;
+}
+.flatinput > img{
+	z-index: 2;
+	height: 50%;
+}
+
+.flatinput > input::-webkit-input-placeholder{
+	color: white;
 }

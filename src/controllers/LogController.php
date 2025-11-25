@@ -85,8 +85,6 @@ class LogController
 
         $db = getDbConnection();
         $model = new LogModel($db);
-        var_dump($email);
-        var_dump($password);
         if ($model->verifyPassword($email, $password)) {
 
             session_start();
