@@ -29,10 +29,6 @@
             }
             ?>
             <?php if (!isset($_SESSION['id'])): ?>
-                <button class="button" style="height: 60px; width: 60px; justify-content: center;" data-action="create" onclick="window.location.href='?page=createContent'">
-                    <span></span>
-                    <p style="font-size: 40px;">+</p>
-                </button>
                 <button class="button" data-action="register">
                     <span></span>
                     <p>S'inscrire</p>
@@ -42,6 +38,10 @@
                     <p>Connexion</p>
                 </button>
             <?php else: ?>
+                <button class="button" style="height: 60px; width: 60px; justify-content: center;" data-action="create" onclick="window.location.href='?page=createContent'">
+                    <span></span>
+                    <p style="font-size: 40px;">+</p>
+                </button>
                 <button class="button" style="padding: 15px;" data-action="account">
                     <span></span>
                     <svg width="70" height="70" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
