@@ -60,8 +60,17 @@
     <div class="quiz-affichage">
         <?php 
         foreach ($quizzes as $quiz) {
-            echo '<div class="quiz">
-                <article onclick="window.location.href=\'./QuizPage.php?quiz_id=' . $quiz['id'] . '\'">
+            if ($quiz['genre'] === 'flashcard'){
+                $genre = 'flashcard';
+                $suite = '&action=start';
+            }
+            elseif($quiz['genre'] === 'standard'){
+                $genre = 'standard';
+            }elseif($quiz['genre'] === 'test'){
+                $genre = 'test';
+            }
+            echo '<div class="quiz" onclick="window.location.href=\'index.php?page='.$genre.''.$suite.'&id='.$quiz['id'].'\'">
+                <article >
                     <div class="quiz-cat">';
                         if (!empty($quiz['categories']) && is_array($quiz['categories'])) {
                             foreach ($quiz['categories'] as $cat) {
