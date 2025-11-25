@@ -15,7 +15,7 @@
 <body>
 <header>
     <img onclick="window.location.href='/'" style="cursor: pointer;" src="./assets/images/logo.svg" alt="Logo">
-    <div class="input">
+    <div class="input" style="width: 100%;">
         <span></span>
         <img src="./assets/images/loupe.svg" alt="Search Icon">
         <input type="text" placeholder="Rechercher des créations..."/>
