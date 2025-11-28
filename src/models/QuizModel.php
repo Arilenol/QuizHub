@@ -20,13 +20,19 @@ class QuizModel
      * @return int  Nombre total de questions du quiz. 0 si aucune question n’est trouvée.
      */
 
-    public function getMaxNbQuestion(int $idQuiz): int
+    public function getMaxNbQuestion(int $quizId): int
     {
-        $stmt = $this->db->prepare("SELECT COUNT(id) AS max_questions FROM question WHERE quiz_id = ?");
-        $stmt->execute([$idQuiz]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $result ? (int) $result['max_questions'] : 0;
+        $stmt = $this->db->prepare("
+        SELECT MAX(numeroQuiz) AS maxi
+        FROM question
+        WHERE quiz_id = ?
+    ");
+        $stmt->execute([$quizId]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return intval($row['maxi']);
     }
+
 
 
     /**
@@ -43,9 +49,11 @@ class QuizModel
      * @return array|false Retourne un tableau associatif contenant la question,
      *                     ou false si aucune question ne correspond.
      */
-
-    public function getQuestion(int $idQuiz, ?int $idQuestion = 1): array|false
+    public function getQuestion(int $idQuiz, ?int $idQuestion = null): array|false
     {
+        if ($idQuestion === null) {
+            $idQuestion = $this->getMiniQuestionId($idQuiz);
+        }
         $stmt = $this->db->prepare("
         SELECT *
         FROM question
@@ -68,7 +76,6 @@ class QuizModel
      * @return array|false  Retourne un tableau contenant toutes les réponses sous forme
      *                      de tableaux associatifs, ou false si aucune réponse n'est trouvée.
      */
-
     public function getReponses(int $idQuestion): array|false
     {
         $stmt = $this->db->prepare("SELECT * FROM reponse WHERE question_id = ?");
@@ -77,28 +84,71 @@ class QuizModel
     }
 
 
-    public function createQuiz(int $user_id, array $params, array $TAB_CONTENU, string $desc, string $title , int $nbQuestion, array $nbReponse){
-        try{
+    /**
+     * Récupère toutes les réponses justes associées à une question.
+     *
+     * Cette méthode retourne l'ensemble des réponses justes liées à une question
+     * spécifique, identifiée par son ID. Chaque réponse est renvoyée sous
+     * forme de tableau associatif contenant ses informations (texte,
+     * validité, identifiant, etc.).
+     *
+     * @param int $idQuestion  Identifiant de la question dont on veut obtenir les réponses.
+     *
+     * @return array|false  Retourne un tableau contenant toutes les réponses justes sous forme
+     *                      de tableaux associatifs, ou false si aucune réponse n'est trouvée.
+     */
+    public function getCorrectAnswers(int $quizId, int $idQuestion): array
+    {
+        $stmt = $this->db->prepare("
+        SELECT r.id 
+        FROM reponse r
+        JOIN question q ON r.question_id = q.id
+        WHERE q.quiz_id = ?
+        AND q.numeroQuiz = ?
+        AND r.estCorrecte = 1
+    ");
+
+        $stmt->execute([$quizId, $idQuestion]);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return array_map('intval', array_column($results, 'id'));
+    }
+
+    public function getMiniQuestionId(int $quizId): int
+    {
+        $stmt = $this->db->prepare("
+        SELECT MIN(numeroQuiz) AS mini
+        FROM question
+        WHERE quiz_id = ?
+    ");
+        $stmt->execute([$quizId]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return intval($row['mini']);
+    }
+
+    public function createQuiz(int $user_id, array $params, array $TAB_CONTENU, string $desc, string $title, int $nbQuestion, array $nbReponse)
+    {
+        try {
             $this->db->beginTransaction();
             $newQuiz = $this->insertQuiz($user_id, $title, $desc, date('Y-m-d'), 'standard');
-            if (!$newQuiz){
+            if (!$newQuiz) {
                 throw new PDOException("erreur dans l\'insertion du Quiz dans QuizModel.php/createQuiz");
             }
-            for ($i = 0; $i < $nbQuestion; $i++){
+            for ($i = 0; $i < $nbQuestion; $i++) {
                 $newQuestion = $this->insertQuestion($i, $newQuiz, $TAB_CONTENU[$i]['name']);
-                if (!$newQuestion){
+                if (!$newQuestion) {
                     throw new PDOException("erreur dans l\'insertion de question dans QuizModel.php/createQuiz");
                 }
-                for ($k = 0; $k < $nbReponse[$i] ; $k++){
+                for ($k = 0; $k < $nbReponse[$i]; $k++) {
                     $newReponse = $this->insertReponse($newQuestion, $TAB_CONTENU[$i]['reponses'][$k]['texte'], $TAB_CONTENU[$i]['reponses'][$k]['valide']);
-                    if (!$newReponse){
+                    if (!$newReponse) {
                         throw new PDOException("erreur dans l\'insertion de reponse dans QuizModel.php/createQuiz");
                     }
                 }
             }
             $this->db->commit();
-
-        }catch (PDOException $e){
+        } catch (PDOException $e) {
             error_log("Erreur création de quiz entier : " . $e->getMessage());
             $this->db->rollBack();
             return false;
@@ -106,66 +156,69 @@ class QuizModel
     }
 
 
-    public function insertQuiz(int $user_id, string $title, string $desc, string $date, string $genre){
-        try{
+    public function insertQuiz(int $user_id, string $title, string $desc, string $date, string $genre)
+    {
+        try {
             $newQuiz = $this->db->prepare("INSERT INTO Quiz(user_id, title, description, difficulty, disponibilite, nbjaime, nbjaimepas, date, genre)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);");
-            $newQuiz->bindValue(1,$user_id);
-            $newQuiz->bindValue(2,$title);
-            $newQuiz->bindValue(3,$desc);
-            $newQuiz->bindValue(4,1);
-            $newQuiz->bindValue(5,'public');
-            $newQuiz->bindValue(6,0);
-            $newQuiz->bindValue(7,0);
-            $newQuiz->bindValue(7,$date);
-            $newQuiz->bindValue(7,'standard');
+            $newQuiz->bindValue(1, $user_id);
+            $newQuiz->bindValue(2, $title);
+            $newQuiz->bindValue(3, $desc);
+            $newQuiz->bindValue(4, 1);
+            $newQuiz->bindValue(5, 'public');
+            $newQuiz->bindValue(6, 0);
+            $newQuiz->bindValue(7, 0);
+            $newQuiz->bindValue(7, $date);
+            $newQuiz->bindValue(7, 'standard');
 
             $reussite = $newQuiz->execute();
-            if (!$reussite){
+            if (!$reussite) {
                 return false;
-            }else{
+            } else {
                 return $this->db->lastInsertId();
             }
-        }catch (PDOException $e){
-            error_log("Erreur d'insertion de quiz : ".$e->getMessage());
+        } catch (PDOException $e) {
+            error_log("Erreur d'insertion de quiz : " . $e->getMessage());
             return false;
         }
     }
 
-    public function insertQuestion(int $numero, int $quiz_id, string $question){
-        try{
+    public function insertQuestion(int $numero, int $quiz_id, string $question)
+    {
+        try {
             $newQuestion = $this->db->prepare("INSERT INTO Question (numeroQuiz, quiz_id, question) VALUES (?, ?, ?);");
             $newQuestion->bindValue(1, $numero);
             $newQuestion->bindValue(2, $quiz_id);
             $newQuestion->bindValue(3, $question);
 
             $reussite = $newQuestion->execute();
-            if (!$reussite){
+            if (!$reussite) {
                 return false;
-            }else{
+            } else {
                 return $this->db->lastInsertId();
             }
-        }catch (PDOException $e){
-            error_log("Erreur d'insertion de question : ".$e->getMessage());
+        } catch (PDOException $e) {
+            error_log("Erreur d'insertion de question : " . $e->getMessage());
             return false;
         }
     }
 
-    public function insertReponse(int $question_id, string $contenu, int $valide){
-        try{
+    public function insertReponse(int $question_id, string $contenu, int $valide)
+    {
+        try {
             $newReponse = $this->db->prepare("INSERT INTO Reponse(question_id, reponse, estCorrecte) VALUES (?, ?, ?);");
             $newReponse->bindValue(1, $question_id);
             $newReponse->bindValue(2, $contenu);
             $newReponse->bindValue(3, $valide);
 
             $reussite = $newReponse->execute();
-            if (!$reussite){
+            if (!$reussite) {
                 return false;
-            }else{
+            } else {
                 return $this->db->lastInsertId();
             }
-        }catch (PDOException $e){
-            error_log("Erreur d'insertion de reponse : ".$e->getMessage());
+        } catch (PDOException $e) {
+            error_log("Erreur d'insertion de reponse : " . $e->getMessage());
             return false;
         }
     }

@@ -6,32 +6,45 @@
     require __DIR__ . '/../partials/header.php';
 ?>
 
-<form method = "post" action = "index.php?page=flashcard&categorie=create">
-    <button type = "submit" name = "Retour" value = "yes"><span> < </span>Retour</button>
+<form method = "post" action = "index.php?page=flashcard&categorie=create" style="display: flex; flex-direction: column; padding: 25px; gap: 15px">
+    <button class="button" type = "submit" name = "Retour" value = "yes"><span></span><p> < Retour</p></button>
     <h1>Créer une Flashcard</h1>
-    <input type = "hidden" name="page" value="flashcard">
+
+        <input type = "hidden" name="page" value="flashcard">
     <input type="hidden" name ="categorie" value = "create">
     <h2>Nom des flashcards</h2>
-    <input type="text" name ="FlashcardTitle" value = "<?php echo $title ?>">
+    <div class="input">
+        <span></span>
+        <input type="text" name ="FlashcardTitle" value = "<?php echo $title ?>">
+    </div>
     <p class="description">Description</p>
-    <input type="text" name ="FlashcardDescription" value = "<?php echo $desc ?>">
-    <div class = "newflashcard">
+    <div class="input">
+        <span></span>
+        <input type="text" name ="FlashcardDescription" value = "<?php echo $desc ?>">
+    </div>
+    <div class = "newflashcard" style="display: flex; flex-direction: column; gap: 15px">
     <p class = "cartes">Cartes</p>
     <?php
     for($i = 0; $i < $_SESSION['nbCartes'] ; $i = $i +1){
-        echo '<div class="Carte">
+        echo '<div class="Carte" style="display: flex; flex-direction: column; gap: 15px">
         <p>Carte '.($i+1).'</p>
         <p>Question :</p>
-        <textarea name ="cardQuestion'.$i.'"> '.$TAB_CONTENU[$i]['question'].'</textarea>
+        <div class="textarea">
+            <span></span>
+            <textarea name ="cardQuestion'.$i.'"> '.$TAB_CONTENU[$i]['question'].'</textarea>
+        </div>
         <p>Réponse :</p>
-        <textarea name = "cardReponse'.$i.'">'.$TAB_CONTENU[$i]['reponse'].'</textarea>
+        <div class="textarea">
+            <span></span>
+            <textarea name = "cardReponse'.$i.'">'.$TAB_CONTENU[$i]['reponse'].'</textarea>
+        </div>
         
-        <button name = "DelCard" type="submit" value='.$i.'>Supprimer cette question</button>
+        <button class="button" name = "DelCard" type="submit" value='.$i.'><span></span><p>Supprimer cette question</p></button>
         </div>';
     }
-    echo '<button type = "submit" name = "addCard" value = "yes">Ajouter une question</button>'
+    echo '<button class="button" type = "submit" name = "addCard" value = "yes"><span></span><p>Ajouter une question</p></button>'
     ?>
     </div>
 
-    <button type = "submit" name = "create" value = "yes">Créer les flashcards</button>
+    <button class="button" type = "submit" name = "create" value = "yes"><span></span><p>Créer les flashcards</p></button>
 </form>

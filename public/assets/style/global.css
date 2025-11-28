@@ -25,7 +25,7 @@ header > *:nth-child(3){
 	all: unset;
 }
 
-.button, .searchbar, .input, .flatinput {
+.button, .searchbar, .input, .flatinput, .textarea {
 	display: flex;
 	position: relative;
 	align-items: center;
@@ -37,14 +37,14 @@ header > *:nth-child(3){
 }
 
 .searchbar{
-	width: 31.25%;
+	width: 60%;
 	height: 100px;
 	padding: 0 35px;
 	justify-content: flex-start;
 	gap: 20px;
 }
 
-.button > span, .searchbar > span, .input > span, .flatinput > span {
+.button > span, .searchbar > span, .input > span, .flatinput > span, .textarea > span {
 	position: absolute;
 	inset: 0;
 	background: #0AB1BD;
@@ -117,6 +117,11 @@ header > *:nth-child(3){
 .button > span:active {
 	box-shadow: none;
 }
+
+.checkbox{
+	transform: scale(0.8) translate(-11%, 10%);
+}
+
 .checkbox > svg{
 	cursor: pointer;
 }
@@ -129,6 +134,7 @@ header > *:nth-child(3){
 }
 .input > input{
 	all: unset;
+	width: 100%;
 	z-index: 2;
 	color: white;
 	font-size: min(1.7vw, 25px);
@@ -167,4 +173,27 @@ header > *:nth-child(3){
 
 .flatinput > input::-webkit-input-placeholder{
 	color: white;
+}
+
+.input > span, .textarea > span, .flatinput > span{
+	cursor: default;
+}
+
+.textarea > textarea{
+	all: unset;
+	width: 100%;
+	height: 100%;
+	word-break: break-all;
+	font-size: 25px;
+	padding: 10px;
+	color: white;
+	z-index: 2;
+}
+
+.textarea > textarea::-webkit-input-placeholder{
+	color: white;
+}
+
+.textarea > span{
+	border-radius: 50px;
 }
