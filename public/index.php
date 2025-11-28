@@ -4,8 +4,26 @@ define('ROOT', dirname(__DIR__));
 
 // par défaut page d’accueil
 $page = isset($_GET['page']) ? htmlspecialchars($_GET['page']) : 'home';
+
+// if (session_status() === PHP_SESSION_ACTIVE) {
+//     foreach ($_SESSION as $key => $value) {
+//         if ($key !== 'id') {   // on ne garde que "id"
+//             unset($_SESSION[$key]);
+//         }
+//     }
+// }
+
 switch ($page) {
     case 'home':
+        session_start();
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            foreach ($_SESSION as $key => $value) {
+                if ($key !== 'id') {
+                    // on ne garde que "id", on supprime tous les résultats précédents
+                    unset($_SESSION[$key]);
+                }
+            }
+        }
         require_once ROOT . '/src/controllers/HomeController.php';
         $controller = new HomeController();
         // va charger views/home.php
@@ -29,10 +47,9 @@ switch ($page) {
             //créé une leçon
             case 'create':
                 require_once ROOT . '/src/controllers/LessonController.php';
-                isset($_GET['id']) ? $id = $_GET['id'] : exit;
                 $controller = new LessonController();
                 // va charger views/lesson/createLesson.php
-                $controller->createLesson($id);
+                $controller->createLesson();
                 break;
 
             //voir une leçon
@@ -93,7 +110,11 @@ switch ($page) {
         $action = $_GET['action'] ?? null; // start, ongoing, end
         require_once ROOT . '/src/controllers/FlashCardController.php';
         $controller = new FlashCardController();
-
+        if (isset($_GET['categorie'])) {
+            //routine pour créer le controlleur
+            $controller->createFlashcard();
+            break;
+        }
         switch ($action) {
             case 'start':
                 $id = $_GET['id'] ?? null;
@@ -119,10 +140,11 @@ switch ($page) {
         $controller->showProfile();
         break;
     case 'standard':
-        if (isset($_GET['categorie'])){
+    case 'test':
+        if (isset($_GET['categorie'])) {
             require_once ROOT . '/src/controllers/QuizController.php';
             $controller = new QuizController();
-            // $controller->createQuiz();
+            $controller->createQuiz();
             exit;
         }
         $id = $_GET['id'] ?? null;
@@ -134,8 +156,17 @@ switch ($page) {
 
         $controller->showQuiz($id, $idQuestion, $showAnswer);
         break;
-
+    case 'createContent':
+        require_once ROOT . '/src/views/createContent.php';
+        break;
+        
+        case 'CRUD':
+        require_once ROOT . '/src/controllers/CRUDController.php';
+        $controller = new CRUDController();
+        $controller->index();
+        break;
     default:
         echo "404 - Page non trouvée";
         break;
 }
+
