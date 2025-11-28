@@ -159,7 +159,16 @@ switch ($page) {
     case 'createContent':
         require_once ROOT . '/src/views/createContent.php';
         break;
+
+        
+        case 'CRUD':
+        require_once ROOT . '/src/controllers/CRUDController.php';
+        $controller = new CRUDController();
+        $controller->index();
+        break;
+
     default:
         echo "404 - Page non trouvée";
         break;
 }
+
