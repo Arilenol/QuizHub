@@ -12,6 +12,15 @@ h1 {
   padding-left: 2%;
 }
 
+.no-content {
+    text-align: center;
+    padding: 30px;
+    color: #777;
+    font-size: 1.1em;
+    opacity: 0.8;
+    font-style: italic;
+}
+
 .newCreations {
   display: flex;
   flex-direction: row;

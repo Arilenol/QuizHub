@@ -160,15 +160,29 @@ switch ($page) {
         require_once ROOT . '/src/views/createContent.php';
         break;
 
-        
-        case 'CRUD':
+
+    case 'CRUD':
         require_once ROOT . '/src/controllers/CRUDController.php';
         $controller = new CRUDController();
         $controller->index();
         break;
+    case 'notification':
+        require_once ROOT . '/src/controllers/NotificationController.php';
+        $controller = new NotificationController();
+        if (isset($_GET['email'])) {
+            $controller->sendRequest($_GET['email']);
+        } elseif (isset($_GET['action'])) {
+            if ($_GET['action'] === 'add') {
+                $controller->addFriendRequest($_GET['id']);
+            } elseif ($_GET['action'] === 'delete') {
+                $controller->deleteFriendRequest($_GET['id']);
+            }
+        } else {
+            $controller->index();
+        }
 
+        break;
     default:
         echo "404 - Page non trouvée";
         break;
 }
-
