@@ -12,7 +12,7 @@
     <input type = "hidden" name="page" value="lesson">
     <input type="hidden" name ="categorie" value = "create">
     <h2>Nom de la leçon</h2>
-    <input type="text" name ="LessonTitle" value = "<?php echo $title ?>">
+    <input type="text" name ="LessonTitle" value = "<?php echo $LessonTitle ?>">
     <p class="description">Description</p>
     <input type="text" name ="LessonDescription" value = "<?php echo $desc ?>">
     <div class = "newLesson">

@@ -53,8 +53,7 @@ class LessonController {
         }
         //var_dump($_SESSION);
         //var_dump($_POST);
-        $title = isset($_POST['LessonTitle']) ? $_POST['LessonTitle'] : '';
-        $desc = isset($_POST['LessonDescription']) ? $_POST['LessonDescription'] : '';
+        
         // afficher la vue
 
         if (!isset($_SESSION['nbParts']) || empty($_SESSION['nbParts'])){
@@ -146,6 +145,9 @@ class LessonController {
         if ($_SESSION['bouton'] === false){
             $this->contentFusionSessionPost();
         }
+
+        $LessonTitle = isset($_SESSION['POST']['LessonTitle']) ? $_SESSION['POST']['LessonTitle'] : '';
+        $desc = isset($_SESSION['POST']['LessonDescription']) ? $_SESSION['POST']['LessonDescription'] : '';
         //var_dump($quizSelected);
         $TAB_CONTENU = array();
         for ($i = 0; $i < $_SESSION['nbParts'] ; $i++){
@@ -166,9 +168,9 @@ class LessonController {
 
         if (isset($_POST['create']) && $_POST['create'] == "yes"){
             if (isset($_POST['LessonTitle']) && !empty($_POST['LessonTitle'])  && isset($_POST['LessonDescription']) && !empty($_POST['LessonDescription'])){
-                $title = $_POST['LessonTitle'];
+                $LessonTitle = $_POST['LessonTitle'];
                 $desc = $_POST['LessonDescription'];
-                $model->createLesson($id, $title, $desc, $_SESSION['nbParts'],$_SESSION['nbExemple'],$TAB_CONTENU,$quizSelected);
+                $model->createLesson($id, $LessonTitle, $desc, $_SESSION['nbParts'],$_SESSION['nbExemple'],$TAB_CONTENU,$quizSelected);
                 //je mets une redirecion pour être sûr qu'on ne l'oublie pas après
                 unset($_SESSION['nbExemple']);
                 unset($_SESSION['nbParts']);
@@ -188,6 +190,12 @@ class LessonController {
     }
 
     public function contentFusionSessionPost(){
+        if (isset($_POST['LessonTitle'])){
+            $_SESSION['POST']['LessonTitle'] = $_POST['LessonTitle'];
+        }
+        if (isset($_POST['LessonDescription'])){
+            $_SESSION['POST']['LessonDescription'] = $_POST['LessonDescription'];
+        }
         for ($i = 0; $i < $_SESSION['nbParts'] ; $i ++){
             if (isset($_POST['namePart'.$i])){
                 $_SESSION['POST']['namePart'.$i] = $_POST['namePart'.$i];
