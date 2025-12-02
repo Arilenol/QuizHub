@@ -137,7 +137,13 @@ switch ($page) {
     case 'profil':
         require_once ROOT . '/src/controllers/ProfileController.php';
         $controller = new ProfileController();
-        $controller->showProfile();
+        if (isset($_GET['action'])) {
+            if ($_GET['action'] === 'displayFriends') {
+                $controller->showProfile("showFriends");
+            }
+        } else {
+            $controller->showProfile();
+        }
         break;
     case 'standard':
     case 'test':
@@ -159,7 +165,6 @@ switch ($page) {
     case 'createContent':
         require_once ROOT . '/src/views/createContent.php';
         break;
-
 
     case 'CRUD':
         require_once ROOT . '/src/controllers/CRUDController.php';
