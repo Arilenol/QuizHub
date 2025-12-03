@@ -27,9 +27,10 @@ class LogController
         $email    = trim($_POST['email'] ?? '');
         $username = trim($_POST['username'] ?? '');
         $password = trim($_POST['password'] ?? '');
+        $passwordVerif = trim($_POST['passwordVerif'] ?? '');
 
         // Vérification des champs obligatoires
-        if ($email === '' || $username === '' || $password === '') {
+        if ($email === '' || $username === '' || $password === '' || $passwordVerif === '') {
             $error = "Tous les champs doivent être remplis.";
             require ROOT . '/src/views/log/register.php';
             return;
@@ -38,6 +39,13 @@ class LogController
         // Vérification du mail
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $error = "Format d’email invalide.";
+            require ROOT . '/src/views/log/register.php';
+            return;
+        }
+
+        // Vérification si les 2 mots de passes saisis sont identiques
+        if ($password!==$passwordVerif) {
+            $error = "Les 2 mots de passes sont différents";
             require ROOT . '/src/views/log/register.php';
             return;
         }

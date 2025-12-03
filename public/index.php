@@ -5,14 +5,6 @@ define('ROOT', dirname(__DIR__));
 // par défaut page d’accueil
 $page = isset($_GET['page']) ? htmlspecialchars($_GET['page']) : 'home';
 
-// if (session_status() === PHP_SESSION_ACTIVE) {
-//     foreach ($_SESSION as $key => $value) {
-//         if ($key !== 'id') {   // on ne garde que "id"
-//             unset($_SESSION[$key]);
-//         }
-//     }
-// }
-
 switch ($page) {
     case 'home':
         session_start();
@@ -184,6 +176,9 @@ switch ($page) {
             }
         } else {
             $controller->index();
+        }
+        if (isset($_GET['action']) && ($_GET['action']  === "fetch")){
+            $controller->fetch();
         }
 
         break;

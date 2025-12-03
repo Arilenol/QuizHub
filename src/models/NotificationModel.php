@@ -31,7 +31,7 @@ class NotificationModel
         // DELETE FROM amis
         // WHERE user1_id = ? AND user2_id = ?
         // ");
-
+        // 
         // $stmt2->execute([12, 13]);
         
         // $stmt2 = $this->db->prepare("
@@ -39,7 +39,7 @@ class NotificationModel
         // VALUES (?,?)
         // ");
 
-        // $stmt2->execute([12, 13]);
+        // $stmt2->execute([1, 13]);
 
         $stmt = $this->db->prepare("
         SELECT da.*, u.username, u.email, u.id

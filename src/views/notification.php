@@ -24,36 +24,6 @@ include 'partials/header.php';
             </div>
         </div>
     <?php endforeach; ?>
-
-
-    <div class="request">
-        <div class="request-info">
-            <div class="avatar">A</div>
-            <div>
-                <strong>Alice Dupont (donnée test)</strong><br>
-                <small>alice@example.com</small>
-            </div>
-        </div>
-        <div class="request-buttons">
-            <button class="accept">Accepter</button>
-            <button class="reject">Refuser</button>
-        </div>
-    </div>
-
-    <div class="request">
-        <div class="request-info">
-            <div class="avatar">J</div>
-            <div>
-                <strong>Jean Martin (donnée test)</strong><br>
-                <small>jean.martin@example.com</small>
-            </div>
-        </div>
-        <div class="request-buttons">
-            <button class="accept">Accepter</button>
-            <button class="reject">Refuser</button>
-        </div>
-    </div>
-
 </div>
 
 <div class="invite-box">

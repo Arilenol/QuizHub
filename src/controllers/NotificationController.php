@@ -49,4 +49,11 @@ class NotificationController
         header('Location: ?page=notification');
         exit;
     }
+
+    public function fetch()
+    {
+        $notifications = $this->model->getFriendRequestsReceived($_SESSION['id']);
+        // pour que le JS puisse récupérer
+        echo json_encode($notifications); 
+    }
 }
