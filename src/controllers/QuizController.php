@@ -57,7 +57,7 @@ class QuizController
 
         //------------informations à remplir---------------------
         $tabParametres = array(
-            array('name' => 'minutor', 'desc' => 'minuterie'),
+            array('name' => 'timer', 'desc' => 'minuterie'),
             array('name' => 'retryError','desc' => 'rééssayer les questions échouées'),
             array('name' => 'noOrder','desc' => 'faire dans le désordre par défaut'),
             array('name' => 'score','desc' => 'afficher le score')
@@ -182,7 +182,7 @@ class QuizController
             }
         }
 
-
+        $timerValue = isset($_SESSION['POST']['timerValue']) ? $_SESSION['POST']['timerValue'] : 1;
 
         
 
@@ -204,7 +204,7 @@ class QuizController
 
         $_SESSION['bouton'] = false;
 
-        var_dump($_SESSION['POST']);
+        //var_dump($_SESSION['POST']);
         //var_dump($_POST);
         //var_dump($TAB_CONTENU);
         //unset($_SESSION['POST']);
@@ -214,7 +214,7 @@ class QuizController
     public function contentFusionSessionPost()
     {
         $tabParametres = array(
-            array('name' => 'minutor', 'desc' => 'minuterie'),
+            array('name' => 'timer', 'desc' => 'minuterie'),
             array('name' => 'retryError','desc' => 'rééssayer les questions échouées'),
             array('name' => 'noOrder','desc' => 'faire dans le désordre par défaut'),
             array('name' => 'score','desc' => 'afficher le score')
@@ -244,6 +244,9 @@ class QuizController
             if (isset($_POST['param'.$param['name']])){
                 $_SESSION['POST']['param'.$param['name']] = $_POST['param'.$param['name']];
             }
+        }
+        if(isset($_POST['timerValue'])){
+            $_SESSION['POST']['timerValue'] = $_POST['timerValue'];
         }
     }
 

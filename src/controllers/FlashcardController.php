@@ -60,9 +60,6 @@ class FlashCardController
     }
 
     public function createFlashcard(){
-        //-----------------------------test--------------------------------
-        $_SESSION['id'] = 1;
-        //-----------------------------test--------------------------------
         if (isset($_SESSION['id'])){
             $id = $_SESSION['id'];
         }

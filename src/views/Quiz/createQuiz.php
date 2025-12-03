@@ -85,8 +85,12 @@
                     <p style="font-size: 20px">'.$param['desc'].' : </p>
                     <div class="checkbox">
                         <input type="checkbox" name="param'.$param['name'].'" '.$TAB_PARAM[$indice].' hidden>
-                    </div>
-                </div>';
+                    </div>';
+                    if ($param['name'] == 'timer' && !empty($_SESSION['POST']['param'.$param['name']])){
+                        echo '<p>Temps :</p>
+                        <input type = "number" name = "timerValue" value = "'.$timerValue.'" min = 1 max = 60 />';
+                    }
+                echo '</div>';
             }
 
         ?>
