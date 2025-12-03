@@ -82,9 +82,9 @@
                 echo 
                 '
                 <div style="display: flex; flex-direction: row; align-items: center; gap: 10px">
-                    <p style="font-size: 20px">'.$param['name'].' : </p>
+                    <p style="font-size: 20px">'.$param['desc'].' : </p>
                     <div class="checkbox">
-                        <input type="checkbox" name="param'.$indice.'" hidden>
+                        <input type="checkbox" name="param'.$param['name'].'" '.$TAB_PARAM[$indice].' hidden>
                     </div>
                 </div>';
             }

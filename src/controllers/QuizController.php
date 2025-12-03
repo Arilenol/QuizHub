@@ -54,6 +54,16 @@ class QuizController
         //var_dump($_POST);
 
 
+
+        //------------informations à remplir---------------------
+        $tabParametres = array(
+            array('name' => 'minutor', 'desc' => 'minuterie'),
+            array('name' => 'retryError','desc' => 'rééssayer les questions échouées'),
+            array('name' => 'noOrder','desc' => 'faire dans le désordre par défaut'),
+            array('name' => 'score','desc' => 'afficher le score')
+        );
+
+        //------------informations à remplir---------------------
         // Handle form actions: Retour, addQuestion, addReponse, DelQuestion, delReponseX
         if (isset($_POST['Retour']) && $_POST['Retour'] === "yes") {
             unset($_SESSION['bouton']);
@@ -162,16 +172,19 @@ class QuizController
             $TAB_CONTENU[] = $qContent;
         }
 
+        $TAB_PARAM = [];
+        foreach ($tabParametres as $param){
+            if(isset($_SESSION['POST']['param'.$param['name']])){
+                $TAB_PARAM[] = 'checked';
+            }
+            else{
+                $TAB_PARAM[] = '';
+            }
+        }
 
 
-        //------------informations à remplir---------------------
-        $tabParametres = array(
-            array('name' => 'minuterie'),
-            array('name' => 'rééssayer les questions échouées'),
-            array('name' => 'faire dans le désordre par défaut'),
-            array('name' => 'afficher le score')
-        );
-        //------------informations à remplir---------------------
+
+        
 
         if (isset($_POST['create']) && $_POST['create'] === 'yes') {
             // basic validation: ensure a title is provided
@@ -191,7 +204,7 @@ class QuizController
 
         $_SESSION['bouton'] = false;
 
-        //var_dump($_SESSION['POST']);
+        var_dump($_SESSION['POST']);
         //var_dump($_POST);
         //var_dump($TAB_CONTENU);
         //unset($_SESSION['POST']);
@@ -200,6 +213,12 @@ class QuizController
 
     public function contentFusionSessionPost()
     {
+        $tabParametres = array(
+            array('name' => 'minutor', 'desc' => 'minuterie'),
+            array('name' => 'retryError','desc' => 'rééssayer les questions échouées'),
+            array('name' => 'noOrder','desc' => 'faire dans le désordre par défaut'),
+            array('name' => 'score','desc' => 'afficher le score')
+        );
         if (isset($_POST['QuizTitle'])){
             $_SESSION['POST']['QuizTitle'] = $_POST['QuizTitle'];
         }
@@ -219,6 +238,11 @@ class QuizController
                 } else {
                     $_SESSION['POST']['checkbox' . $k . '-question' . $i] = 0;
                 }
+            }
+        }
+        foreach($tabParametres as $param){
+            if (isset($_POST['param'.$param['name']])){
+                $_SESSION['POST']['param'.$param['name']] = $_POST['param'.$param['name']];
             }
         }
     }
