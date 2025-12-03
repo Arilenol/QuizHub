@@ -5,14 +5,27 @@ require_once ROOT . '/config/config.php';
 class ProfileController
 {
 
-    public function showProfile()
+    private ProfileModel $model;
+
+    public function __construct()
     {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
         $db = getDbConnection();
-        $model = new ProfileModel($db);
-        session_start();
+        $this->model = new ProfileModel($db);
+    }
+
+    public function showProfile(?string $option = null)
+    {
         if (isset($_SESSION['id'])) {
-            $creation = $model->getCreationsNumber($_SESSION['id']);
-            $played = $model->getGamesNumber($_SESSION['id']);
+            $creation = $this->model->getCreationsNumber($_SESSION['id']);
+            $played = $this->model->getGamesNumber($_SESSION['id']);
+            if ($option !== null && $option === "showFriends") {
+                $friends = $this->model->getFriends($_SESSION['id']);
+            }
+            $activeTab = $_GET['action'] ?? 'creations';
+            $activeTab = $activeTab === 'displayFriends' ? 'friends' : ($activeTab === 'showHistory' ? 'history' : 'creations');
             require ROOT . '/src/views/profil.php';
         } else {
             echo "Problème de chargement";

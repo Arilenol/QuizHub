@@ -1,10 +1,10 @@
-body{
+body {
 	font-family: "Inter", sans-serif;
 	background-color: #FFC97D;
 	margin: 0;
 }
 
-header{
+header {
 	display: grid;
 	height: 150px;
 	background-color: #FFC067;
@@ -14,18 +14,23 @@ header{
 	grid-template-columns: 1fr 1fr 1fr;
 }
 
-header > *:nth-child(2){
+header>*:nth-child(2) {
 	justify-self: center;
 }
-header > *:nth-child(3){
+
+header>*:nth-child(3) {
 	justify-self: end;
 }
 
-.button{
+.button {
 	all: unset;
 }
 
-.button, .searchbar, .input, .flatinput, .textarea {
+.button,
+.searchbar,
+.input,
+.flatinput,
+.textarea {
 	display: flex;
 	position: relative;
 	align-items: center;
@@ -36,7 +41,7 @@ header > *:nth-child(3){
 	height: max-content;
 }
 
-.searchbar{
+.searchbar {
 	width: 60%;
 	height: 100px;
 	padding: 0 35px;
@@ -44,7 +49,11 @@ header > *:nth-child(3){
 	gap: 20px;
 }
 
-.button > span, .searchbar > span, .input > span, .flatinput > span, .textarea > span {
+.button>span,
+.searchbar>span,
+.input>span,
+.flatinput>span,
+.textarea>span {
 	position: absolute;
 	inset: 0;
 	background: #0AB1BD;
@@ -55,28 +64,29 @@ header > *:nth-child(3){
 	transition: background ease-out 0.2s;
 }
 
-.button.disabled > span{
+.button.disabled>span {
 	background: #8b8b8b;
 	box-shadow: 0px 8px 2px #2e2e2ebf;
 	cursor: no-drop;
 }
 
-.button.disabled > span:hover{
+.button.disabled>span:hover {
 	background: #8b8b8b;
 	box-shadow: 0px 8px 2px #2e2e2ebf;
 }
 
 .button.disabled:has(span:hover) p {
-  	color: white;
+	color: white;
 }
 
-.button.disabled:has(span:active){
+.button.disabled:has(span:active) {
 	transition: none;
-  	filter: none;
-  	transform: none;
+	filter: none;
+	transform: none;
 }
 
-.button > p, .searchbar > p {
+.button>p,
+.searchbar>p {
 	font-size: min(1.7vw, 25px);
 	line-height: 39px;
 	color: #fff;
@@ -84,102 +94,118 @@ header > *:nth-child(3){
 	z-index: 1;
 	user-select: none;
 	pointer-events: none;
-  	transition: color ease-out 0.2s;
+	transition: color ease-out 0.2s;
 }
 
-.button > img, .button > svg, .searchbar > img {
+.button>img,
+.button>svg,
+.searchbar>img {
 	z-index: 1;
 	pointer-events: none;
 }
 
-.button > svg > path {
-  	transition: fill ease-in-out 0.2s;
+svg {
+	fill: white;
 }
 
-.button:has(span:hover) svg > path {
-  	fill: #0AB1BD;
+.button>svg>path {
+	transition: fill ease-in-out 0.2s;
+}
+
+.button:has(span:hover) svg>path {
+	fill: #0AB1BD;
 }
 
 .button:has(span:hover) p {
-  	color: #0AB1BD;
+	color: #0AB1BD;
 }
 
-.button > span:hover {
-  	background-color: #fff;
-  	box-shadow: 0px 8px 2px #CACACABF;
+.button>span:hover {
+	background-color: #fff;
+	box-shadow: 0px 8px 2px #CACACABF;
 }
 
 .button:has(span:active) {
 	transition: none;
-  	filter: none;
-  	transform: translate(0px, 8px);
+	filter: none;
+	transform: translate(0px, 8px);
 }
-.button > span:active {
+
+.button>span:active {
 	box-shadow: none;
 }
 
-.checkbox{
+.checkbox {
 	transform: scale(0.8) translate(-11%, 10%);
 }
 
-.checkbox > svg{
+.checkbox>svg {
 	cursor: pointer;
 }
-.checkbox > svg rect, .checkbox > svg circle, .checkbox > svg filter{
+
+.checkbox>svg rect,
+.checkbox>svg circle,
+.checkbox>svg filter {
 	transition: all ease-in-out 0.2s;
 }
-.input{
+
+.input {
 	height: 100px;
 	padding: 0 20px;
 }
-.input > input{
+
+.input>input {
 	all: unset;
 	width: 100%;
 	z-index: 2;
 	color: white;
 	font-size: min(1.7vw, 25px);
 }
-.input > img{
+
+.input>img {
 	z-index: 2;
 	height: 50%;
 }
 
-.input > input::-webkit-input-placeholder{
+.input>input::-webkit-input-placeholder {
 	color: white;
 }
 
-.flatinput{
+.flatinput {
 	height: 80px;
 	padding: 0 35px;
 	cursor: default;
 }
 
-.flatinput > span{
+.flatinput>span {
 	box-shadow: none;
 	cursor: default;
 }
 
-.flatinput > input{
+.flatinput>input {
 	all: unset;
 	z-index: 2;
 	color: white;
 	font-size: min(1.7vw, 25px);
-	cursor:text;
+	cursor: text;
 }
-.flatinput > img{
+
+.flatinput>img {
 	z-index: 2;
 	height: 50%;
 }
 
-.flatinput > input::-webkit-input-placeholder{
+.flatinput>input::-webkit-input-placeholder {
 	color: white;
 }
 
-.input > span, .textarea > span, .flatinput > span{
+.input>span,
+.textarea>span,
+.flatinput>span {
 	cursor: default;
 }
 
-.textarea > textarea{
+.textarea>textarea {
 	all: unset;
 	width: 100%;
 	height: 100%;
@@ -190,10 +216,51 @@ header > *:nth-child(3){
 	z-index: 2;
 }
 
-.textarea > textarea::-webkit-input-placeholder{
+.textarea>textarea::-webkit-input-placeholder {
 	color: white;
 }
 
-.textarea > span{
+.textarea>span {
 	border-radius: 50px;
+}
+
+.button>span {
+	position: absolute;
+	inset: 0;
+	background: #0AB1BD;
+	border-radius: 50px;
+	cursor: pointer;
+	z-index: 0;
+	box-shadow: 0px 8px 2px #007881BF;
+	transition: background ease-out 0.2s;
+}
+
+.button svg,
+.button .notif-dot {
+	position: relative;
+	z-index: 1;
+	pointer-events: none;
+}
+
+.notif-dot {
+    position: absolute;
+    top: 0;       /* coin supérieur */
+    right: 0;     /* coin droit */
+    width: 12px;
+    height: 12px;
+    background-color: red;
+    border-radius: 50%;
+    border: 2px solid white; /* optionnel pour un contour */
+    display: none;
+    z-index: 2;
+}
+
+.notif-btn.has-notif .notif-dot {
+	display: block;
+}
+
+/* Hover sur le bouton */
+.button:hover>span {
+	background-color: #fff;
+	box-shadow: 0px 8px 2px #CACACABF;
 }

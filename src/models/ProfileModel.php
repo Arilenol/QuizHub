@@ -53,15 +53,53 @@ class ProfileModel
      * Cette méthode exécute une requête SQL afin de déterminer combien de
      * quiz ont été jouées par un utilisateur spécifique en fonction de son ID.
      *
-     * @param int $id L'identifiant de l'utilisateur.
+     * @param int $id|string L'identifiant de l'utilisateur.
      *
      * @return int Le nombre total de quiz jouées par l'utilisateur.
      */
-    public function getGamesNumber(int $id): int
+    public function getGamesNumber(int|string $id): int
     {
         $stmt = $this->db->prepare("SELECT COUNT(id) AS resultat FROM quiz WHERE user_id = ?");
         $stmt->execute([$id]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return (int)$result['resultat'];
+    }
+
+    /**
+     * Récupère tous les amis d’un utilisateur.
+     *
+     * Cette méthode retourne un tableau contenant tous les enregistrements de la table `amis`
+     * où l'utilisateur est soit `user1_id` soit `user2_id`.
+     *
+     * @param int|string $id L'identifiant de l'utilisateur.
+     *
+     * @return array|false Tableau de tous les amis ou false si aucun ami trouvé.
+     */
+    public function getFriends(int|string $id): array|false
+    {
+
+        $stmt = $this->db->prepare("
+        SELECT 
+            CASE 
+                WHEN a.user1_id = :id THEN u2.id
+                ELSE u1.id
+            END AS friend_id,
+            CASE 
+                WHEN a.user1_id = :id THEN u2.username
+                ELSE u1.username
+            END AS friend_name,
+            CASE 
+                WHEN a.user1_id = :id THEN u2.email
+                ELSE u1.email
+            END AS friend_email
+        FROM amis a
+        JOIN users u1 ON u1.id = a.user1_id
+        JOIN users u2 ON u2.id = a.user2_id
+        WHERE a.user1_id = :id OR a.user2_id = :id
+    ");
+        $stmt->execute([":id" => $id]);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return !empty($results) ? $results : false;
     }
 }

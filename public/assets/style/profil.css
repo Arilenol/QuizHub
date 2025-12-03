@@ -127,3 +127,37 @@
   padding: 0.3% 2%;
   font-size: 0.8rem;
 }
+.avatar {
+  width: 48px; 
+  height: 48px;
+  background: #d8d8ff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-right: 5%; 
+}
+
+p,h3{
+  margin: 0%;
+}
+
+.tabs span {
+    cursor: pointer;
+}
+
+.tabs span.active {
+    font-weight: bold;
+}
+
+.friend-card {
+  border-radius: 12px;  
+  background-color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3%;
+  padding-right: 5%; 
+  gap: 5%;
+}

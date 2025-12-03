@@ -35,28 +35,56 @@ require_once 'partials/header.php'; ?>
         </div>
 
         <div class="tabs">
-            <span>Mes créations</span>
-            <span>Historique</span>
+            <span class="<?= $activeTab === 'creations' ? 'active' : '' ?>"
+                onclick="window.location.href='?page=profil'">
+                Mes créations
+            </span>
+
+            <span class="<?= $activeTab === 'history' ? 'active' : '' ?>"
+                onclick="window.location.href='?page=profil&action=showHistory'">
+                Historique
+            </span>
+
+            <span class="<?= $activeTab === 'friends' ? 'active' : '' ?>"
+                onclick="window.location.href='?page=profil&action=displayFriends'">
+                Mes amis
+            </span>
         </div>
 
         <div class="quiz-container">
-            <div class="quiz-card">
-                <div class="tags">
-                    <span>Thème</span>
-                    <span>Type</span>
+            <?php if (isset($friends)) :
+                if ($friends === false) :  ?>
+                    <p>Vous n'avez pas d'amis pour le moment. <a href="?page=notification">Cliquez ici pour en ajouter</p></a>
+                    <?php else :
+                    foreach ($friends as $friend) : ?>
+                        <div class="friend-card">
+                            <div class="avatar"><?= $friend['friend_name'][0] ?></div>
+                            <div>
+                                <h3><?= $friend['friend_name'] ?></h3>
+                                <p><?= $friend['friend_email'] ?></p>
+                            </div>
+                        </div>
+                <?php endforeach;
+                endif; ?>
+            <?php else : ?>
+                <div class="quiz-card">
+                    <div class="tags">
+                        <span>Thème</span>
+                        <span>Type</span>
+                    </div>
+                    <h3>Titre</h3>
+                    <p>Description</p>
                 </div>
-                <h3>Titre</h3>
-                <p>Description</p>
-            </div>
 
-            <div class="quiz-card">
-                <div class="tags">
-                    <span>Thème</span>
-                    <span>Type</span>
+                <div class="quiz-card">
+                    <div class="tags">
+                        <span>Thème</span>
+                        <span>Type</span>
+                    </div>
+                    <h3>Titre</h3>
+                    <p>Description</p>
                 </div>
-                <h3>Titre</h3>
-                <p>Description</p>
-            </div>
+            <?php endif; ?>
         </div>
 
     </div>

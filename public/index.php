@@ -5,14 +5,6 @@ define('ROOT', dirname(__DIR__));
 // par défaut page d’accueil
 $page = isset($_GET['page']) ? htmlspecialchars($_GET['page']) : 'home';
 
-// if (session_status() === PHP_SESSION_ACTIVE) {
-//     foreach ($_SESSION as $key => $value) {
-//         if ($key !== 'id') {   // on ne garde que "id"
-//             unset($_SESSION[$key]);
-//         }
-//     }
-// }
-
 switch ($page) {
     case 'home':
         session_start();
@@ -137,7 +129,13 @@ switch ($page) {
     case 'profil':
         require_once ROOT . '/src/controllers/ProfileController.php';
         $controller = new ProfileController();
-        $controller->showProfile();
+        if (isset($_GET['action'])) {
+            if ($_GET['action'] === 'displayFriends') {
+                $controller->showProfile("showFriends");
+            }
+        } else {
+            $controller->showProfile();
+        }
         break;
     case 'standard':
     case 'test':
@@ -160,15 +158,31 @@ switch ($page) {
         require_once ROOT . '/src/views/createContent.php';
         break;
 
-        
-        case 'CRUD':
+    case 'CRUD':
         require_once ROOT . '/src/controllers/CRUDController.php';
         $controller = new CRUDController();
         $controller->index();
         break;
+    case 'notification':
+        require_once ROOT . '/src/controllers/NotificationController.php';
+        $controller = new NotificationController();
+        if (isset($_GET['email'])) {
+            $controller->sendRequest($_GET['email']);
+        } elseif (isset($_GET['action'])) {
+            if ($_GET['action'] === 'add') {
+                $controller->addFriendRequest($_GET['id']);
+            } elseif ($_GET['action'] === 'delete') {
+                $controller->deleteFriendRequest($_GET['id']);
+            }
+        } else {
+            $controller->index();
+        }
+        if (isset($_GET['action']) && ($_GET['action']  === "fetch")){
+            $controller->fetch();
+        }
 
+        break;
     default:
         echo "404 - Page non trouvée";
         break;
 }
-

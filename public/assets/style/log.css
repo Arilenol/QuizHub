@@ -58,3 +58,30 @@ input {
 h3 {
     color: rgb(128, 0, 0);
 }
+
+i {                 
+    position: relative;
+    right:1rem;
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+}
+
+.log-container .flatinput > span {
+    position: absolute;
+    inset: 0;
+}
+
+.log-container .flatinput {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+}
+
+
+.log-container .flatinput i {
+    z-index: 2;
+    position: absolute;
+    right: 1rem;
+}
