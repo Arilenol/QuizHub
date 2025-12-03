@@ -15,7 +15,7 @@
     <h2>Nom des flashcards</h2>
     <div class="input">
         <span></span>
-        <input type="text" name ="FlashcardTitle" value = "<?php echo $title ?>">
+        <input type="text" name ="FlashcardTitle" value = "<?php echo $CardsTitle ?>">
     </div>
     <p class="description">Description</p>
     <div class="input">
