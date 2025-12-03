@@ -42,8 +42,7 @@ class QuizController
             $_SESSION['bouton'] = false;
         }
 
-        $title = isset($_POST['QuizTitle']) ? $_POST['QuizTitle'] : '';
-        $desc = isset($_POST['QuizDescription']) ? $_POST['QuizDescription'] : '';
+        
 
         if (!isset($_SESSION['nbQuestions']) || empty($_SESSION['nbQuestions'])) {
             $_SESSION['nbQuestions'] = 1;
@@ -144,9 +143,8 @@ class QuizController
         }
 
 
-        /*if (!empty($_SESSION['POST'])) {
-            $_POST = array_merge($_POST,$_SESSION['POST']);
-        }*/
+        $quizTitle = isset($_SESSION['POST']['QuizTitle']) ? $_SESSION['POST']['QuizTitle'] : '';
+        $desc = isset($_SESSION['POST']['QuizDescription']) ? $_SESSION['POST']['QuizDescription'] : '';
 
         $TAB_CONTENU = array();
         for ($i = 0; $i < $_SESSION['nbQuestions']; $i++) {
@@ -178,9 +176,9 @@ class QuizController
         if (isset($_POST['create']) && $_POST['create'] === 'yes') {
             // basic validation: ensure a title is provided
             if (isset($_POST['QuizTitle']) && !empty($_POST['QuizTitle'])) {
-                $title = $_POST['QuizTitle'];
+                $quizTitle = $_POST['QuizTitle'];
                 $desc = isset($_POST['QuizDescription']) ? $_POST['QuizDescription'] : '';
-                $model->createQuiz($id, $tabParametres, $TAB_CONTENU, $desc, $title, $_SESSION['nbQuestion'], $_SESSION['nbReponse']);
+                $model->createQuiz($id, $tabParametres, $TAB_CONTENU, $desc, $quizTitle, $_SESSION['nbQuestions'], $_SESSION['nbReponse']);
                 unset($_SESSION['bouton']);
                 unset($_SESSION['nbReponse']);
                 unset($_SESSION['nbQuestions']);
@@ -202,6 +200,12 @@ class QuizController
 
     public function contentFusionSessionPost()
     {
+        if (isset($_POST['QuizTitle'])){
+            $_SESSION['POST']['QuizTitle'] = $_POST['QuizTitle'];
+        }
+        if (isset($_POST['QuizDescription'])){
+            $_SESSION['POST']['QuizDescription'] = $_POST['QuizDescription'];
+        }
         for ($i = 0; $i < $_SESSION['nbQuestions']; $i++) {
             for ($k = 0; $k < $_SESSION['nbReponse'][$i]; $k++) {
                 if (isset($_POST['question' . $i])) {

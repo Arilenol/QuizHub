@@ -16,7 +16,7 @@
     <h2>Nom du quiz</h2>
     <div class="input">
         <span></span>
-        <input type="text" name ="QuizTitle" value = "<?php echo htmlspecialchars($title) ?>">
+        <input type="text" name ="QuizTitle" value = "<?php echo htmlspecialchars($quizTitle) ?>">
     </div>
     <p class="description">Description</p>
     <div class="input">

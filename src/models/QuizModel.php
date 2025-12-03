@@ -168,8 +168,8 @@ class QuizModel
             $newQuiz->bindValue(5, 'public');
             $newQuiz->bindValue(6, 0);
             $newQuiz->bindValue(7, 0);
-            $newQuiz->bindValue(7, $date);
-            $newQuiz->bindValue(7, 'standard');
+            $newQuiz->bindValue(8, $date);
+            $newQuiz->bindValue(9, 'standard');
 
             $reussite = $newQuiz->execute();
             if (!$reussite) {

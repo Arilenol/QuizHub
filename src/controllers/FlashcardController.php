@@ -77,9 +77,6 @@ class FlashCardController
             $_SESSION['bouton'] = false;
         }
 
-        $title = isset($_POST['FlashcardTitle']) ? $_POST['FlashcardTitle'] : '';
-        $desc = isset($_POST['FlashcardDescription']) ? $_POST['FlashcardDescription'] : '';
-
         if (!isset($_SESSION['nbCartes']) || empty($_SESSION['nbCartes'])){
             $_SESSION['nbCartes'] = 1;
         }
@@ -128,6 +125,9 @@ class FlashCardController
             $this->contentFusionSessionPost();
         }
 
+        $CardsTitle = isset($_SESSION['POST']['FlashcardTitle']) ? $_SESSION['POST']['FlashcardTitle'] : '';
+        $desc = isset($_SESSION['POST']['FlashcardDescription']) ? $_SESSION['POST']['FlashcardDescription'] : '';
+
         $TAB_CONTENU = array();
         for ($i = 0; $i < $_SESSION['nbCartes'] ; $i++){
             $partContent = array(
@@ -139,9 +139,9 @@ class FlashCardController
 
         if (isset($_POST['create']) && $_POST['create'] == "yes"){
             if (isset($_POST['FlashcardTitle']) && !empty($_POST['FlashcardTitle'])  && isset($_POST['FlashcardDescription']) && !empty($_POST['FlashcardDescription'])){
-                $title = $_POST['FlashcardTitle'];
+                $CardsTitle = $_POST['FlashcardTitle'];
                 $desc = $_POST['FlashcardDescription'];
-                $this->model->createFlashcard($_SESSION['nbCartes'], $id, $title, $desc, $TAB_CONTENU);
+                $this->model->createFlashcard($_SESSION['nbCartes'], $id, $CardsTitle, $desc, $TAB_CONTENU);
                 //je mets une redirecion pour être sûr qu'on ne l'oublie pas après
                 unset($_SESSION['nbCartes']);
                 unset($_POST);
@@ -158,6 +158,12 @@ class FlashCardController
     }
 
     public function contentFusionSessionPost(){
+        if(isset($_POST['FlashcardTitle'])){
+            $_SESSION['POST']['FlashcardTitle'] = $_POST['FlashcardTitle'];
+        }
+        if (isset($_POST['FlashcardDescription'])){
+            $_SESSION['POST']['FlashcardDescription'] = $_POST['FlashcardDescription'];
+        }
         for ($i = 0; $i < $_SESSION['nbCartes'] ; $i ++){
             if (isset($_POST['cardQuestion'.$i])){
                 $_SESSION['POST']['cardQuestion'.$i] = $_POST['cardQuestion'.$i];
