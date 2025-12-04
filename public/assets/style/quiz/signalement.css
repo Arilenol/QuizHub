@@ -1,0 +1,63 @@
+.signalement-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 50px 20px;
+    font-family: "Inter", sans-serif;
+    min-height: 100vh;
+}
+
+.signalement-page h1 {
+    margin-bottom: 40px;
+    color: #222;
+}
+
+.signalement-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 500px;
+    gap: 20px;
+}
+
+.signalement-form label {
+    font-weight: bold;
+    color: #222;
+}
+
+.signalement-form select,
+.signalement-form textarea {
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.signalement-form textarea {
+    resize: vertical;
+}
+
+button {
+    border-radius: 75px;
+    background-color: #0AB1BD;
+    color: white;
+    border: none;
+    padding: 21px 36px;
+    font-size: 1.575rem;
+    min-height: 69px;
+    cursor: pointer;
+    box-shadow: 0 12px 0 #087b86;
+}
+
+button:hover {
+    background-color: #fff;
+    color: #087b86;
+    box-shadow: 0px 8px 2px #CACACABF;
+}
+
+.retour {
+    margin-left: 1%;
+    margin-top: 1%;
+}

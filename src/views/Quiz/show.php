@@ -5,11 +5,14 @@ require_once '../src/views/partials/header.php';
 ?>
 
 <div class="quiz-réalisation">
+    <div class = "buttonAction">
     <?php if (isset($_GET['test'])): ?>
         <button class="retour" onclick="history.back()">← Retour</button>
     <?php else: ?>
         <button class="retour" onclick="window.location.href='?page=home'">← Retour</button>
     <?php endif; ?>
+    <button class="signalement" onclick="window.location.href='?page=signalement'">Signaler ce quiz</button>
+    </div>
     <?php if (empty($question)) : ?>
 
         <!-- FIN DU QUIZ -->
@@ -19,7 +22,7 @@ require_once '../src/views/partials/header.php';
 
             <?php if ($_GET['page'] === 'standard') : ?>
                 <div class="actions-fin">
-                    <button class="valider" onclick="window.location.href='?page=standard&id=<?= $id ?>'">Recommencer le quiz</button>
+                    <button class="valider" onclick="window.location.href='?page=standard&id=<?= $quizId ?>'">Recommencer le quiz</button>
                     <button class="valider" onclick="window.location.href='?page=catalogue'">Voir d’autres quiz</button>
                     <button class="valider" onclick="window.location.href='?page=home'">Retour à l’accueil</button>
                 </div>
@@ -34,8 +37,8 @@ require_once '../src/views/partials/header.php';
             <h2><?= htmlspecialchars($question['question']) ?></h2>
 
             <div class="ensemble-réponse">
-
-                <form method="get" id="quizForm">
+                <?php $oddClass = (count($reponse) % 2 !== 0) ? ' odd' : ''; ?>
+                <form method="get" id="quizForm" class="<?= $oddClass ?>">
 
                     <input type="hidden" name="page" value="<?= $_GET['page'] ?>">
                     <input type="hidden" name="id" value="<?= $question['quiz_id'] ?>">
@@ -53,11 +56,10 @@ require_once '../src/views/partials/header.php';
 
                             <input type="checkbox"
                                 id="<?= $inputId ?>"
-                                name="answer[]"
+                                name="<?= ($_GET['page'] === "standard") ? "" : "answer[]" ?>"
                                 value="<?= $rep['id'] ?>"
                                 <?= $showAnswer ? 'disabled' : '' ?>>
 
-                            <!-- Affichage coloré si reponse=visible -->
                             <?php if ($showAnswer  && ($_GET['page'] === 'standard')): ?>
                                 <label for="<?= $inputId ?>"
                                     style="cursor: auto;
