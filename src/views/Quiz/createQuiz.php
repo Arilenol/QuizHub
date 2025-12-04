@@ -82,11 +82,21 @@
                 echo 
                 '
                 <div style="display: flex; flex-direction: row; align-items: center; gap: 10px">
-                    <p style="font-size: 20px">'.$param['name'].' : </p>
-                    <div class="checkbox">
-                        <input type="checkbox" name="param'.$indice.'" hidden>
-                    </div>
-                </div>';
+                    <p style="font-size: 20px">'.$param['desc'].' : </p>
+                    <div class="checkbox param"  id = "'.$param['name'].'">
+                        <input type="checkbox" id = "param'.$param['name'].'" name="param'.$param['name'].'" '.$TAB_PARAM[$indice].' hidden/>
+                    </div>';
+                    if ($param['name'] == 'timer'){
+                        if (!empty($_SESSION['POST']['param'.$param['name']])){
+                            $hidden = '';
+                        }
+                        else{
+                            $hidden = 'hidden';
+                        }
+                        echo '<p class = "timerP"'.$hidden.'>Temps :</p>
+                        <input type = "number" name = "timerValue" value = "'.$timerValue.'" min = 0 max = 60 '.$hidden.'/>';
+                    }
+                echo '</div>';
             }
 
         ?>
@@ -94,3 +104,4 @@
 
     <button class="button" type = "submit" name = "create" value = "yes"><span></span><p>Créer le quiz</p></button>
 </form>
+<script src = "./assets/js/createQuiz.js"></script>
