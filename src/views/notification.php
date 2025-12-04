@@ -4,8 +4,8 @@ $style = './assets/style/notification.css';
 include 'partials/header.php';
 ?>
 
+<button class="retour" onclick="history.back()">← Retour</button>
 <h1>Gestion des demandes d'amis</h1>
-
 <div class="friend-requests">
     <h2>Demandes reçues</h2>
 

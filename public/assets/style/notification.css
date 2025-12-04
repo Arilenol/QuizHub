@@ -107,3 +107,26 @@ form button {
 form button:hover {
     background: #3548a5;
 }
+
+.retour {
+    border-radius: 75px;
+    background-color: #0AB1BD;
+    color: white;
+    border: none;
+    padding: 21px 36px;
+    font-size: 1.575rem;
+    min-height: 69px;
+    cursor: pointer;
+    box-shadow: 0 12px 0 #087b86;
+}
+
+.retour:hover {
+    background-color: #fff;
+    color: #087b86;
+    box-shadow: 0px 8px 2px #CACACABF;
+}
+
+.retour {
+    margin-left: 1%;
+    margin-top: 1%;
+}

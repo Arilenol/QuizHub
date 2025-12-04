@@ -119,7 +119,7 @@ switch ($page) {
                 break;
 
             case 'end':
-                echo "Fin du quiz";
+                $controller->endFlashCard();
                 break;
 
             default:
@@ -182,6 +182,12 @@ switch ($page) {
         }
 
         break;
+    case 'signalement':
+        require_once ROOT . '/src/controllers/SignalementController.php';
+        $controller = new SignalementController();
+        $controller->index();
+        break;
+       
     default:
         echo "404 - Page non trouvée";
         break;

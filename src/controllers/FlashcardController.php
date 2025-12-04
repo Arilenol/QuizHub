@@ -173,4 +173,10 @@ class FlashCardController
             }
         }
     }
+
+    public function endFlashCard(){
+        $viewData = null;
+        $quizId = $_GET['id'];
+        require ROOT . '/src/views/quiz/flashcard.php';
+    }
 }
