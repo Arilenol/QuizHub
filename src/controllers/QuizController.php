@@ -193,20 +193,29 @@ class QuizController
             if (isset($_POST['QuizTitle']) && !empty($_POST['QuizTitle'])) {
                 $quizTitle = $_POST['QuizTitle'];
                 $desc = isset($_POST['QuizDescription']) ? $_POST['QuizDescription'] : '';
-                $model->createQuiz($id, $tabParametres, $TAB_CONTENU, $desc, $quizTitle, $_SESSION['nbQuestions'], $_SESSION['nbReponse']);
-                unset($_SESSION['bouton']);
-                unset($_SESSION['nbReponse']);
-                unset($_SESSION['nbQuestions']);
-                unset($_SESSION['POST']);
-                unset($_POST);
-                header('Location: index.php?page=home');
-                exit;
+                if($this->verifValidite()){
+                    $model->createQuiz($id, $tabParametres, $TAB_CONTENU, $desc, $quizTitle, $_SESSION['nbQuestions'], $_SESSION['nbReponse']);
+                    unset($_SESSION['bouton']);
+                    unset($_SESSION['nbReponse']);
+                    unset($_SESSION['nbQuestions']);
+                    unset($_SESSION['POST']);
+                    unset($_POST);
+                    header('Location: index.php?page=home');
+                    exit;
+                }
+                else{
+                    $this->contentFusionSessionPost();
+                    $_SESSION['bouton'] = true;
+                    header('Location: ' . $_SERVER['REQUEST_URI']);
+                    exit;
+                }
+                
             }
         }
 
         $_SESSION['bouton'] = false;
 
-        var_dump($_SESSION['POST']);
+        //var_dump($_SESSION['POST']);
         //var_dump($_POST);
         //var_dump($TAB_CONTENU);
         //unset($_SESSION['POST']);
@@ -250,11 +259,16 @@ class QuizController
             }
             else{
                 $_SESSION['POST']['param'.$param['name']] = '';
+                
             }
         }
         if(isset($_POST['timerValue'])){
             $_SESSION['POST']['timerValue'] = $_POST['timerValue'];
         }
+    }
+
+    public function verifValidite(){
+        return true;
     }
 
     public function showQuiz(int $quizId, ?int $idQuestion = 1, bool $showAnswer = false)
