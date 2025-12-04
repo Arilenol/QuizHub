@@ -37,21 +37,47 @@ include 'partials/header.php';
 
 </div>
 
-<h1>Vos créations</h1>
+<?php if (isset($_SESSION['id']) && !empty($_SESSION['id'])): ?>
+    <h1>Vos créations</h1>
+<?php else :  ?>
+    <h1>Créations récentes</h1>
+<?php endif; ?>
 
-<div class="popCreations">
-    <?php if (empty($userCreations)): ?>
-        <p class="no-content">Vous n'avez encore créé aucune ressource.</p>
-    <?php else: ?>
-        <!-- Affichage des créations de l’utilisateur -->
-        <?php foreach ($userCreations as $creation): ?>
-            <article class="quiz">
-                <p class="quiz-title"><?= htmlspecialchars($creation['title']) ?></p>
+<?php if (empty($quizNextPart)): ?>
+    <p class="no-content">Vous n'avez encore créé aucune ressource.</p>
+<?php else: ?>
+    <div class="newCreations">
+        <?php for ($i = 0; $i < count($quizNextPart); $i++): ?>
+            <article onclick="window.location.href='./?page=<?= $quiz[$i]['genre'] ?>&id=<?= $quizNextPart[$i]['id'] ?> <?= $quizNextPart[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?>'" class="quiz">
+                <div class="quiz-cat">
+                    <?php if (!empty($quizNextPart[$i]['categories'])): ?>
+                        <?php foreach ($quizNextPart[$i]['categories'] as $cat): ?>
+                            <span class="category"><?= htmlspecialchars($cat) ?></span>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
+                <p class="quiz-genre"><?= htmlspecialchars($quizNextPart[$i]['genre'] ?? '') ?></p>
+                <br>
+                <p class="quiz-title"><?= htmlspecialchars($quizNextPart[$i]['title'] ?? '') ?></p>
+                <br>
+                <p class="quiz-description"><?= htmlspecialchars($quizNextPart[$i]['description'] ?? '') ?></p>
+                <br>
+
+                <br>
+                <div class="quiz-footer">
+                    <p class="quiz-auteur">Par : <?= htmlspecialchars($quizNextPart[$i]['user_name'] ?? '') ?></p>
+                    <p class="quiz-date">Publié le : <?= htmlspecialchars($quizNextPart[$i]['date'] ?? '') ?></p>
+                    <div class="quiz-reactions">
+                        <span class="reaction like">👍 <?= htmlspecialchars($quizNextPart[$i]['nbjaime'] ?? 0) ?></span>
+                        <span class="reaction dislike">👎 <?= htmlspecialchars($quizNextPart[$i]['nbjaimepas'] ?? 0) ?></span>
+                    </div>
+                </div>
             </article>
-        <?php endforeach; ?>
+        <?php endfor; ?>
+
     <?php endif; ?>
-</div>
+    </div>
 
-</body>
+    </body>
 
-</html>
+    </html>

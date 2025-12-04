@@ -177,7 +177,7 @@ switch ($page) {
         } else {
             $controller->index();
         }
-        if (isset($_GET['action']) && ($_GET['action']  === "fetch")){
+        if (isset($_GET['action']) && ($_GET['action']  === "fetch")) {
             $controller->fetch();
         }
 
