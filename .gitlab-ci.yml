@@ -21,7 +21,7 @@ deploy_production:
     - sudo chmod 777 /var/www/sae3.01/sessions
     
     # 4. Redémarrer le service
-    - sudo systemctl restart mon-service
+    - sudo systemctl restart quizhub
     
     - echo "Déploiement terminé avec succès !"
   only:
