@@ -1,0 +1,28 @@
+stages:
+  - deploy
+
+deploy_production:
+  stage: deploy
+  tags:
+    - prod  # Le tag que tu as défini à l'étape 1 (important !)
+  script:
+    - echo "Déploiement commencé..."
+    
+    # 1. Copier les fichiers du runner vers le dossier web
+    # Le runner télécharge déjà le code dans son dossier de travail, on le copie juste.
+    - sudo rsync -av --delete --exclude '.git' --exclude 'sessions' . /var/www/sae3.01/
+    
+    # 2. Remettre les permissions propres
+    - sudo chown -R www-data:www-data /var/www/sae3.01
+    
+    # 3. Gérer le dossier sessions (pour éviter ton bug précédent)
+    - sudo mkdir -p /var/www/sae3.01/sessions
+    - sudo chown -R www-data:www-data /var/www/sae3.01/sessions
+    - sudo chmod 777 /var/www/sae3.01/sessions
+    
+    # 4. Redémarrer le service
+    - sudo systemctl restart mon-service
+    
+    - echo "Déploiement terminé avec succès !"
+  only:
+    - main  # Ne le fait que sur la branche main
