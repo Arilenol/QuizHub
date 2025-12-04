@@ -10,6 +10,7 @@
 node_modules/
 dist/
 build/
+sessions/
 
 # Logs et caches
 *.log
