@@ -84,11 +84,17 @@
                 <div style="display: flex; flex-direction: row; align-items: center; gap: 10px">
                     <p style="font-size: 20px">'.$param['desc'].' : </p>
                     <div class="checkbox">
-                        <input type="checkbox" name="param'.$param['name'].'" '.$TAB_PARAM[$indice].' hidden>
+                        <input type="checkbox" name="param'.$param['name'].'" '.$TAB_PARAM[$indice].' hidden/>
                     </div>';
-                    if ($param['name'] == 'timer' && !empty($_SESSION['POST']['param'.$param['name']])){
-                        echo '<p>Temps :</p>
-                        <input type = "number" name = "timerValue" value = "'.$timerValue.'" min = 1 max = 60 />';
+                    if ($param['name'] == 'timer'){
+                        if (!empty($_SESSION['POST']['param'.$param['name']])){
+                            $hidden = '';
+                        }
+                        else{
+                            $hidden = 'hidden';
+                        }
+                        echo '<p '.$hidden.'>Temps :</p>
+                        <input type = "number" name = "timerValue" value = "'.$timerValue.'" min = 0 max = 60 '.$hidden.'/>';
                     }
                 echo '</div>';
             }
