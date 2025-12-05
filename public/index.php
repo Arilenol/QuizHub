@@ -206,7 +206,6 @@ switch ($page) {
         $controller = new SignalementController();
         $controller->index();
         break;
-
     case 'CRUDquiz':
         require_once ROOT . '/src/controllers/CRUDQuizController.php';
         $controller = new CRUDQuizController();

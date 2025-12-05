@@ -135,3 +135,32 @@ p.fin {
   font-size: 25px;
   font-weight: bold;
 }
+
+.quiz-reactions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 0;
+}
+.quiz-reactions .reaction {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 0.95rem;
+  color: #073238;
+  background-color: rgba(0, 0, 0, 0.03);
+  font-size: 1.7rem;
+}
+.quiz-reactions .like {
+  cursor: pointer;
+  color: #ff3b3b;
+  background-color: rgba(255, 59, 59, 0.08);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.04);
+}
+ .quiz-reactions .dislike {
+  cursor: pointer;
+  color: #666;
+  background-color: rgba(0, 0, 0, 0.03);
+}
