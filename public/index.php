@@ -187,7 +187,7 @@ switch ($page) {
         $controller = new SignalementController();
         $controller->index();
         break;
-       
+
     default:
         echo "404 - Page non trouvée";
         break;

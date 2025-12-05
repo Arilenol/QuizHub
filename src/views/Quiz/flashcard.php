@@ -71,6 +71,11 @@ require_once '../src/views/partials/header.php';
 				<button class="valider" onclick="window.location.href='?page=home'">Retour à l’accueil</button>
 			</div>
 		</div>
+		<p class="fin">Vous avez aimé le quiz ? N'hésiter pas à le noter : </p>
+		<div class="quiz-reactions">
+			<span class="reaction like" onclick="window.location.href='?page=flashcard&action=end&user=like&id=<?= $quizId ?>'">👍 <?= htmlspecialchars($reactions['nbjaime']) ?></span>
+			<span class="reaction dislike" onclick="window.location.href='?page=flashcard&action=end&user=dislike'">👎 <?= htmlspecialchars($reactions['nbjaimepas']) ?></span>
+		</div>
 	</div>
 
 <?php endif; ?>

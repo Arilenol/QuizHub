@@ -6,12 +6,13 @@ class FlashCardController
 {
 
     private FlashCardModel $model;
+    private $db;
 
     public function __construct()
     {
         session_start();
-        $db = getDbConnection();
-        $this->model = new FlashCardModel($db);
+        $this->db = getDbConnection();
+        $this->model = new FlashCardModel($this->db);
     }
 
     // Charge la première question du quiz
@@ -59,33 +60,33 @@ class FlashCardController
         ];
     }
 
-    public function createFlashcard(){
-        if (isset($_SESSION['id'])){
+    public function createFlashcard()
+    {
+        if (isset($_SESSION['id'])) {
             $id = $_SESSION['id'];
-        }
-        else{
+        } else {
             header('Location: index.php?page=home');
             exit;
         }
-        if (!isset($_SESSION['POST'])){
+        if (!isset($_SESSION['POST'])) {
             $_SESSION['POST'] = [];
         }
-        if (!isset($_SESSION['bouton'])){
+        if (!isset($_SESSION['bouton'])) {
             $_SESSION['bouton'] = false;
         }
 
-        if (!isset($_SESSION['nbCartes']) || empty($_SESSION['nbCartes'])){
+        if (!isset($_SESSION['nbCartes']) || empty($_SESSION['nbCartes'])) {
             $_SESSION['nbCartes'] = 1;
         }
 
-        if (isset($_POST['Retour']) && $_POST['Retour'] === "yes"){
+        if (isset($_POST['Retour']) && $_POST['Retour'] === "yes") {
             unset($_SESSION['nbCartes']);
 
             header('Location: index.php?page=createContent');
             exit;
         }
 
-        if (isset($_POST['addCard']) && !empty($_POST['addCard'])){
+        if (isset($_POST['addCard']) && !empty($_POST['addCard'])) {
             $_SESSION['nbCartes']++;
             $this->contentFusionSessionPost();
             $_SESSION['bouton'] = true;
@@ -94,23 +95,22 @@ class FlashCardController
         }
 
         if (isset($_POST['DelCard']) && $_POST['DelCard'] !== '') {
-            if ($_SESSION['nbCartes'] > 1){
+            if ($_SESSION['nbCartes'] > 1) {
                 $idx = (int)$_POST['DelCard'];
-                $oldNbParts = $_SESSION['nbCartes']; 
+                $oldNbParts = $_SESSION['nbCartes'];
 
-                
+
                 for ($i = $idx; $i < $oldNbParts - 1; $i++) {
-                    $_POST['cardQuestion'.$i] = $_POST['cardQuestion'.($i + 1)];
-                    $_POST['cardReponse'.$i] = $_POST['cardReponse'.($i + 1)];
-                    
+                    $_POST['cardQuestion' . $i] = $_POST['cardQuestion' . ($i + 1)];
+                    $_POST['cardReponse' . $i] = $_POST['cardReponse' . ($i + 1)];
                 }
-                
+
                 $last = $oldNbParts - 1;
             }
-            
-            unset($_POST['cardQuestion'.$last]);
-            unset($_POST['cardReponse'.$last]);
- 
+
+            unset($_POST['cardQuestion' . $last]);
+            unset($_POST['cardReponse' . $last]);
+
             $_SESSION['nbCartes']--;
             $this->contentFusionSessionPost();
             $_SESSION['bouton'] = true;
@@ -118,7 +118,7 @@ class FlashCardController
             exit;
         }
 
-        if ($_SESSION['bouton'] === false){
+        if ($_SESSION['bouton'] === false) {
             $this->contentFusionSessionPost();
         }
 
@@ -126,16 +126,16 @@ class FlashCardController
         $desc = isset($_SESSION['POST']['FlashcardDescription']) ? $_SESSION['POST']['FlashcardDescription'] : '';
 
         $TAB_CONTENU = array();
-        for ($i = 0; $i < $_SESSION['nbCartes'] ; $i++){
+        for ($i = 0; $i < $_SESSION['nbCartes']; $i++) {
             $partContent = array(
-                'question' => isset($_SESSION['POST']['cardQuestion'.$i]) ? $_SESSION['POST']['cardQuestion'.$i] : '',
-                'reponse' => isset($_SESSION['POST']['cardReponse'.$i]) ? $_SESSION['POST']['cardReponse'.$i] : ''
+                'question' => isset($_SESSION['POST']['cardQuestion' . $i]) ? $_SESSION['POST']['cardQuestion' . $i] : '',
+                'reponse' => isset($_SESSION['POST']['cardReponse' . $i]) ? $_SESSION['POST']['cardReponse' . $i] : ''
             );
             $TAB_CONTENU[] = $partContent;
         }
 
-        if (isset($_POST['create']) && $_POST['create'] == "yes"){
-            if (isset($_POST['FlashcardTitle']) && !empty($_POST['FlashcardTitle'])  && isset($_POST['FlashcardDescription']) && !empty($_POST['FlashcardDescription'])){
+        if (isset($_POST['create']) && $_POST['create'] == "yes") {
+            if (isset($_POST['FlashcardTitle']) && !empty($_POST['FlashcardTitle'])  && isset($_POST['FlashcardDescription']) && !empty($_POST['FlashcardDescription'])) {
                 $CardsTitle = $_POST['FlashcardTitle'];
                 $desc = $_POST['FlashcardDescription'];
                 $this->model->createFlashcard($_SESSION['nbCartes'], $id, $CardsTitle, $desc, $TAB_CONTENU);
@@ -145,35 +145,43 @@ class FlashCardController
                 header('Location: index.php?page=home');
                 exit;
             }
-            
         }
 
         $_SESSION['bouton'] = false;
 
         require ROOT . '/src/views/Quiz/createFlashcard.php';
-
     }
 
-    public function contentFusionSessionPost(){
-        if(isset($_POST['FlashcardTitle'])){
+    public function contentFusionSessionPost()
+    {
+        if (isset($_POST['FlashcardTitle'])) {
             $_SESSION['POST']['FlashcardTitle'] = $_POST['FlashcardTitle'];
         }
-        if (isset($_POST['FlashcardDescription'])){
+        if (isset($_POST['FlashcardDescription'])) {
             $_SESSION['POST']['FlashcardDescription'] = $_POST['FlashcardDescription'];
         }
-        for ($i = 0; $i < $_SESSION['nbCartes'] ; $i ++){
-            if (isset($_POST['cardQuestion'.$i])){
-                $_SESSION['POST']['cardQuestion'.$i] = $_POST['cardQuestion'.$i];
+        for ($i = 0; $i < $_SESSION['nbCartes']; $i++) {
+            if (isset($_POST['cardQuestion' . $i])) {
+                $_SESSION['POST']['cardQuestion' . $i] = $_POST['cardQuestion' . $i];
             }
-            if (isset($_POST['cardReponse'.$i])){
-                $_SESSION['POST']['cardReponse'.$i] = $_POST['cardReponse'.$i];
+            if (isset($_POST['cardReponse' . $i])) {
+                $_SESSION['POST']['cardReponse' . $i] = $_POST['cardReponse' . $i];
             }
         }
     }
 
-    public function endFlashCard(){
+    public function endFlashCard()
+    {
         $viewData = null;
         $quizId = $_GET['id'];
+        require_once ROOT . '/src/models/LikeModel.php';
+        $modelLike = new LikeModel($this->db);
+        if (isset($_GET['user']) && $_GET['user'] === "like") {
+            $modelLike->sendLike($quizId);
+        } else if (isset($_GET['user']) && $_GET['user'] === "dislike") {
+            $modelLike->sendDislike($quizId);
+        }
+        $reactions = $modelLike->getReactions($quizId);
         require ROOT . '/src/views/quiz/flashcard.php';
     }
 }
