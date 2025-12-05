@@ -27,7 +27,7 @@
     <?php
     for($i = 0; $i < $_SESSION['nbCartes'] ; $i = $i +1){
         echo '<div class="Carte" style="display: flex; flex-direction: column; gap: 15px">
-        <p>Carte '.($i+1).'</p>
+        <p >Carte '.($i+1).'</p>
         <p>Question :</p>
         <div class="textarea">
             <span></span>
@@ -48,3 +48,4 @@
 
     <button class="button" type = "submit" name = "create" value = "yes"><span></span><p>Créer les flashcards</p></button>
 </form>
+<script src = "./assets/js/sauvegardeScroll.js"></script>

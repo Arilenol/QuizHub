@@ -6,7 +6,7 @@
     require __DIR__ . '/../partials/header.php';
 ?>
 
-<script src="./assets/js/script.js"></script>
+
 
 <form style="display: flex; flex-direction: column; padding: 25px; gap: 20px" method = "post" action = "index.php?page=standard&categorie=create">
     <button class="button" type = "submit" name = "Retour" value = "yes"><span></span><p> < Retour</p></button>
@@ -30,7 +30,7 @@
             echo '<p class="validite">réponse valide ?</p>';
             echo '<div class="question" style="grid-row-start: 1; grid-row-end: '. $_SESSION['nbReponse'][$i] + 1 .';">
                 <p>Question '. $i+1 .'</p>
-                <div class="textarea" style="width: calc(100% - 40px); height: calc(100% - 90px)">
+                <div class="textarea" id = "question'.($i+1).'" style="width: calc(100% - 40px); height: calc(100% - 90px)">
                     <span></span>
                     <textarea type = "text" name ="question'.$i.'" placeholder="nom de la question">'.$TAB_CONTENU[$i]['name'].'</textarea>
                 </div>
@@ -104,4 +104,6 @@
 
     <button class="button" type = "submit" name = "create" value = "yes"><span></span><p>Créer le quiz</p></button>
 </form>
+<script src="./assets/js/script.js"></script>
 <script src = "./assets/js/createQuiz.js"></script>
+<script src = "./assets/js/sauvegardeScroll.js"></script>

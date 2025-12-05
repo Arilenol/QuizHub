@@ -58,3 +58,4 @@
     </select>
     <button type = "submit" name = "create" value = "yes">Créer la leçon</button>
 </form>
+<script src = "./assets/js/sauvegardeScroll.js"></script>
