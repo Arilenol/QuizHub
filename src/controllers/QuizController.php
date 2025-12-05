@@ -94,7 +94,7 @@ class QuizController
 
         if (isset($_POST['addReponse']) && $_POST['addReponse'] !== '') {
             $_SESSION['nbReponse'][(int)$_POST['addReponse']]++;
-
+            $i = $_POST['addReponse'];
             unset($_POST['addReponse']);
             $this->contentFusionSessionPost();
 
@@ -114,7 +114,9 @@ class QuizController
 
                     for ($k = 0; $k < $_SESSION['nbReponse'][$i]; $k++) {
                         $_POST['reponse' . $k . '-question' . $i] = $_POST['reponse' . $k . '-question' . ($i + 1)];
-                        $_POST['checkbox' . $k . '-question' . $i] = $_POST['checkbox' . $k . '-question' . ($i + 1)];
+                        if (isset( $_POST['checkbox' . $k . '-question' . ($i + 1)])){
+                            $_POST['checkbox' . $k . '-question' . $i] = $_POST['checkbox' . $k . '-question' . ($i + 1)];
+                        }
                     }
                 }
 
