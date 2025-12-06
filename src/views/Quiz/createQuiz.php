@@ -98,7 +98,7 @@
                         else{
                             $hidden = 'hidden';
                         }
-                        echo '<p class = "timerP"'.$hidden.'>Temps :</p>
+                        echo '<p class = "timerP"'.$hidden.'>Temps en minutes (entre 0 et 60) :</p>
                         <input type = "number" name = "timerValue" value = "'.$timerValue.'" min = 0 max = 60 '.$hidden.'/>';
                     }
                 echo '</div>';
@@ -106,9 +106,42 @@
 
         ?>
     </div>
-
+    <div class = "disponibilite">
+        <p>Mode de publication :</p>
+        <select name="disponibilite" id="disponibilite">
+            <?php $dispo = '';
+            $dispo = $_SESSION['POST']['disponibilite'] == 'public' ? 'selected' : '';
+             ?>
+            <option value="public" <?= $dispo ?> >publique</option>
+            <?php $dispo = $_SESSION['POST']['disponibilite'] == 'ami' ? 'selected' : ''; ?>
+            <option value="ami" <?= $dispo ?> >Seulement les amis</option>
+            <?php $dispo = $_SESSION['POST']['disponibilite'] == 'private' ? 'selected' : ''; ?>
+            <option value="private" <?= $dispo ?> >seulement vous</option>
+        </select>
+        <?php
+        //-----------------------------------------------------ici---------------------------------------------------------
+        if ($_SESSION['POST']['disponibilite'] == "ami"){
+            $hidden2 = '';
+        } 
+        else{
+            $hidden2 = 'hidden';
+        }
+        echo '<label '.$hidden2.'><input name = "amiDispo[]" type = "checkbox" value="tous">Tous les amis</label>';
+        foreach($TAB_AMI as $ami){
+            echo '<label '.$hidden2.'><input name = "amiDispo[]" type = "checkbox" value="'.$ami['ami_id'].'">'.$ami['username'].'</label>';
+        }
+        
+        ?>
+    </div>
+    <?php
+    //-----------------------------------------------------ici---------------------------------------------------------
+        if ($_SESSION['erreur']){
+            echo '<p class="erreur">Chaque champ doit être rempli<br>Chaque question doit avoir au moins une réponse juste et une réponse fausse</p>';
+        } 
+    ?>
     <button class="button" type = "submit" name = "create" value = "yes"><span></span><p>Créer le quiz</p></button>
 </form>
 <script src="./assets/js/script.js"></script>
 <script src = "./assets/js/createQuiz.js"></script>
 <script src = "./assets/js/sauvegardeScroll.js"></script>
+<script src = "./assets/js/selectDispo.js"></script>

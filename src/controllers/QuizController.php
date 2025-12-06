@@ -38,10 +38,16 @@ class QuizController
         if (!isset($_SESSION['POST'])) {
             $_SESSION['POST'] = [];
         }
+        //-----------------------------------------------------ici---------------------------------------------------------
+        if(!isset($_SESSION['POST']['disponibilite'])){
+            $_SESSION['POST']['disponibilite'] = 'public';
+        }
         if (!isset($_SESSION['bouton'])) {
             $_SESSION['bouton'] = false;
         }
-
+        if (!isset($_SESSION['erreur'])){
+            $_SESSION['erreur'] = false;
+        }
         
 
         if (!isset($_SESSION['nbQuestions']) || empty($_SESSION['nbQuestions'])) {
@@ -73,6 +79,7 @@ class QuizController
             unset($_SESSION['nbReponse']);
             unset($_SESSION['nbQuestions']);
             unset($_SESSION['POST']);
+            unset($_SESSION['erreur']);
             unset($_POST);
             // redirect back to content creation or other appropriate page
             header('Location: index.php?page=createContent');
@@ -156,7 +163,7 @@ class QuizController
         if ($_SESSION['bouton'] === false) {
             $this->contentFusionSessionPost();
         }
-
+        
 
         $quizTitle = isset($_SESSION['POST']['QuizTitle']) ? $_SESSION['POST']['QuizTitle'] : '';
         $desc = isset($_SESSION['POST']['QuizDescription']) ? $_SESSION['POST']['QuizDescription'] : '';
@@ -187,42 +194,45 @@ class QuizController
             }
         }
 
+        //-----------------------------------------------------ici---------------------------------------------------------
+        $TAB_AMI = $this->model->getAmis($_SESSION['id']);
         $timerValue = isset($_SESSION['POST']['timerValue']) ? $_SESSION['POST']['timerValue'] : 0;
 
         
 
         if (isset($_POST['create']) && $_POST['create'] === 'yes') {
-            // basic validation: ensure a title is provided
-            if (isset($_POST['QuizTitle']) && !empty($_POST['QuizTitle'])) {
-                $quizTitle = $_POST['QuizTitle'];
-                $desc = isset($_POST['QuizDescription']) ? $_POST['QuizDescription'] : '';
-                $this->contentFusionSessionPost();
-                if($this->verifValidite()){
-                    
-                    $model->createQuiz($id, $tabParametres, $TAB_CONTENU, $desc, $quizTitle, $_SESSION['nbQuestions'], $_SESSION['nbReponse']);
-                    unset($_SESSION['bouton']);
-                    unset($_SESSION['nbReponse']);
-                    unset($_SESSION['nbQuestions']);
-                    unset($_SESSION['POST']);
-                    unset($_POST);
-                    header('Location: index.php?page=home');
-                    exit;
-                }
-                else{
-                    //$this->contentFusionSessionPost();
-                    $_SESSION['bouton'] = true;
-                    header('Location: ' . $_SERVER['REQUEST_URI']);
-                    exit;
-                }
-                
+            $quizTitle = $_POST['QuizTitle'];
+            $desc = isset($_POST['QuizDescription']) ? $_POST['QuizDescription'] : '';
+            $this->contentFusionSessionPost();
+            $test = $this->verifValidite();
+            $_SESSION['verif'] = $test;
+            if($test){
+                  
+                $model->createQuiz($id, $tabParametres, $TAB_CONTENU, $desc, $quizTitle, $_SESSION['nbQuestions'], $_SESSION['nbReponse']);
+                unset($_SESSION['bouton']);
+                unset($_SESSION['nbReponse']);
+                unset($_SESSION['nbQuestions']);
+                unset($_SESSION['POST']);
+                unset($_SESSION['erreur']);
+                unset($_POST);
+                header('Location: index.php?page=home');
+                exit;
+            }
+            else{
+                $_SESSION['erreur'] = true;
+                unset($_POST['create']);
+                $_SESSION['bouton'] = true;
+                header('Location: ' . $_SERVER['REQUEST_URI']);
+                exit;
             }
         }
-
+        
         $_SESSION['bouton'] = false;
-
         //var_dump($_SESSION['POST']);
-        //var_dump($_POST);
+        var_dump($_POST);
         //var_dump($TAB_CONTENU);
+        var_dump($_SESSION);
+        var_dump($TAB_AMI);
         //unset($_SESSION['POST']);
         require ROOT . '/src/views/Quiz/createQuiz.php';
     }
@@ -252,9 +262,9 @@ class QuizController
                     $_SESSION['POST']['reponse' . $k . '-question' . $i] = $_POST['reponse' . $k . '-question' . $i];
                 }
                 if (isset($_POST['checkbox' . $k . '-question' . $i])) {
-                    $_SESSION['POST']['checkbox' . $k . '-question' . $i] = 1;
+                    $_SESSION['POST']['checkbox' . $k . '-question' . $i] = "on";
                 } else {
-                    $_SESSION['POST']['checkbox' . $k . '-question' . $i] = 0;
+                    $_SESSION['POST']['checkbox' . $k . '-question' . $i] = '';
                 }
             }
         }
@@ -270,32 +280,48 @@ class QuizController
         if(isset($_POST['timerValue'])){
             $_SESSION['POST']['timerValue'] = $_POST['timerValue'];
         }
+        //-----------------------------------------------------ici---------------------------------------------------------
+        if(isset($_POST['disponibilite'])){
+            $_SESSION['POST']['disponibilite'] = $_POST['disponibilite'];
+        }
+        if(isset($_POST['amiDispo'])){
+            $_SESSION['POST']['amiDispo'] = $_POST['amiDispo'];
+        }
     }
 
     public function verifValidite(){
-        if (!isset($_POST['QuizTitle']) || empty($_POST['QuizTitle'])){
+        if(isset($_SESSION['POST']['timerValue']) && (int)$_SESSION['POST']['timerValue'] > 60){
             return false;
         }
-        if (!isset($_POST['QuizDescription']) || empty($_POST['QuizDescription'])){
+        if (!isset($_SESSION['POST']['QuizTitle']) || empty($_SESSION['POST']['QuizTitle'])){
+            $_SESSION['estpasvalidetitre'] = 'estpasvalidetitre';
+            return false;
+        }
+        if (!isset($_SESSION['POST']['QuizDescription']) || empty($_SESSION['POST']['QuizDescription'])){
+            $_SESSION['estpasvalidetitre'] = 'estpasvalidetitre';
             return false;
         }
         for ($i = 0; $i < $_SESSION['nbQuestions']; $i++){
             $count = 0;
             for ($k = 0; $k < $_SESSION['nbReponse'][$i] ; $k++){
-                if (isset($_POST['checkbox'.$k.'-question'.$i]) && $_POST['checkbox'.$k.'-question'.$i] == "on"){
+                if (isset($_SESSION['POST']['checkbox'.$k.'-question'.$i]) && $_SESSION['POST']['checkbox'.$k.'-question'.$i] == "on"){
                     $count++;
                 }
-                if(!isset($_POST['reponse'.$k.'-question'.$i]) || empty($_POST['reponse'.$k.'-question'.$i])){
+                if(!isset($_SESSION['POST']['reponse'.$k.'-question'.$i]) || empty($_SESSION['POST']['reponse'.$k.'-question'.$i])){
+                    $_SESSION['estpasvalidetitre'] = 'estpasvalidetitre';
                     return false;
                 }
             }
-            if(!isset($_POST['question'.$i]) || empty($_POST['question'.$i])){
+            if(!isset($_SESSION['POST']['question'.$i]) || empty($_SESSION['POST']['question'.$i])){
+                $_SESSION['estpasvalidetitre'] = 'estpasvalidetitre';
                 return false;
             }
             if($count === 0 || $count === $_SESSION['nbReponse'][$i]){
+                $_SESSION['estpasvalidetitre'] = 'estpasvalidetitre';
                 return false;
             }
         }
+        $_SESSION['estvalide'] = 'estvalide';
         return true;
     }
 

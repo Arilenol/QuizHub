@@ -106,4 +106,23 @@ class FlashCardModel
             return false;
         }
     }
+
+    public function getAmis(int $user_id){
+        $amis = $this->db->prepare("SELECT 
+                                CASE 
+                                WHEN user1_id = ? THEN user2_id
+                                ELSE user1_id
+                                END AS ami_id , username
+                                FROM amis JOIN users ON ami_id = users.id 
+                                WHERE ? = user1_id OR ? = user2_id;");
+        $amis->bindvalue(1,$user_id);
+        $amis->bindvalue(2,$user_id);
+        $amis->bindvalue(3,$user_id);
+
+        $amis->execute();
+
+        $result = $amis->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+        
+    }
 }

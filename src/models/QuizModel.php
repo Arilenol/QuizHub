@@ -203,13 +203,14 @@ class QuizModel
         }
     }
 
-    public function insertReponse(int $question_id, string $contenu, int $valide)
+    public function insertReponse(int $question_id, string $contenu, string $valide)
     {
         try {
             $newReponse = $this->db->prepare("INSERT INTO Reponse(question_id, reponse, estCorrecte) VALUES (?, ?, ?);");
             $newReponse->bindValue(1, $question_id);
             $newReponse->bindValue(2, $contenu);
-            $newReponse->bindValue(3, $valide);
+            $validite = $valide == "on" ? 1 : 0;
+            $newReponse->bindValue(3, $validite);
 
             $reussite = $newReponse->execute();
             if (!$reussite) {
@@ -221,5 +222,24 @@ class QuizModel
             error_log("Erreur d'insertion de reponse : " . $e->getMessage());
             return false;
         }
+    }
+
+    public function getAmis(int $user_id){
+        $amis = $this->db->prepare("SELECT 
+                                CASE 
+                                WHEN user1_id = ? THEN user2_id
+                                ELSE user1_id
+                                END AS ami_id , username
+                                FROM amis JOIN users ON ami_id = users.id 
+                                WHERE ? = user1_id OR ? = user2_id;");
+        $amis->bindvalue(1,$user_id);
+        $amis->bindvalue(2,$user_id);
+        $amis->bindvalue(3,$user_id);
+
+        $amis->execute();
+
+        $result = $amis->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+        
     }
 }
