@@ -72,19 +72,24 @@
         </button>
     </div>
     
-    
-    
+    <h2>Test</h2>
+    <div style="display: flex; flex-direction: row; align-items: center; gap: 10px">
+        <p style="font-size: 20px"><?= $tabParametres[0]['desc'] ?> </p>
+        <div class="checkbox param"  id = "<?= $tabParametres[0]['name'] ?>">
+            <input type="checkbox" id = "<?=  'param'.$tabParametres[0]['name'] ?>" name=" <?=  'param'.$tabParametres[0]['name'] ?>" <?= $TAB_PARAM[0] ?> hidden/>
+        </div>
+    </div>
     <h2>Paramètres</h2>
     <div class = "parametres">
         <?php
-            foreach ($tabParametres as $indice => $param){
+            foreach (array_slice($tabParametres,1) as $indice => $param){
                 //----------------------------------------faudra demander à kilian---------------------------------------
                 echo 
                 '
                 <div style="display: flex; flex-direction: row; align-items: center; gap: 10px">
                     <p style="font-size: 20px">'.$param['desc'].' : </p>
                     <div class="checkbox param"  id = "'.$param['name'].'">
-                        <input type="checkbox" id = "param'.$param['name'].'" name="param'.$param['name'].'" '.$TAB_PARAM[$indice].' hidden/>
+                        <input type="checkbox" id = "param'.$param['name'].'" name="param'.$param['name'].'" '.$TAB_PARAM[$indice+1].' hidden/>
                     </div>';
                     if ($param['name'] == 'timer'){
                         if (!empty($_SESSION['POST']['param'.$param['name']])){
