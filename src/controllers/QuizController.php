@@ -57,6 +57,7 @@ class QuizController
 
         //------------informations à remplir---------------------
         $tabParametres = array(
+            array('name' => 'test', 'desc' => 'Un test permet de voir un récapitulatif à la fin du quiz<br>Ce mode permet de simuler une évaluation'),
             array('name' => 'timer', 'desc' => 'minuterie'),
             array('name' => 'retryError','desc' => 'rééssayer les questions échouées'),
             array('name' => 'noOrder','desc' => 'faire dans le désordre par défaut'),
@@ -195,7 +196,9 @@ class QuizController
             if (isset($_POST['QuizTitle']) && !empty($_POST['QuizTitle'])) {
                 $quizTitle = $_POST['QuizTitle'];
                 $desc = isset($_POST['QuizDescription']) ? $_POST['QuizDescription'] : '';
+                $this->contentFusionSessionPost();
                 if($this->verifValidite()){
+                    
                     $model->createQuiz($id, $tabParametres, $TAB_CONTENU, $desc, $quizTitle, $_SESSION['nbQuestions'], $_SESSION['nbReponse']);
                     unset($_SESSION['bouton']);
                     unset($_SESSION['nbReponse']);
@@ -206,7 +209,7 @@ class QuizController
                     exit;
                 }
                 else{
-                    $this->contentFusionSessionPost();
+                    //$this->contentFusionSessionPost();
                     $_SESSION['bouton'] = true;
                     header('Location: ' . $_SERVER['REQUEST_URI']);
                     exit;
@@ -224,9 +227,9 @@ class QuizController
         require ROOT . '/src/views/Quiz/createQuiz.php';
     }
 
-    public function contentFusionSessionPost()
-    {
+    public function contentFusionSessionPost(){
         $tabParametres = array(
+            array('name' => 'test', 'desc' => 'Un test permet de voir un récapitulatif à la fin du quiz<br>Ce mode permet de simuler une évaluation'),
             array('name' => 'timer', 'desc' => 'minuterie'),
             array('name' => 'retryError','desc' => 'rééssayer les questions échouées'),
             array('name' => 'noOrder','desc' => 'faire dans le désordre par défaut'),
@@ -270,6 +273,29 @@ class QuizController
     }
 
     public function verifValidite(){
+        if (!isset($_POST['QuizTitle']) || empty($_POST['QuizTitle'])){
+            return false;
+        }
+        if (!isset($_POST['QuizDescription']) || empty($_POST['QuizDescription'])){
+            return false;
+        }
+        for ($i = 0; $i < $_SESSION['nbQuestions']; $i++){
+            $count = 0;
+            for ($k = 0; $k < $_SESSION['nbReponse'][$i] ; $k++){
+                if (isset($_POST['checkbox'.$k.'-question'.$i]) && $_POST['checkbox'.$k.'-question'.$i] == "on"){
+                    $count++;
+                }
+                if(!isset($_POST['reponse'.$k.'-question'.$i]) || empty($_POST['reponse'.$k.'-question'.$i])){
+                    return false;
+                }
+            }
+            if(!isset($_POST['question'.$i]) || empty($_POST['question'.$i])){
+                return false;
+            }
+            if($count === 0 || $count === $_SESSION['nbReponse'][$i]){
+                return false;
+            }
+        }
         return true;
     }
 

@@ -170,15 +170,22 @@ class LessonController {
             if (isset($_POST['LessonTitle']) && !empty($_POST['LessonTitle'])  && isset($_POST['LessonDescription']) && !empty($_POST['LessonDescription'])){
                 $LessonTitle = $_POST['LessonTitle'];
                 $desc = $_POST['LessonDescription'];
-                $model->createLesson($id, $LessonTitle, $desc, $_SESSION['nbParts'],$_SESSION['nbExemple'],$TAB_CONTENU,$quizSelected);
-                //je mets une redirecion pour être sûr qu'on ne l'oublie pas après
-                unset($_SESSION['nbExemple']);
-                unset($_SESSION['nbParts']);
-                unset($_POST);
-                header('Location: index.php?page=home');
-                exit;
+                $this->contentFusionSessionPost();
+                if ($this->verifValidite()){
+                    $model->createLesson($id, $LessonTitle, $desc, $_SESSION['nbParts'],$_SESSION['nbExemple'],$TAB_CONTENU,$quizSelected);
+                    //je mets une redirecion pour être sûr qu'on ne l'oublie pas après
+                    unset($_SESSION['nbExemple']);
+                    unset($_SESSION['nbParts']);
+                    unset($_POST);
+                    header('Location: index.php?page=home');
+                    exit;
+                }
+                else{
+                    $_SESSION['bouton'] = true;
+                    header('Location: ' . $_SERVER['REQUEST_URI']);
+                    exit;
+                }
             }
-            
         }
 
 
@@ -187,6 +194,32 @@ class LessonController {
         $_SESSION['bouton'] = false;
 
         require ROOT . '/src/views/lesson/createLesson.php';
+    }
+
+    public function verifValidite(){
+        if (!isset($_POST['LessonTitle']) || empty($_POST['LessonDescription'])){
+            return false;
+        }
+        if (!isset($_POST['LessonDescription']) || empty($_POST['LessonDescription'])){
+            return false;
+        }
+        for ($i = 0; $i < $_SESSION['nbParts'] ; $i++){
+            if (!isset($_POST['namePart'.$i]) || empty($_POST['namePart'.$i])){
+                return false;
+            }
+            if (!isset($_POST['contentPart'.$i]) || empty($_POST['contentPart'.$i])){
+                return false;
+            }
+            for ($k = 0; $k < $_SESSION['nbExemple'][$i] ; $k++){
+                if (!isset($_POST['exemple'.$k.'-part'.$i]) || empty($_POST['exemple'.$k.'-part'.$i])){
+                    return false;
+                }
+                if (!isset($_POST['reponse'.$k.'-part'.$i]) || empty($_POST['reponse'.$k.'-part'.$i])){
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     public function contentFusionSessionPost(){
