@@ -76,7 +76,7 @@ class LessonModel {
      *
      * @return bool  true si la création est réussie, false en cas d'erreur.
      */
-    public function createLesson(int $id, String $title, String $description, int $nbParts, array $nbExemple, array $TAB_CONTENU, array $TAB_AMI_CHOISI, string $disponibilite, ?int $quizSelected): int|false {
+    public function createLesson(int $id, String $title, String $description, int $nbParts, array $nbExemple, array $TAB_CONTENU, array $TAB_AMI_CHOISI,array $TAB_CATEGORIE_CHOISI,  string $disponibilite, ?int $quizSelected): int|false {
         try {
             $this->db->beginTransaction();
 
@@ -98,6 +98,12 @@ class LessonModel {
 
                 }
 
+            }
+            foreach($TAB_CATEGORIE_CHOISI as $categorie){
+                $newLessonCategorie = $this->insertLessonCategorie($newLesson, (int)$categorie);
+                if (!$newLessonCategorie) {
+                    throw new PDOException("erreur dans l\'insertion des catégories dans LessonModel.php/createLesson");
+                }
             }
             if ($disponibilite == 'ami'){
                 foreach($TAB_AMI_CHOISI as $ami){
@@ -298,6 +304,57 @@ class LessonModel {
         $result = $amis->fetchAll(PDO::FETCH_ASSOC);
         return $result;
         
+    }
+
+    /**
+     * Insère une association entre un quiz et une catégorie.
+     *
+     * Cette méthode crée un lien dans la table `categorie_quiz` pour indiquer
+     * qu'une catégorie est associée à un quiz spécifique.
+     *
+     * @param int $quiz_id      Identifiant du quiz.
+     * @param int $categorie_id Identifiant de la catégorie à associer.
+     *
+     * @return int|false  Retourne l'ID de la catégorie insérée, ou false en cas d'erreur.
+     */
+    public function insertLessonCategorie(int $lesson_id, int $categorie_id)
+    {
+        try {
+            $newQuizCategorie = $this->db->prepare("INSERT INTO categorie_lecon(category_id, lesson_id) VALUES (?, ?);");
+            $newQuizCategorie->bindValue(1, $categorie_id);
+            $newQuizCategorie->bindValue(2, $lesson_id);
+
+            $reussite = $newQuizCategorie->execute();
+            if ($reussite === false) {
+                return false;
+            } else {
+                return $categorie_id;
+            }
+        } catch (PDOException $e) {
+            error_log("Erreur d'insertion de quiz categorie : " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Récupère la liste des catégories disponibles.
+     *
+     * Cette méthode retourne un tableau associatif contenant les catégories
+     * (id et CategorieName) présentes dans la table `categories`.
+     *
+     * @return array|false  Tableau associatif des catégories, ou false en cas d'erreur.
+     */
+    public function getAllCategories(): mixed{
+        try{
+            $sql = $this->db->prepare("SELECT DISTINCT id,CategorieName FROM categories;");
+            $sql->execute();
+            $categories = $sql->fetchAll(PDO::FETCH_ASSOC);
+            return $categories;
+        }catch(PDOException $e){
+            die("Fetching categories failed: " . $e->getMessage());
+        }catch(Exception $e){
+            die("Error: " . $e->getMessage());
+        }
     }
 }
 ?>

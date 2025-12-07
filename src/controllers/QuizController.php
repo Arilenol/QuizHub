@@ -168,6 +168,13 @@ class QuizController
         $quizTitle = isset($_SESSION['POST']['QuizTitle']) ? $_SESSION['POST']['QuizTitle'] : '';
         $desc = isset($_SESSION['POST']['QuizDescription']) ? $_SESSION['POST']['QuizDescription'] : '';
 
+        $TAB_CATEGORIE = $this->model->getAllCategories();
+        $TAB_CATEGORIE_CHOISI = array();
+        if (isset($_SESSION['POST']['categories'])){
+            $TAB_CATEGORIE_CHOISI = $_SESSION['POST']['categories'];
+        }
+
+
         $TAB_CONTENU = array();
         for ($i = 0; $i < $_SESSION['nbQuestions']; $i++) {
             $qContent = array(
@@ -211,7 +218,7 @@ class QuizController
             $test = $this->verifValidite();
             if($test){
                 
-                $reussi = $this->model->createQuiz($id, $TAB_PARAM,$timerValue, $TAB_CONTENU,$TAB_AMI_CHOISI, $_SESSION['POST']['disponibilite'], $desc, $quizTitle, $_SESSION['nbQuestions'], $_SESSION['nbReponse']);
+                $reussi = $this->model->createQuiz($id, $TAB_PARAM,$timerValue, $TAB_CONTENU,$TAB_AMI_CHOISI, $TAB_CATEGORIE_CHOISI, $_SESSION['POST']['disponibilite'], $desc, $quizTitle, $_SESSION['nbQuestions'], $_SESSION['nbReponse']);
                 if ($reussi){
                     unset($_SESSION['bouton']);
                     unset($_SESSION['nbReponse']);
@@ -240,7 +247,7 @@ class QuizController
         }
         
         $_SESSION['bouton'] = false;
-        //var_dump($_SESSION['POST']);
+        var_dump($_SESSION['POST']);
         //var_dump($_POST);
         //var_dump($TAB_CONTENU);
         //var_dump($_SESSION);
@@ -300,6 +307,9 @@ class QuizController
         if(isset($_POST['amiDispo'])){
             $_SESSION['POST']['amiDispo'] = $_POST['amiDispo'];
         }
+        if(isset($_POST['categories'])){
+            $_SESSION['POST']['categories'] = $_POST['categories'];
+        }
     }
 
     public function verifValidite(){
@@ -328,6 +338,9 @@ class QuizController
             if($count === 0 || $count === $_SESSION['nbReponse'][$i]){
                 return false;
             }
+        }
+        if(!isset($_SESSION['POST']['categories']) || count($_SESSION['POST']['categories']) === 0){
+            return false;
         }
         return true;
     }

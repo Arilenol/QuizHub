@@ -158,7 +158,7 @@ class QuizModel
      *
      * @return bool  true si la création est réussie, false en cas d'erreur.
      */
-    public function createQuiz(int $user_id, array $params, int $timer, array $TAB_CONTENU,array $TAB_AMI_CHOISI, string $disponibilite,  string $desc, string $title, int $nbQuestion, array $nbReponse)
+    public function createQuiz(int $user_id, array $params, int $timer, array $TAB_CONTENU,array $TAB_AMI_CHOISI, array $TAB_CATEGORIE_CHOISI, string $disponibilite,  string $desc, string $title, int $nbQuestion, array $nbReponse)
     {
         try {
             $this->db->beginTransaction();
@@ -168,7 +168,7 @@ class QuizModel
                 throw new PDOException("erreur dans l\'insertion du Quiz dans QuizModel.php/createQuiz");
             }
             for ($i = 0; $i < $nbQuestion; $i++) {
-                $newQuestion = $this->insertQuestion($i, $newQuiz, $TAB_CONTENU[$i]['name']);
+                $newQuestion = $this->insertQuestion($i+1, $newQuiz, $TAB_CONTENU[$i]['name']);
                 if (!$newQuestion) {
                     throw new PDOException("erreur dans l\'insertion de question dans QuizModel.php/createQuiz");
                 }
@@ -177,6 +177,12 @@ class QuizModel
                     if (!$newReponse) {
                         throw new PDOException("erreur dans l\'insertion de reponse dans QuizModel.php/createQuiz");
                     }
+                }
+            }
+            foreach($TAB_CATEGORIE_CHOISI as $categorie){
+                $newCategorie = $this->insertQuizCategorie($newQuiz, (int)$categorie);
+                if (!$newCategorie) {
+                    throw new PDOException("erreur dans l\'insertion des catégories dans QuizModel.php/createQuiz");
                 }
             }
             $hasParam = false;
@@ -247,6 +253,36 @@ class QuizModel
             }
         } catch (PDOException $e) {
             error_log("Erreur d'insertion de quiz : " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Insère une association entre un quiz et une catégorie.
+     *
+     * Cette méthode crée un lien dans la table `categorie_quiz` pour indiquer
+     * qu'une catégorie est associée à un quiz spécifique.
+     *
+     * @param int $quiz_id      Identifiant du quiz.
+     * @param int $categorie_id Identifiant de la catégorie à associer.
+     *
+     * @return int|false  Retourne l'ID de la catégorie insérée, ou false en cas d'erreur.
+     */
+    public function insertQuizCategorie(int $quiz_id, int $categorie_id)
+    {
+        try {
+            $newQuizCategorie = $this->db->prepare("INSERT INTO categorie_quiz(category_id, quiz_id) VALUES (?, ?);");
+            $newQuizCategorie->bindValue(1, $categorie_id);
+            $newQuizCategorie->bindValue(2, $quiz_id);
+
+            $reussite = $newQuizCategorie->execute();
+            if ($reussite === false) {
+                return false;
+            } else {
+                return $categorie_id;
+            }
+        } catch (PDOException $e) {
+            error_log("Erreur d'insertion de quiz categorie : " . $e->getMessage());
             return false;
         }
     }
@@ -423,5 +459,26 @@ class QuizModel
         $result = $amis->fetchAll(PDO::FETCH_ASSOC);
         return $result;
         
+    }
+
+    /**
+     * Récupère la liste des catégories disponibles.
+     *
+     * Cette méthode retourne un tableau associatif contenant les catégories
+     * (id et CategorieName) présentes dans la table `categories`.
+     *
+     * @return array|false  Tableau associatif des catégories, ou false en cas d'erreur.
+     */
+    public function getAllCategories(): mixed{
+        try{
+            $sql = $this->db->prepare("SELECT DISTINCT id,CategorieName FROM categories;");
+            $sql->execute();
+            $categories = $sql->fetchAll(PDO::FETCH_ASSOC);
+            return $categories;
+        }catch(PDOException $e){
+            die("Fetching categories failed: " . $e->getMessage());
+        }catch(Exception $e){
+            die("Error: " . $e->getMessage());
+        }
     }
 }

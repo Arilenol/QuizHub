@@ -158,6 +158,13 @@ class LessonController {
 
         $LessonTitle = isset($_SESSION['POST']['LessonTitle']) ? $_SESSION['POST']['LessonTitle'] : '';
         $desc = isset($_SESSION['POST']['LessonDescription']) ? $_SESSION['POST']['LessonDescription'] : '';
+
+        $TAB_CATEGORIE = $model->getAllCategories();
+        $TAB_CATEGORIE_CHOISI = array();
+        if (isset($_SESSION['POST']['categories'])){
+            $TAB_CATEGORIE_CHOISI = $_SESSION['POST']['categories'];
+        }
+
         //var_dump($quizSelected);
         $TAB_CONTENU = array();
         for ($i = 0; $i < $_SESSION['nbParts'] ; $i++){
@@ -187,7 +194,7 @@ class LessonController {
             $desc = $_POST['LessonDescription'];
             $this->contentFusionSessionPost();
             if ($this->verifValidite()){
-                $reussi = $model->createLesson($id, $LessonTitle, $desc, $_SESSION['nbParts'],$_SESSION['nbExemple'],$TAB_CONTENU,$TAB_AMI_CHOISI, $_SESSION['POST']['disponibilite'],$quizSelected);
+                $reussi = $model->createLesson($id, $LessonTitle, $desc, $_SESSION['nbParts'],$_SESSION['nbExemple'],$TAB_CONTENU,$TAB_AMI_CHOISI, $TAB_CATEGORIE_CHOISI, $_SESSION['POST']['disponibilite'],$quizSelected);
                 //je mets une redirecion pour être sûr qu'on ne l'oublie pas après
                 if($reussi){
                     unset($_SESSION['nbExemple']);
@@ -247,6 +254,9 @@ class LessonController {
                 }
             }
         }
+        if(!isset($_SESSION['POST']['categories']) || count($_SESSION['POST']['categories']) === 0){
+            return false;
+        }
         return true;
     }
 
@@ -278,6 +288,9 @@ class LessonController {
         }
         if(isset($_POST['amiDispo'])){
             $_SESSION['POST']['amiDispo'] = $_POST['amiDispo'];
+        }
+        if(isset($_POST['categories'])){
+            $_SESSION['POST']['categories'] = $_POST['categories'];
         }
     }
 
