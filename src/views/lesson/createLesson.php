@@ -15,6 +15,24 @@
     <input type="text" name ="LessonTitle" value = "<?php echo $LessonTitle ?>">
     <p class="description">Description</p>
     <input type="text" name ="LessonDescription" value = "<?php echo $desc ?>">
+
+    <h2 style="display : inline;">Catégories
+        <button id="hiddenCategories" type = "button ">▼</button>
+    </h2>
+    <div class="categoriesList">
+        <?php
+        foreach($TAB_CATEGORIE as $categorie){
+            if (in_array((string)$categorie['id'], $TAB_CATEGORIE_CHOISI)) {
+                $checked = 'checked';
+            } else {
+                $checked = '';
+            }
+            echo '<label><input name = "categories[]" type = "checkbox" value='.$categorie['id'].' '.$checked.'>'.$categorie['categorieName'].'</label>';
+        }
+        ?>
+
+    </div>
+
     <div class = "newLesson">
     <p class = "LessonParts">Parties</p>
     <?php
@@ -97,10 +115,11 @@
     <?php
     //-----------------------------------------------------ici---------------------------------------------------------
         if ($_SESSION['erreur']){
-            echo '<p class="erreur">Chaque champ doit être rempli<br>Chaque partie peut avoir autant d\'exemple que nécessaire</p>';
+            echo '<p class="erreur">Chaque champ doit être rempli<br>Chaque partie peut avoir autant d\'exemple que nécessaire<br>Au moins une catégorie doit être sélectionnée</p>';
         } 
     ?>
     <button type = "submit" name = "create" value = "yes">Créer la leçon</button>
 </form>
 <script src = "./assets/js/sauvegardeScroll.js"></script>
 <script src = "./assets/js/selectDispo.js"></script>
+<script src = "./assets/js/createContent.js"></script>

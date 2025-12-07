@@ -134,6 +134,12 @@ class FlashCardController
         $CardsTitle = isset($_SESSION['POST']['FlashcardTitle']) ? $_SESSION['POST']['FlashcardTitle'] : '';
         $desc = isset($_SESSION['POST']['FlashcardDescription']) ? $_SESSION['POST']['FlashcardDescription'] : '';
 
+        $TAB_CATEGORIE = $this->model->getAllCategories();
+        $TAB_CATEGORIE_CHOISI = array();
+        if (isset($_SESSION['POST']['categories'])){
+            $TAB_CATEGORIE_CHOISI = $_SESSION['POST']['categories'];
+        }
+
         $TAB_CONTENU = array();
         for ($i = 0; $i < $_SESSION['nbCartes'] ; $i++){
             $partContent = array(
@@ -155,7 +161,7 @@ class FlashCardController
             $this->contentFusionSessionPost();
             if ($this->verifValidite()){
 
-                $reussi = $this->model->createFlashcard($_SESSION['nbCartes'], $id, $CardsTitle, $desc, $TAB_CONTENU, $TAB_AMI_CHOISI, $_SESSION['POST']['disponibilite']);
+                $reussi = $this->model->createFlashcard($_SESSION['nbCartes'], $id, $CardsTitle, $desc, $TAB_CONTENU, $TAB_AMI_CHOISI, $TAB_CATEGORIE_CHOISI, $_SESSION['POST']['disponibilite']);
                 if ($reussi){
                     unset($_SESSION['nbCartes']);
                     unset($_SESSION['bouton']);
@@ -211,6 +217,9 @@ class FlashCardController
         if(isset($_POST['amiDispo'])){
             $_SESSION['POST']['amiDispo'] = $_POST['amiDispo'];
         }
+        if(isset($_POST['categories'])){
+            $_SESSION['POST']['categories'] = $_POST['categories'];
+        }
     }
 
     public function verifValidite(){
@@ -227,6 +236,9 @@ class FlashCardController
             if(!isset($_SESSION['POST']['cardReponse'.$i]) || empty($_SESSION['POST']['cardReponse'.$i])){
                 return false;
             }
+        }
+        if(!isset($_SESSION['POST']['categories']) || count($_SESSION['POST']['categories']) === 0){
+            return false;
         }
         return true;
     }

@@ -23,6 +23,24 @@
         <span></span>
         <input type="text" name ="QuizDescription" value = "<?php echo htmlspecialchars($desc) ?>">
     </div>
+
+    <h2 style="display : inline;">Catégories
+        <button id="hiddenCategories" type = "button ">▼</button>
+    </h2>
+    <div class="categoriesList">
+        <?php
+        foreach($TAB_CATEGORIE as $categorie){
+            if (in_array((string)$categorie['id'], $TAB_CATEGORIE_CHOISI)) {
+                $checked = 'checked';
+            } else {
+                $checked = '';
+            }
+            echo '<label><input name = "categories[]" type = "checkbox" value='.$categorie['id'].' '.$checked.'>'.$categorie['categorieName'].'</label>';
+        }
+        ?>
+
+    </div>
+
     <div style="display: flex; flex-direction: column; gap: 20px">
         <?php
         for($i = 0; $i < $_SESSION['nbQuestions'] ; $i = $i +1){
@@ -147,7 +165,7 @@
     <?php
     //-----------------------------------------------------ici---------------------------------------------------------
         if ($_SESSION['erreur']){
-            echo '<p class="erreur">Chaque champ doit être rempli<br>Chaque question doit avoir au moins une réponse juste et une réponse fausse</p>';
+            echo '<p class="erreur">Chaque champ doit être rempli<br>Chaque question doit avoir au moins une réponse juste et une réponse fausse<br>Au moins une catégorie doit être sélectionnée</p>';
         } 
     ?>
     <button class="button" type = "submit" name = "create" value = "yes"><span></span><p>Créer le quiz</p></button>
@@ -156,3 +174,4 @@
 <script src = "./assets/js/createQuiz.js"></script>
 <script src = "./assets/js/sauvegardeScroll.js"></script>
 <script src = "./assets/js/selectDispo.js"></script>
+<script src = "./assets/js/createContent.js"></script>

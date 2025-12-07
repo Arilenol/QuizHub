@@ -160,6 +160,7 @@ function constructionBD(PDO $conn){
 
             $conn->exec($sql);
 
+            
             $sql = "CREATE TABLE IF NOT EXISTS categorie_quiz(
                 category_id INTEGER,
                 quiz_id INTEGER,
@@ -300,6 +301,16 @@ function constructionBD(PDO $conn){
                 difficulty INTEGER,
                 moyenne FLOAT,
                 FOREIGN KEY (quiz_id) REFERENCES quiz(id)
+            );";
+
+            $conn->exec($sql);
+
+            $sql = "CREATE TABLE IF NOT EXISTS categorie_lecon(
+                category_id INTEGER,
+                lesson_id INTEGER,
+                PRIMARY KEY (category_id, lesson_id),
+                FOREIGN KEY (category_id) REFERENCES categories(id),
+                FOREIGN KEY (lesson_id) REFERENCES Lecon(id)
             );";
 
             $conn->exec($sql);
