@@ -36,7 +36,24 @@ class FlashCardModel
     }
 
 
-    public function createFlashcard(int $nbCartes, int $user_id, string $title, string $desc, array $TAB_CONTENU){
+    /**
+     * Crée une flashcard complète avec toutes ses cartes et restrictions d'amis.
+     *
+     * Cette méthode effectue une transaction complète qui crée une flashcard, insère
+     * toutes ses cartes (question/réponse), et les restrictions d'amis si applicable.
+     * En cas d'erreur, la transaction est annulée et aucune donnée n'est conservée.
+     *
+     * @param int    $nbCartes        Nombre total de cartes dans la flashcard.
+     * @param int    $user_id         Identifiant de l'utilisateur créateur de la flashcard.
+     * @param string $title           Titre de la flashcard.
+     * @param string $desc            Description de la flashcard.
+     * @param array  $TAB_CONTENU     Tableau contenant les questions et réponses de chaque carte.
+     * @param array  $TAB_AMI_CHOISI  Tableau des IDs d'amis autorisés à accéder (si dispo='ami').
+     * @param string $disponibilite   Type de disponibilité ('public', 'ami', etc.).
+     *
+     * @return bool  true si la création est réussie, false en cas d'erreur.
+     */
+    public function createFlashcard(int $nbCartes, int $user_id, string $title, string $desc, array $TAB_CONTENU, array $TAB_AMI_CHOISI, string $disponibilite){
         try{
             $this->db->beginTransaction();
             $newFlashcard = $this->insertFlashcard($user_id, $title, $desc);
@@ -49,7 +66,16 @@ class FlashCardModel
                     throw new PDOException("erreur dans l\'insertion d\'une carte dans FlashcardModel.php/createFlashcard");
                 }
             }
+            if ($disponibilite == 'ami'){
+                foreach($TAB_AMI_CHOISI as $ami){
+                    $newAmiDispo = $this->insertAmiDispo($newFlashcard, (int)$ami);
+                    if (!$newAmiDispo) {
+                        throw new PDOException("erreur dans l\'insertion des amis dans QuizModel.php/createQuiz");
+                    }
+                }
+            }
             $this->db->commit();
+            return true;
         }catch (PDOException $e){
             error_log("Erreur création de flashcard : " . $e->getMessage());
             $this->db->rollBack();
@@ -57,6 +83,19 @@ class FlashCardModel
         }
     }
 
+    /**
+     * Insère une nouvelle flashcard dans la base de données.
+     *
+     * Cette méthode crée un enregistrement flashcard (via la table Quiz avec genre='flashcard')
+     * avec les informations fournies. Les paramètres par défaut incluent : difficulté = 1,
+     * disponibilité = 'public', nbjaime = 0, nbjaimepas = 0.
+     *
+     * @param int    $user_id  Identifiant de l'utilisateur créateur de la flashcard.
+     * @param string $title    Titre de la flashcard.
+     * @param string $desc     Description de la flashcard.
+     *
+     * @return int|false  Retourne l'ID de la flashcard insérée, ou false en cas d'erreur.
+     */
     public function insertFlashcard(int $user_id, string $title, string $desc){
         try{
             $newFlashcard = $this->db->prepare("INSERT INTO Quiz (user_id, title, description, difficulty, disponibilite, nbjaime, nbjaimepas, date, genre)
@@ -84,6 +123,49 @@ class FlashCardModel
         }
     }
 
+    /**
+     * Insère une restriction d'accès à la flashcard pour un ami spécifique.
+     *
+     * Cette méthode crée une association entre une flashcard et un ami,
+     * indiquant que l'ami peut accéder à la flashcard.
+     *
+     * @param int $quiz_id  Identifiant de la flashcard.
+     * @param int $ami_id   Identifiant de l'ami autorisé à accéder à la flashcard.
+     *
+     * @return int|false  Retourne l'ID de l'ami inséré, ou false en cas d'erreur.
+     */
+    public function insertAmiDispo(int $quiz_id, int $ami_id)
+    {
+        try {
+            $newAmiDispo = $this->db->prepare("INSERT INTO amiDisponibilite(quiz_id, ami_id) VALUES (?, ?);");
+            $newAmiDispo->bindValue(1, $quiz_id);
+            $newAmiDispo->bindValue(2, $ami_id);
+
+            $reussite = $newAmiDispo->execute();
+            if ($reussite === false) {
+                return false;
+            } else {
+                return $ami_id;
+            }
+        } catch (PDOException $e) {
+            error_log("Erreur d'insertion d'ami dispo : " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Insère une nouvelle carte dans une flashcard.
+     *
+     * Cette méthode crée un enregistrement carte avec une question et sa réponse,
+     * associé à une flashcard donnée, avec un numéro d'ordre.
+     *
+     * @param int    $flashcard_id  Identifiant de la flashcard à laquelle appartient la carte.
+     * @param int    $numero        Numéro d'ordre de la carte dans la flashcard.
+     * @param string $question      Texte de la question sur la carte.
+     * @param string $reponse       Texte de la réponse sur la carte.
+     *
+     * @return int|false  Retourne l'ID de la carte insérée, ou false en cas d'erreur.
+     */
     public function insertCarte(int $flashcard_id, int $numero, string $question, string $reponse){
         try{
             $newCarte = $this->db->prepare("INSERT INTO Carte (quiz_id, numeroCarte, question, reponse)
@@ -105,5 +187,34 @@ class FlashCardModel
             error_log("Erreur d'insertion de carte : " . $e->getMessage());
             return false;
         }
+    }
+
+    /**
+     * Récupère tous les amis d'un utilisateur.
+     *
+     * Cette méthode retourne une liste de tous les amis connectés à l'utilisateur
+     * spécifié, en incluant leur ID et leur nom d'utilisateur.
+     *
+     * @param int $user_id  Identifiant de l'utilisateur pour lequel récupérer les amis.
+     *
+     * @return array  Tableau de tableaux associatifs contenant 'ami_id' et 'username' pour chaque ami.
+     */
+    public function getAmis(int $user_id){
+        $amis = $this->db->prepare("SELECT 
+                                CASE 
+                                WHEN user1_id = ? THEN user2_id
+                                ELSE user1_id
+                                END AS ami_id , username
+                                FROM amis JOIN users ON ami_id = users.id 
+                                WHERE ? = user1_id OR ? = user2_id;");
+        $amis->bindvalue(1,$user_id);
+        $amis->bindvalue(2,$user_id);
+        $amis->bindvalue(3,$user_id);
+
+        $amis->execute();
+
+        $result = $amis->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+        
     }
 }

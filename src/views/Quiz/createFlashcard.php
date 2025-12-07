@@ -45,7 +45,51 @@
     echo '<button class="button" type = "submit" name = "addCard" value = "yes"><span></span><p>Ajouter une question</p></button>'
     ?>
     </div>
-
+    <?php //-----------------------------------------------------ici---------------------------------------------------------?>
+    <div class = "disponibilite">
+        <p>Mode de publication :</p>
+        <select name="disponibilite" id="disponibilite">
+            <?php $dispo = '';
+            $dispo = $_SESSION['POST']['disponibilite'] == 'public' ? 'selected' : '';
+             ?>
+            <option value="public" <?= $dispo ?> >publique</option>
+            <?php $dispo = $_SESSION['POST']['disponibilite'] == 'ami' ? 'selected' : ''; ?>
+            <option value="ami" <?= $dispo ?> >Seulement les amis</option>
+            <?php $dispo = $_SESSION['POST']['disponibilite'] == 'private' ? 'selected' : ''; ?>
+            <option value="private" <?= $dispo ?> >seulement vous</option>
+        </select>
+        <?php
+        //-----------------------------------------------------ici---------------------------------------------------------
+        if ($_SESSION['POST']['disponibilite'] == "ami"){
+            $hidden2 = '';
+        } 
+        else{
+            $hidden2 = 'hidden';
+        }
+        if (in_array('tous', $TAB_AMI_CHOISI)) {
+            $checkedTous = 'checked';
+        } else {
+            $checkedTous = '';
+        }
+        echo '<label '.$hidden2.'><input name = "amiDispo[]" type = "checkbox" value="tous" '.$checkedTous.'>Tous les amis</label>';
+        foreach($TAB_AMI as $ami){
+            if (in_array($ami['ami_id'], $TAB_AMI_CHOISI)) {
+                $checked = 'checked';
+            } else {
+                $checked = '';
+            }
+            echo '<label '.$hidden2.'><input name = "amiDispo[]" type = "checkbox" value="'.$ami['ami_id'].'" '.$checked.'>'.$ami['username'].'</label>';
+        }
+        
+        ?>
+    </div>
+    <?php
+    //-----------------------------------------------------ici---------------------------------------------------------
+        if ($_SESSION['erreur']){
+            echo '<p class="erreur">Chaque champ doit être rempli</p>';
+        } 
+    ?>
     <button class="button" type = "submit" name = "create" value = "yes"><span></span><p>Créer les flashcards</p></button>
 </form>
 <script src = "./assets/js/sauvegardeScroll.js"></script>
+<script src = "./assets/js/selectDispo.js"></script>

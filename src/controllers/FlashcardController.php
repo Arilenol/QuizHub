@@ -70,8 +70,14 @@ class FlashCardController
         if (!isset($_SESSION['POST'])){
             $_SESSION['POST'] = [];
         }
+        if(!isset($_SESSION['POST']['disponibilite'])){
+            $_SESSION['POST']['disponibilite'] = 'public';
+        }
         if (!isset($_SESSION['bouton'])){
             $_SESSION['bouton'] = false;
+        }
+        if (!isset($_SESSION['erreur'])){
+            $_SESSION['erreur'] = false;
         }
 
         if (!isset($_SESSION['nbCartes']) || empty($_SESSION['nbCartes'])){
@@ -80,7 +86,10 @@ class FlashCardController
 
         if (isset($_POST['Retour']) && $_POST['Retour'] === "yes"){
             unset($_SESSION['nbCartes']);
-
+            unset($_SESSION['bouton']);
+            unset($_SESSION['POST']);
+            unset($_SESSION['erreur']);
+            unset($_POST);
             header('Location: index.php?page=createContent');
             exit;
         }
@@ -133,23 +142,46 @@ class FlashCardController
             );
             $TAB_CONTENU[] = $partContent;
         }
+        $TAB_AMI = $this->model->getAmis($_SESSION['id']);
+
+        $TAB_AMI_CHOISI = array();
+        if (isset($_SESSION['POST']['amiDispo'])){
+            $TAB_AMI_CHOISI = $_SESSION['POST']['amiDispo'];
+        }
 
         if (isset($_POST['create']) && $_POST['create'] == "yes"){
-            if (isset($_POST['FlashcardTitle']) && !empty($_POST['FlashcardTitle'])  && isset($_POST['FlashcardDescription']) && !empty($_POST['FlashcardDescription'])){
-                $CardsTitle = $_POST['FlashcardTitle'];
-                $desc = $_POST['FlashcardDescription'];
-                $this->contentFusionSessionPost();
-                if ($this->verifValidite()){
-                    $this->model->createFlashcard($_SESSION['nbCartes'], $id, $CardsTitle, $desc, $TAB_CONTENU);
-                    
+            $CardsTitle = $_POST['FlashcardTitle'];
+            $desc = $_POST['FlashcardDescription'];
+            $this->contentFusionSessionPost();
+            if ($this->verifValidite()){
+
+                $reussi = $this->model->createFlashcard($_SESSION['nbCartes'], $id, $CardsTitle, $desc, $TAB_CONTENU, $TAB_AMI_CHOISI, $_SESSION['POST']['disponibilite']);
+                if ($reussi){
                     unset($_SESSION['nbCartes']);
+                    unset($_SESSION['bouton']);
+                    unset($_SESSION['POST']);
+                    unset($_SESSION['erreur']);
                     unset($_POST);
+                    header('Location: index.php?page=home');
+                    exit; 
+                }
+                else{
+                    unset($_POST['create']);
+                    $_SESSION['bouton'] = true;
+                    header('Location: '.$_SERVER['REQUEST_URI']);
+                    exit;
                 }
                 
-                header('Location: index.php?page=home');
+            }
+            else{
+                $_SESSION['erreur'] = true;
+                unset($_POST['create']);
+                $_SESSION['bouton'] = true;
+                header('Location: '.$_SERVER['REQUEST_URI']);
                 exit;
             }
             
+                   
         }
 
         $_SESSION['bouton'] = false;
@@ -173,20 +205,26 @@ class FlashCardController
                 $_SESSION['POST']['cardReponse'.$i] = $_POST['cardReponse'.$i];
             }
         }
+        if(isset($_POST['disponibilite'])){
+            $_SESSION['POST']['disponibilite'] = $_POST['disponibilite'];
+        }
+        if(isset($_POST['amiDispo'])){
+            $_SESSION['POST']['amiDispo'] = $_POST['amiDispo'];
+        }
     }
 
     public function verifValidite(){
-        if (!isset($_POST['FlashCardTitle']) || empty($_POST['FlashcardTitle'])){
+        if (!isset($_SESSION['POST']['FlashcardTitle']) || empty($_SESSION['POST']['FlashcardTitle'])){
             return false;
         }
-        if(!isset($_POST['FlashcardDescription']) || empty($_POST['FlashcardDescription'])){
+        if(!isset($_SESSION['POST']['FlashcardDescription']) || empty($_SESSION['POST']['FlashcardDescription'])){
             return false;
         }
         for ($i = 0; $i < $_SESSION['nbCartes'] ; $i++){
-            if(!isset($_POST['cardQuestion'.$i]) || empty($_POST['cardQuestion'.$i])){
+            if(!isset($_SESSION['POST']['cardQuestion'.$i]) || empty($_SESSION['POST']['cardQuestion'.$i])){
                 return false;
             }
-            if(!isset($_POST['cardReponse'.$i]) || empty($_POST['cardReponse'.$i])){
+            if(!isset($_SESSION['POST']['cardReponse'.$i]) || empty($_SESSION['POST']['cardReponse'.$i])){
                 return false;
             }
         }

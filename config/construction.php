@@ -137,11 +137,24 @@ function constructionBD(PDO $conn){
             );";
             $conn->exec($sql);
 
+            $sql = "CREATE TABLE IF NOT EXISTS Lecon(
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                quiz_id INTEGER,
+                title TEXT NOT NULL,
+                description TEXT,
+                FOREIGN KEY (quiz_id) REFERENCES quiz(id)
+            );";
+
+            $conn->exec($sql);
+
             $sql = "CREATE TABLE IF NOT EXISTS amiDisponibilite(
                 quiz_id INTEGER,
+                lesson_id INTEGER,
                 ami_id INTEGER,
-                PRIMARY KEY (quiz_id, ami_id),
+                PRIMARY KEY (quiz_id,lesson_id, ami_id),
                 FOREIGN KEY (quiz_id) REFERENCES quiz(id),
+                FOREIGN KEY (lesson_id) REFERENCES Lecon(id),
                 FOREIGN KEY (ami_id) REFERENCES users(id)
             );";
 
@@ -154,17 +167,6 @@ function constructionBD(PDO $conn){
                 FOREIGN KEY (category_id) REFERENCES categories(id),
                 FOREIGN KEY (quiz_id) REFERENCES quiz(id)
             );";
-            $conn->exec($sql);
-
-            $sql = "CREATE TABLE IF NOT EXISTS Lecon(
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id INTEGER NOT NULL,
-                quiz_id INTEGER,
-                title TEXT NOT NULL,
-                description TEXT,
-                FOREIGN KEY (quiz_id) REFERENCES quiz(id)
-            );";
-
             $conn->exec($sql);
 
             $sql = "CREATE TABLE IF NOT EXISTS Partie(
@@ -223,7 +225,6 @@ function constructionBD(PDO $conn){
             $conn->exec($sql);
 
             $sql = "CREATE TABLE IF NOT EXISTS parametreQuiz (
-                id INTEGER,
                 quiz_id INTEGER PRIMARY KEY,
                 afficherAvancement BOOLEAN,
                 minuterie INTEGER,

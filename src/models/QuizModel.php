@@ -114,6 +114,17 @@ class QuizModel
         return array_map('intval', array_column($results, 'id'));
     }
 
+    /**
+     * Récupère le numéro minimum d'une question d'un quiz.
+     *
+     * Cette méthode retourne le numéro de la première question (le plus petit)
+     * associée à un quiz. Cela est utile pour déterminer le point de départ
+     * lors du parcours des questions d'un quiz.
+     *
+     * @param int $quizId  Identifiant du quiz dont on veut obtenir le minimum de question.
+     *
+     * @return int  Numéro minimum de question du quiz (numeroQuiz).
+     */
     public function getMiniQuestionId(int $quizId): int
     {
         $stmt = $this->db->prepare("
@@ -127,11 +138,32 @@ class QuizModel
         return intval($row['mini']);
     }
 
-    public function createQuiz(int $user_id, array $params, array $TAB_CONTENU, string $desc, string $title, int $nbQuestion, array $nbReponse)
+    /**
+     * Crée un quiz complet avec toutes ses questions, réponses et paramètres.
+     *
+     * Cette méthode effectue une transaction complète qui crée un quiz, insère
+     * toutes ses questions, réponses, paramètres optionnels et restrictions d'amis.
+     * En cas d'erreur, la transaction est annulée et aucune donnée n'est conservée.
+     *
+     * @param int    $user_id          Identifiant de l'utilisateur créateur du quiz.
+     * @param array  $params           Tableau des paramètres du quiz (minuterie, rejeu erreurs, ordre aléatoire, etc.).
+     * @param int    $timer            Durée de la minuterie en minutes (si activée).
+     * @param array  $TAB_CONTENU      Tableau contenant les questions et leurs réponses.
+     * @param array  $TAB_AMI_CHOISI   Tableau des IDs d'amis autorisés à accéder au quiz (si dispo='ami').
+     * @param string $disponibilite    Type de disponibilité du quiz ('public', 'ami', etc.).
+     * @param string $desc             Description du quiz.
+     * @param string $title            Titre du quiz.
+     * @param int    $nbQuestion       Nombre total de questions dans le quiz.
+     * @param array  $nbReponse        Tableau contenant le nombre de réponses pour chaque question.
+     *
+     * @return bool  true si la création est réussie, false en cas d'erreur.
+     */
+    public function createQuiz(int $user_id, array $params, int $timer, array $TAB_CONTENU,array $TAB_AMI_CHOISI, string $disponibilite,  string $desc, string $title, int $nbQuestion, array $nbReponse)
     {
         try {
             $this->db->beginTransaction();
-            $newQuiz = $this->insertQuiz($user_id, $title, $desc, date('Y-m-d'), 'standard');
+            $genre = !empty($params[0]) ? 'test' : 'standard';
+            $newQuiz = $this->insertQuiz($user_id, $title, $desc, $disponibilite, date('Y-m-d'),$genre);
             if (!$newQuiz) {
                 throw new PDOException("erreur dans l\'insertion du Quiz dans QuizModel.php/createQuiz");
             }
@@ -147,7 +179,28 @@ class QuizModel
                     }
                 }
             }
+            $hasParam = false;
+            foreach($params as $p){
+                if (!empty($p)){
+                    $hasParam = true;
+                }
+            }
+            if ($hasParam){
+                $newParams = $this->insertQuizParams($newQuiz, $params, (int)$timer);
+                if (!$newParams) {
+                    throw new PDOException("erreur dans l\'insertion des paramètres dans QuizModel.php/createQuiz");
+                }
+            }
+            if ($disponibilite == 'ami'){
+                foreach($TAB_AMI_CHOISI as $ami){
+                    $newAmiDispo = $this->insertAmiDispo($newQuiz, (int)$ami);
+                    if (!$newAmiDispo) {
+                        throw new PDOException("erreur dans l\'insertion des amis dans QuizModel.php/createQuiz");
+                    }
+                }
+            }
             $this->db->commit();
+            return true;
         } catch (PDOException $e) {
             error_log("Erreur création de quiz entier : " . $e->getMessage());
             $this->db->rollBack();
@@ -156,7 +209,22 @@ class QuizModel
     }
 
 
-    public function insertQuiz(int $user_id, string $title, string $desc, string $date, string $genre)
+    /**
+     * Insère un nouveau quiz dans la base de données.
+     *
+     * Cette méthode crée un enregistrement quiz avec les informations fournies.
+     * Les valeurs par défaut incluent : difficulté = 1, nbjaime = 0, nbjaimepas = 0.
+     *
+     * @param int    $user_id  Identifiant de l'utilisateur créateur du quiz.
+     * @param string $title    Titre du quiz.
+     * @param string $desc     Description du quiz.
+     * @param string $dispo    Disponibilité du quiz ('public', 'ami', etc.).
+     * @param string $date     Date de création du quiz (format 'Y-m-d').
+     * @param string $genre    Genre ou type du quiz ('standard', 'test', etc.).
+     *
+     * @return int|false  Retourne l'ID du quiz inséré, ou false en cas d'erreur.
+     */
+    public function insertQuiz(int $user_id, string $title, string $desc,string $dispo,  string $date, string $genre)
     {
         try {
             $newQuiz = $this->db->prepare("INSERT INTO Quiz(user_id, title, description, difficulty, disponibilite, nbjaime, nbjaimepas, date, genre)
@@ -165,14 +233,14 @@ class QuizModel
             $newQuiz->bindValue(2, $title);
             $newQuiz->bindValue(3, $desc);
             $newQuiz->bindValue(4, 1);
-            $newQuiz->bindValue(5, 'public');
+            $newQuiz->bindValue(5, $dispo);
             $newQuiz->bindValue(6, 0);
             $newQuiz->bindValue(7, 0);
             $newQuiz->bindValue(8, $date);
-            $newQuiz->bindValue(9, 'standard');
+            $newQuiz->bindValue(9, $genre);
 
             $reussite = $newQuiz->execute();
-            if (!$reussite) {
+            if ($reussite === false) {
                 return false;
             } else {
                 return $this->db->lastInsertId();
@@ -183,6 +251,98 @@ class QuizModel
         }
     }
 
+    /**
+     * Insère les paramètres optionnels d'un quiz.
+     *
+     * Cette méthode crée un enregistrement de paramètres pour un quiz donné.
+     * Les paramètres incluent : minuterie, rejeu des erreurs, ordre aléatoire,
+     * affichage du score, avancement, et récapitulatif de fin.
+     *
+     * @param int   $quiz_id  Identifiant du quiz pour lequel insérer les paramètres.
+     * @param array $params   Tableau des paramètres (indices 1-6 pour chaque paramètre booléen).
+     * @param int   $timer    Durée de la minuterie en minutes (utilisé si params[1] est actif).
+     *
+     * @return int|false  Retourne l'ID du paramètre inséré, ou false en cas d'erreur.
+     */
+    public function insertQuizParams(int $quiz_id, array $params, int $timer)
+    {
+        try {
+            $_SESSION['longueurParams'] = count($params);
+            $newParams = $this->db->prepare("INSERT INTO parametreQuiz(quiz_id, minuterie , repasserErreurs, ordreAleatoire, afficherScore, afficherAvancement, recapitulatifFin)
+            VALUES (?, ?, ?, ?, ?, ?, ?);");
+            $newParams->bindValue(1, $quiz_id);
+
+            if (!empty($params[1])){
+                $newParams->bindValue(2, $timer);
+            }
+            else{
+                $newParams->bindValue(2, 0);
+            }
+            $val = !empty($params[2]) ? 1 : 0;
+            $newParams->bindValue(3, $val);
+            $val = !empty($params[3]) ? 1 : 0;
+            $newParams->bindValue(4, $val);
+            $val = !empty($params[4]) ? 1 : 0;
+            $newParams->bindValue(5, $val);
+            $val = !empty($params[5]) ? 1 : 0;
+            $newParams->bindValue(6, $val);
+            $val = !empty($params[6]) ? 1 : 0;
+            $newParams->bindValue(7, $val);
+
+            $reussite = $newParams->execute();
+            if ($reussite === false) {
+                return false;
+            } else {
+                return $this->db->lastInsertId();
+            }
+        } catch (PDOException $e) {
+            error_log("Erreur d'insertion de paramètres de quiz : " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Insère une restriction d'accès au quiz pour un ami spécifique.
+     *
+     * Cette méthode crée une association entre un quiz et un ami,
+     * indiquant que l'ami peut accéder au quiz.
+     *
+     * @param int $quiz_id  Identifiant du quiz.
+     * @param int $ami_id   Identifiant de l'ami autorisé à accéder au quiz.
+     *
+     * @return int|false  Retourne l'ID de l'ami inséré, ou false en cas d'erreur.
+     */
+    public function insertAmiDispo(int $quiz_id, int $ami_id)
+    {
+        try {
+            $newAmiDispo = $this->db->prepare("INSERT INTO amiDisponibilite(quiz_id, ami_id) VALUES (?, ?);");
+            $newAmiDispo->bindValue(1, $quiz_id);
+            $newAmiDispo->bindValue(2, $ami_id);
+
+            $reussite = $newAmiDispo->execute();
+            if ($reussite === false) {
+                return false;
+            } else {
+                return $ami_id;
+            }
+        } catch (PDOException $e) {
+            error_log("Erreur d'insertion d'ami dispo : " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Insère une nouvelle question associée à un quiz.
+     *
+     * Cette méthode crée un enregistrement question avec un numéro d'ordre
+     * et le contenu textuel de la question.
+     *
+     * @param int    $numero    Numéro d'ordre de la question au sein du quiz.
+     * @param int    $quiz_id   Identifiant du quiz auquel appartient la question.
+     * @param string $question  Texte de la question.
+     *
+     * @return int|false  Retourne l'ID de la question insérée, ou false en cas d'erreur.
+     */
     public function insertQuestion(int $numero, int $quiz_id, string $question)
     {
         try {
@@ -192,7 +352,7 @@ class QuizModel
             $newQuestion->bindValue(3, $question);
 
             $reussite = $newQuestion->execute();
-            if (!$reussite) {
+            if ($reussite === false) {
                 return false;
             } else {
                 return $this->db->lastInsertId();
@@ -203,16 +363,29 @@ class QuizModel
         }
     }
 
-    public function insertReponse(int $question_id, string $contenu, int $valide)
+    /**
+     * Insère une réponse associée à une question.
+     *
+     * Cette méthode crée un enregistrement réponse avec le contenu textuel
+     * et indique si la réponse est correcte ou non.
+     *
+     * @param int    $question_id  Identifiant de la question à laquelle appartient la réponse.
+     * @param string $contenu      Texte de la réponse.
+     * @param string $valide       État de validité de la réponse ('on' = correcte, autre = incorrecte).
+     *
+     * @return int|false  Retourne l'ID de la réponse insérée, ou false en cas d'erreur.
+     */
+    public function insertReponse(int $question_id, string $contenu, string $valide)
     {
         try {
             $newReponse = $this->db->prepare("INSERT INTO Reponse(question_id, reponse, estCorrecte) VALUES (?, ?, ?);");
             $newReponse->bindValue(1, $question_id);
             $newReponse->bindValue(2, $contenu);
-            $newReponse->bindValue(3, $valide);
+            $validite = $valide == "on" ? 1 : 0;
+            $newReponse->bindValue(3, $validite);
 
             $reussite = $newReponse->execute();
-            if (!$reussite) {
+            if ($reussite === false) {
                 return false;
             } else {
                 return $this->db->lastInsertId();
@@ -221,5 +394,34 @@ class QuizModel
             error_log("Erreur d'insertion de reponse : " . $e->getMessage());
             return false;
         }
+    }
+
+    /**
+     * Récupère tous les amis d'un utilisateur.
+     *
+     * Cette méthode retourne une liste de tous les amis connectés à l'utilisateur
+     * spécifié, en incluant leur ID et leur nom d'utilisateur.
+     *
+     * @param int $user_id  Identifiant de l'utilisateur pour lequel récupérer les amis.
+     *
+     * @return array  Tableau de tableaux associatifs contenant 'ami_id' et 'username' pour chaque ami.
+     */
+    public function getAmis(int $user_id){
+        $amis = $this->db->prepare("SELECT 
+                                CASE 
+                                WHEN user1_id = ? THEN user2_id
+                                ELSE user1_id
+                                END AS ami_id , username
+                                FROM amis JOIN users ON ami_id = users.id 
+                                WHERE ? = user1_id OR ? = user2_id;");
+        $amis->bindvalue(1,$user_id);
+        $amis->bindvalue(2,$user_id);
+        $amis->bindvalue(3,$user_id);
+
+        $amis->execute();
+
+        $result = $amis->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+        
     }
 }
