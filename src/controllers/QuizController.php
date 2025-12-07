@@ -15,7 +15,7 @@ class QuizController
 
     public function createQuiz()
     {
-        // show all errors while developing this flow
+        
         error_reporting(E_ALL);
         ini_set('display_errors', 1);
 
@@ -73,7 +73,7 @@ class QuizController
         );
 
         //------------informations à remplir---------------------
-        // Handle form actions: Retour, addQuestion, addReponse, DelQuestion, delReponseX
+        
         if (isset($_POST['Retour']) && $_POST['Retour'] === "yes") {
             unset($_SESSION['bouton']);
             unset($_SESSION['nbReponse']);
@@ -81,7 +81,7 @@ class QuizController
             unset($_SESSION['POST']);
             unset($_SESSION['erreur']);
             unset($_POST);
-            // redirect back to content creation or other appropriate page
+            
             header('Location: index.php?page=createContent');
             exit;
         }
@@ -111,7 +111,7 @@ class QuizController
             exit;
         }
 
-        // Delete a question (shift subsequent questions up)
+        
         if (isset($_POST['DelQuestion']) && $_POST['DelQuestion'] !== '') {
             if ($_SESSION['nbQuestions'] > 1) {
                 $idx = (int)$_POST['DelQuestion'];
@@ -198,6 +198,10 @@ class QuizController
         $TAB_AMI = $this->model->getAmis($_SESSION['id']);
         $timerValue = isset($_SESSION['POST']['timerValue']) ? $_SESSION['POST']['timerValue'] : 0;
 
+        $TAB_AMI_CHOISI = array();
+        if (isset($_SESSION['POST']['amiDispo'])){
+            $TAB_AMI_CHOISI = $_SESSION['POST']['amiDispo'];
+        }
         
 
         if (isset($_POST['create']) && $_POST['create'] === 'yes') {
@@ -205,18 +209,26 @@ class QuizController
             $desc = isset($_POST['QuizDescription']) ? $_POST['QuizDescription'] : '';
             $this->contentFusionSessionPost();
             $test = $this->verifValidite();
-            $_SESSION['verif'] = $test;
             if($test){
-                  
-                $model->createQuiz($id, $tabParametres, $TAB_CONTENU, $desc, $quizTitle, $_SESSION['nbQuestions'], $_SESSION['nbReponse']);
-                unset($_SESSION['bouton']);
-                unset($_SESSION['nbReponse']);
-                unset($_SESSION['nbQuestions']);
-                unset($_SESSION['POST']);
-                unset($_SESSION['erreur']);
-                unset($_POST);
-                header('Location: index.php?page=home');
-                exit;
+                
+                $reussi = $this->model->createQuiz($id, $TAB_PARAM,$timerValue, $TAB_CONTENU,$TAB_AMI_CHOISI, $_SESSION['POST']['disponibilite'], $desc, $quizTitle, $_SESSION['nbQuestions'], $_SESSION['nbReponse']);
+                if ($reussi){
+                    unset($_SESSION['bouton']);
+                    unset($_SESSION['nbReponse']);
+                    unset($_SESSION['nbQuestions']);
+                    unset($_SESSION['POST']);
+                    unset($_SESSION['erreur']);
+                    unset($_POST);
+                    header('Location: index.php?page=home');
+                    exit;
+                }
+                else{
+                    unset($_POST['create']);
+                    $_SESSION['bouton'] = true;
+                    header('Location: ' . $_SERVER['REQUEST_URI']);
+                    exit;
+                }
+                
             }
             else{
                 $_SESSION['erreur'] = true;
@@ -233,6 +245,7 @@ class QuizController
         //var_dump($TAB_CONTENU);
         var_dump($_SESSION);
         var_dump($TAB_AMI);
+        var_dump($TAB_PARAM);
         //unset($_SESSION['POST']);
         require ROOT . '/src/views/Quiz/createQuiz.php';
     }
@@ -290,15 +303,13 @@ class QuizController
     }
 
     public function verifValidite(){
-        if(isset($_SESSION['POST']['timerValue']) && (int)$_SESSION['POST']['timerValue'] > 60){
+        if(isset($_SESSION['POST']['timerValue']) && (int)$_SESSION['POST']['timerValue'] > 120){
             return false;
         }
         if (!isset($_SESSION['POST']['QuizTitle']) || empty($_SESSION['POST']['QuizTitle'])){
-            $_SESSION['estpasvalidetitre'] = 'estpasvalidetitre';
             return false;
         }
         if (!isset($_SESSION['POST']['QuizDescription']) || empty($_SESSION['POST']['QuizDescription'])){
-            $_SESSION['estpasvalidetitre'] = 'estpasvalidetitre';
             return false;
         }
         for ($i = 0; $i < $_SESSION['nbQuestions']; $i++){
@@ -308,20 +319,16 @@ class QuizController
                     $count++;
                 }
                 if(!isset($_SESSION['POST']['reponse'.$k.'-question'.$i]) || empty($_SESSION['POST']['reponse'.$k.'-question'.$i])){
-                    $_SESSION['estpasvalidetitre'] = 'estpasvalidetitre';
                     return false;
                 }
             }
             if(!isset($_SESSION['POST']['question'.$i]) || empty($_SESSION['POST']['question'.$i])){
-                $_SESSION['estpasvalidetitre'] = 'estpasvalidetitre';
                 return false;
             }
             if($count === 0 || $count === $_SESSION['nbReponse'][$i]){
-                $_SESSION['estpasvalidetitre'] = 'estpasvalidetitre';
                 return false;
             }
         }
-        $_SESSION['estvalide'] = 'estvalide';
         return true;
     }
 

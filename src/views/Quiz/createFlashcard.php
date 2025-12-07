@@ -45,6 +45,7 @@
     echo '<button class="button" type = "submit" name = "addCard" value = "yes"><span></span><p>Ajouter une question</p></button>'
     ?>
     </div>
+    <?php //-----------------------------------------------------ici---------------------------------------------------------?>
     <div class = "disponibilite">
         <p>Mode de publication :</p>
         <select name="disponibilite" id="disponibilite">
@@ -65,9 +66,19 @@
         else{
             $hidden2 = 'hidden';
         }
-        echo '<label '.$hidden2.'><input name = "amiDispo[]" type = "checkbox" value="tous">Tous les amis</label>';
+        if (in_array('tous', $TAB_AMI_CHOISI)) {
+            $checkedTous = 'checked';
+        } else {
+            $checkedTous = '';
+        }
+        echo '<label '.$hidden2.'><input name = "amiDispo[]" type = "checkbox" value="tous" '.$checkedTous.'>Tous les amis</label>';
         foreach($TAB_AMI as $ami){
-            echo '<label '.$hidden2.'><input name = "amiDispo[]" type = "checkbox" value="'.$ami['ami_id'].'">'.$ami['username'].'</label>';
+            if (in_array($ami['ami_id'], $TAB_AMI_CHOISI)) {
+                $checked = 'checked';
+            } else {
+                $checked = '';
+            }
+            echo '<label '.$hidden2.'><input name = "amiDispo[]" type = "checkbox" value="'.$ami['ami_id'].'" '.$checked.'>'.$ami['username'].'</label>';
         }
         
         ?>

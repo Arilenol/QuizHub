@@ -177,21 +177,35 @@ class LessonController {
         }
         $TAB_AMI = $model->getAmis($_SESSION['id']);
 
+        $TAB_AMI_CHOISI = array();
+        if (isset($_SESSION['POST']['amiDispo'])){
+            $TAB_AMI_CHOISI = $_SESSION['POST']['amiDispo'];
+        }
+
         if (isset($_POST['create']) && $_POST['create'] == "yes"){
             $LessonTitle = $_POST['LessonTitle'];
             $desc = $_POST['LessonDescription'];
             $this->contentFusionSessionPost();
             if ($this->verifValidite()){
-                $model->createLesson($id, $LessonTitle, $desc, $_SESSION['nbParts'],$_SESSION['nbExemple'],$TAB_CONTENU,$quizSelected);
+                $reussi = $model->createLesson($id, $LessonTitle, $desc, $_SESSION['nbParts'],$_SESSION['nbExemple'],$TAB_CONTENU,$TAB_AMI_CHOISI, $_SESSION['POST']['disponibilite'],$quizSelected);
                 //je mets une redirecion pour être sûr qu'on ne l'oublie pas après
-                unset($_SESSION['nbExemple']);
-                unset($_SESSION['nbParts']);
-                unset($_SESSION['POST']);
-                unset($_SESSION['bouton']);
-                unset($_SESSION['erreur']);
-                unset($_POST);
-                header('Location: index.php?page=home');
-                exit;
+                if($reussi){
+                    unset($_SESSION['nbExemple']);
+                    unset($_SESSION['nbParts']);
+                    unset($_SESSION['POST']);
+                    unset($_SESSION['bouton']);
+                    unset($_SESSION['erreur']);
+                    unset($_POST);
+                    header('Location: index.php?page=home');
+                    exit;
+                }
+                else{
+                    unset($_POST['create']);
+                    $_SESSION['bouton'] = true;
+                    header('Location: ' . $_SERVER['REQUEST_URI']);
+                    exit;
+                }
+                
             }
             else{
                 $_SESSION['erreur'] = true;

@@ -144,20 +144,34 @@ class FlashCardController
         }
         $TAB_AMI = $this->model->getAmis($_SESSION['id']);
 
+        $TAB_AMI_CHOISI = array();
+        if (isset($_SESSION['POST']['amiDispo'])){
+            $TAB_AMI_CHOISI = $_SESSION['POST']['amiDispo'];
+        }
+
         if (isset($_POST['create']) && $_POST['create'] == "yes"){
             $CardsTitle = $_POST['FlashcardTitle'];
             $desc = $_POST['FlashcardDescription'];
             $this->contentFusionSessionPost();
             if ($this->verifValidite()){
-                $this->model->createFlashcard($_SESSION['nbCartes'], $id, $CardsTitle, $desc, $TAB_CONTENU);
-                    
-                unset($_SESSION['nbCartes']);
-                unset($_SESSION['bouton']);
-                unset($_SESSION['POST']);
-                unset($_SESSION['erreur']);
-                unset($_POST);
-                header('Location: index.php?page=home');
-                exit; 
+
+                $reussi = $this->model->createFlashcard($_SESSION['nbCartes'], $id, $CardsTitle, $desc, $TAB_CONTENU, $TAB_AMI_CHOISI, $_SESSION['POST']['disponibilite']);
+                if ($reussi){
+                    unset($_SESSION['nbCartes']);
+                    unset($_SESSION['bouton']);
+                    unset($_SESSION['POST']);
+                    unset($_SESSION['erreur']);
+                    unset($_POST);
+                    header('Location: index.php?page=home');
+                    exit; 
+                }
+                else{
+                    unset($_POST['create']);
+                    $_SESSION['bouton'] = true;
+                    header('Location: '.$_SERVER['REQUEST_URI']);
+                    exit;
+                }
+                
             }
             else{
                 $_SESSION['erreur'] = true;
@@ -200,7 +214,7 @@ class FlashCardController
     }
 
     public function verifValidite(){
-        if (!isset($_SESSION['POST']['FlashCardTitle']) || empty($_SESSION['POST']['FlashcardTitle'])){
+        if (!isset($_SESSION['POST']['FlashcardTitle']) || empty($_SESSION['POST']['FlashcardTitle'])){
             return false;
         }
         if(!isset($_SESSION['POST']['FlashcardDescription']) || empty($_SESSION['POST']['FlashcardDescription'])){
