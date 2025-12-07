@@ -6,11 +6,12 @@ class QuizController
 {
 
     private QuizModel $model;
+    private $db;
 
     public function __construct()
     {
-        $db = getDbConnection();
-        $this->model = new QuizModel($db);
+        $this->db = getDbConnection();
+        $this->model = new QuizModel($this->db);
     }
 
     public function createQuiz()
@@ -42,7 +43,7 @@ class QuizController
             $_SESSION['bouton'] = false;
         }
 
-        
+
 
         if (!isset($_SESSION['nbQuestions']) || empty($_SESSION['nbQuestions'])) {
             $_SESSION['nbQuestions'] = 1;
@@ -58,9 +59,9 @@ class QuizController
         //------------informations à remplir---------------------
         $tabParametres = array(
             array('name' => 'timer', 'desc' => 'minuterie'),
-            array('name' => 'retryError','desc' => 'rééssayer les questions échouées'),
-            array('name' => 'noOrder','desc' => 'faire dans le désordre par défaut'),
-            array('name' => 'score','desc' => 'afficher le score'),
+            array('name' => 'retryError', 'desc' => 'rééssayer les questions échouées'),
+            array('name' => 'noOrder', 'desc' => 'faire dans le désordre par défaut'),
+            array('name' => 'score', 'desc' => 'afficher le score'),
             array('name' => 'avancement', 'desc' => 'afficher l\'avancement'),
             array('name' => 'recap', 'desc' => 'afficher un recapitulatif à la fin')
         );
@@ -175,25 +176,24 @@ class QuizController
         }
 
         $TAB_PARAM = [];
-        foreach ($tabParametres as $param){
-            if(isset($_SESSION['POST']['param'.$param['name']]) && $_SESSION['POST']['param'.$param['name']] == 'on'){
+        foreach ($tabParametres as $param) {
+            if (isset($_SESSION['POST']['param' . $param['name']]) && $_SESSION['POST']['param' . $param['name']] == 'on') {
                 $TAB_PARAM[] = 'checked';
-            }
-            else{
+            } else {
                 $TAB_PARAM[] = '';
             }
         }
 
         $timerValue = isset($_SESSION['POST']['timerValue']) ? $_SESSION['POST']['timerValue'] : 0;
 
-        
+
 
         if (isset($_POST['create']) && $_POST['create'] === 'yes') {
             // basic validation: ensure a title is provided
             if (isset($_POST['QuizTitle']) && !empty($_POST['QuizTitle'])) {
                 $quizTitle = $_POST['QuizTitle'];
                 $desc = isset($_POST['QuizDescription']) ? $_POST['QuizDescription'] : '';
-                if($this->verifValidite()){
+                if ($this->verifValidite()) {
                     $model->createQuiz($id, $tabParametres, $TAB_CONTENU, $desc, $quizTitle, $_SESSION['nbQuestions'], $_SESSION['nbReponse']);
                     unset($_SESSION['bouton']);
                     unset($_SESSION['nbReponse']);
@@ -202,14 +202,12 @@ class QuizController
                     unset($_POST);
                     header('Location: index.php?page=home');
                     exit;
-                }
-                else{
+                } else {
                     $this->contentFusionSessionPost();
                     $_SESSION['bouton'] = true;
                     header('Location: ' . $_SERVER['REQUEST_URI']);
                     exit;
                 }
-                
             }
         }
 
@@ -226,16 +224,16 @@ class QuizController
     {
         $tabParametres = array(
             array('name' => 'timer', 'desc' => 'minuterie'),
-            array('name' => 'retryError','desc' => 'rééssayer les questions échouées'),
-            array('name' => 'noOrder','desc' => 'faire dans le désordre par défaut'),
-            array('name' => 'score','desc' => 'afficher le score'),
+            array('name' => 'retryError', 'desc' => 'rééssayer les questions échouées'),
+            array('name' => 'noOrder', 'desc' => 'faire dans le désordre par défaut'),
+            array('name' => 'score', 'desc' => 'afficher le score'),
             array('name' => 'avancement', 'desc' => 'afficher l\'avancement'),
             array('name' => 'recap', 'desc' => 'afficher un recapitulatif à la fin')
         );
-        if (isset($_POST['QuizTitle'])){
+        if (isset($_POST['QuizTitle'])) {
             $_SESSION['POST']['QuizTitle'] = $_POST['QuizTitle'];
         }
-        if (isset($_POST['QuizDescription'])){
+        if (isset($_POST['QuizDescription'])) {
             $_SESSION['POST']['QuizDescription'] = $_POST['QuizDescription'];
         }
         for ($i = 0; $i < $_SESSION['nbQuestions']; $i++) {
@@ -253,68 +251,107 @@ class QuizController
                 }
             }
         }
-        foreach($tabParametres as $param){
-            if (isset($_POST['param'.$param['name']]) && $_POST['param'.$param['name']] === "on"){
-                $_SESSION['POST']['param'.$param['name']] = $_POST['param'.$param['name']];
-            }
-            else{
-                $_SESSION['POST']['param'.$param['name']] = '';
-                
+        foreach ($tabParametres as $param) {
+            if (isset($_POST['param' . $param['name']]) && $_POST['param' . $param['name']] === "on") {
+                $_SESSION['POST']['param' . $param['name']] = $_POST['param' . $param['name']];
+            } else {
+                $_SESSION['POST']['param' . $param['name']] = '';
             }
         }
-        if(isset($_POST['timerValue'])){
+        if (isset($_POST['timerValue'])) {
             $_SESSION['POST']['timerValue'] = $_POST['timerValue'];
         }
     }
 
-    public function verifValidite(){
+    public function verifValidite()
+    {
         return true;
     }
 
     public function showQuiz(int $quizId, ?int $idQuestion = 1, bool $showAnswer = false)
     {
-        if (session_status() === PHP_SESSION_NONE && ($_GET['page'] === 'test')) {
+        // Démarrage de session si nécessaire
+        if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
 
+        $isTest = ($_GET['page'] === 'test');
         $max = $this->model->getMaxNbQuestion($quizId);
 
-        // initialisation des réponses si vide
-        if (!isset($_SESSION['answers'])) {
+        // Initialisation de la session pour le test
+        if ($isTest && !isset($_SESSION['answers'])) {
             $_SESSION['answers'] = [];
         }
 
-        // si utilisateur a envoyé une réponse
-        if (!empty($_GET['answer'])) {
+        // Récupération de la question courante
+        if ($isTest && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            $idQuestion = isset($_POST['idQuestion']) ? intval($_POST['idQuestion']) : 1;
 
-            $answers = array_map('intval', $_GET['answer']);
+            // Stocker la réponse ou tableau vide si rien coché
+            $answers = !empty($_POST['answer']) ? array_map('intval', $_POST['answer']) : [];
+            $_SESSION['answers'][$idQuestion] = [
+                $this->isCorrect($quizId, $idQuestion, $answers),
+                $answers
+            ];
 
-            // on stocke pour LA QUESTION COURANTE
-            $_SESSION['answers'][$idQuestion] = array($this->isCorrect($quizId, $idQuestion, $answers), $answers);
-
-            // on passe à la question suivante
+            // Passer à la question suivante
             $idQuestion++;
         }
 
-        // fin du quiz
-        if ($idQuestion > $max) {
-            $question = null;
-            $reponse = [];
+        // Standard (GET)
+        if (!$isTest && isset($_GET['rep'])) {
+            $idQuestion = isset($_GET['idQuestion']) ? intval($_GET['idQuestion']) : 1;
 
-            if ($_GET['page'] === 'standard') {
-                require ROOT . '/src/views/quiz/show.php';
-            } else {
-                ksort($_SESSION['answers']);
-                require ROOT . '/src/views/quiz/endTest.php';
+            $answers = !empty($_GET['rep']) ? array_map('intval', $_GET['rep']) : [];
+            $_SESSION['answers'][$idQuestion] = [
+                $this->isCorrect($quizId, $idQuestion, $answers),
+                $answers
+            ];
+
+            $showAnswer = true;
+        }
+
+        // Fin du quiz
+        if ($idQuestion > $max) {
+
+            require_once ROOT . '/src/models/LikeModel.php';
+            $modelLike = new LikeModel($this->db);
+
+            // Like/Dislike en POST
+            if (isset($_POST['reaction'])) {
+                if ($_POST['reaction'] === "like") {
+                    $modelLike->sendLike($quizId);
+                } elseif ($_POST['reaction'] === "dislike") {
+                    $modelLike->sendDislike($quizId);
+                }
+
+                header("Location: ?page=" . $_GET['page'] . "&id=$quizId&idQuestion=$idQuestion");
+                exit;
             }
+
+            $reactions = $modelLike->getReactions($quizId);
+
+            if ($isTest) {
+                ksort($_SESSION['answers']);
+                $question = null;
+                $reponse = [];
+                require ROOT . '/src/views/quiz/endTest.php';
+            } else {
+                $question = null;
+                $reponse = [];
+                require ROOT . '/src/views/quiz/show.php';
+            }
+
             return;
         }
-        // récupération de la question actuelle
+
+        // Affichage de la question courante
         $question = $this->model->getQuestion($quizId, $idQuestion);
         $reponse  = $this->model->getReponses($question['id']);
 
         require ROOT . '/src/views/quiz/show.php';
     }
+
 
 
     public function isCorrect(int $quizId, int $idQuestion, array $reponses): bool

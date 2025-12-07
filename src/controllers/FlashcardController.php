@@ -176,10 +176,15 @@ class FlashCardController
         $quizId = $_GET['id'];
         require_once ROOT . '/src/models/LikeModel.php';
         $modelLike = new LikeModel($this->db);
-        if (isset($_GET['user']) && $_GET['user'] === "like") {
-            $modelLike->sendLike($quizId);
-        } else if (isset($_GET['user']) && $_GET['user'] === "dislike") {
-            $modelLike->sendDislike($quizId);
+        if (isset($_POST['reaction'])) {
+            if ($_POST['reaction'] === "like") {
+                $modelLike->sendLike($quizId);
+            } elseif ($_POST['reaction'] === "dislike") {
+                $modelLike->sendDislike($quizId);
+            }
+            // Évite double envoi en cas de F5
+            header("Location: ?page=flashcard&action=end&id=$quizId");
+            exit;
         }
         $reactions = $modelLike->getReactions($quizId);
         require ROOT . '/src/views/quiz/flashcard.php';
