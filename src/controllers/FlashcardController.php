@@ -243,6 +243,9 @@ class FlashCardController
         return true;
     }
 
+    public function modifyFlashcard($id){
+        require ROOT . '/src/views/Quiz/createFlashcard.php';
+    }
     public function endFlashCard(){
         $viewData = null;
         $quizId = $_GET['id'];

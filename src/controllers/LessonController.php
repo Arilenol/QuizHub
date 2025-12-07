@@ -294,6 +294,10 @@ class LessonController {
         }
     }
 
+    public function modifyLesson($id){
+        require ROOT . '/src/views/lesson/createLesson.php';
+    }
+
 }
 
 ?>

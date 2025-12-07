@@ -345,6 +345,10 @@ class QuizController
         return true;
     }
 
+    public function modifyQuiz($id){
+        require ROOT . '/src/views/Quiz/createQuiz.php';
+    }
+
     public function showQuiz(int $quizId, ?int $idQuestion = 1, bool $showAnswer = false)
     {
         if (session_status() === PHP_SESSION_NONE && ($_GET['page'] === 'test')) {

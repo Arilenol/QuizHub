@@ -45,6 +45,13 @@ switch ($page) {
                 break;
 
             //voir une leçon
+            case 'modify':
+                require_once ROOT . '/src/controllers/LessonController.php';
+                isset($_GET['id']) ? $id = $_GET['id'] : exit;
+                $controller = new LessonController();
+                // va charger views/lesson/createLesson.php
+                $controller->modifyLesson($id);
+                break;
             case 'view':
                 require_once ROOT . '/src/controllers/LessonController.php';
                 isset($_GET['id']) ? $id = $_GET['id'] : exit;
@@ -102,9 +109,13 @@ switch ($page) {
         $action = $_GET['action'] ?? null; // start, ongoing, end
         require_once ROOT . '/src/controllers/FlashCardController.php';
         $controller = new FlashCardController();
-        if (isset($_GET['categorie'])) {
+        if (isset($_GET['categorie']) && $_GET['categorie'] === 'create') {
             //routine pour créer le controlleur
             $controller->createFlashcard();
+            break;
+        }elseif(isset($_GET['categorie']) && $_GET['categorie'] === 'modify'){
+            $id = $_GET['id'] ?? null;
+            $controller->modifyFlashcard($id);
             break;
         }
         switch ($action) {
@@ -139,10 +150,17 @@ switch ($page) {
         break;
     case 'standard':
     case 'test':
-        if (isset($_GET['categorie'])) {
+        if (isset($_GET['categorie']) && $_GET['categorie'] === 'create') {
             require_once ROOT . '/src/controllers/QuizController.php';
             $controller = new QuizController();
             $controller->createQuiz();
+            exit;
+        }
+        elseif(isset($_GET['categorie']) && $_GET['categorie'] === 'modify'){
+            $id = $_GET['id'] ?? null;
+            require_once ROOT . '/src/controllers/QuizController.php';
+            $controller = new QuizController();
+            $controller->modifyQuiz($id);
             exit;
         }
         $id = $_GET['id'] ?? null;
