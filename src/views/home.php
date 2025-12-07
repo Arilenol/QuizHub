@@ -7,7 +7,7 @@ include 'partials/header.php';
 <h1>Créations populaires</h1>
 
 <div class="newCreations">
-    <?php for ($i = 0; $i < 7; $i++): ?>
+    <?php for ($i = 0; $i < count($quiz); $i++): ?>
         <article onclick="window.location.href='./?page=<?= $quiz[$i]['genre'] ?>&id=<?= $quiz[$i]['id'] ?> <?= $quiz[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?>'" class="quiz">
             <div class="quiz-cat">
                 <?php if (!empty($quiz[$i]['categories'])): ?>

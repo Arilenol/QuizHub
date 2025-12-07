@@ -20,7 +20,7 @@ class LikeModel
     public function sendDislike(int|string $quizId): bool
     {
         $stmt = $this->db->prepare("
-        UPDATE quiz SET nbjaimepas = nbjaime + 1 where id = ?
+        UPDATE quiz SET nbjaimepas = nbjaimepas + 1 where id = ?
         ");
         return $stmt->execute([$quizId]);
     }

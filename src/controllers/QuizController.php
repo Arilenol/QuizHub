@@ -231,6 +231,7 @@ class QuizController
                     header('Location: ' . $_SERVER['REQUEST_URI']);
                     exit;
                 }
+
             } else {
                 $_SESSION['erreur'] = true;
                 unset($_POST['create']);
@@ -568,6 +569,7 @@ class QuizController
 
             require_once ROOT . '/src/models/LikeModel.php';
             $modelLike = new LikeModel($this->db);
+
             $reactions = $modelLike->getReactions($quizId);
             // Like/Dislike en POST
             if (isset($_POST['reaction'])) {
@@ -590,7 +592,6 @@ class QuizController
             }
 
 
-
             if ($isTest) {
                 ksort($_SESSION['answers']);
                 $question = null;
@@ -611,6 +612,7 @@ class QuizController
 
         require ROOT . '/src/views/quiz/show.php';
     }
+
 
 
     public function isCorrect(int $quizId, int $idQuestion, array $reponses): bool

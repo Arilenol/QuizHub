@@ -82,7 +82,6 @@ class HomeModel
                 q.genre, 
                 q.date, 
                 u.username AS user_name, 
-                GROUP_CONCAT(c.categorieName) AS categories,
                 q.title, 
                 q.difficulty, 
                 q.description,
@@ -90,21 +89,18 @@ class HomeModel
                 q.nbjaimepas 
             FROM quiz q
             JOIN users u ON u.id = q.user_id
-            JOIN categorie_quiz cq ON cq.quiz_id = q.id
-            JOIN categories c ON c.id = cq.category_id
-            WHERE u.id = ?
+            WHERE q.user_id = ?
             GROUP BY q.id
         ");
 
         $stmt->execute([$id]);
-
         $resultsBis = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // transformation des catégories en tableau
-        foreach ($resultsBis as &$row) {
-            $row['categories'] = explode(',', $row['categories']);
-        }
-
+        // foreach ($resultsBis as &$row) {
+        //     $row['categories'] = explode(',', $row['categories']);
+        // }
+        // var_dump($resultsBis);
         return $resultsBis;
     }
 
