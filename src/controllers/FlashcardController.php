@@ -6,6 +6,7 @@ class FlashCardController
 {
 
     private FlashCardModel $model;
+    private $db;
 
     public function __construct()
     {
@@ -243,9 +244,31 @@ class FlashCardController
         return true;
     }
 
-    public function endFlashCard(){
+    public function endFlashCard()
+    {
         $viewData = null;
         $quizId = $_GET['id'];
+        require_once ROOT . '/src/models/LikeModel.php';
+        $modelLike = new LikeModel($this->db);
+        if (isset($_POST['reaction'])) {
+            if ($_POST['reaction'] === "like") {
+                if ($modelLike->hasLiked($quizId, $_SESSION['id'])) {
+                    $modelLike->removeLike($quizId, $_SESSION['id']);
+                } else {
+                    $modelLike->sendLike($quizId, $_SESSION['id']);
+                }
+            } elseif ($_POST['reaction'] === "dislike") {
+                if ($modelLike->hasDisliked($quizId, $_SESSION['id'])) {
+                    $modelLike->removeDislike($quizId, $_SESSION['id']);
+                } else {
+                    $modelLike->sendDislike($quizId, $_SESSION['id']);
+                }
+            }
+            // Évite double envoi en cas de F5
+            header("Location: ?page=flashcard&action=end&id=$quizId");
+            exit;
+        }
+        $reactions = $modelLike->getReactions($quizId);
         require ROOT . '/src/views/quiz/flashcard.php';
     }
 }

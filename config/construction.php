@@ -23,6 +23,12 @@ function constructionBD(PDO $conn){
             $sql = "DROP TABLE IF EXISTS users;";
             $conn->exec($sql);
 
+            $sql = "DROP TABLE IF EXISTS dislikes;";
+            $conn->exec($sql);
+
+            $sql = "DROP TABLE IF EXISTS likes;";
+            $conn->exec($sql);
+
             $sql = "DROP TABLE IF EXISTS Lecon;";
             $conn->exec($sql);
 
@@ -157,6 +163,30 @@ function constructionBD(PDO $conn){
                 FOREIGN KEY (lesson_id) REFERENCES Lecon(id),
                 FOREIGN KEY (ami_id) REFERENCES users(id)
             );";
+
+            $conn->exec($sql);
+
+            $sql = "CREATE TABLE likes (
+                like_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                quiz_id INTEGER NOT NULL,
+                user_id INTEGER NOT NULL,
+                UNIQUE (quiz_id, user_id),
+                FOREIGN KEY (quiz_id) REFERENCES quiz(id),
+                FOREIGN KEY (user_id) REFERENCES users(id)
+            );
+            ";
+
+            $conn->exec($sql);
+
+            $sql = "CREATE TABLE dislikes (
+                    dislike_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    quiz_id INTEGER NOT NULL,
+                    user_id INTEGER NOT NULL,
+                    UNIQUE (quiz_id, user_id),
+                    FOREIGN KEY (quiz_id) REFERENCES quiz(id),
+                    FOREIGN KEY (user_id) REFERENCES users(id)
+                );
+                ";
 
             $conn->exec($sql);
 

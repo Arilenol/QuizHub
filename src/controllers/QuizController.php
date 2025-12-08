@@ -6,6 +6,7 @@ class QuizController
 {
 
     private QuizModel $model;
+    private $db;
 
     public function __construct()
     {
@@ -347,43 +348,90 @@ class QuizController
 
     public function showQuiz(int $quizId, ?int $idQuestion = 1, bool $showAnswer = false)
     {
-        if (session_status() === PHP_SESSION_NONE && ($_GET['page'] === 'test')) {
+        // Démarrage de session si nécessaire
+        if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
 
+        $isTest = ($_GET['page'] === 'test');
         $max = $this->model->getMaxNbQuestion($quizId);
 
-        // initialisation des réponses si vide
-        if (!isset($_SESSION['answers'])) {
+        // Initialisation de la session pour le test
+        if ($isTest && !isset($_SESSION['answers'])) {
             $_SESSION['answers'] = [];
         }
 
-        // si utilisateur a envoyé une réponse
-        if (!empty($_GET['answer'])) {
+        // Récupération de la question courante
+        if ($isTest && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            $idQuestion = isset($_POST['idQuestion']) ? intval($_POST['idQuestion']) : 1;
 
-            $answers = array_map('intval', $_GET['answer']);
+            // Stocker la réponse ou tableau vide si rien coché
+            $answers = !empty($_POST['answer']) ? array_map('intval', $_POST['answer']) : [];
+            $_SESSION['answers'][$idQuestion] = [
+                $this->isCorrect($quizId, $idQuestion, $answers),
+                $answers
+            ];
 
-            // on stocke pour LA QUESTION COURANTE
-            $_SESSION['answers'][$idQuestion] = array($this->isCorrect($quizId, $idQuestion, $answers), $answers);
-
-            // on passe à la question suivante
+            // Passer à la question suivante
             $idQuestion++;
         }
 
-        // fin du quiz
-        if ($idQuestion > $max) {
-            $question = null;
-            $reponse = [];
+        // Standard (GET)
+        if (!$isTest && isset($_GET['rep'])) {
+            $idQuestion = isset($_GET['idQuestion']) ? intval($_GET['idQuestion']) : 1;
 
-            if ($_GET['page'] === 'standard') {
-                require ROOT . '/src/views/quiz/show.php';
-            } else {
-                ksort($_SESSION['answers']);
-                require ROOT . '/src/views/quiz/endTest.php';
+            $answers = !empty($_GET['rep']) ? array_map('intval', $_GET['rep']) : [];
+            $_SESSION['answers'][$idQuestion] = [
+                $this->isCorrect($quizId, $idQuestion, $answers),
+                $answers
+            ];
+
+            $showAnswer = true;
+        }
+
+        // Fin du quiz
+        if ($idQuestion > $max) {
+
+            require_once ROOT . '/src/models/LikeModel.php';
+            $modelLike = new LikeModel($this->db);
+            $reactions = $modelLike->getReactions($quizId);
+            // Like/Dislike en POST
+            if (isset($_POST['reaction'])) {
+                if ($_POST['reaction'] === "like") {
+                    if ($modelLike->hasLiked($quizId, $_SESSION['id'])) {
+                        $modelLike->removeLike($quizId, $_SESSION['id']);
+                    } else {
+                        $modelLike->sendLike($quizId, $_SESSION['id']);
+                    }
+                } elseif ($_POST['reaction'] === "dislike") {
+                    if ($modelLike->hasDisliked($quizId, $_SESSION['id'])) {
+                        $modelLike->removeDislike($quizId, $_SESSION['id']);
+                    } else {
+                        $modelLike->sendDislike($quizId, $_SESSION['id']);
+                    }
+                }
+
+                header("Location: ?page=" . $_GET['page'] . "&id=$quizId&idQuestion=$idQuestion");
+                exit;
             }
+
+
+
+            if ($isTest) {
+                ksort($_SESSION['answers']);
+                $question = null;
+                $reponse = [];
+                require ROOT . '/src/views/quiz/endTest.php';
+            } else {
+                $question = null;
+                $reponse = [];
+                require ROOT . '/src/views/quiz/show.php';
+            }
+
             return;
         }
-        // récupération de la question actuelle
+
+        // Affichage de la question courante
         $question = $this->model->getQuestion($quizId, $idQuestion);
         $reponse  = $this->model->getReponses($question['id']);
 

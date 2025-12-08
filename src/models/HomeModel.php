@@ -41,19 +41,21 @@ class HomeModel
                 q.id,
                 q.genre, 
                 q.date, 
-                u.username AS user_name, 
-                GROUP_CONCAT(c.categorieName) AS categories,
+                u.username AS user_name,
+                (
+                    SELECT GROUP_CONCAT(DISTINCT c.categorieName)
+                    FROM categorie_quiz cq
+                    JOIN categories c ON c.id = cq.category_id
+                    WHERE cq.quiz_id = q.id
+                ) AS categories,
                 q.title, 
                 q.difficulty, 
                 q.description,
-                q.nbjaime,
-                q.nbjaimepas 
+                (SELECT COUNT(*) FROM likes l WHERE l.quiz_id = q.id) AS nbjaime,
+                (SELECT COUNT(*) FROM dislikes d WHERE d.quiz_id = q.id) AS nbjaimepas
             FROM quiz q
             JOIN users u ON u.id = q.user_id
-            JOIN categorie_quiz cq ON cq.quiz_id = q.id
-            JOIN categories c ON c.id = cq.category_id
-            GROUP BY q.id
-            ORDER BY q.nbjaime DESC
+            ORDER BY nbjaime DESC;
         ");
 
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -81,30 +83,31 @@ class HomeModel
                 q.id,
                 q.genre, 
                 q.date, 
-                u.username AS user_name, 
-                GROUP_CONCAT(c.categorieName) AS categories,
+                u.username AS user_name,
+                (
+                    SELECT GROUP_CONCAT(DISTINCT c.categorieName)
+                    FROM categorie_quiz cq
+                    JOIN categories c ON c.id = cq.category_id
+                    WHERE cq.quiz_id = q.id
+                ) AS categories,
                 q.title, 
                 q.difficulty, 
                 q.description,
-                q.nbjaime,
-                q.nbjaimepas 
+                (SELECT COUNT(*) FROM likes l WHERE l.quiz_id = q.id) AS nbjaime,
+                (SELECT COUNT(*) FROM dislikes d WHERE d.quiz_id = q.id) AS nbjaimepas
             FROM quiz q
             JOIN users u ON u.id = q.user_id
-            JOIN categorie_quiz cq ON cq.quiz_id = q.id
-            JOIN categories c ON c.id = cq.category_id
             WHERE u.id = ?
-            GROUP BY q.id
         ");
 
         $stmt->execute([$id]);
-
         $resultsBis = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // transformation des catégories en tableau
-        foreach ($resultsBis as &$row) {
-            $row['categories'] = explode(',', $row['categories']);
-        }
-
+        // foreach ($resultsBis as &$row) {
+        //     $row['categories'] = explode(',', $row['categories']);
+        // }
+        // var_dump($resultsBis);
         return $resultsBis;
     }
 
@@ -122,18 +125,20 @@ class HomeModel
                 q.id,
                 q.genre, 
                 q.date, 
-                u.username AS user_name, 
-                GROUP_CONCAT(c.categorieName) AS categories,
+                u.username AS user_name,
+                (
+                    SELECT GROUP_CONCAT(DISTINCT c.categorieName)
+                    FROM categorie_quiz cq
+                    JOIN categories c ON c.id = cq.category_id
+                    WHERE cq.quiz_id = q.id
+                ) AS categories,
                 q.title, 
                 q.difficulty, 
                 q.description,
-                q.nbjaime,
-                q.nbjaimepas 
+                (SELECT COUNT(*) FROM likes l WHERE l.quiz_id = q.id) AS nbjaime,
+                (SELECT COUNT(*) FROM dislikes d WHERE d.quiz_id = q.id) AS nbjaimepas
             FROM quiz q
             JOIN users u ON u.id = q.user_id
-            JOIN categorie_quiz cq ON cq.quiz_id = q.id
-            JOIN categories c ON c.id = cq.category_id
-            GROUP BY q.id
             ORDER BY q.date DESC;
         ");
 
