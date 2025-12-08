@@ -11,8 +11,8 @@ class FlashCardController
     public function __construct()
     {
         session_start();
-        $db = getDbConnection();
-        $this->model = new FlashCardModel($db);
+        $this->db = getDbConnection();
+        $this->model = new FlashCardModel($this->db);
     }
 
     // Charge la première question du quiz
