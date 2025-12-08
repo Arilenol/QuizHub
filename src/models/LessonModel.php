@@ -36,6 +36,19 @@ class LessonModel {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+
+    // public function getAllLessons(): array|false {
+    //     $stmt = $this->db->prepare("
+    //         SELECT title, description
+    //         FROM partie
+    //         WHERE lecon_id = ?
+    //         ORDER BY numeroPartie ASC
+    //     ");
+    //     $stmt->execute();
+
+    //     return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // }
+
     /**
      * Récupère les différentes parties de la leçon par son ID
      *

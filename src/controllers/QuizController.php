@@ -316,20 +316,28 @@ class QuizController
 
             require_once ROOT . '/src/models/LikeModel.php';
             $modelLike = new LikeModel($this->db);
-
+            $reactions = $modelLike->getReactions($quizId);
             // Like/Dislike en POST
             if (isset($_POST['reaction'])) {
                 if ($_POST['reaction'] === "like") {
-                    $modelLike->sendLike($quizId);
+                    if ($modelLike->hasLiked($quizId, $_SESSION['id'])) {
+                        $modelLike->removeLike($quizId, $_SESSION['id']);
+                    } else {
+                        $modelLike->sendLike($quizId, $_SESSION['id']);
+                    }
                 } elseif ($_POST['reaction'] === "dislike") {
-                    $modelLike->sendDislike($quizId);
+                    if ($modelLike->hasDisliked($quizId, $_SESSION['id'])) {
+                        $modelLike->removeDislike($quizId, $_SESSION['id']);
+                    } else {
+                        $modelLike->sendDislike($quizId, $_SESSION['id']);
+                    }
                 }
 
                 header("Location: ?page=" . $_GET['page'] . "&id=$quizId&idQuestion=$idQuestion");
                 exit;
             }
 
-            $reactions = $modelLike->getReactions($quizId);
+
 
             if ($isTest) {
                 ksort($_SESSION['answers']);

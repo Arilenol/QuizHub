@@ -152,25 +152,27 @@ function constructionBD(PDO $conn)
 
         $conn->exec($sql);
 
-        $sql = "CREATE TABLE IF NOT EXISTS likes(
-                like_id INTEGER,
-                quiz_id INTEGER,
-                user_id INTEGER,
-                PRIMARY KEY (quiz_id, like_id),
+        $sql = "CREATE TABLE likes (
+                like_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                quiz_id INTEGER NOT NULL,
+                user_id INTEGER NOT NULL,
+                UNIQUE (quiz_id, user_id),
                 FOREIGN KEY (quiz_id) REFERENCES quiz(id),
                 FOREIGN KEY (user_id) REFERENCES users(id)
-            );";
+            );
+            ";
 
         $conn->exec($sql);
 
-        $sql = "CREATE TABLE IF NOT EXISTS dislikes(
-                dislike_id INTEGER,
-                quiz_id INTEGER,
-                user_id INTEGER,
-                PRIMARY KEY (quiz_id, dislike_id),
+        $sql = "CREATE TABLE dislikes (
+                dislike_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                quiz_id INTEGER NOT NULL,
+                user_id INTEGER NOT NULL,
+                UNIQUE (quiz_id, user_id),
                 FOREIGN KEY (quiz_id) REFERENCES quiz(id),
                 FOREIGN KEY (user_id) REFERENCES users(id)
-            );";
+            );
+            ";
 
         $conn->exec($sql);
 
@@ -588,21 +590,28 @@ function constructionBD(PDO $conn)
                 // Insertion des likes
                 for ($i = 0; $i < $nbLikes && $i < count($shuffledUsers); $i++) {
                     $user_id = $shuffledUsers[$i];
-                    $stmt = $conn->prepare("INSERT INTO likes (like_id, quiz_id, user_id) VALUES (?, ?, ?)");
-                    $stmt->execute([$i + 1, $quiz_id, $user_id]);
+                    $stmt = $conn->prepare("
+                        INSERT OR IGNORE INTO likes (quiz_id, user_id)
+                        VALUES (?, ?)
+                    ");
+                    $stmt->execute([$quiz_id, $user_id]);
                 }
 
-                // Re-shuffle pour dislikes afin de ne pas réutiliser les mêmes users
+                // Re-shuffle pour dislikes
                 $shuffledUsers = $users;
                 shuffle($shuffledUsers);
 
                 // Insertion des dislikes
                 for ($i = 0; $i < $nbDislikes && $i < count($shuffledUsers); $i++) {
                     $user_id = $shuffledUsers[$i];
-                    $stmt = $conn->prepare("INSERT INTO dislikes (dislike_id, quiz_id, user_id) VALUES (?, ?, ?)");
-                    $stmt->execute([$i + 1, $quiz_id, $user_id]);
+                    $stmt = $conn->prepare("
+                        INSERT OR IGNORE INTO dislikes (quiz_id, user_id)
+                        VALUES (?, ?)
+                    ");
+                    $stmt->execute([$quiz_id, $user_id]);
                 }
             }
+
 
 
 

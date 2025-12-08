@@ -178,9 +178,17 @@ class FlashCardController
         $modelLike = new LikeModel($this->db);
         if (isset($_POST['reaction'])) {
             if ($_POST['reaction'] === "like") {
-                $modelLike->sendLike($quizId);
+                if ($modelLike->hasLiked($quizId, $_SESSION['id'])) {
+                    $modelLike->removeLike($quizId, $_SESSION['id']);
+                } else {
+                    $modelLike->sendLike($quizId, $_SESSION['id']);
+                }
             } elseif ($_POST['reaction'] === "dislike") {
-                $modelLike->sendDislike($quizId);
+                if ($modelLike->hasDisliked($quizId, $_SESSION['id'])) {
+                    $modelLike->removeDislike($quizId, $_SESSION['id']);
+                } else {
+                    $modelLike->sendDislike($quizId, $_SESSION['id']);
+                }
             }
             // Évite double envoi en cas de F5
             header("Location: ?page=flashcard&action=end&id=$quizId");

@@ -28,9 +28,10 @@ require_once 'partials/header.php'; ?>
                         <span class="label">Quiz joués</span>
                     </div>
                 </div>
-
-                <button class="btn edit">Modifier le profil</button>
-                <button class="btn edit" onclick="window.location.href='?page=log&typelog=logout'">Déconnexion</button>
+                <div class = "action">
+                <button class="edit">Modifier le profil</button>
+                <button class="logout" onclick="window.location.href='?page=log&typelog=logout'">Déconnexion</button>
+                </div>
             </div>
         </div>
 
