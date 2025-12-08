@@ -136,31 +136,56 @@ p.fin {
   font-weight: bold;
 }
 
+.quiz-réalisation button {
+  border-radius: 75px;
+  background-color: #0AB1BD;
+  color: white;
+  border: none;
+  padding: 21px 36px;
+  font-size: 1.575rem;
+  min-height: 69px;
+  cursor: pointer;
+  box-shadow: 0 12px 0 #087b86;
+}
+
+.quiz-réalisation button:hover {
+  background-color: #fff;
+  color: #087b86;
+  box-shadow: 0px 8px 2px #CACACABF;
+}
+
 .quiz-reactions {
   display: flex;
   gap: 10px;
   align-items: center;
   margin: 0;
 }
+
 .quiz-reactions .reaction {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
-  padding: 6px 10px;
+  padding: 10px 20px;     
   border-radius: 20px;
-  font-size: 0.95rem;
-  color: #073238;
-  background-color: rgba(0, 0, 0, 0.03);
   font-size: 1.7rem;
+  cursor: pointer;
+  border: none;
+  color: white;            
 }
+
+
 .quiz-reactions .like {
-  cursor: pointer;
-  color: #ff3b3b;
-  background-color: rgba(255, 59, 59, 0.08);
-  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.04);
+  background-color: #31c414bf;  
+  box-shadow: 0px 10px 2px #22810ebf;
 }
- .quiz-reactions .dislike {
-  cursor: pointer;
-  color: #666;
-  background-color: rgba(0, 0, 0, 0.03);
+
+.quiz-reactions .dislike {
+  background-color: #c62828;  /* fond rouge foncé */
+  box-shadow: 0px 10px 2px #8a1c1c;
+}
+
+.quiz-reactions .reaction:hover {
+  background-color: #ff1f1f; /* légèrement plus clair au survol */
+  color: white;
 }

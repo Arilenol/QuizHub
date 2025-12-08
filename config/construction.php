@@ -149,6 +149,7 @@ function constructionBD(PDO $conn)
             );";
         $conn->exec($sql);
 
+
         $sql = "CREATE TABLE IF NOT EXISTS Lecon(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER NOT NULL,
@@ -684,7 +685,6 @@ function constructionBD(PDO $conn)
                 // Insertion des dislikes
                 for ($i = 0; $i < $nbDislikes && $i < count($shuffledUsers); $i++) {
                     $user_id = $shuffledUsers[$i];
-
                     $stmt = $conn->prepare("
                         INSERT OR IGNORE INTO dislikes (quiz_id, user_id)
                         VALUES (?, ?)
@@ -692,6 +692,7 @@ function constructionBD(PDO $conn)
                     $stmt->execute([$quiz_id, $user_id]);
                 }
             }
+
 
 
 

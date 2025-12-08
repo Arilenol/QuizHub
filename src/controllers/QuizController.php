@@ -569,7 +569,6 @@ class QuizController
 
             require_once ROOT . '/src/models/LikeModel.php';
             $modelLike = new LikeModel($this->db);
-
             $reactions = $modelLike->getReactions($quizId);
             // Like/Dislike en POST
             if (isset($_POST['reaction'])) {
