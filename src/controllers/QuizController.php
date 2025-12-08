@@ -10,8 +10,8 @@ class QuizController
 
     public function __construct()
     {
-        $db = getDbConnection();
-        $this->model = new QuizModel($db);
+        $this->db = getDbConnection();
+        $this->model = new QuizModel($this->db);
     }
 
     public function createQuiz()
