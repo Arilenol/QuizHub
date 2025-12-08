@@ -7,9 +7,13 @@ require_once '../src/views/partials/header.php';
 <div class="quiz-réalisation">
     <div class="buttonAction">
         <?php if (isset($_GET['test'])): ?>
-            <button type="button" class="retour" onclick="window.location.href='?page=test&id=<?= $quizId ?>'">
+            <button type="submit" class="retour" form="retourForm">
                 ← Retour
             </button>
+
+            <form id="retourForm" method="post" action="?page=test&id=<?= $quizId ?>">
+                <input type="hidden" name="idQuestion" value="<?= $max ?>">
+            </form>
 
         <?php else: ?>
             <button class="retour" onclick="window.location.href='?page=home'">← Retour</button>
@@ -128,22 +132,24 @@ require_once '../src/views/partials/header.php';
 
         <!-- Bouton validation -->
         <div class="bouton-container">
+            <?php if (!isset($_GET['test'])): ?>
 
-            <?php if (!$showAnswer && !$isTest): ?>
-                <!-- STANDARD → première étape → validateur -->
-                <button class="submit" type="submit" form="quizForm">Valider</button>
+                <?php if (!$showAnswer && !$isTest): ?>
+                    <!-- STANDARD → première étape → validateur -->
+                    <button class="submit" type="submit" form="quizForm">Valider</button>
 
-            <?php elseif ($isTest): ?>
-                <!-- TEST → toujours POST -->
-                <button class="valider" type="submit" form="quizForm">Continuer</button>
+                <?php elseif ($isTest): ?>
+                    <!-- TEST → toujours POST -->
+                    <button class="valider" type="submit" form="quizForm">Continuer</button>
 
-            <?php else: ?>
-                <!-- STANDARD → réponse affichée → suivant en GET -->
-                <button
-                    class="valider"
-                    onclick="window.location.href='?page=standard&id=<?= $question['quiz_id'] ?>&idQuestion=<?= $question['numeroQuiz'] + 1 ?>'">
-                    Continuer
-                </button>
+                <?php else: ?>
+                    <!-- STANDARD → réponse affichée → suivant en GET -->
+                    <button
+                        class="valider"
+                        onclick="window.location.href='?page=standard&id=<?= $question['quiz_id'] ?>&idQuestion=<?= $question['numeroQuiz'] + 1 ?>'">
+                        Continuer
+                    </button>
+                <?php endif; ?>
             <?php endif; ?>
 
         </div>
