@@ -1,7 +1,6 @@
 <?php
     require_once ROOT . '/src/models/CatalogueModel.php';
     require_once ROOT . '/config/config.php';
-    require_once ROOT . '/config/construction.php';
 
 
     class CatalogueController {
@@ -16,7 +15,19 @@
 
             $cats = $this->model->getCategories();
 
-
+            $options = [
+                    'date_desc' => 'Date (nouveau → ancien)',
+                    'date_asc' => 'Date (ancien → nouveau)',
+                    'title_asc' => 'Titre (A → Z)',
+                    'title_desc' => 'Titre (Z → A)',
+                    'difficulty_asc' => 'Difficulté (faible → élevé)',
+                    'difficulty_desc' => 'Difficulté (élevé → faible)',
+                    'author_asc' => "Auteur (A → Z)",
+                    'author_desc' => "Auteur (Z → A)",
+                    'genre_asc' => 'Genre (A → Z)',
+                    'genre_desc' => 'Genre (Z → A)'
+                ];
+                
             $recherche_cat = isset($_GET['categorie'])&& !empty($_GET['categorie'])&& htmlspecialchars($_GET['categorie'])!='Toutes les catégories' ? $_GET['categorie'] : '';
             $recherche_contenu = isset($_GET['contenu'])&& !empty($_GET['contenu']) ? htmlspecialchars($_GET['contenu']) : '';
             $recherche_auteur = isset($_GET['searchAuthor']) && !empty($_GET['searchAuthor']) ? htmlspecialchars($_GET['searchAuthor']) : '';

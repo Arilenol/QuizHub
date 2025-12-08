@@ -15,6 +15,24 @@
     <input type="text" name ="LessonTitle" value = "<?php echo $LessonTitle ?>">
     <p class="description">Description</p>
     <input type="text" name ="LessonDescription" value = "<?php echo $desc ?>">
+
+    <h2 style="display : inline;">Catégories
+        <button id="hiddenCategories" type = "button ">▼</button>
+    </h2>
+    <div class="categoriesList">
+        <?php
+        foreach($TAB_CATEGORIE as $categorie){
+            if (in_array((string)$categorie['id'], $TAB_CATEGORIE_CHOISI)) {
+                $checked = 'checked';
+            } else {
+                $checked = '';
+            }
+            echo '<label><input name = "categories[]" type = "checkbox" value='.$categorie['id'].' '.$checked.'>'.$categorie['categorieName'].'</label>';
+        }
+        ?>
+
+    </div>
+
     <div class = "newLesson">
     <p class = "LessonParts">Parties</p>
     <?php
@@ -56,5 +74,52 @@
         }
         ?>
     </select>
+    <?php //-----------------------------------------------------ici---------------------------------------------------------?>
+    <div class = "disponibilite">
+        <p>Mode de publication :</p>
+        <select name="disponibilite" id="disponibilite">
+            <?php $dispo = '';
+            $dispo = $_SESSION['POST']['disponibilite'] == 'public' ? 'selected' : '';
+             ?>
+            <option value="public" <?= $dispo ?> >publique</option>
+            <?php $dispo = $_SESSION['POST']['disponibilite'] == 'ami' ? 'selected' : ''; ?>
+            <option value="ami" <?= $dispo ?> >Seulement les amis</option>
+            <?php $dispo = $_SESSION['POST']['disponibilite'] == 'private' ? 'selected' : ''; ?>
+            <option value="private" <?= $dispo ?> >seulement vous</option>
+        </select>
+        <?php
+        //-----------------------------------------------------ici---------------------------------------------------------
+        if ($_SESSION['POST']['disponibilite'] == "ami"){
+            $hidden2 = '';
+        } 
+        else{
+            $hidden2 = 'hidden';
+        }
+        if (in_array('tous', $TAB_AMI_CHOISI)) {
+            $checkedTous = 'checked';
+        } else {
+            $checkedTous = '';
+        }
+        echo '<label '.$hidden2.'><input name = "amiDispo[]" type = "checkbox" value="tous" '.$checkedTous.'>Tous les amis</label>';
+        foreach($TAB_AMI as $ami){
+            if (in_array($ami['ami_id'], $TAB_AMI_CHOISI)) {
+                $checked = 'checked';
+            } else {
+                $checked = '';
+            }
+            echo '<label '.$hidden2.'><input name = "amiDispo[]" type = "checkbox" value="'.$ami['ami_id'].'" '.$checked.'>'.$ami['username'].'</label>';
+        }
+        
+        ?>
+    </div>
+    <?php
+    //-----------------------------------------------------ici---------------------------------------------------------
+        if ($_SESSION['erreur']){
+            echo '<p class="erreur">Chaque champ doit être rempli<br>Chaque partie peut avoir autant d\'exemple que nécessaire<br>Au moins une catégorie doit être sélectionnée</p>';
+        } 
+    ?>
     <button type = "submit" name = "create" value = "yes">Créer la leçon</button>
 </form>
+<script src = "./assets/js/sauvegardeScroll.js"></script>
+<script src = "./assets/js/selectDispo.js"></script>
+<script src = "./assets/js/createContent.js"></script>

@@ -12,7 +12,7 @@
         <input type="hidden" name = "page" value = "catalogue">
         <div class="search-author">
             <?php
-                echo '<input type="text" name="searchAuthor" placeholder="Rechercher un auteur..." value="'.(isset($_GET['searchAuthor']) ? htmlspecialchars($_GET['searchAuthor']) : '').'">';
+                echo '<input type="text" name="searchAuthor" placeholder="Rechercher un auteur par mot-clé" value="'.(isset($_GET['searchAuthor']) ? htmlspecialchars($_GET['searchAuthor']) : '').'">';
             ?>
         </div>
         <div class = "selects">
@@ -22,6 +22,7 @@
             }
             ?>
 
+            <p>Catégorie :</p>
             <select name = "categorie" onchange="this.form.submit()">
             <option value="">Toutes les catégories</option>
                 <?php
@@ -31,25 +32,14 @@
                 }
                 ?>
             </select>
+            <p>Tri :</p>
             <select name="tri" onchange="this.form.submit()">
-            <option value="">Trier par</option>
+            <option value="">Aucun tri</option>
                 <?php
-                $triSelected = isset($_GET['tri']) ? $_GET['tri'] : '';
                 
-                $options = [
-                    'date_desc' => 'Date (nouveau → ancien)',
-                    'date_asc' => 'Date (ancien → nouveau)',
-                    'title_asc' => 'Titre (A → Z)',
-                    'title_desc' => 'Titre (Z → A)',
-                    'difficulty_asc' => 'Difficulté (faible → élevé)',
-                    'difficulty_desc' => 'Difficulté (élevé → faible)',
-                    'author_asc' => "Auteur (A → Z)",
-                    'author_desc' => "Auteur (Z → A)",
-                    'genre_asc' => 'Genre (A → Z)',
-                    'genre_desc' => 'Genre (Z → A)'
-                ];
+                
                 foreach ($options as $val => $label) {
-                    $sel = ($triSelected === $val) ? 'selected' : '';
+                    $sel = ($tri === $val) ? 'selected' : '';
                     echo '<option value="' . $val . '" ' . $sel . '>' . htmlspecialchars($label) . '</option>';
                 }
                 ?>
@@ -66,8 +56,10 @@
             }
             elseif($quiz['genre'] === 'standard'){
                 $genre = 'standard';
+                $suite = '';
             }elseif($quiz['genre'] === 'test'){
                 $genre = 'test';
+                $suite = '';
             }
             echo '<div class="quiz" onclick="window.location.href=\'index.php?page='.$genre.''.$suite.'&id='.$quiz['id'].'\'">
                 <article >
