@@ -8,19 +8,19 @@ class LikeModel
         $this->db = $db;
     }
 
-    public function sendLike(int|string $quizId): bool
+    public function sendLike(int|string $quizId, string $userId): bool
     {
 
         $stmt = $this->db->prepare("
-        UPDATE quiz SET nbjaime = nbjaime + 1 where id = ?
+        INSERT INTO likes (dislike_id, quiz_id,user_id) VALUES (?, 1) ON DUPLICATE KEY UPDATE nbjaime = nbjaime + 1
         ");
-        return $stmt->execute([$quizId]);
+        return $stmt->execute([$quizId, $userId]);
     }
 
     public function sendDislike(int|string $quizId): bool
     {
         $stmt = $this->db->prepare("
-        UPDATE quiz SET nbjaimepas = nbjaimepas + 1 where id = ?
+        UPDATE dislikes SET nbjaimepas = nbjaimepas + 1 where id = ?
         ");
         return $stmt->execute([$quizId]);
     }

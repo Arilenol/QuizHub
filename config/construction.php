@@ -21,13 +21,14 @@ function constructionBD(PDO $conn)
         $sql = "DROP TABLE IF EXISTS amiDisponibilite;";
         $conn->exec($sql);
 
-        $sql = "DROP TABLE IF EXISTS users;";
-        $conn->exec($sql);
 
         $sql = "DROP TABLE IF EXISTS dislikes;";
         $conn->exec($sql);
 
         $sql = "DROP TABLE IF EXISTS likes;";
+        $conn->exec($sql);
+
+        $sql = "DROP TABLE IF EXISTS users;";
         $conn->exec($sql);
 
         $sql = "DROP TABLE IF EXISTS Lecon;";
@@ -74,7 +75,6 @@ function constructionBD(PDO $conn)
 
         $sql = "DROP TRIGGER IF EXISTS trg_before_insert_TestStatistiques;";
         $conn->exec($sql);
-
         $sql = "DROP TRIGGER IF EXISTS trg_before_insert_Carte;";
         $conn->exec($sql);
 
@@ -655,7 +655,6 @@ function constructionBD(PDO $conn)
             }
 
 
-
             foreach ($quiz_ids as $quiz) {
                 $quiz_id = $quiz['id'];
 
@@ -670,6 +669,7 @@ function constructionBD(PDO $conn)
                 // Insertion des likes
                 for ($i = 0; $i < $nbLikes && $i < count($shuffledUsers); $i++) {
                     $user_id = $shuffledUsers[$i];
+
                     $stmt = $conn->prepare("
                         INSERT OR IGNORE INTO likes (quiz_id, user_id)
                         VALUES (?, ?)
@@ -684,6 +684,7 @@ function constructionBD(PDO $conn)
                 // Insertion des dislikes
                 for ($i = 0; $i < $nbDislikes && $i < count($shuffledUsers); $i++) {
                     $user_id = $shuffledUsers[$i];
+
                     $stmt = $conn->prepare("
                         INSERT OR IGNORE INTO dislikes (quiz_id, user_id)
                         VALUES (?, ?)
@@ -691,6 +692,7 @@ function constructionBD(PDO $conn)
                     $stmt->execute([$quiz_id, $user_id]);
                 }
             }
+
 
 
             // ---------- resultats : moyenne 2 par user, 1 user with 13 ----------

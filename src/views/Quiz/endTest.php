@@ -5,7 +5,7 @@ require_once '../src/views/partials/header.php';
 ?>
 
 <div class="quiz-réalisation">
-    <button class="retour" onclick="history.back()">← Retour</button>
+    <button class="retour" onclick="window.location.href='?page=home'">Retour à l'accueil</button>
     <h2>Vos réponses</h2>
     <div class="answers">
         <?php foreach ($_SESSION['answers'] as $questionNumber => $a) : ?>
