@@ -12,6 +12,7 @@ class FlashcardController
     {
         session_start();
         $this->db = getDbConnection();
+
         $this->model = new FlashcardModel($this->db);
     }
 
