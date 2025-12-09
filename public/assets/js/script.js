@@ -1,3 +1,9 @@
+window.addEventListener("load", () => {
+    if("serviceWorker" in navigator){
+        navigator.serviceWorker.register("sw.js");
+    }
+})
+
 window.addEventListener("DOMContentLoaded", () => {
     const checkboxs = document.querySelectorAll(".checkbox");
     if(checkboxs.length > 0){
@@ -42,5 +48,12 @@ window.addEventListener("DOMContentLoaded", () => {
             });
         });
     }
-    
 });
+
+download = async function(id){
+    if(id != null){
+        const result = await (await fetch("/getFlashcardData.php?id=" + id)).text();
+        localforage.setItem(JSON.parse(result)["id"], JSON.parse(result));
+        console.log(id + " downloaded")
+    }
+}

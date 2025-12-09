@@ -1,0 +1,63 @@
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/offline/offline.css">
+    <title>Quiz</title>
+</head>
+
+<body>
+    <header>
+        <img onclick="window.location.href='?page=home'" style="cursor: pointer;" src="/offline/logo.svg" alt="Logo">
+    </header>
+    <!-- Création des listeners des boutons du header -->
+    <div class="quiz-réalisation">
+        <div class="buttonAction">
+            <button class="retour" onclick="window.location.href='?page=home'">← Retour</button>
+        </div>
+
+        <!-- QUESTION -->
+        <div class="question">
+
+            <h2>Question 1 pour le quiz 30</h2>
+
+            <div class="ensemble-réponse">
+                <form method="get" id="quizForm" class=" odd">
+
+                    <input type="hidden" name="page" value="standard">
+                    <input type="hidden" name="id" value="30">
+                    <input type="hidden" name="idQuestion" value="1">
+                    <input type="hidden" name="reponse" value="visible">
+                    <div class="réponse">
+                        <input type="checkbox" id="rep_881" name="" value="881">
+                        <label for="rep_881">
+                            Réponse 1 pour question 223 </label>
+                    </div>
+                    <div class="réponse">
+                        <input type="checkbox" id="rep_882" name="" value="882">
+                        <label for="rep_882">
+                            Réponse 2 pour question 223 </label>
+                    </div>
+                    <div class="réponse">
+                        <input type="checkbox" id="rep_883" name="" value="883">
+                        <label for="rep_883">
+                            Réponse 3 pour question 223 </label>
+                    </div>
+                </form>
+            </div>
+
+            <div class="bouton-container">
+                <button class="submit" type="submit" form="quizForm">Valider</button>
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</body>
+
+</html>

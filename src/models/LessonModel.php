@@ -15,7 +15,7 @@ class LessonModel {
     public function getLesson($id) : array|false {
         $stmt = $this->db->prepare("SELECT * FROM lecon WHERE id = ?");
         $stmt->execute([$id]);
-        return $stmt->fetch();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     /**
