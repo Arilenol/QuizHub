@@ -667,4 +667,16 @@ class QuizModel
             die("Updating responses in quiz failed: " . $e->getMessage());
         }
     }
+
+    public function addQuestionToQuiz(int $quizId,int $numQuestion, string $questionContent, array $reponsesContent, array $checksContent){
+        try{
+            $newQuestionId = $this->insertQuestion($numQuestion, $quizId, $questionContent);
+            foreach($reponsesContent as $index => $reponse){
+                $this->insertReponse($newQuestionId, $reponse, $checksContent[$index]);
+            }
+            return true;
+        } catch(PDOException $e){
+            die("Adding question to quiz failed: " . $e->getMessage());
+        }
+    }
 }

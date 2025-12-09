@@ -68,7 +68,7 @@
                 
 
             }
-            echo '<div id="questionFooter'.$i.'" style="display: flex; flex-direction: row;gap:10px; grid-column-start: 2; grid-column-end: 3;">
+            echo '<div id="questionFooter'.$i.'" class="questionFooter" style="display: flex; flex-direction: row;gap:10px; grid-column-start: 2; grid-column-end: 3;">
                         <button class="button modifierQuestion" type = "submit" id ="modifier'.$i.'" name="modifierQuestion" value='.$i.'>
                             <span></span>
                             <p>Modifier</p>
@@ -81,7 +81,7 @@
         }
         ?>
         </div>
-        <button class="button" type = "submit" name = "addQuestion" value = "yes">
+        <button class="button" type = "submit" name = "addQuestion" id="addQuestion" value = "yes">
             <span></span>
             <p>Ajouter une question</p>
         </button>

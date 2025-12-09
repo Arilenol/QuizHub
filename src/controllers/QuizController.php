@@ -386,6 +386,9 @@ class QuizController
             $reponsesContent = isset($_POST['reponse'.$iQuestion]) && is_array($_POST['reponse'.$iQuestion]) && !empty($_POST['reponse'.$iQuestion]) ? $_POST['reponse'.$iQuestion] : [];
             $checksContent = isset($_POST['checkbox'.$iQuestion]) && is_array($_POST['checkbox'.$iQuestion]) ? $_POST['checkbox'.$iQuestion] : [];
             if ($this->modifQuestionValidite($questionContent, $reponsesContent, $checksContent)){
+                if ($taille < $iQuestion + 1){
+                    $this->model->addQuestionToQuiz($idQuiz, $iQuestion+1, $questionContent, $reponsesContent, $checksContent);
+                }
                 $this->model->updateQuestionQuiz($idQuiz, $iQuestion+1, $questionContent, $reponsesContent, $checksContent);
             }
             else{
