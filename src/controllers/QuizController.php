@@ -19,9 +19,6 @@ class QuizController
         error_reporting(E_ALL);
         ini_set('display_errors', 1);
 
-        $db = getDbConnection();
-        $model = new QuizModel($db);
-
         session_start();
 
         //unset($_POST);
@@ -247,7 +244,7 @@ class QuizController
         }
         
         $_SESSION['bouton'] = false;
-        var_dump($_SESSION['POST']);
+        //var_dump($_SESSION['POST']);
         //var_dump($_POST);
         //var_dump($TAB_CONTENU);
         //var_dump($_SESSION);
@@ -346,7 +343,70 @@ class QuizController
     }
 
     public function modifyQuiz($id){
-        require ROOT . '/src/views/Quiz/createQuiz.php';
+        error_reporting(E_ALL);
+        ini_set('display_errors', 1);
+
+        session_start();
+        $idQuiz = (int)$id;
+        //die("erreur :".$idQuiz);
+        $taille = $this->model->getQuizSize($idQuiz);
+        $user_id = $this->model->getUserIdFromQuiz($idQuiz);
+        if (!isset($_SESSION['id']) || $user_id != $_SESSION['id']){
+            header('Location: index.php?page=home');
+            exit;
+        }
+        if ($taille === 0){
+            header('Location: index.php?page=home');
+            exit;
+        }
+        if (isset($_POST['Retour']) && $_POST['Retour'] === "yes") {
+            unset($_POST);
+            header('Location: index.php?page=createContent');
+            exit;
+        }
+        if(isset($_POST['categories']) && !empty($_POST['categories'])){
+            $this->model->updateCategoriesQuiz($idQuiz, $_POST['categories']);
+            unset($_POST['categories']);
+            header('Location: ' . $_SERVER['REQUEST_URI']);
+            exit;
+        }
+        if(isset($_POST['appliquerDispo'])){
+            $disponibilite = isset($_POST['disponibilite']) ? $_POST['disponibilite'] : 'public';
+            $amiDispo = isset($_POST['amiDispo']) && is_array($_POST['amiDispo']) ? $_POST['amiDispo'] : [];
+            $this->model->updateDisponibiliteQuiz($idQuiz, $disponibilite, $amiDispo);
+            unset($_POST['appliquerDispo']);
+            unset($_POST['disponibilite']);
+            unset($_POST['amiDispo']);
+            header('Location: ' . $_SERVER['REQUEST_URI']);
+            exit;
+        }
+
+
+
+        $tabParametres = array(
+            array('name' => 'timer', 'desc' => 'minuterie'),
+            array('name' => 'retryError','desc' => 'rééssayer les questions échouées'),
+            array('name' => 'noOrder','desc' => 'faire dans le désordre par défaut'),
+            array('name' => 'score','desc' => 'afficher le score'),
+            array('name' => 'avancement', 'desc' => 'afficher l\'avancement'),
+            array('name' => 'recap', 'desc' => 'afficher un recapitulatif à la fin')
+        );
+        $quizInfos = $this->model->getQuizInfos($idQuiz);
+        $TAB_QUESTIONS = $this->model->getQuestionsRepFromQuiz($idQuiz);
+        $TAB_PARAMS = $this->model->getQuizParametres($idQuiz);
+        $TAB_CATEGORIES = $this->model->getCategoriesFromQuiz($idQuiz);
+        $ALL_CATEGORIES = $this->model->getAllCategories();
+        $ALL_AMIS = $this->model->getAmis($user_id);
+        $TAB_AMIS = $this->model->getAmisSelection($idQuiz);
+
+
+        
+
+        //var_dump($_POST);
+        //var_dump($_SESSION);
+        $erreur = false;
+
+        require ROOT . '/src/views/Quiz/modifyQuiz.php';
     }
 
     public function showQuiz(int $quizId, ?int $idQuestion = 1, bool $showAnswer = false)
