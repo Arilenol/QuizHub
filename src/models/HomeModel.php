@@ -24,7 +24,7 @@ class HomeModel
     {
         $stmt = $this->db->prepare("SELECT * FROM quiz WHERE id = ?");
         $stmt->execute([$id]);
-        return $stmt->fetch();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     /**
