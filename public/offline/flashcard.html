@@ -1,0 +1,52 @@
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/offline/offline.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.js"></script>
+    <title>Flashcard</title>
+</head>
+
+<body>
+    <header>
+        <img onclick="window.location.href='/'" style="cursor: pointer;" src="/offline/logo.svg"
+            alt="Logo">
+    </header>
+    <!-- Création des listeners des boutons du header -->
+    <div class="buttonAction">
+        <button class="retour" onclick="window.location.href = '/'">← Retour</button>
+    </div>
+    <div class="container">
+
+        <div class="card" style="grid-column-start: 1; grid-column-end: 8; grid-row-start: 2; grid-row-end: 3;">
+            <div class="card-face card-front">
+                <h2 id="question"></h2>
+            </div>
+            <div class="card-face card-back">
+                <h2 id="answer"></h2>
+            </div>
+        </div>
+
+        <div class="button" style="grid-column-start: 4; grid-column-end: 5; grid-row-start: 3; grid-row-end: 4;"
+            onclick="this.previousElementSibling.style.transform = this.previousElementSibling.style.transform != 'rotateY(180deg)' ? 'rotateY(180deg)' : 'rotateY(0deg)'">
+            <span></span>
+            <p>Afficher la réponse</p>
+        </div>
+
+
+        <div class="button disabled" id="previous" style="grid-column-start: 3; grid-column-end: 4; grid-row-start: 4; grid-row-end: 5;">
+            <span></span>
+            <p>Précédent</p>
+        </div>
+        <div class="button" id="next" style="grid-column-start: 5; grid-column-end: 6; grid-row-start: 4; grid-row-end: 5;">
+            <span></span>
+            <p>Suivant</p>
+        </div>
+
+    </div>
+
+    <script src="/offline/offline.js"></script>
+</body>
+
+</html>
