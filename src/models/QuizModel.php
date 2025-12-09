@@ -628,4 +628,43 @@ class QuizModel
             die("Updating disponibilite for quiz failed: " . $e->getMessage());
         }
     }
+
+    public function updateQuestionQuiz(int $quizId, int $numeroQuiz, string $questionContent, array $reponsesContent, array $checksContent){
+        try{
+            $updateQuestion = $this->db->prepare("UPDATE question SET question = ? WHERE quiz_id = ? AND numeroQuiz = ? RETURNING id;");
+            $updateQuestion->bindValue(1,$questionContent);
+            $updateQuestion->bindValue(2,$quizId);
+            $updateQuestion->bindValue(3,$numeroQuiz);
+            $updateQuestion->execute();
+
+            $idQuestion = $updateQuestion->fetchColumn();
+
+            $this->updateReponses($idQuestion, $reponsesContent, $checksContent);
+            return true;
+
+            
+        } catch(PDOException $e){
+            die("Updating question in quiz failed: " . $e->getMessage());
+        }
+    }
+
+    public function updateReponses(int $questionId, array $reponsesContent, array $checksContent){
+        try{
+            $getReponses = $this->db->prepare("SELECT id FROM reponse WHERE question_id = ? ORDER BY id ASC;");
+            $getReponses->bindValue(1,$questionId);
+            $getReponses->execute();
+            $existingReponses = $getReponses->fetchAll(PDO::FETCH_ASSOC);
+
+            foreach($existingReponses as $index => $reponse){
+                $updateReponse = $this->db->prepare("UPDATE reponse SET reponse = ?, estCorrecte = ? WHERE id = ?;");
+                $updateReponse->bindValue(1,$reponsesContent[$index]);
+                $updateReponse->bindValue(2,$checksContent[$index]);
+                $updateReponse->bindValue(3,$reponse['id']);
+                $updateReponse->execute();
+            }
+            return true;
+        } catch(PDOException $e){
+            die("Updating responses in quiz failed: " . $e->getMessage());
+        }
+    }
 }

@@ -380,6 +380,24 @@ class QuizController
             header('Location: ' . $_SERVER['REQUEST_URI']);
             exit;
         }
+        if(isset($_POST['applyModif'])){
+            $iQuestion = (int)$_POST['applyModif'];
+            $questionContent = ( isset($_POST['question'.$iQuestion]) && !empty($_POST['question'.$iQuestion]) ) ? $_POST['question'.$iQuestion] : '';
+            $reponsesContent = isset($_POST['reponse'.$iQuestion]) && is_array($_POST['reponse'.$iQuestion]) && !empty($_POST['reponse'.$iQuestion]) ? $_POST['reponse'.$iQuestion] : [];
+            $checksContent = isset($_POST['checkbox'.$iQuestion]) && is_array($_POST['checkbox'.$iQuestion]) ? $_POST['checkbox'.$iQuestion] : [];
+            if ($this->modifQuestionValidite($questionContent, $reponsesContent, $checksContent)){
+                $this->model->updateQuestionQuiz($idQuiz, $iQuestion+1, $questionContent, $reponsesContent, $checksContent);
+            }
+            else{
+                die("Erreur de validation des données de la question ".$iQuestion);
+            }
+            unset($_POST['applyModif']);
+            unset($_POST['question'.$iQuestion]);
+            unset($_POST['reponse'.$iQuestion]);
+            unset($_POST['checkbox'.$iQuestion]);
+            header('Location: ' . $_SERVER['REQUEST_URI']);
+            exit;
+        }
 
 
 
@@ -407,6 +425,21 @@ class QuizController
         $erreur = false;
 
         require ROOT . '/src/views/Quiz/modifyQuiz.php';
+    }
+
+    public function modifQuestionValidite(string $questionContent, array $reponsesContent, array $cheksContent): bool{
+        if (!in_array(0,$cheksContent) || !in_array(1,$cheksContent)){
+            return false;
+        }
+        if( empty($questionContent)){
+            return false;
+        }
+        foreach($reponsesContent as $rep){
+            if (empty($rep)){
+                return false;
+            }
+        }
+        return true;
     }
 
     public function showQuiz(int $quizId, ?int $idQuestion = 1, bool $showAnswer = false)
