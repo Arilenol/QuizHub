@@ -7,7 +7,7 @@ require 'partials/header.php';
 ?>
 
 <div class="catalogue">
-    <button onclick="window.location.href='index.php?page=home'" type="submit">
+    <button onclick="window.location.href='index.php?page=home'" class="retour" type="submit">
         < Retour </button>
             <form method="GET" action=index.php>
                 <input type="hidden" name="page" value="catalogue">

@@ -9,8 +9,6 @@ class LessonController {
         // récupère les données de la leçon
         $lesson = $model->getLesson($id);
         if (!$lesson) {
-            // Leçon non trouvée
-            http_response_code(404);
             echo "Leçon non trouvée";
             return;
         }

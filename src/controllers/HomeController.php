@@ -9,10 +9,11 @@ class HomeController
     {
         $db = getDbConnection();
         $model = new HomeModel($db);
+        $modelLesson = new LessonModel($db);
         // récupère les données
         $quiz = $model->getAllInfo();
 
-        // $lessons = 
+        $lessons = $modelLesson->getAllInfoLessons();
         if (isset($_SESSION['id']) && !empty($_SESSION['id'])) {
             $quizNextPart = $model->getAllCreationsByUser($_SESSION['id']);
         } else {
