@@ -1,8 +1,10 @@
 <?php
-class LessonModel {
+class LessonModel
+{
     private $db;
 
-    public function __construct($db) {
+    public function __construct($db)
+    {
         $this->db = $db;
     }
 
@@ -12,8 +14,21 @@ class LessonModel {
      * @param int $id Identifiant de la leçon
      * @return array|false Tableau associatif de la leçon, ou false si non trouvé
      */
-    public function getLesson($id) : array|false {
-        $stmt = $this->db->prepare("SELECT * FROM lecon WHERE id = ?");
+    public function getLesson(int $id): array|false
+    {
+        $stmt = $this->db->prepare("
+        SELECT 
+            l.id, 
+            l.title, 
+            l.description, 
+            l.date AS 'date', 
+            u.username AS username, 
+            l.quiz_id
+        FROM lecon l
+        JOIN users u ON u.id = l.user_id
+        WHERE l.id = ?
+        LIMIT 1
+    ");
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -24,7 +39,8 @@ class LessonModel {
      * @param int $id Identifiant de la leçon
      * @return array|false Tableau associatif des parties de la leçon, ou false si non trouvé
      */
-    public function getPart(int $id): array|false {
+    public function getPart(int $id): array|false
+    {
         $stmt = $this->db->prepare("
             SELECT title, content,id
             FROM partie
@@ -37,17 +53,51 @@ class LessonModel {
     }
 
 
-    // public function getAllLessons(): array|false {
-    //     $stmt = $this->db->prepare("
-    //         SELECT title, description
-    //         FROM partie
-    //         WHERE lecon_id = ?
-    //         ORDER BY numeroPartie ASC
-    //     ");
-    //     $stmt->execute();
+    public function getAllInfoLessons(): array
+    {
+        $stmt = $this->db->query("
+        SELECT
+            l.id AS lecon_id,
+            l.title AS lecon_title,
+            l.description AS lecon_description,
+            l.date AS lecon_date,
 
-    //     return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    // }
+            u.id AS user_id,
+            u.username AS user_name,
+
+            q.id AS quiz_id,
+            q.title AS quiz_title,
+            q.genre,
+            q.difficulty,
+            q.description AS quiz_description,
+
+            (
+                SELECT GROUP_CONCAT(DISTINCT c.categorieName)
+                FROM categorie_quiz cq
+                JOIN categories c ON c.id = cq.category_id
+                WHERE cq.quiz_id = q.id
+            ) AS categories,
+
+            (SELECT COUNT(*) FROM likes l2 WHERE l2.quiz_id = q.id) AS nbjaime,
+            (SELECT COUNT(*) FROM dislikes d2 WHERE d2.quiz_id = q.id) AS nbjaimepas
+
+        FROM Lecon l
+        JOIN users u ON u.id = l.user_id
+        LEFT JOIN quiz q ON q.id = l.quiz_id
+
+        ORDER BY l.date DESC;
+    ");
+
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($results as &$row) {
+            $row['categories'] = $row['categories']
+                ? explode(',', $row['categories'])
+                : [];
+        }
+
+        return $results;
+    }
 
     /**
      * Récupère les exemples associés à une partie de leçon.
@@ -58,7 +108,8 @@ class LessonModel {
      * @param int $id Identifiant de la partie
      * @return array|false Tableau associatif des exemples, ou false si non trouvé
      */
-    public function getExemple(int $id): array|false {
+    public function getExemple(int $id): array|false
+    {
         $stmt = $this->db->prepare("
             SELECT consigne, reponse, numeroExemple, partie_id
             FROM exemple
@@ -89,37 +140,36 @@ class LessonModel {
      *
      * @return bool  true si la création est réussie, false en cas d'erreur.
      */
-    public function createLesson(int $id, String $title, String $description, int $nbParts, array $nbExemple, array $TAB_CONTENU, array $TAB_AMI_CHOISI,array $TAB_CATEGORIE_CHOISI,  string $disponibilite, ?int $quizSelected): int|false {
+    public function createLesson(int $id, String $title, String $description, int $nbParts, array $nbExemple, array $TAB_CONTENU, array $TAB_AMI_CHOISI, array $TAB_CATEGORIE_CHOISI,  string $disponibilite, ?int $quizSelected): int|false
+    {
         try {
             $this->db->beginTransaction();
 
             $newLesson = $this->insertLesson($id, $quizSelected, $title, $description);
-            if (!$newLesson){
+            if (!$newLesson) {
                 throw new PDOException("erreur dans l\'insertion de la leçon dans LessonModel.php/createLesson");
             }
-            for ($i = 0; $i < $nbParts ; $i++){
+            for ($i = 0; $i < $nbParts; $i++) {
 
                 $newPart = $this->insertPart($i, $newLesson, $TAB_CONTENU[$i]['name'], $TAB_CONTENU[$i]['content']);
-                if (!$newPart){
-                    throw new PDOException('erreur dans l\'insertion de la partie '.$i.' dans LessonModel.php/createLesson');
+                if (!$newPart) {
+                    throw new PDOException('erreur dans l\'insertion de la partie ' . $i . ' dans LessonModel.php/createLesson');
                 }
-                for ($k = 0; $k < $nbExemple[$i]; $k++){
+                for ($k = 0; $k < $nbExemple[$i]; $k++) {
                     $newExample = $this->insertExample($k, $newPart, $TAB_CONTENU[$i]['exemples'][$k]['consigne'], $TAB_CONTENU[$i]['exemples'][$k]['reponse']);
-                    if (!$newExample){
-                        throw new PDOException('erreur dans l\'insertion de l\'exemple '.$k.' de la partie '.$i.' dans LessonModel.php/createLesson');
+                    if (!$newExample) {
+                        throw new PDOException('erreur dans l\'insertion de l\'exemple ' . $k . ' de la partie ' . $i . ' dans LessonModel.php/createLesson');
                     }
-
                 }
-
             }
-            foreach($TAB_CATEGORIE_CHOISI as $categorie){
+            foreach ($TAB_CATEGORIE_CHOISI as $categorie) {
                 $newLessonCategorie = $this->insertLessonCategorie($newLesson, (int)$categorie);
                 if (!$newLessonCategorie) {
                     throw new PDOException("erreur dans l\'insertion des catégories dans LessonModel.php/createLesson");
                 }
             }
-            if ($disponibilite == 'ami'){
-                foreach($TAB_AMI_CHOISI as $ami){
+            if ($disponibilite == 'ami') {
+                foreach ($TAB_AMI_CHOISI as $ami) {
                     $newAmiDispo = $this->insertAmiDispo($newLesson, (int)$ami);
                     if (!$newAmiDispo) {
                         throw new PDOException("erreur dans l\'insertion des amis dans QuizModel.php/createQuiz");
@@ -128,7 +178,6 @@ class LessonModel {
             }
             $this->db->commit();
             return true;
-
         } catch (PDOException $e) {
             error_log("Erreur création leçon : " . $e->getMessage());
             $this->db->rollBack();
@@ -176,17 +225,17 @@ class LessonModel {
      *
      * @return array|false  Tableau associatif des quizzes (id, title), ou false en cas d'erreur.
      */
-    public function getQuizByAuthor(int $authorId){
+    public function getQuizByAuthor(int $authorId)
+    {
         $sql = $this->db->prepare("SELECT id,title FROM quiz WHERE user_id = ? ;");
 
-        $sql->bindParam(1,$authorId);
+        $sql->bindParam(1, $authorId);
         $reussite = $sql->execute();
-        if($reussite){
+        if ($reussite) {
             return $sql->fetchAll(PDO::FETCH_ASSOC);
-        }else{
+        } else {
             return false;
         }
-        
     }
 
     /**
@@ -202,24 +251,24 @@ class LessonModel {
      *
      * @return int|false  Retourne l'ID de la leçon insérée, ou false en cas d'erreur.
      */
-    public function insertLesson(int $user_id, ?int $quizSelected, String $title, String $description){
-        try{
+    public function insertLesson(int $user_id, ?int $quizSelected, String $title, String $description)
+    {
+        try {
             $newLesson = $this->db->prepare("INSERT INTO Lecon (user_id, quiz_id, title, description) VALUES (?, ?, ?, ?);");
             $newLesson->bindValue(1, $user_id);
             $newLesson->bindValue(2, $quizSelected);
             $newLesson->bindValue(3, $title);
             $newLesson->bindValue(4, $description);
             $reussite = $newLesson->execute();
-            if (!$reussite){
+            if (!$reussite) {
                 return false;
-            }else{
+            } else {
                 return $this->db->lastInsertId();
             }
-        }catch (PDOException $e){
+        } catch (PDOException $e) {
             error_log("Erreur d'insertion de leçon : " . $e->getMessage());
             return false;
         }
-        
     }
 
     /**
@@ -235,8 +284,9 @@ class LessonModel {
      *
      * @return int|false  Retourne l'ID de la partie insérée, ou false en cas d'erreur.
      */
-    public function insertPart(int $numeroPartie, int $lecon_id, String $title, string $content){
-        try{
+    public function insertPart(int $numeroPartie, int $lecon_id, String $title, string $content)
+    {
+        try {
             $newPart = $this->db->prepare("INSERT INTO Partie (numeroPartie, lecon_id, title, content) VALUES (?, ?, ?, ?);");
             $newPart->bindValue(1, $numeroPartie);
             $newPart->bindValue(2, $lecon_id);
@@ -245,13 +295,13 @@ class LessonModel {
 
             $reussite = $newPart->execute();
 
-            if ($reussite){
+            if ($reussite) {
                 return $this->db->lastInsertId();
-            }else{
+            } else {
                 return false;
             }
-        }catch(PDOException $e){
-            error_log("Erreur d'insertion de partie : ".$e->getMessage());
+        } catch (PDOException $e) {
+            error_log("Erreur d'insertion de partie : " . $e->getMessage());
             return false;
         }
     }
@@ -269,8 +319,9 @@ class LessonModel {
      *
      * @return int|false  Retourne l'ID de l'exemple inséré, ou false en cas d'erreur.
      */
-    public function insertExample(int $numeroExemple, int $partie_id, string $consigne, string $reponse){
-        try{
+    public function insertExample(int $numeroExemple, int $partie_id, string $consigne, string $reponse)
+    {
+        try {
             $newExample = $this->db->prepare("INSERT INTO Exemple (numeroexemple, partie_id, consigne, reponse) VALUES (?, ?, ?, ?);");
             $newExample->bindValue(1, $numeroExemple);
             $newExample->bindValue(2, $partie_id);
@@ -279,13 +330,13 @@ class LessonModel {
 
             $reussite = $newExample->execute();
 
-            if ($reussite){
+            if ($reussite) {
                 return $this->db->lastInsertId();
-            }else{
+            } else {
                 return false;
             }
-        }catch(PDOException $e){
-            error_log("Erreur d'insertion d'exemple : ".$e->getMessage());
+        } catch (PDOException $e) {
+            error_log("Erreur d'insertion d'exemple : " . $e->getMessage());
             return false;
         }
     }
@@ -300,7 +351,8 @@ class LessonModel {
      *
      * @return array  Tableau de tableaux associatifs contenant 'ami_id' et 'username' pour chaque ami.
      */
-    public function getAmis(int $user_id){
+    public function getAmis(int $user_id)
+    {
         $amis = $this->db->prepare("SELECT 
                                 CASE 
                                 WHEN user1_id = ? THEN user2_id
@@ -308,15 +360,14 @@ class LessonModel {
                                 END AS ami_id , username
                                 FROM amis JOIN users ON ami_id = users.id 
                                 WHERE ? = user1_id OR ? = user2_id;");
-        $amis->bindvalue(1,$user_id);
-        $amis->bindvalue(2,$user_id);
-        $amis->bindvalue(3,$user_id);
+        $amis->bindvalue(1, $user_id);
+        $amis->bindvalue(2, $user_id);
+        $amis->bindvalue(3, $user_id);
 
         $amis->execute();
 
         $result = $amis->fetchAll(PDO::FETCH_ASSOC);
         return $result;
-        
     }
 
     /**
@@ -357,17 +408,17 @@ class LessonModel {
      *
      * @return array|false  Tableau associatif des catégories, ou false en cas d'erreur.
      */
-    public function getAllCategories(): mixed{
-        try{
+    public function getAllCategories(): mixed
+    {
+        try {
             $sql = $this->db->prepare("SELECT DISTINCT id,CategorieName FROM categories;");
             $sql->execute();
             $categories = $sql->fetchAll(PDO::FETCH_ASSOC);
             return $categories;
-        }catch(PDOException $e){
+        } catch (PDOException $e) {
             die("Fetching categories failed: " . $e->getMessage());
-        }catch(Exception $e){
+        } catch (Exception $e) {
             die("Error: " . $e->getMessage());
         }
     }
 }
-?>

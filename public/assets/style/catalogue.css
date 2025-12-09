@@ -20,6 +20,18 @@
   display: inline-block;
   vertical-align: middle;
 }
+
+button.retour{
+  cursor: pointer;
+  margin-top: 1%;
+}
+
+button.retour:hover{
+    background-color: #fff;
+  color: #087b86;
+  box-shadow: 0px 8px 2px #CACACABF;
+}
+
 .catalogue button::-moz-placeholder {
   color: white;
   opacity: 0.8;
