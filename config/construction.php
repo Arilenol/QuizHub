@@ -21,15 +21,14 @@ function constructionBD(PDO $conn)
         $sql = "DROP TABLE IF EXISTS amiDisponibilite;";
         $conn->exec($sql);
 
+            $sql = "DROP TABLE IF EXISTS users;";
+            $conn->exec($sql);
 
         $sql = "DROP TABLE IF EXISTS dislikes;";
         $conn->exec($sql);
 
-        $sql = "DROP TABLE IF EXISTS likes;";
-        $conn->exec($sql);
-
-        $sql = "DROP TABLE IF EXISTS users;";
-        $conn->exec($sql);
+            $sql = "DROP TABLE IF EXISTS likes;";
+            $conn->exec($sql);
 
         $sql = "DROP TABLE IF EXISTS Lecon;";
         $conn->exec($sql);
@@ -654,6 +653,45 @@ function constructionBD(PDO $conn)
                     }
                 }
             }
+
+
+
+            foreach ($quiz_ids as $quiz) {
+                $quiz_id = $quiz['id'];
+
+                // Nombre aléatoire de likes et dislikes
+                $nbLikes = mt_rand(0, 5);
+                $nbDislikes = mt_rand(0, 3);
+
+                // Shuffle des users pour éviter doublons
+                $shuffledUsers = $users;
+                shuffle($shuffledUsers);
+
+                // Insertion des likes
+                for ($i = 0; $i < $nbLikes && $i < count($shuffledUsers); $i++) {
+                    $user_id = $shuffledUsers[$i];
+                    $stmt = $conn->prepare("
+                        INSERT OR IGNORE INTO likes (quiz_id, user_id)
+                        VALUES (?, ?)
+                    ");
+                    $stmt->execute([$quiz_id, $user_id]);
+                }
+
+                // Re-shuffle pour dislikes
+                $shuffledUsers = $users;
+                shuffle($shuffledUsers);
+
+                // Insertion des dislikes
+                for ($i = 0; $i < $nbDislikes && $i < count($shuffledUsers); $i++) {
+                    $user_id = $shuffledUsers[$i];
+                    $stmt = $conn->prepare("
+                        INSERT OR IGNORE INTO dislikes (quiz_id, user_id)
+                        VALUES (?, ?)
+                    ");
+                    $stmt->execute([$quiz_id, $user_id]);
+                }
+            }
+
 
 
             foreach ($quiz_ids as $quiz) {
