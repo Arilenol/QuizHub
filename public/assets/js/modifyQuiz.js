@@ -203,6 +203,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 
                 newRep.querySelector("div").querySelector("input").value = "";
                 newCheck.querySelector("input").checked = false;
+                newCheck.querySelector("input").disabled = false;
 
                 newRep.style.gridRowStart = nextRow;
                 newRep.style.gridRowEnd = nextRow + 1;
@@ -215,6 +216,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 quizQuestion.appendChild(newRep);
                 quizQuestion.appendChild(newCheck);
+
+                resetCheckboxSVG();
+                initCheckboxSVG();
             });
             
             footerQuestion.appendChild(addRep);
@@ -369,5 +373,63 @@ document.addEventListener("DOMContentLoaded", () => {
             ev.preventDefault();
             alert("Veuillez terminer la modification en cours avant d'en modifier une autre.");
         }
+    });
+
+    const modifParams = document.querySelector("#modifParam");
+
+    modifParams.addEventListener("click", (ev) => {
+        if (!modif){
+            modif = true;
+            ev.preventDefault();
+            const divParams = document.querySelectorAll(".param");
+            const timerV = document.querySelector("#timerV");
+
+            timerV.disabled = false;
+
+            for(let div of divParams){
+                div.querySelector("input").disabled = false;
+            }
+
+            const AppliquerBtn = document.createElement("button");
+            AppliquerBtn.type = "submit";
+            AppliquerBtn.name = "appliquerParam";
+            AppliquerBtn.id = "appliquerParam";
+            AppliquerBtn.textContent = "Appliquer";
+            AppliquerBtn.addEventListener("click", (evt) =>{
+                evt.preventDefault();
+                const formData = new FormData();
+
+                formData.append("appliquerParam", 1);
+                for(let param of divParams){
+                    if (param.querySelector("input").checked){
+                        formData.append("params[]", 1);
+                    }
+                    else{
+                        formData.append("params[]", 0);
+                    }
+                }
+                formData.append("timerValue", timerV.value);
+                
+                fetch(URL, {
+                    method: "POST",
+                    body: formData
+                }).then(() => {
+                    window.location.href = URL;
+                });
+
+            });
+            const Annuler = document.createElement("button");
+            Annuler.type = "submit";
+            Annuler.textContent = "Annuler";
+
+            modifParams.replaceWith(AppliquerBtn);
+            AppliquerBtn.after(Annuler);
+
+        }
+        else{
+            ev.preventDefault();
+            alert("Veuillez terminer la modification en cours avant d'en modifier une autre.");
+        }
+
     });
 });

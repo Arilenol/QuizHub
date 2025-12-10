@@ -654,13 +654,23 @@ class QuizModel
             $getReponses->bindValue(1,$questionId);
             $getReponses->execute();
             $existingReponses = $getReponses->fetchAll(PDO::FETCH_ASSOC);
-
+            $nbRep = count($existingReponses);
             foreach($existingReponses as $index => $reponse){
+                if(count($reponsesContent) <= $index){
+                    $deleteReponse = $this->db->prepare("DELETE FROM reponse WHERE id = ?;");
+                    $deleteReponse->bindValue(1,$reponse['id']);
+                    $deleteReponse->execute();
+                    continue;
+                }
                 $updateReponse = $this->db->prepare("UPDATE reponse SET reponse = ?, estCorrecte = ? WHERE id = ?;");
                 $updateReponse->bindValue(1,$reponsesContent[$index]);
-                $updateReponse->bindValue(2,$checksContent[$index]);
+                $updateReponse->bindValue(2,(int)$checksContent[$index]);
                 $updateReponse->bindValue(3,$reponse['id']);
                 $updateReponse->execute();
+            }
+            foreach(array_slice($reponsesContent, count($existingReponses)) as $index => $reponse){
+                $valid = (int)$checksContent[count($existingReponses)+$index] == 1 ? "on" : "";
+                $this->insertReponse($questionId, $reponse, $valid);
             }
             return true;
         } catch(PDOException $e){
@@ -672,11 +682,40 @@ class QuizModel
         try{
             $newQuestionId = $this->insertQuestion($numQuestion, $quizId, $questionContent);
             foreach($reponsesContent as $index => $reponse){
-                $this->insertReponse($newQuestionId, $reponse, $checksContent[$index]);
+                $valid = (int)$checksContent[$index] == 1 ? "on" : "";
+                $this->insertReponse($newQuestionId, $reponse, $valid);
             }
             return true;
         } catch(PDOException $e){
             die("Adding question to quiz failed: " . $e->getMessage());
+        }
+    }
+
+    public function updateParametresQuiz(int $quizId, array $params, int $timer){
+        try{
+            $updateParams = $this->db->prepare("UPDATE parametreQuiz SET minuterie = ?, repasserErreurs = ?, ordreAleatoire = ?, afficherScore = ?, afficherAvancement = ?, recapitulatifFin = ? WHERE quiz_id = ?;");
+            if (!empty($params[0])){
+                $updateParams->bindValue(1, $timer);
+            }
+            else{
+                $updateParams->bindValue(1, 0);
+            }
+            $val = !empty($params[1]) ? 1 : 0;
+            $updateParams->bindValue(2, $val);
+            $val = !empty($params[2]) ? 1 : 0;
+            $updateParams->bindValue(3, $val);
+            $val = !empty($params[3]) ? 1 : 0;
+            $updateParams->bindValue(4, $val);
+            $val = !empty($params[4]) ? 1 : 0;
+            $updateParams->bindValue(5, $val);
+            $val = !empty($params[5]) ? 1 : 0;
+            $updateParams->bindValue(6, $val);
+            $updateParams->bindValue(7, $quizId);
+
+            $updateParams->execute();
+            return true;
+        } catch(PDOException $e){
+            die("Updating quiz parameters failed: " . $e->getMessage());
         }
     }
 }

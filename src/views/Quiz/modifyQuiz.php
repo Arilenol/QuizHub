@@ -90,7 +90,7 @@
     <h2>Test</h2>
     <div style="display: flex; flex-direction: row; align-items: center; gap: 10px">
         <p style="font-size: 20px">Un test permet de voir un récapitulatif à la fin du quiz<br>Ce mode permet de simuler une évaluation</p>
-        <div class="checkbox param"  id = "Test">
+        <div class="checkbox"  id = "Test">
             <?php
             if($quizInfos['genre'] == 'test'){
                 $check = 'checked';
@@ -114,8 +114,8 @@
                 '
                 <div style="display: flex; flex-direction: row; align-items: center; gap: 10px">
                     <p style="font-size: 20px">'.$param['desc'].' : </p>
-                    <div class="checkbox param"  id = "'.$param['name'].'">
-                        <input type="checkbox" id = "param'.$param['name'].'" name="param'.$param['name'].'" '.($TAB_PARAMS[$indice]!= 0 ? 'checked' : '').' disabled hidden/>
+                    <div class="checkbox param"  id = "'.$param['name'].'" value="'.$indice.'">
+                        <input type="checkbox" id = "param'.$param['name'].'" name="param'.$param['name'].'"  '.($TAB_PARAMS[$indice]!= 0 ? 'checked' : '').' disabled hidden/>
                     </div>';
                     if ($param['name'] == 'timer'){
                         if (!empty($TAB_PARAMS[0]) && $TAB_PARAMS[0] != 0){
@@ -124,8 +124,8 @@
                         else{
                             $hidden = 'hidden';
                         }
-                        echo '<p class = "timerP"'.$hidden.'>Temps en minutes entre 0 et 120<br>(0 ne sera pas compté) :</p>
-                        <input type = "number" name = "timerValue" value = "'.$TAB_PARAMS[$indice].'" min = 0 max = 120 '.$hidden.' disabled/>';
+                        echo '<p class = "timerP" id="timerP" '.$hidden.'>Temps en minutes entre 0 et 120<br>(0 ne sera pas compté) :</p>
+                        <input type = "number" name = "timerValue" id = "timerV" value = "'.$TAB_PARAMS[$indice].'" min = 0 max = 120 '.$hidden.' disabled/>';
                     }
                 echo '</div>';
             }

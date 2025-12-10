@@ -359,6 +359,14 @@ class QuizController
             header('Location: index.php?page=home');
             exit;
         }
+        $tabParametres = array(
+            array('name' => 'timer', 'desc' => 'minuterie'),
+            array('name' => 'retryError','desc' => 'rééssayer les questions échouées'),
+            array('name' => 'noOrder','desc' => 'faire dans le désordre par défaut'),
+            array('name' => 'score','desc' => 'afficher le score'),
+            array('name' => 'avancement', 'desc' => 'afficher l\'avancement'),
+            array('name' => 'recap', 'desc' => 'afficher un recapitulatif à la fin')
+        );
         if (isset($_POST['Retour']) && $_POST['Retour'] === "yes") {
             unset($_POST);
             header('Location: index.php?page=createContent');
@@ -401,17 +409,26 @@ class QuizController
             header('Location: ' . $_SERVER['REQUEST_URI']);
             exit;
         }
+        if (isset($_POST['appliquerParam'])){
+            $tabParams = isset($_POST['params']) && is_array($_POST['params']) ? $_POST['params'] : [];
+            $timer = isset($_POST['timerValue']) ? (int)$_POST['timerValue'] : 0;
+            if ($this->modifParamValidite($tabParams, $timer)){
+                $this->model->updateParametresQuiz($idQuiz, $tabParams, $timer);
+            }
+            else{
+                die("Erreur de validation des paramètres");
+            }
+            unset($_POST['appliquerParam']);
+            unset($_POST['params']);
+            unset($_POST['timerValue']);
+            header('Location: ' . $_SERVER['REQUEST_URI']);
+            exit;
+
+        }
 
 
 
-        $tabParametres = array(
-            array('name' => 'timer', 'desc' => 'minuterie'),
-            array('name' => 'retryError','desc' => 'rééssayer les questions échouées'),
-            array('name' => 'noOrder','desc' => 'faire dans le désordre par défaut'),
-            array('name' => 'score','desc' => 'afficher le score'),
-            array('name' => 'avancement', 'desc' => 'afficher l\'avancement'),
-            array('name' => 'recap', 'desc' => 'afficher un recapitulatif à la fin')
-        );
+        
         $quizInfos = $this->model->getQuizInfos($idQuiz);
         $TAB_QUESTIONS = $this->model->getQuestionsRepFromQuiz($idQuiz);
         $TAB_PARAMS = $this->model->getQuizParametres($idQuiz);
@@ -430,8 +447,28 @@ class QuizController
         require ROOT . '/src/views/Quiz/modifyQuiz.php';
     }
 
+    public function modifParamValidite(array $paramsContent, int $timer): bool{
+        $allowedParams = array('timer', 'retryError', 'noOrder', 'score', 'avancement', 'recap');
+        if (count($paramsContent) != count($allowedParams)){
+            return false;
+        }
+        if ($timer < 0 || $timer > 120){
+            return false;
+        }
+        if ($timer == 0){
+            $paramsContent[0] = 0;
+        }
+        return true;
+    }
+
     public function modifQuestionValidite(string $questionContent, array $reponsesContent, array $cheksContent): bool{
         if (!in_array(0,$cheksContent) || !in_array(1,$cheksContent)){
+            return false;
+        }
+        if(count($reponsesContent) != count($cheksContent)){
+            return false;
+        }
+        if(count($reponsesContent) < 2 || count($cheksContent) < 2){
             return false;
         }
         if( empty($questionContent)){

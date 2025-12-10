@@ -1,4 +1,8 @@
 window.addEventListener("DOMContentLoaded", () => {
+    initCheckboxSVG();
+});
+
+function initCheckboxSVG(){
     const checkboxs = document.querySelectorAll(".checkbox");
     if(checkboxs.length > 0){
         fetch("assets/images/checkbox.svg")
@@ -42,5 +46,16 @@ window.addEventListener("DOMContentLoaded", () => {
             });
         });
     }
-    
-});
+}
+
+function resetCheckboxSVG() {
+    const checkboxs = document.querySelectorAll(".checkbox");
+
+    checkboxs.forEach(checkboxDiv => {
+
+        checkboxDiv.querySelectorAll("svg").forEach(svg => svg.remove());
+
+        //const input = checkboxDiv.querySelector("input[type='checkbox']");
+
+    });
+}
