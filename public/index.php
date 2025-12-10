@@ -211,7 +211,6 @@ switch ($page) {
         $controller = new CRUDQuizController();
         $controller->index();
         break;
-
     case 'CRUDauteur':
         require_once ROOT . '/src/controllers/CRUDAuteurController.php';
         $controller = new CRUDAuteurController();
