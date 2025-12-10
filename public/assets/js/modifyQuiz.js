@@ -322,8 +322,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const repList = newQuestion.querySelectorAll(".reponse");
             const checkList = newQuestion.querySelectorAll(".checkbox");
             console.log(repList, typeof repList);
-            for( let i ; i < repList.length; i++){
-                if (i < 1){
+            for( let i = 0; i < repList.length; i++){
+                if (i < 2){
                     repList[i].querySelector("div").querySelector("input").value = "";
                     repList[i].querySelector("div").querySelector("input").disabled = false;
                 }
@@ -331,8 +331,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     repList[i].remove();
                 }
             }
-            for (let i ; i < checkList.length; i++){
-                if (i < 1){
+            for (let i = 0 ; i < checkList.length; i++){
+                if (i < 2){
                     checkList[i].querySelector("input").checked = false;
                     checkList[i].querySelector("input").disabled = false;
                 }
@@ -342,7 +342,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             let i = parseInt(newQuestion.querySelector(".modifierQuestion").value);
             newQuestion.querySelector("#questionFooter"+i).id = "questionFooter"+(i+1);
-            newQuestion.querySelector(".question").querySelector("p").textContent = "Question "+(i+1);
+            newQuestion.querySelector(".question").querySelector("p").textContent = "Question "+(i+2);
             newQuestion.querySelector(".question").querySelector(".textarea").id = "question"+(i+1);
             for (let rep of newQuestion.querySelectorAll(".reponse")){
                 rep.querySelector("div").querySelector("input").name = "reponse"+(i+1)+"[]";
@@ -366,6 +366,9 @@ document.addEventListener("DOMContentLoaded", () => {
             document.querySelectorAll(".newQuiz")[document.querySelectorAll(".newQuiz").length-1].after(newQuestion);
 
             ev.currentTarget.remove();
+
+            resetCheckboxSVG();
+            initCheckboxSVG();
             footer.click();
 
         }
