@@ -180,14 +180,25 @@ switch ($page) {
         if (isset($_GET['action']) && ($_GET['action']  === "fetch")) {
             $controller->fetch();
         }
-
         break;
+
     case 'signalement':
         require_once ROOT . '/src/controllers/SignalementController.php';
         $controller = new SignalementController();
         $controller->index();
         break;
 
+    case 'CRUDquiz':
+        require_once ROOT . '/src/controllers/CRUDQuizController.php';
+        $controller = new CRUDQuizController();
+        $controller->index();
+        break;
+
+    case 'CRUDauteur':
+        require_once ROOT . '/src/controllers/CRUDAuteurController.php';
+        $controller = new CRUDAuteurController();
+        $controller->index();
+        break;
     default:
         echo "404 - Page non trouvée";
         break;
