@@ -3,16 +3,16 @@ $title = "Leçon";
 $style = '../public/assets/style/lesson/show.css';
 include __DIR__ . '/../partials/header.php';
 ?>
-
-<button onclick="window.location.href='?page=home'" class="back-btn">← Retour</button>
-
+<div class="buttonAction">
+    <button onclick="window.location.href='?page=home'" class="back-btn">← Retour</button>
+    <button class="signalement" onclick="window.location.href='?page=signalement'">Signaler cette leçon</button>
+</div>
 <main class="lesson-page">
 
     <!-- Header de la leçon -->
     <section class="lesson-header">
         <h1><?= htmlspecialchars($lesson['title']) ?></h1>
         <div class="meta-info">
-            <!-- Si tu veux afficher l'auteur et la date -->
             <p><?= htmlspecialchars($lesson['username'] ?? '') ?> — <?= htmlspecialchars($lesson['date'] ?? '') ?></p>
         </div>
     </section>
@@ -52,7 +52,14 @@ include __DIR__ . '/../partials/header.php';
 
     <?php endforeach; ?>
 
+    <div class="info">
+        <p>
+            Cette leçon offre un quiz pour vérifier ses connaissances
+        </p>
+        <a href="?page=standard&id=<?= $lesson['quiz_id'] ?>">Cliquez-ici pour commencer</a>
+    </div>
 </main>
 
 </body>
+
 </html>

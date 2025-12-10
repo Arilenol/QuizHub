@@ -5,9 +5,8 @@ include 'partials/header.php';
 ?>
 
 <button class="retour" onclick="history.back()">← Retour</button>
-<h1>Gestion des demandes d'amis</h1>
 <div class="friend-requests">
-    <h2>Demandes reçues</h2>
+    <h2>Demandes d'amis reçues</h2>
 
     <?php foreach ($allFriendRequests as $friend) : ?>
         <div class="request">
@@ -24,6 +23,31 @@ include 'partials/header.php';
             </div>
         </div>
     <?php endforeach; ?>
+</div>
+
+<div class="friend-requests">
+    <h2>Notifications reçues</h2>
+    <?php if (!isset($notifications)): ?>
+
+        <p class="notif">Aucune notification reçue</p>
+
+    <?php else: ?>
+        <?php foreach ($notifications as $notif) : ?>
+            <div class="request">
+                <div class="request-info">
+                    <div class="avatar"><?= $friend['username'][0] ?></div>
+                    <div>
+                        <strong><?= $friend['username'] ?></strong><br>
+                        <small><?= $friend['email'] ?></small>
+                    </div>
+                </div>
+                <div class="request-buttons">
+                    <button class="accept" onclick='window.location.href="?page=notification&action=add&id=<?= $friend["id"] ?>"'>Accepter</button>
+                    <button class="reject" onclick='window.location.href="?page=notification&action=delete&id=<?= $friend["id"] ?>"'>Refuser</button>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    <?php endif; ?>
 </div>
 
 <div class="invite-box">

@@ -8,7 +8,7 @@
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
 }
 
-.back-btn {
+.back-btn, .signalement {
   margin-top: 1%;
   margin-left: 1%;
   border-radius: 75px;
@@ -20,7 +20,14 @@
   min-height: 69px;
   cursor: pointer;
   box-shadow: 0 12px 0 #087b86;
-  transition: 0.2s ease-in-out;
+}
+
+.buttonAction {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 10px;
 }
 
 .back-btn:hover {
@@ -64,7 +71,7 @@
   margin-bottom: 50px;
 }
 
-.lesson-part h2 {
+.lesson-part h2, .info {
   font-size: 2rem;
   font-weight: 700;
   color: #073238;
@@ -106,4 +113,29 @@
   background: linear-gradient(to right, transparent, #0AB1BD, transparent);
   margin: 40px auto;
   border-radius: 5px;
+}
+
+.info{
+  margin-top: 8%;
+}
+
+.signalement {
+  padding: 21px 36px;
+  font-size: 1.575rem;
+  min-height: 69px;
+  margin-right: 1%;
+  margin-top: 1%;
+  background-color: rgb(167, 48, 48);
+  box-shadow: 0 12px 0 rgb(114, 34, 34);
+}
+
+.signalement:hover{
+  color: rgb(167, 48, 48);
+  background-color: white;
+  box-shadow: 0 12px 0 rgb(165, 165, 165);
+}
+
+.info a {
+  display: flex;
+  justify-self: end;
 }

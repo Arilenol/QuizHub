@@ -100,8 +100,8 @@ switch ($page) {
         break;
     case 'flashcard':
         $action = $_GET['action'] ?? null; // start, ongoing, end
-        require_once ROOT . '/src/controllers/FlashCardController.php';
-        $controller = new FlashCardController();
+        require_once ROOT . '/src/controllers/FlashcardController.php';
+        $controller = new FlashcardController();
         if (isset($_GET['categorie'])) {
             //routine pour créer le controlleur
             $controller->createFlashcard();
@@ -119,7 +119,7 @@ switch ($page) {
                 break;
 
             case 'end':
-                $controller->endFlashCard();
+                $controller->endFlashcard();
                 break;
 
             default:
