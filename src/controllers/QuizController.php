@@ -244,7 +244,7 @@ class QuizController
         }
 
         $_SESSION['bouton'] = false;
-        var_dump($_SESSION['POST']);
+        // var_dump($_SESSION['POST']);
         //var_dump($_POST);
         //var_dump($TAB_CONTENU);
         //var_dump($_SESSION);
