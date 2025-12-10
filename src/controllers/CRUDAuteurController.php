@@ -2,10 +2,12 @@
 require_once ROOT . '/src/models/CRUDModel.php';
 require_once ROOT . '/config/config.php';
 
-class CRUDAuteurController {
+class CRUDAuteurController
+{
     private $model;
 
-    public function index() {
+    public function index()
+    {
         $db = getDbConnection();
         $this->model = new CRUDModel($db);
 
@@ -37,4 +39,3 @@ class CRUDAuteurController {
         require ROOT . '/src/views/CRUD/CRUDauteur.php';
     }
 }
-?>
