@@ -187,7 +187,7 @@ class FlashcardController
 
         $_SESSION['bouton'] = false;
 
-        require ROOT . '/src/views/Quiz/createFlashcard.php';
+        require ROOT . '/src/views/quiz/createFlashcard.php';
     }
 
     public function contentFusionSessionPost()
