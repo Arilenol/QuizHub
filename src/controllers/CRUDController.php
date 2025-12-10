@@ -19,12 +19,29 @@
 
             $recherche_cat = isset($_GET['categorie'])&& !empty($_GET['categorie'])&& htmlspecialchars($_GET['categorie'])!='Toutes les catégories' ? $_GET['categorie'] : '';
             $recherche_contenu = isset($_GET['contenu'])&& !empty($_GET['contenu']) ? htmlspecialchars($_GET['contenu']) : '';
-            $recherche_auteur = isset($_GET['searchAuthor']) && !empty($_GET['searchAuthor']) ? htmlspecialchars($_GET['searchAuthor']) : '';
+            
             $tri = isset($_GET['tri']) && !empty($_GET['tri']) ? $_GET['tri'] : null;
+
+            $filtre = isset($_GET['filtre']) && !empty($_GET['filtre']) ? htmlspecialchars($_GET['filtre']) : '';
+            $genre = isset($_GET['genre']) && !empty($_GET['genre']) && htmlspecialchars($_GET['genre']) != 'Tous les genres' ? htmlspecialchars($_GET['genre']) : '';
+            $recherche = isset($_GET['search']) && !empty($_GET['search']) ? htmlspecialchars($_GET['search']) : '';
+            $authors = [];
             if($recherche_cat != ''){
-                $quiz_correspondants = $this->model->searchQuizByAll($recherche_cat,$recherche_contenu,$recherche_auteur,$tri);
+                $quiz_correspondants = $this->model->searchQuizByAll($recherche_cat,$recherche_contenu,$recherche,$genre,$tri);
             }else{
-                $quiz_correspondants = $this->model->searchQuizByContentAndAuthor($recherche_contenu,$recherche_auteur,$tri);
+                // Si l'utilisateur a choisi de filtrer par auteur explicitement -> rechercher les auteurs
+                if ($filtre === 'auteur') {
+                    // Cherche les auteurs correspondant à la recherche (liste d'auteurs)
+                    $authors = $this->model->searchAuthors($recherche);
+                    // Pas de recherche de quiz ici ; on affiche la liste d'auteurs dans la vue
+                    $quiz_correspondants = [];
+                } elseif ($filtre === 'quiz') {
+                    // recherche par titre de quiz uniquement
+                    $quiz_correspondants = $this->model->searchQuizByTitle($recherche,$genre,$tri);
+                } else {
+                    // recherche par contenu et auteur si fourni
+                    $quiz_correspondants = $this->model->searchQuizByContentAndAuthor($recherche_contenu,$recherche,$genre,$tri);
+                }
             }
 
             $quizzes = $quiz_correspondants;

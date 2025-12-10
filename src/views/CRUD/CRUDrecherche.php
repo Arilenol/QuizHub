@@ -17,22 +17,42 @@
     <div class="catalogue">
         <button onclick="window.location.href='?page=home'" class="retour">&lt; Retour</button>
 
-    
+
         <form method="GET" action=index.php>
             <input type="hidden" name="page" value="CRUD">
+
             <div class="search-author">
                 <?php
-                echo '<input type="text" name="searchAuthor" placeholder="Rechercher un auteur..." value="' . (isset($_GET['searchAuthor']) ? htmlspecialchars($_GET['searchAuthor']) : '') . '">';
+                echo '<input type="text" name="search" placeholder="écrire votre recherche" value="' . (isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '') . '">';
                 ?>
+                <button type="submit">Confirmer Recherche</button>
             </div>
+
             <div class="selects">
                 <?php
                 if (isset($_GET['contenu']) && $_GET['contenu'] !== '') {
                     echo '<input type="hidden" name="contenu" value="' . htmlspecialchars($_GET['contenu']) . '">';
                 }
+
+                $triSelected = isset($_GET['tri']) ? $_GET['tri'] : '';
+                $filtreSelected = isset($_GET['filtre']) ? $_GET['filtre'] : '';
+                $genreSelected = isset($_GET['genre']) ? $_GET['genre'] : '';
                 ?>
 
-                <select name="categorie" onchange="this.form.submit()">
+                <select name="filtre">
+                    <option value="quiz" <?= $filtreSelected === 'quiz' ? 'selected' : '' ?>>recherche quiz</option>
+                    <option value="auteur" <?= $filtreSelected === 'auteur' ? 'selected' : '' ?>>recherche auteur</option>
+                </select>
+
+                <select name="genre">
+                    <option value="" <?= $genreSelected === '' ? 'selected' : '' ?>>tout genre</option>
+                    <option value="standard" <?= $genreSelected === 'quiz' ? 'selected' : '' ?>>standard</option>
+                    <option value="test" <?= $genreSelected === 'test' ? 'selected' : '' ?>>test</option>
+                    <option value="lecon" <?= $genreSelected === 'lecon' ? 'selected' : '' ?>>lecon</option>
+                    <option value="flashcard" <?= $genreSelected === 'flashcard' ? 'selected' : '' ?>>flashcard</option>
+                </select>
+
+                <select name="categorie">
                     <option value="">Toutes les catégories</option>
                     <?php
                     foreach ($cats as $cat) {
@@ -41,11 +61,10 @@
                     }
                     ?>
                 </select>
-                <select name="tri" onchange="this.form.submit()">
+
+                <select name="tri">
                     <option value="">Trier par</option>
                     <?php
-                    $triSelected = isset($_GET['tri']) ? $_GET['tri'] : '';
-
                     $options = [
                         'date_desc' => 'Date (nouveau → ancien)',
                         'date_asc' => 'Date (ancien → nouveau)',
@@ -64,51 +83,51 @@
                     }
                     ?>
                 </select>
-                <select name="filtre" onchange="this.form.submit()">
-                    <option value="auteur">recherche auteur</option>
-                    <option value="quiz">recherche quiz</option>
-                </select>
-                <select name="genre" onchange="this.form.submit()">
-                    <option value="">tout</option>
-                    <option value="quiz">quiz</option>
-                    <option value="test">test</option>
-                    <option value="lecon">lecon</option>
-                    <option value="flashcard">flashcard</option>
-                </select>
             </div>
         </form>
-    
-    
-    
-        <!-- ajouter bouton modifier et supprimer qui redirige vers autre page avec details -->
-        
+
+
+        <!-- Résultats -->
         <div class="quiz-affichage">
-        <?php 
-        foreach ($quizzes as $quiz) {
-            if ($quiz['genre'] === 'flashcard'){
-                $genre = 'flashcard';
-                $suite = '&action=start';
-            }
-            elseif($quiz['genre'] === 'standard'){
-                $genre = 'standard';
-            }elseif($quiz['genre'] === 'test'){
-                $genre = 'test';
-            }
-            echo '<div class="quiz" onclick="window.location.href=\'index.php?page='.$genre.''.$suite.'&id='.$quiz['id'].'\'">
+
+            <!-- Si on a des auteurs (recherche par auteur) -->
+            <?php if (!empty($authors)): ?>
+                <h2>Auteurs trouvés (<?= count($authors) ?>)</h2>
+                <div class="quiz-affichage" id="authors-affichage">
+                    <?php foreach ($authors as $author): ?>
+                        <div class="quiz author-card" onclick="window.location.href='index.php?page=CRUDauteur&id=<?= $author['id'] ?>'">
+                            <article>
+                                <div class="quiz-cat">
+                                    <span class="category">Auteur</span>
+                                </div>
+                                <p class="quiz-title"><?= htmlspecialchars($author['username']) ?></p>
+                                <br>
+                                <p class="quiz-description">Voir tous les quiz de cet auteur</p>
+                            </article>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+
+            <!-- Résultats: Quizzes -->
+            <div class="quiz-affichage" id="quiz-affichage">
+                <?php
+                foreach ($quizzes as $quiz) {
+                    echo '<div class="quiz" onclick="window.location.href=\'index.php?page=CRUDquiz&id=' . $quiz['id'] . '\'">
                 <article >
                     <div class="quiz-cat">';
-                        if (!empty($quiz['categories']) && is_array($quiz['categories'])) {
-                            foreach ($quiz['categories'] as $cat) {
-                                
-                                $catName = $cat['categorieName'] ?? $cat['CategorieName'] ?? $cat['name'] ?? '';
-                                echo '<span class="category">' . htmlspecialchars($catName) . '</span>';
-                            }
+                    if (!empty($quiz['categories']) && is_array($quiz['categories'])) {
+                        foreach ($quiz['categories'] as $cat) {
+
+                            $catName = $cat['categorieName'] ?? $cat['CategorieName'] ?? $cat['name'] ?? '';
+                            echo '<span class="category">' . htmlspecialchars($catName) . '</span>';
                         }
+                    }
                     echo '</div>
                     <p class="quiz-genre">' . htmlspecialchars($quiz['genre'] ?? '') . '</p>
                     <br><p class="quiz-title">' . htmlspecialchars($quiz['title'] ?? '') . '</p>
                     <br><p class="quiz-description">' . htmlspecialchars($quiz['description'] ?? '') . '</p>
-                    <br><p class="quiz-auteur">Par : '.htmlspecialchars($quiz['nom_auteur'] ?? '') . '</p>
+                    <br><p class="quiz-auteur">Par : ' . htmlspecialchars($quiz['nom_auteur'] ?? '') . '</p>
                     
                     <div class="quiz-footer">
                         <p class="quiz-date">publié le : ' . htmlspecialchars($quiz['date'] ?? '') . '</p>
@@ -119,10 +138,10 @@
                     </div>
                 </article>
             </div>';
-        }
-        ?>
+                }
+                ?>
+            </div>
         </div>
-    </div>
 
 </body>
 
