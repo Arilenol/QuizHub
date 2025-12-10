@@ -91,7 +91,8 @@ function constructionBD(PDO $conn){
                 password TEXT NOT NULL,
                 email TEXT NOT NULL,
                 description TEXT DEFAULT '',
-                UNIQUE(email)
+                UNIQUE(email),
+                admin BOOLEAN DEFAULT 0
             );";
 
             $conn->exec($sql);
