@@ -231,7 +231,6 @@ class QuizController
                     header('Location: ' . $_SERVER['REQUEST_URI']);
                     exit;
                 }
-
             } else {
                 $_SESSION['erreur'] = true;
                 unset($_POST['create']);
