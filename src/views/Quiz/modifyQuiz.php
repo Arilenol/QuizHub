@@ -8,8 +8,8 @@
 
 
 
-<form style="display: flex; flex-direction: column; padding: 25px; gap: 20px" method = "post" data-id="<?php echo $idQuiz ?>" action = "index.php?page=standard&categorie=modify&id=<?php echo $idQuiz ?>">
-    <input type="hidden" name="idQuiz" id="idQuiz" value="<?php echo $idQuiz ?>">
+<form style="display: flex; flex-direction: column; padding: 25px; gap: 20px" method = "post" data-id="<?php echo htmlspecialchars($idQuiz) ?>" action = "index.php?page=standard&categorie=modify&id=<?php echo htmlspecialchars($idQuiz) ?>">
+    <input type="hidden" name="idQuiz" id="idQuiz" value="<?php echo htmlspecialchars($idQuiz) ?>">
     <button class="button" type = "submit" name = "Retour" value = "yes"><span></span><p> < Retour</p></button>
     <h2>Résumé du quiz
         <button class="modifResum" id ="modifResum" >Modifier</button>
@@ -36,7 +36,7 @@
             } else {
                 $checked = '';
             }
-            echo '<label '.(!empty($checked) ? '' : 'hidden').'><input  class="category" name = "categories[]" type = "checkbox" value='.$categorie['id'].' '.$checked.' '.(!empty($checked) ? '' : 'hidden').' disabled>'.$categorie['categorieName'].'</label>';
+            echo '<label '.(!empty($checked) ? '' : 'hidden').'><input  class="category" name = "categories[]" type = "checkbox" value="'.htmlspecialchars($categorie['id']).'" '.$checked.' '.(!empty($checked) ? '' : 'hidden').' disabled>'.htmlspecialchars($categorie['categorieName']).'</label>';
         }
         ?>
 
@@ -51,7 +51,7 @@
                 <p>Question '. $i+1 .'</p>
                 <div class="textarea" id = "question'.($i+1).'" style="width: calc(100% - 40px); height: calc(100% - 90px)">
                     <span></span>
-                    <textarea type = "text" name ="question'.$i.'" id="textarea'.$i.'" placeholder="nom de la question" disabled>'.$TAB_QUESTIONS[$i]['question'].'</textarea>
+                    <textarea type = "text" name ="question'.$i.'" id="textarea'.$i.'" placeholder="nom de la question" disabled>'.htmlspecialchars($TAB_QUESTIONS[$i]['question']).'</textarea>
                 </div>
                 </div>';
             
@@ -61,15 +61,13 @@
                 <p>Réponse '.($k+1).' :</p>
                 <div class="input" style="width: calc(100% - 40px);">
                     <span></span>
-                    <input name ="reponse'.$i.'[]" value = "'.$TAB_QUESTIONS[$i]['reponses'][$k]['reponse'].'" disabled></input>
+                    <input name ="reponse'.$i.'[]" value = "'.htmlspecialchars($TAB_QUESTIONS[$i]['reponses'][$k]['reponse']).'" disabled></input>
                 </div>
                 </div>
                 <div class="checkbox" style="grid-row-start: '. 1 + $k .'; grid-row-end: '. 2 + $k .'; grid-column-start: 3; grid-column-end: 4;align-self: end;">
                     <input type="checkbox" name="checkbox'.$i.'[]" '.($TAB_QUESTIONS[$i]['reponses'][$k]['estCorrecte'] ? 'checked':'').' disabled hidden>
                 </div>
                 ';
-                
-
             }
             echo '<div id="questionFooter'.$i.'" class="questionFooter" style="display: flex; flex-direction: row;gap:10px; grid-column-start: 2; grid-column-end: 3;">
                         <button class="button modifierQuestion" type = "submit" id ="modifier'.$i.'" name="modifierQuestion" value='.$i.'>
@@ -126,8 +124,8 @@
                         else{
                             $hidden = 'hidden';
                         }
-                        echo '<p class = "timerP" id="timerP" '.$hidden.'>Temps en minutes entre 0 et 120<br>(0 ne sera pas compté) :</p>
-                        <input type = "number" name = "timerValue" id = "timerV" value = "'.$TAB_PARAMS[$indice].'" min = 0 max = 120 '.$hidden.' disabled/>';
+                        echo '<p class = "timerP" id="timerP" '. $hidden .'>Temps en minutes entre 0 et 120<br>(0 ne sera pas compté) :</p>';
+                        echo '<input type="number" name="timerValue" id="timerV" value="'.htmlspecialchars($TAB_PARAMS[$indice]).'" min="0" max="120" '. $hidden . ' disabled/>';
                     }
                 echo '</div>';
             }
@@ -167,7 +165,7 @@
             } else {
                 $checked = '';
             }
-            echo '<label class="friends" '.$hidden2.'><input name = "amiDispo[]" type = "checkbox" value="'.$ami['ami_id'].'" '.$checked.' disabled>'.$ami['username'].'</label>';
+            echo '<label class="friends" '.$hidden2.'><input name = "amiDispo[]" type = "checkbox" value="'.htmlspecialchars($ami['ami_id']).'" '.$checked.' disabled>'.htmlspecialchars($ami['username']).'</label>';
         }
         
         ?>

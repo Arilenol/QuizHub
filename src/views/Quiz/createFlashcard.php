@@ -15,12 +15,12 @@
     <h2>Nom des flashcards</h2>
     <div class="input">
         <span></span>
-        <input type="text" name ="FlashcardTitle" value = "<?php echo $CardsTitle ?>">
+        <input type="text" name ="FlashcardTitle" value = "<?php echo htmlspecialchars($CardsTitle) ?>">
     </div>
     <p class="description">Description</p>
     <div class="input">
         <span></span>
-        <input type="text" name ="FlashcardDescription" value = "<?php echo $desc ?>">
+        <input type="text" name ="FlashcardDescription" value = "<?php echo htmlspecialchars($desc) ?>">
     </div>
 
     <h2 style="display : inline;">Catégories
@@ -34,7 +34,7 @@
             } else {
                 $checked = '';
             }
-            echo '<label><input name = "categories[]" type = "checkbox" value='.$categorie['id'].' '.$checked.'>'.$categorie['categorieName'].'</label>';
+            echo '<label><input name="categories[]" type="checkbox" value="'.htmlspecialchars($categorie['id']).'" '.$checked.'>'.htmlspecialchars($categorie['categorieName']).'</label>';
         }
         ?>
 
@@ -49,12 +49,12 @@
         <p>Question :</p>
         <div class="textarea">
             <span></span>
-            <textarea name ="cardQuestion'.$i.'"> '.$TAB_CONTENU[$i]['question'].'</textarea>
+            <textarea name ="cardQuestion'.$i.'"> '.htmlspecialchars($TAB_CONTENU[$i]['question']).'</textarea>
         </div>
         <p>Réponse :</p>
         <div class="textarea">
             <span></span>
-            <textarea name = "cardReponse'.$i.'">'.$TAB_CONTENU[$i]['reponse'].'</textarea>
+            <textarea name = "cardReponse'.$i.'">'.htmlspecialchars($TAB_CONTENU[$i]['reponse']).'</textarea>
         </div>
         
         <button class="button" name = "DelCard" type="submit" value='.$i.'><span></span><p>Supprimer cette question</p></button>
@@ -96,7 +96,7 @@
             } else {
                 $checked = '';
             }
-            echo '<label '.$hidden2.'><input name = "amiDispo[]" type = "checkbox" value="'.$ami['ami_id'].'" '.$checked.'>'.$ami['username'].'</label>';
+            echo '<label '.$hidden2.'><input name = "amiDispo[]" type = "checkbox" value="'.htmlspecialchars($ami['ami_id']).'" '.$checked.'>'.htmlspecialchars($ami['username']).'</label>';
         }
         
         ?>

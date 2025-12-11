@@ -35,7 +35,7 @@
             } else {
                 $checked = '';
             }
-            echo '<label><input name = "categories[]" type = "checkbox" value='.$categorie['id'].' '.$checked.'>'.$categorie['categorieName'].'</label>';
+            echo '<label><input name="categories[]" type="checkbox" value="'.htmlspecialchars($categorie['id']).'" '.$checked.'>'.htmlspecialchars($categorie['categorieName']).'</label>';
         }
         ?>
 
@@ -50,7 +50,7 @@
                 <p>Question '. $i+1 .'</p>
                 <div class="textarea" id = "question'.($i+1).'" style="width: calc(100% - 40px); height: calc(100% - 90px)">
                     <span></span>
-                    <textarea type = "text" name ="question'.$i.'" placeholder="nom de la question">'.$TAB_CONTENU[$i]['name'].'</textarea>
+                    <textarea type = "text" name ="question'.$i.'" placeholder="nom de la question">'.htmlspecialchars($TAB_CONTENU[$i]['name']).'</textarea>
                 </div>
                 </div>';
             
@@ -60,7 +60,7 @@
                 <p>Réponse '.($k+1).' :</p>
                 <div class="input" style="width: calc(100% - 40px);">
                     <span></span>
-                    <input name ="reponse'.$k.'-question'.$i.'" value = "'.$TAB_CONTENU[$i]['reponses'][$k]['texte'].'"></input>
+                    <input name ="reponse'.$k.'-question'.$i.'" value = "'.htmlspecialchars($TAB_CONTENU[$i]['reponses'][$k]['texte']).'"></input>
                 </div>
                 </div>
                 <div class="checkbox" style="grid-row-start: '. 1 + $k .'; grid-row-end: '. 2 + $k .'; grid-column-start: 3; grid-column-end: 4;align-self: end;">
@@ -116,8 +116,8 @@
                         else{
                             $hidden = 'hidden';
                         }
-                        echo '<p class = "timerP"'.$hidden.'>Temps en minutes entre 0 et 120<br>(0 ne sera pas compté) :</p>
-                        <input type = "number" name = "timerValue" value = "'.$timerValue.'" min = 0 max = 120 '.$hidden.'/>';
+                        echo '<p class = "timerP"'.$hidden.'>Temps en minutes entre 0 et 120<br>(0 ne sera pas compté) :</p>';
+                        echo '<input type="number" name="timerValue" value="'.htmlspecialchars($timerValue).'" min="0" max="120" '.$hidden.'/>';
                     }
                 echo '</div>';
             }
