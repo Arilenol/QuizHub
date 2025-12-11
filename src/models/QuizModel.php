@@ -718,4 +718,48 @@ class QuizModel
             die("Updating quiz parameters failed: " . $e->getMessage());
         }
     }
+
+    public function updateGenreQuiz(int $quizId, string $genre){
+        try{
+            $updateGenre = $this->db->prepare("UPDATE quiz SET genre = ? WHERE id = ?;");
+            $updateGenre->bindValue(1,$genre);
+            $updateGenre->bindValue(2,$quizId);
+            $updateGenre->execute();
+            return true;
+        } catch(PDOException $e){
+            die("Updating quiz genre failed: " . $e->getMessage());
+        }
+    }
+
+    public function updateResumQuiz(int $quizId, string $title, string $description){
+        try{
+            $updateResum = $this->db->prepare("UPDATE quiz SET title = ?, description = ? WHERE id = ?;");
+            $updateResum->bindValue(1,$title);
+            $updateResum->bindValue(2,$description);
+            $updateResum->bindValue(3,$quizId);
+            $updateResum->execute();
+            return true;
+        } catch(PDOException $e){
+            die("Updating quiz resum failed: " . $e->getMessage());
+        }
+    }
+
+    public function deleteQuestionFromQuiz(int $quizId, int $numeroQuiz){
+        try{
+            $getQuestion = $this->db->prepare("SELECT id FROM question WHERE quiz_id = ? AND numeroQuiz = ?;");
+            $getQuestion->bindValue(1,$quizId);
+            $getQuestion->bindValue(2,$numeroQuiz);
+            $getQuestion->execute();
+            $question = $getQuestion->fetch(PDO::FETCH_ASSOC);
+            if ($question){
+                $deleteQuestion = $this->db->prepare("DELETE FROM question WHERE id = ?;");
+                $deleteQuestion->bindValue(1,$question['id']);
+                $deleteQuestion->execute();
+      
+            }
+            return true;
+        } catch(PDOException $e){
+            die("Deleting question from quiz failed: " . $e->getMessage());
+        }
+    }
 }

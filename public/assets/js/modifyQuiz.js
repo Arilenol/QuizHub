@@ -60,6 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const Annuler = document.createElement("button");
             Annuler.type = "submit";
             Annuler.textContent = "Annuler";
+            Annuler.name = "Annuler";
 
             modifCat.replaceWith(AppliquerBtn);
             AppliquerBtn.after(Annuler);
@@ -81,9 +82,6 @@ document.addEventListener("DOMContentLoaded", () => {
             ev.preventDefault();
             select.disabled = false;
             for(let ami of amis){
-                if(ami.hidden){
-                    ami.hidden = false;
-                }
                 if(ami.children[0].disabled){
                     ami.children[0].disabled = false;
                 }
@@ -117,6 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const Annuler = document.createElement("button");
             Annuler.type = "submit";
             Annuler.textContent = "Annuler";
+            Annuler.name = "Annuler";
 
             modifPublish.replaceWith(AppliquerBtnPublish);
             AppliquerBtnPublish.after(Annuler);
@@ -292,6 +291,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const Annuler = document.createElement("button");
             Annuler.type = "submit";
             Annuler.textContent = "Annuler";
+            Annuler.name = "Annuler";
 
             DelBtn.replaceWith(applyModif);
             applyModif.after(Annuler);
@@ -424,6 +424,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const Annuler = document.createElement("button");
             Annuler.type = "submit";
             Annuler.textContent = "Annuler";
+            Annuler.name = "Annuler";
 
             modifParams.replaceWith(AppliquerBtn);
             AppliquerBtn.after(Annuler);
@@ -435,4 +436,118 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
     });
+    const modifTest = document.querySelector("#modifTest");
+    modifTest.addEventListener("click", (ev) => {
+        if (!modif){
+            modif = true;
+            ev.preventDefault();
+            const genreTest = document.querySelector("#genreTest");
+            genreTest.disabled = false;
+
+            if (genreTest.checked){
+                genreTest.checked = false;
+                modifTest.closest("h2").textContent = "Quiz standard ";
+            }
+            else{
+                genreTest.checked = true;
+                modifTest.closest("h2").textContent = "Test ";
+            }
+
+
+            const formData = new FormData();
+            formData.append("changerGenre", 1);
+            if (genreTest.checked){
+                formData.append("genre", "test");
+            }
+            else{
+                formData.append("genre", "standard");
+            }
+            
+            fetch(URL, {
+                method: "POST",
+                body: formData
+            }).then(() => {
+                window.location.href = URL;
+            });
+
+        }
+        else{
+            ev.preventDefault();
+            alert("Veuillez terminer la modification en cours avant d'en modifier une autre.");
+        }
+    });
+
+    const modifResum = document.querySelector("#modifResum");
+    modifResum.addEventListener("click", (ev) => {
+        if (!modif){
+            modif = true;
+            ev.preventDefault();
+            const title = document.querySelector("#QuizTitle");
+            const description = document.querySelector("#QuizDescription");
+            title.disabled = false;
+            description.disabled = false;
+
+            const Appliquer = document.createElement("button");
+            Appliquer.type = "submit";
+            Appliquer.name = "appliquerResum";
+            Appliquer.id = "appliquerResum";
+            Appliquer.textContent = "Appliquer";
+            Appliquer.addEventListener("click", (evt) =>{
+                evt.preventDefault();
+                const formData = new FormData();
+
+                formData.append("appliquerResum", 1);
+                formData.append("QuizTitle", title.value);
+                formData.append("QuizDescription", description.value);
+                
+                fetch(URL, {
+                    method: "POST",
+                    body: formData
+                }).then(() => {
+                    window.location.href = URL;
+                });
+
+            });
+            const Annuler = document.createElement("button");
+            Annuler.type = "submit";
+            Annuler.textContent = "Annuler";
+            Annuler.name = "Annuler";
+
+            modifResum.replaceWith(Appliquer);
+            Appliquer.after(Annuler);
+
+        }
+        else{
+            ev.preventDefault();
+            alert("Veuillez terminer la modification en cours avant d'en modifier une autre.");
+        }
+    });
+
+    function delQuestionFunction(ev){
+        if (!modif){
+            modif = true;
+            ev.preventDefault();
+            const i = ev.currentTarget.value;
+
+            const formData = new FormData();
+            formData.append("DelQuestion", i);
+            
+            fetch(URL, {
+                method: "POST",
+                body: formData
+            }).then(() => {
+                window.location.href = URL;
+            });
+
+        }
+        else{
+            ev.preventDefault();
+            alert("Veuillez terminer la modification en cours avant d'en modifier une autre.");
+        }
+    }
+    const deleteQuestion = document.querySelectorAll(".delQuestionButton");
+    for (let delQ of deleteQuestion){
+        delQ.addEventListener("click", delQuestionFunction);
+    }
+
 });

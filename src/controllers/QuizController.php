@@ -423,7 +423,41 @@ class QuizController
             unset($_POST['timerValue']);
             header('Location: ' . $_SERVER['REQUEST_URI']);
             exit;
-
+        }
+        if(isset($_POST['changerGenre'])){
+            $genre = isset($_POST['genre']) && ($_POST['genre'] === 'test' || $_POST['genre'] === 'standard') ? $_POST['genre'] : 'standard';
+            $this->model->updateGenreQuiz($idQuiz, $genre);
+            unset($_POST['changerGenre']);
+            unset($_POST['genre']);
+            header('Location: ' . $_SERVER['REQUEST_URI']);
+            exit;
+        }
+        if (isset($_POST['appliquerResum'])){
+            $title = isset($_POST['QuizTitle']) ? $_POST['QuizTitle'] : '';
+            $description = isset($_POST['QuizDescription']) ? $_POST['QuizDescription'] : '';
+            if ($this->modifResumValidite($title, $description)){
+                $this->model->updateResumQuiz($idQuiz, $title, $description);
+            }
+            else{
+                die("Erreur de validation du résumé");
+            }
+            unset($_POST['appliquerResum']);
+            unset($_POST['QuizTitle']);
+            unset($_POST['QuizDescription']);
+            header('Location: ' . $_SERVER['REQUEST_URI']);
+            exit;
+        }
+        if(isset($_POST['DelQuestion'])){
+            $iQuestion = (int)$_POST['DelQuestion'];
+            $this->model->deleteQuestionFromQuiz($idQuiz, $iQuestion+1);
+            unset($_POST['DelQuestion']);
+            header('Location: ' . $_SERVER['REQUEST_URI']);
+            exit;
+        }
+        if(isset($_POST['Annuler'])){
+            unset($_POST);
+            header('Location: ' . $_SERVER['REQUEST_URI']);
+            exit;
         }
 
 
@@ -457,6 +491,13 @@ class QuizController
         }
         if ($timer == 0){
             $paramsContent[0] = 0;
+        }
+        return true;
+    }
+
+    public function modifResumValidite(string $title, string $description): bool{
+        if (empty($title) || empty($description)){
+            return false;
         }
         return true;
     }

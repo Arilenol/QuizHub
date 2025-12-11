@@ -11,15 +11,18 @@
 <form style="display: flex; flex-direction: column; padding: 25px; gap: 20px" method = "post" data-id="<?php echo $idQuiz ?>" action = "index.php?page=standard&categorie=modify&id=<?php echo $idQuiz ?>">
     <input type="hidden" name="idQuiz" id="idQuiz" value="<?php echo $idQuiz ?>">
     <button class="button" type = "submit" name = "Retour" value = "yes"><span></span><p> < Retour</p></button>
-    <h2>Nom du quiz</h2>
+    <h2>Résumé du quiz
+        <button class="modifResum" id ="modifResum" >Modifier</button>
+    </h2>
+    <p class="name">Nom du quiz</p>
     <div class="input">
         <span></span>
-        <input type="text" name ="QuizTitle" value = "<?php echo htmlspecialchars($quizInfos['title']) ?>" disabled>
+        <input type="text" name ="QuizTitle" id="QuizTitle" value = "<?php echo htmlspecialchars($quizInfos['title']) ?>" disabled>
     </div>
     <p class="description">Description</p>
     <div class="input">
         <span></span>
-        <input type="text" name ="QuizDescription" value = "<?php echo htmlspecialchars($quizInfos['description']) ?>" disabled>
+        <input type="text" name ="QuizDescription" id="QuizDescription" value = "<?php echo htmlspecialchars($quizInfos['description']) ?>" disabled>
     </div>
 
     <h2 style="display : inline;">Catégories
@@ -87,9 +90,8 @@
         </button>
     </div>
     
-    <h2>Test</h2>
-    <div style="display: flex; flex-direction: row; align-items: center; gap: 10px">
-        <p style="font-size: 20px">Un test permet de voir un récapitulatif à la fin du quiz<br>Ce mode permet de simuler une évaluation</p>
+    <h2 ><?= $quizInfos['genre'] == 'test' ? 'test ': 'Quiz standard' ?>
+        <button id = "modifTest">Changer</button>
         <div class="checkbox"  id = "Test">
             <?php
             if($quizInfos['genre'] == 'test'){
@@ -102,7 +104,7 @@
             ?>
             <input type="checkbox" id = "genreTest" name="genreTest" <?= $check ?> disabled hidden/>
         </div>
-    </div>
+    </h2>
     <h2>Paramètres
         <button class="modifParam" id ="modifParam" >Modifier</button>
     </h2>
