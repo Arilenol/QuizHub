@@ -475,7 +475,7 @@ class QuizController
         //var_dump($_SESSION);
         $erreur = false;
 
-        require ROOT . '/src/views/Quiz/modifyQuiz.php';
+        require ROOT . '/src/views/quiz/modifyQuiz.php';
     }
 
     public function modifParamValidite(array $paramsContent, int $timer): bool{
