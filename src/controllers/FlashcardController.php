@@ -238,9 +238,12 @@ class FlashcardController
         }
         return true;
     }
+    
+    public function modifyFlashcard($id){
+        require ROOT . '/src/views/Quiz/createFlashcard.php';
+    }
 
-    public function endFlashcard()
-    {
+    public function endFlashcard(){
         $viewData = null;
         $quizId = $_GET['id'];
         require_once ROOT . '/src/models/LikeModel.php';

@@ -12,9 +12,9 @@
     <input type = "hidden" name="page" value="lesson">
     <input type="hidden" name ="categorie" value = "create">
     <h2>Nom de la leçon</h2>
-    <input type="text" name ="LessonTitle" value = "<?php echo $LessonTitle ?>">
+    <input type="text" name ="LessonTitle" value = "<?php echo htmlspecialchars($LessonTitle) ?>">
     <p class="description">Description</p>
-    <input type="text" name ="LessonDescription" value = "<?php echo $desc ?>">
+    <input type="text" name ="LessonDescription" value = "<?php echo htmlspecialchars($desc) ?>">
 
     <h2 style="display : inline;">Catégories
         <button id="hiddenCategories" type = "button ">▼</button>
@@ -27,7 +27,7 @@
             } else {
                 $checked = '';
             }
-            echo '<label><input name = "categories[]" type = "checkbox" value='.$categorie['id'].' '.$checked.'>'.$categorie['categorieName'].'</label>';
+            echo '<label><input name = "categories[]" type = "checkbox" value="'.htmlspecialchars($categorie['id']).'" '.$checked.'>'.htmlspecialchars($categorie['categorieName']).'</label>';
         }
         ?>
 
@@ -39,17 +39,17 @@
     for($i = 0; $i < $_SESSION['nbParts'] ; $i = $i +1){
         echo '<div class="LessonPart">
         <p>Partie '.($i+1).'</p>
-        <input type = "text" name ="namePart'.$i.'" value = "'.$TAB_CONTENU[$i]['name'].'" placeholder="nom de la partie">
+        <input type = "text" name ="namePart'.$i.'" value = "'.htmlspecialchars($TAB_CONTENU[$i]['name']).'" placeholder="nom de la partie">
         <p>Leçon :</p>
-        <textarea name = "contentPart'.$i.'">'.$TAB_CONTENU[$i]['content'].'</textarea>';
+        <textarea name = "contentPart'.$i.'">'.htmlspecialchars($TAB_CONTENU[$i]['content']).'</textarea>';
         
         for ($k = 0; $k < $_SESSION['nbExemple'][$i];$k = $k +1){
             echo '<div class="exemple">
             <p>Exemple '.($k+1).' :</p>
             <p>consigne : <p>
-            <textarea name ="exemple'.$k.'-part'.$i.'">'.$TAB_CONTENU[$i]['exemples'][$k]['consigne'].'</textarea>
+            <textarea name ="exemple'.$k.'-part'.$i.'">'.htmlspecialchars($TAB_CONTENU[$i]['exemples'][$k]['consigne']).'</textarea>
             <p>réponse : <p>
-            <textarea name ="reponse'.$k.'-part'.$i.'">'.$TAB_CONTENU[$i]['exemples'][$k]['reponse'].'</textarea>
+            <textarea name ="reponse'.$k.'-part'.$i.'">'.htmlspecialchars($TAB_CONTENU[$i]['exemples'][$k]['reponse']).'</textarea>
             <button name= "delExemple'.$k.'-part'.$i.'" value="yes" type="submit"> Supprimer cet exemple</button>
             </div>';
 
@@ -67,9 +67,9 @@
         <?php
         foreach($quizzes as $quiz){
             if ($quizSelected == $quiz['id']) {
-                echo '<option value='.$quiz['id'].' selected>'.$quiz['title'].'</option>';
+                echo '<option value="'.htmlspecialchars($quiz['id']).'" selected>'.htmlspecialchars($quiz['title']).'</option>';
             } else {
-            echo '<option value='.$quiz['id'].' >'.$quiz['title'].'</option>';
+            echo '<option value="'.htmlspecialchars($quiz['id']).'">'.htmlspecialchars($quiz['title']).'</option>';
             }
         }
         ?>

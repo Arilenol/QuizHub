@@ -74,11 +74,13 @@ function constructionBD(PDO $conn)
 
         $sql = "DROP TRIGGER IF EXISTS trg_before_insert_TestStatistiques;";
         $conn->exec($sql);
-
         $sql = "DROP TRIGGER IF EXISTS trg_before_insert_Carte;";
         $conn->exec($sql);
 
         $sql = "DROP TRIGGER IF EXISTS trg_bef_insert_battleParticipants;";
+        $conn->exec($sql);
+
+        $sql = "DROP TRIGGER IF EXISTS trg_after_delete_question;";
         $conn->exec($sql);
 
 
@@ -101,6 +103,7 @@ function constructionBD(PDO $conn)
                 password TEXT NOT NULL,
                 email TEXT NOT NULL,
                 description TEXT DEFAULT '',
+                admin BOOLEAN DEFAULT 0,
                 UNIQUE(email)
             );";
 
@@ -110,8 +113,8 @@ function constructionBD(PDO $conn)
                 demandeur_id INTEGER NOT NULL,
                 receveur_id INTEGER NOT NULL,
                 PRIMARY KEY(demandeur_id, receveur_id),
-                FOREIGN KEY (demandeur_id) REFERENCES users(id),
-                FOREIGN KEY (receveur_id) REFERENCES users(id),
+                FOREIGN KEY (demandeur_id) REFERENCES users(id) ON DELETE CASCADE,
+                FOREIGN KEY (receveur_id) REFERENCES users(id) ON DELETE CASCADE,
                 UNIQUE(demandeur_id, receveur_id)
             );";
 
@@ -122,8 +125,8 @@ function constructionBD(PDO $conn)
                 user1_id INTEGER NOT NULL,
                 user2_id INTEGER NOT NULL,
                 PRIMARY KEY(user1_id, user2_id),
-                FOREIGN KEY (user1_id) REFERENCES users(id),
-                FOREIGN KEY (user2_id) REFERENCES users(id),
+                FOREIGN KEY (user1_id) REFERENCES users(id) ON DELETE CASCADE,
+                FOREIGN KEY (user2_id) REFERENCES users(id) ON DELETE CASCADE,
                 UNIQUE(user1_id, user2_id)
             );";
 
@@ -139,11 +142,12 @@ function constructionBD(PDO $conn)
                 disponibilite TEXT,
                 date DATE,
                 genre TEXT NOT NULL,
-                FOREIGN KEY (user_id) REFERENCES users(id),
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
                 CHECK (genre IN ('flashcard','standard','test')),
                 CHECK (disponibilite IN ('public','private','ami'))
             );";
         $conn->exec($sql);
+
 
         $sql = "CREATE TABLE IF NOT EXISTS Lecon(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -152,8 +156,8 @@ function constructionBD(PDO $conn)
                 title TEXT NOT NULL,
                 description TEXT,
                 date DATE DEFAULT CURRENT_DATE,
-                FOREIGN KEY (user_id) REFERENCES users(id),
-                FOREIGN KEY (quiz_id) REFERENCES quiz(id)
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+                FOREIGN KEY (quiz_id) REFERENCES quiz(id) ON DELETE CASCADE
             );";
         $conn->exec($sql);
 
@@ -165,9 +169,9 @@ function constructionBD(PDO $conn)
                 lesson_id INTEGER,
                 ami_id INTEGER,
                 PRIMARY KEY (quiz_id,lesson_id, ami_id),
-                FOREIGN KEY (quiz_id) REFERENCES quiz(id),
-                FOREIGN KEY (lesson_id) REFERENCES Lecon(id),
-                FOREIGN KEY (ami_id) REFERENCES users(id)
+                FOREIGN KEY (quiz_id) REFERENCES quiz(id) ON DELETE CASCADE,
+                FOREIGN KEY (lesson_id) REFERENCES Lecon(id) ON DELETE CASCADE,
+                FOREIGN KEY (ami_id) REFERENCES users(id) ON DELETE CASCADE
             );";
 
         $conn->exec($sql);
@@ -177,8 +181,8 @@ function constructionBD(PDO $conn)
                 quiz_id INTEGER NOT NULL,
                 user_id INTEGER NOT NULL,
                 UNIQUE (quiz_id, user_id),
-                FOREIGN KEY (quiz_id) REFERENCES quiz(id),
-                FOREIGN KEY (user_id) REFERENCES users(id)
+                FOREIGN KEY (quiz_id) REFERENCES quiz(id) ON DELETE CASCADE,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
             );
             ";
 
@@ -189,8 +193,8 @@ function constructionBD(PDO $conn)
                     quiz_id INTEGER NOT NULL,
                     user_id INTEGER NOT NULL,
                     UNIQUE (quiz_id, user_id),
-                    FOREIGN KEY (quiz_id) REFERENCES quiz(id),
-                    FOREIGN KEY (user_id) REFERENCES users(id)
+                    FOREIGN KEY (quiz_id) REFERENCES quiz(id) ON DELETE CASCADE,
+                    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
                 );
                 ";
 
@@ -201,8 +205,8 @@ function constructionBD(PDO $conn)
                 category_id INTEGER,
                 quiz_id INTEGER,
                 PRIMARY KEY (category_id, quiz_id),
-                FOREIGN KEY (category_id) REFERENCES categories(id),
-                FOREIGN KEY (quiz_id) REFERENCES quiz(id)
+                FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE,
+                FOREIGN KEY (quiz_id) REFERENCES quiz(id) ON DELETE CASCADE
             );";
         $conn->exec($sql);
 
@@ -212,7 +216,7 @@ function constructionBD(PDO $conn)
                 lecon_id INTEGER,
                 title TEXT NOT NULL,
                 content TEXT,
-                FOREIGN KEY (lecon_id) REFERENCES Lecon(id)
+                FOREIGN KEY (lecon_id) REFERENCES Lecon(id) ON DELETE CASCADE
             );";
 
         $conn->exec($sql);
@@ -223,7 +227,7 @@ function constructionBD(PDO $conn)
                 partie_id INTEGER,
                 consigne TEXT NOT NULL,
                 reponse TEXT NOT NULL,
-                FOREIGN KEY (partie_id) REFERENCES Partie(id)
+                FOREIGN KEY (partie_id) REFERENCES Partie(id) ON DELETE CASCADE
             );";
 
         $conn->exec($sql);
@@ -233,7 +237,7 @@ function constructionBD(PDO $conn)
                 numeroQuiz INTEGER,
                 quiz_id INTEGER NOT NULL,
                 question TEXT NOT NULL,
-                FOREIGN KEY (quiz_id) REFERENCES quiz(id)
+                FOREIGN KEY (quiz_id) REFERENCES quiz(id) ON DELETE CASCADE
             );";
 
         $conn->exec($sql);
@@ -243,7 +247,7 @@ function constructionBD(PDO $conn)
                 question_id INTEGER,
                 reponse TEXT NOT NULL,
                 estCorrecte BOOLEAN,
-                FOREIGN KEY (question_id) REFERENCES Question(id)
+                FOREIGN KEY (question_id) REFERENCES Question(id) ON DELETE CASCADE
             );";
 
         $conn->exec($sql);
@@ -255,7 +259,7 @@ function constructionBD(PDO $conn)
                 numeroCarte INTEGER,
                 question TEXT NOT NULL,
                 reponse TEXT NOT NULL,
-                FOREIGN KEY (quiz_id) REFERENCES quiz(id)
+                FOREIGN KEY (quiz_id) REFERENCES quiz(id) ON DELETE CASCADE
             );";
 
 
@@ -269,7 +273,7 @@ function constructionBD(PDO $conn)
                 recapitulatifFin BOOLEAN,
                 ordreAleatoire BOOLEAN,
                 repasserErreurs BOOLEAN,
-                FOREIGN KEY (quiz_id) REFERENCES quiz(id)
+                FOREIGN KEY (quiz_id) REFERENCES quiz(id) ON DELETE CASCADE
             );";
 
         $conn->exec($sql);
@@ -281,8 +285,8 @@ function constructionBD(PDO $conn)
                 score INTEGER,
                 tempsPris INTEGER,
                 dateRealisation DATE,
-                FOREIGN KEY (user_id) REFERENCES users(id),
-                FOREIGN KEY (quiz_id) REFERENCES quiz(id)
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+                FOREIGN KEY (quiz_id) REFERENCES quiz(id) ON DELETE CASCADE
             );";
 
         $conn->exec($sql);
@@ -293,7 +297,7 @@ function constructionBD(PDO $conn)
                 user_id INTEGER,
                 recherche TEXT NOT NULL,
                 dateRecherche DATE,
-                FOREIGN KEY (user_id) REFERENCES users(id)
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
             );";
 
         $conn->exec($sql);
@@ -313,8 +317,8 @@ function constructionBD(PDO $conn)
                 defiant_id INTEGER NOT NULL,
                 quiz_id INTEGER NOT NULL,
                 dateBattle DATE,
-                FOREIGN KEY (quiz_id) REFERENCES quiz(id),
-                FOREIGN KEY (defiant_id) REFERENCES users(id)
+                FOREIGN KEY (quiz_id) REFERENCES quiz(id) ON DELETE CASCADE,
+                FOREIGN KEY (defiant_id) REFERENCES users(id) ON DELETE CASCADE
             );";
         $conn->exec($sql);
 
@@ -324,8 +328,8 @@ function constructionBD(PDO $conn)
                 fini BOOLEAN NOT NULL,
                 score INTEGER,
                 PRIMARY KEY (battle_id, user_id),
-                FOREIGN KEY (battle_id) REFERENCES BattleQuiz(id),
-                FOREIGN KEY (user_id) REFERENCES users(id)
+                FOREIGN KEY (battle_id) REFERENCES BattleQuiz(id) ON DELETE CASCADE,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
             );";
 
         $conn->exec($sql);
@@ -336,7 +340,7 @@ function constructionBD(PDO $conn)
                 quiz_id INTEGER,
                 difficulty INTEGER,
                 moyenne FLOAT,
-                FOREIGN KEY (quiz_id) REFERENCES quiz(id)
+                FOREIGN KEY (quiz_id) REFERENCES quiz(id) ON DELETE CASCADE
             );";
 
         $conn->exec($sql);
@@ -345,8 +349,8 @@ function constructionBD(PDO $conn)
                 category_id INTEGER,
                 lesson_id INTEGER,
                 PRIMARY KEY (category_id, lesson_id),
-                FOREIGN KEY (category_id) REFERENCES categories(id),
-                FOREIGN KEY (lesson_id) REFERENCES Lecon(id)
+                FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE,
+                FOREIGN KEY (lesson_id) REFERENCES Lecon(id) ON DELETE CASCADE
             );";
 
         $conn->exec($sql);
@@ -427,6 +431,16 @@ function constructionBD(PDO $conn)
                         RAISE(ABORT, 'L''utilisateur n''est pas ami avec le défieur.')
                 END;
             END;";
+        $conn->exec($sql);
+
+        $sql="CREATE TRIGGER trg_after_delete_question
+            AFTER DELETE ON Question
+            BEGIN
+                UPDATE Question 
+                SET numeroQuiz = numeroQuiz - 1 
+                WHERE quiz_id = OLD.quiz_id AND numeroQuiz > OLD.numeroQuiz;
+            END;";
+
         $conn->exec($sql);
 
         // Insertions de données fictives

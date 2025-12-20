@@ -14,7 +14,7 @@
     <link rel="manifest" href="../../manifest.json">
     <script src="assets/js/script.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.js"></script>
-    <title><?= $title ?></title>
+    <title><?= htmlspecialchars($title) ?></title>
 </head>
 
 <body>
@@ -24,7 +24,7 @@
             <div class="input" style="width: 100%;">
                 <span></span>
                 <img src="./assets/images/loupe.svg" alt="Search Icon">
-                <input type="text" name="contenu" placeholder="Rechercher des créations..." <?php $s = isset($_GET['contenu']) ? 'value="'.$_GET['contenu'].'"' : ''; echo $s; ?>/>
+                <input type="text" name="contenu" placeholder="Rechercher des créations..." value="<?php echo isset($_GET['contenu']) ? htmlspecialchars($_GET['contenu']) : ''; ?>" />
                 <input type="hidden" name="page" value="catalogue">
             </div>
         </form>
@@ -45,7 +45,7 @@
                 </button>
             <?php else: ?>
                 <form id="goNotif" action="?page=notification" method="post">
-                    <input type="hidden" name="account" value="<?= $_SESSION['id'] ?>">
+                    <input type="hidden" name="account" value="<?= htmlspecialchars($_SESSION['id']) ?>">
                 </form>
                 <button class="button notif-btn" style="padding: 15px;" data-action="notification"
                     onclick="document.getElementById('goNotif').submit()">
