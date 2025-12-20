@@ -1,3 +1,9 @@
+window.addEventListener("load", () => {
+    if("serviceWorker" in navigator){
+        navigator.serviceWorker.register("sw.js");
+    }
+})
+
 window.addEventListener("DOMContentLoaded", () => {
     initCheckboxSVG();
 });
@@ -58,4 +64,12 @@ function resetCheckboxSVG() {
         //const input = checkboxDiv.querySelector("input[type='checkbox']");
 
     });
+}
+
+download = async function(id){
+    if(id != null){
+        const result = await (await fetch("/getFlashcardData.php?id=" + id)).text();
+        localforage.setItem(JSON.parse(result)["id"], JSON.parse(result));
+        console.log(id + " downloaded");
+    }
 }

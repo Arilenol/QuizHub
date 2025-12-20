@@ -35,8 +35,15 @@
 .catalogue .search-author {
   margin-top: 20px;
   margin-bottom: 20px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
 }
+
 .catalogue .search-author input {
+  flex: 1;
+  min-width: 250px;
   background-color: #0AB1BD;
   border-radius: 50px;
   color: white;
@@ -53,6 +60,26 @@
   appearance: none;
   display: inline-block;
   vertical-align: middle;
+}
+
+.catalogue .search-author button {
+  background-color: #0AB1BD;
+  border-radius: 50px;
+  color: white;
+  border: none;
+  padding: 14px 24px;
+  font-size: 1.05rem;
+  line-height: 1.2;
+  min-height: 46px;
+  cursor: pointer;
+  outline: none;
+  box-shadow: 0 8px 0 #087b86;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: inline-block;
+  vertical-align: middle;
+  transition: transform 0.1s;
 }
 .catalogue .search-author input::-moz-placeholder {
   color: white;
@@ -178,4 +205,10 @@
 .catalogue .quiz-affichage .quiz .quiz-footer .quiz-reactions .dislike {
   color: #666;
   background-color: rgba(0, 0, 0, 0.03);
-}/*# sourceMappingURL=catalogue.css.map */
+}
+/* Petite variante visuelle pour les cartes auteur */
+.author-card {
+  background: linear-gradient(180deg,#fbfbfb,#f7fdfd);
+  border: 2px dashed rgba(10,177,189,0.15);
+}
+#authors-affichage .quiz { width: 30%; } /* même taille que les quizzes */

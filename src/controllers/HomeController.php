@@ -1,6 +1,7 @@
 <?php
 require_once ROOT . '/src/models/HomeModel.php';
 require_once ROOT . '/config/config.php';
+require_once ROOT . '/src/models/LessonModel.php';
 
 class HomeController
 {
@@ -8,12 +9,14 @@ class HomeController
     {
         $db = getDbConnection();
         $model = new HomeModel($db);
+        $modelLesson = new LessonModel($db);
         // récupère les données
+        $quiz = $model->getAllInfo();
+
+        $lessons = $modelLesson->getAllInfoLessons();
         if (isset($_SESSION['id']) && !empty($_SESSION['id'])) {
-            $quiz = $model->getAllInfo();
             $quizNextPart = $model->getAllCreationsByUser($_SESSION['id']);
         } else {
-            $quiz = $model->getAllInfo();
             $quizNextPart = $model->getAllNewCreations();
         }
         // afficher la vue

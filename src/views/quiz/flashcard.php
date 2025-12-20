@@ -71,6 +71,25 @@ require_once '../src/views/partials/header.php';
 				<button class="valider" onclick="window.location.href='?page=home'">Retour à l’accueil</button>
 			</div>
 		</div>
+		<p class="fin">Vous avez aimé le quiz ? N'hésiter pas à le noter : </p>
+		<div class="quiz-reactions">
+			<?php if (isset($_SESSION['id'])) : ?>
+				<form method="POST" action="?page=flashcard&action=end&user=like&id=<?= $quizId ?>">
+					<button class="like" type="submit" name="reaction" value="like" class="reaction like">
+						👍 <?= htmlspecialchars($reactions['nbjaime'] ?? 0) ?>
+					</button>
+				</form>
+				<form method="POST" action="?page=flashcard&action=end&user=dislike&id=<?= $quizId ?>">
+					<button class="dislike" type="submit" name="reaction" value="dislike" class="reaction dislike">
+						👎 <?= htmlspecialchars($reactions['nbjaimepas'] ?? 0) ?>
+					</button>
+				</form>
+			<?php else : ?>
+
+				<p>Pour débloquer cette fonctionnalité <a href="?page=log&typelog=connection"> Connectez-vous</a> d'abord</p>
+
+			<?php endif; ?>
+		</div>
 	</div>
 
 <?php endif; ?>

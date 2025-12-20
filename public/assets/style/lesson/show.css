@@ -1,52 +1,141 @@
 .lesson-page {
-  margin: 20px auto;
+  margin: 30px auto;
   width: 90%;
-  padding: 30px;
-  border-radius: 8px;
-}
-.lesson-page .back-btn {
-  background-color: #00bcd4;
-  border: none;
-  color: white;
-  border-radius: 20px;
-  padding: 8px 16px;
-  font-size: 16px;
-  cursor: pointer;
-  margin-bottom: 20px;
-}
-.lesson-page .lesson-header {
-  text-align: center;
-}
-.lesson-page .lesson-header h2 {
-  font-weight: 700;
-  margin-bottom: 5px;
-}
-.lesson-page .lesson-header p {
-  margin-top: 0;
-  font-size: 16px;
-  color: #333;
-}
-.lesson-page .lesson-part {
-  margin-top: 30px;
-  text-align: center;
-}
-.lesson-page .lesson-part h3 {
-  font-weight: 600;
-}
-.lesson-page .lesson-part p {
-  font-size: 16px;
-  margin: 10px 0;
-}
-.lesson-page .lesson-part .example-box {
-  background-color: #00bcd4;
-  border-radius: 15px;
-  padding: 20px;
-  width: 250px;
-  margin: 20px auto;
-}
-.lesson-page .lesson-part .example-box p {
-  color: white;
-  margin: 0;
+  max-width: 1200px;
+  padding: 40px;
+  border-radius: 40px;
+  background: #ffdba9;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
 }
 
-/*# sourceMappingURL=show.css.map */
+.back-btn, .signalement {
+  margin-top: 1%;
+  margin-left: 1%;
+  border-radius: 75px;
+  background-color: #0AB1BD;
+  color: white;
+  border: none;
+  padding: 21px 36px;
+  font-size: 1.575rem;
+  min-height: 69px;
+  cursor: pointer;
+  box-shadow: 0 12px 0 #087b86;
+}
+
+.buttonAction {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.back-btn:hover {
+  background-color: #fff;
+  color: #087b86;
+  box-shadow: 0px 8px 2px #CACACABF;
+}
+
+.lesson-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.lesson-header h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 10px;
+  color: #073238;
+}
+
+.lesson-header .meta-info {
+  color: #666;
+  font-size: 1.2rem;
+}
+
+.lesson-intro {
+  background: rgba(10, 177, 189, 0.05);
+  border-left: solid 6px #0AB1BD;
+  padding: 20px 30px;
+  border-radius: 15px;
+  margin-bottom: 40px;
+}
+
+.lesson-intro p {
+  font-size: 1.3rem;
+  margin: 0;
+  color: #073238;
+}
+
+.lesson-part {
+  margin-bottom: 50px;
+}
+
+.lesson-part h2, .info {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #073238;
+  margin-bottom: 10px;
+}
+
+.lesson-part p {
+  font-size: 1.2rem;
+  color: #333;
+  max-width: 800px;
+  margin: 0 auto 20px;
+}
+
+.example-box {
+  background-color: #0AB1BD;
+  border-radius: 20px;
+  padding: 25px;
+  width: fit-content;
+  max-width: 70%;
+  margin: 30px auto;
+  box-shadow: 0 12px 0 #087b86;
+}
+
+.example-box strong {
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
+.example-box p {
+  color: #fff;
+  margin-top: 10px;
+  font-size: 1.15rem;
+}
+
+.divider {
+  width: 60%;
+  height: 2px;
+  background: linear-gradient(to right, transparent, #0AB1BD, transparent);
+  margin: 40px auto;
+  border-radius: 5px;
+}
+
+.info{
+  margin-top: 8%;
+}
+
+.signalement {
+  padding: 21px 36px;
+  font-size: 1.575rem;
+  min-height: 69px;
+  margin-right: 1%;
+  margin-top: 1%;
+  background-color: rgb(167, 48, 48);
+  box-shadow: 0 12px 0 rgb(114, 34, 34);
+}
+
+.signalement:hover{
+  color: rgb(167, 48, 48);
+  background-color: white;
+  box-shadow: 0 12px 0 rgb(165, 165, 165);
+}
+
+.info a {
+  display: flex;
+  justify-self: end;
+}

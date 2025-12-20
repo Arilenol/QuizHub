@@ -5,27 +5,46 @@
   max-width: 1000px;
 }
 
-.btn {
-  background-color: #10b3c6;
+button {
+  border-radius: 75px;
+  background-color: #0AB1BD;
   color: white;
   border: none;
-  border-radius: 50px;
-  padding: 1% 2.5%;
+  padding: 21px 36px;
+  font-size: 1.575rem;
+  min-height: 69px;
   cursor: pointer;
-  font-size: 1rem;
-  transition: all 0.2s ease;
-  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 12px 0 #087b86;
 }
-.btn:hover {
-  background-color: rgb(12.1869158879, 136.3411214953, 150.8130841121);
+
+.action {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+.edit{
+  padding: 15px ;
+  font-size: 1.4rem;
+}
+
+.logout {
+  padding: 15px ;
+  font-size: 1.4rem;
+  background-color: #8e2a2a;
+  box-shadow: 0 12px 0 #5e1d1d;
+}
+
+.logout:hover, .retour:hover, .edit:hover {
+  background-color: #fff;
+  color: #087b86;
+  box-shadow: 0px 8px 2px #CACACABF;
 }
 
 .retour {
-  position: left;
-  top: 2%;
-  left: 2%;
-  font-weight: 600;
   margin-top: 1%;
+  margin-left: 1%;
 }
 
 .profile-card {
@@ -41,25 +60,28 @@
 }
 
 .avatar {
-  width: 15%;
+  width: 35%;
   aspect-ratio: 1/1;
   border-radius: 50%;
   -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
 }
 
 .info {
   flex: 1;
   text-align: left;
 }
+
 .info h2 {
   margin: 0;
   font-size: 1.5rem;
 }
+
 .info .username {
   margin: 0.5% 0;
   color: black;
 }
+
 .info .bio {
   margin-bottom: 2%;
   font-size: 0.95rem;
@@ -71,18 +93,14 @@
   gap: 6%;
   margin-bottom: 2%;
 }
+
 .stats .number {
   font-weight: bold;
   font-size: 1.3rem;
 }
+
 .stats .label {
   margin-left: 0.3rem;
-}
-
-.edit {
-  background-color: #10b3c6;
-  padding: 1.2% 3%;
-  font-weight: 600;
 }
 
 .tabs {
@@ -93,6 +111,7 @@
   border-bottom: 1px solid #10b3c6;
   padding-bottom: 1%;
 }
+
 .tabs span {
   font-weight: 500;
   cursor: pointer;
@@ -114,21 +133,25 @@
   padding: 2%;
   text-align: left;
 }
+
 .quiz-card h3 {
   margin: 1% 0;
 }
+
 .quiz-card .tags {
   display: flex;
   gap: 4%;
 }
+
 .quiz-card .tags span {
   background-color: #ddd;
   border-radius: 10px;
   padding: 0.3% 2%;
   font-size: 0.8rem;
 }
+
 .avatar {
-  width: 48px; 
+  width: 48px;
   height: 48px;
   background: #d8d8ff;
   border-radius: 50%;
@@ -136,28 +159,29 @@
   align-items: center;
   justify-content: center;
   font-weight: bold;
-  margin-right: 5%; 
+  margin-right: 5%;
 }
 
-p,h3{
+p,
+h3 {
   margin: 0%;
 }
 
 .tabs span {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .tabs span.active {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .friend-card {
-  border-radius: 12px;  
+  border-radius: 12px;
   background-color: white;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 3%;
-  padding-right: 5%; 
+  padding-right: 5%;
   gap: 5%;
 }
