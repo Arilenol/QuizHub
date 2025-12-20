@@ -11,6 +11,9 @@
     echo "<link rel='stylesheet' href='./assets/style/global.css'>";
 
     ?>
+    <link rel="manifest" href="../../manifest.json">
+    <script src="assets/js/script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.js"></script>
     <title><?= htmlspecialchars($title) ?></title>
 </head>
 
