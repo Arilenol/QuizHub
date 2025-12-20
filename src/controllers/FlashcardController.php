@@ -248,7 +248,6 @@ class FlashcardController
         $quizId = $_GET['id'];
         require_once ROOT . '/src/models/LikeModel.php';
         $modelLike = new LikeModel($this->db);
-
         if (isset($_POST['reaction'])) {
             if ($_POST['reaction'] === "like") {
                 if ($modelLike->hasLiked($quizId, $_SESSION['id'])) {

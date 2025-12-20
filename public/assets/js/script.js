@@ -64,7 +64,6 @@ function resetCheckboxSVG() {
         //const input = checkboxDiv.querySelector("input[type='checkbox']");
 
     });
-
 }
 
 download = async function(id){
