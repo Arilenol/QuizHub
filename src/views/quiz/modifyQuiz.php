@@ -177,7 +177,6 @@
         } 
     ?>
 </form>
-<script src="./assets/js/script.js"></script>
 <script src = "./assets/js/modifyQuiz.js"></script>
 <script src = "./assets/js/sauvegardeScroll.js"></script>
 <script src = "./assets/js/selectDispo.js"></script>
