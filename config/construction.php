@@ -155,9 +155,11 @@ function constructionBD(PDO $conn)
                 quiz_id INTEGER,
                 title TEXT NOT NULL,
                 description TEXT,
+                disponibilite TEXT,
                 date DATE DEFAULT CURRENT_DATE,
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-                FOREIGN KEY (quiz_id) REFERENCES quiz(id) ON DELETE CASCADE
+                FOREIGN KEY (quiz_id) REFERENCES quiz(id) ON DELETE CASCADE,
+                CHECK (disponibilite IN ('public','private','ami'))
             );";
         $conn->exec($sql);
 

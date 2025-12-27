@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         else{
             ev.preventDefault();
-            alert("Veuillez terminer la modification en cours avant d'en modifier une autre.");
+            popupAvertissement("Veuillez terminer la modification en cours avant d'en effectuer une autre.");
         }
         
     });
@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         else{
             ev.preventDefault();
-            alert("Veuillez terminer la modification en cours avant d'en modifier une autre.");
+            popupAvertissement("Veuillez terminer la modification en cours avant d'en effectuer une autre.");
         }
         
     });
@@ -281,7 +281,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     });
                 }
                 else{
-                    alert("Veuillez vérifier que la question possède des champs complets et qu'il y ait au moins ne réponse juste et fausse.");
+                    popupAvertissement("Veuillez vérifier que la question possède des champs complets et qu'il y ait au moins ne réponse juste et fausse.");
                 }
                 
             });
@@ -301,7 +301,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         else{
             ev.preventDefault();
-            alert("Veuillez terminer la modification en cours avant d'en modifier une autre.");
+            popupAvertissement("Veuillez terminer la modification en cours avant d'en effectuer une autre.");
         }
     }
 
@@ -374,7 +374,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         else{
             ev.preventDefault();
-            alert("Veuillez terminer la modification en cours avant d'en modifier une autre.");
+            popupAvertissement("Veuillez terminer la modification en cours avant d'en effectuer une autre.");
         }
     });
 
@@ -432,7 +432,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         else{
             ev.preventDefault();
-            alert("Veuillez terminer la modification en cours avant d'en modifier une autre.");
+            popupAvertissement("Veuillez terminer la modification en cours avant d'en effectuer une autre.");
         }
 
     });
@@ -473,7 +473,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         else{
             ev.preventDefault();
-            alert("Veuillez terminer la modification en cours avant d'en modifier une autre.");
+            popupAvertissement("Veuillez terminer la modification en cours avant d'en effectuer une autre.");
         }
     });
 
@@ -519,7 +519,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         else{
             ev.preventDefault();
-            alert("Veuillez terminer la modification en cours avant d'en modifier une autre.");
+            popupAvertissement("Veuillez terminer la modification en cours avant d'en effectuer une autre.");
         }
     });
 
@@ -542,7 +542,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         else{
             ev.preventDefault();
-            alert("Veuillez terminer la modification en cours avant d'en modifier une autre.");
+            popupAvertissement("Veuillez terminer la modification en cours avant d'en effectuer une autre.");
         }
     }
     const deleteQuestion = document.querySelectorAll(".delQuestionButton");
