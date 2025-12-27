@@ -40,27 +40,34 @@ document.addEventListener("DOMContentLoaded", () => {
             AppliquerBtn.textContent = "Appliquer";
             AppliquerBtn.addEventListener("click", (evt) =>{
                 evt.preventDefault();
-                const formData = new FormData();
+                popupValidation(() => {
+                    const formData = new FormData();
 
-                formData.append("appliquerCat", 1);
-                for(let cat of catList){
-                    if (cat.checked){
-                        formData.append("categories[]", cat.value);
+                    formData.append("appliquerCat", 1);
+                    for(let cat of catList){
+                        if (cat.checked){
+                            formData.append("categories[]", cat.value);
+                        }
                     }
-                }
-                
-                fetch(URL, {
-                    method: "POST",
-                    body: formData
-                }).then(() => {
-                    window.location.href = URL;
+                    
+                    fetch(URL, {
+                        method: "POST",
+                        body: formData
+                    }).then(() => {
+                        window.location.href = URL;
+                    });
                 });
+                
 
             });
             const Annuler = document.createElement("button");
             Annuler.type = "submit";
             Annuler.textContent = "Annuler";
             Annuler.name = "Annuler";
+            Annuler.addEventListener("click", (ev) =>{
+                ev.preventDefault();
+                window.location.reload();
+            });
 
             modifCat.replaceWith(AppliquerBtn);
             AppliquerBtn.after(Annuler);
@@ -93,22 +100,25 @@ document.addEventListener("DOMContentLoaded", () => {
             AppliquerBtnPublish.textContent = "Appliquer";
             AppliquerBtnPublish.addEventListener("click", (evt) =>{
                 evt.preventDefault();
-                const formData = new FormData();
+                popupValidation(() => {
+                    const formData = new FormData();
 
-                formData.append("appliquerDispo", 1);
-                formData.append("disponibilite",select.value);
-                for(let ami of amis){
-                    if (ami.children[0].checked){
-                        formData.append("amiDispo[]", ami.children[0].value);
+                    formData.append("appliquerDispo", 1);
+                    formData.append("disponibilite",select.value);
+                    for(let ami of amis){
+                        if (ami.children[0].checked){
+                            formData.append("amiDispo[]", ami.children[0].value);
+                        }
                     }
-                }
-                
-                fetch(URL, {
-                    method: "POST",
-                    body: formData
-                }).then(() => {
-                    window.location.href = URL;
+                    
+                    fetch(URL, {
+                        method: "POST",
+                        body: formData
+                    }).then(() => {
+                        window.location.href = URL;
+                    });
                 });
+                
 
             });
 
@@ -116,6 +126,10 @@ document.addEventListener("DOMContentLoaded", () => {
             Annuler.type = "submit";
             Annuler.textContent = "Annuler";
             Annuler.name = "Annuler";
+            Annuler.addEventListener("click", (ev) =>{
+                ev.preventDefault();
+                window.location.reload();
+            });
 
             modifPublish.replaceWith(AppliquerBtnPublish);
             AppliquerBtnPublish.after(Annuler);
@@ -256,33 +270,36 @@ document.addEventListener("DOMContentLoaded", () => {
             applyModif.textContent = "Appliquer";
             applyModif.addEventListener("click", (evt)=>{
                 evt.preventDefault();
-                if (questionCorrect(i)){
-                    const formData = new FormData();
+                popupValidation(() => {
+                    if (questionCorrect(i)){
+                        const formData = new FormData();
 
-                    formData.append("applyModif", i);
-                    formData.append("question"+i,textareaContent.value);
-                    for(let rep of document.querySelectorAll("[name='reponse"+i+"[]']")){
-                        formData.append("reponse"+i+"[]", rep.value);
-                    }
-                    for(let checkRep of document.querySelectorAll("[name='checkbox"+i+"[]']")){
-                        if (checkRep.checked){
-                            formData.append("checkbox"+i+"[]", 1);
+                        formData.append("applyModif", i);
+                        formData.append("question"+i,textareaContent.value);
+                        for(let rep of document.querySelectorAll("[name='reponse"+i+"[]']")){
+                            formData.append("reponse"+i+"[]", rep.value);
                         }
-                        else{
-                            formData.append("checkbox"+i+"[]", 0);
+                        for(let checkRep of document.querySelectorAll("[name='checkbox"+i+"[]']")){
+                            if (checkRep.checked){
+                                formData.append("checkbox"+i+"[]", 1);
+                            }
+                            else{
+                                formData.append("checkbox"+i+"[]", 0);
+                            }
                         }
+                        
+                        fetch(URL, {
+                            method: "POST",
+                            body: formData
+                        }).then(() => {
+                            window.location.href = URL;
+                        });
                     }
-                    
-                    fetch(URL, {
-                        method: "POST",
-                        body: formData
-                    }).then(() => {
-                        window.location.href = URL;
-                    });
-                }
-                else{
-                    popupAvertissement("Veuillez vérifier que la question possède des champs complets et qu'il y ait au moins ne réponse juste et fausse.");
-                }
+                    else{
+                        popupAvertissement("Veuillez vérifier que la question possède des champs complets et qu'il y ait au moins ne réponse juste et fausse.");
+                    }
+                })
+                
                 
             });
 
@@ -292,6 +309,10 @@ document.addEventListener("DOMContentLoaded", () => {
             Annuler.type = "submit";
             Annuler.textContent = "Annuler";
             Annuler.name = "Annuler";
+            Annuler.addEventListener("click", (ev) =>{
+                ev.preventDefault();
+                window.location.reload();
+            });
 
             DelBtn.replaceWith(applyModif);
             applyModif.after(Annuler);
@@ -400,31 +421,38 @@ document.addEventListener("DOMContentLoaded", () => {
             AppliquerBtn.textContent = "Appliquer";
             AppliquerBtn.addEventListener("click", (evt) =>{
                 evt.preventDefault();
-                const formData = new FormData();
+                popupValidation(() => {
+                    const formData = new FormData();
 
-                formData.append("appliquerParam", 1);
-                for(let param of divParams){
-                    if (param.querySelector("input").checked){
-                        formData.append("params[]", 1);
+                    formData.append("appliquerParam", 1);
+                    for(let param of divParams){
+                        if (param.querySelector("input").checked){
+                            formData.append("params[]", 1);
+                        }
+                        else{
+                            formData.append("params[]", 0);
+                        }
                     }
-                    else{
-                        formData.append("params[]", 0);
-                    }
-                }
-                formData.append("timerValue", timerV.value);
+                    formData.append("timerValue", timerV.value);
+                    
+                    fetch(URL, {
+                        method: "POST",
+                        body: formData
+                    }).then(() => {
+                        window.location.href = URL;
+                    });
+                })
                 
-                fetch(URL, {
-                    method: "POST",
-                    body: formData
-                }).then(() => {
-                    window.location.href = URL;
-                });
 
             });
             const Annuler = document.createElement("button");
             Annuler.type = "submit";
             Annuler.textContent = "Annuler";
             Annuler.name = "Annuler";
+            Annuler.addEventListener("click", (ev) =>{
+                ev.preventDefault();
+                window.location.reload();
+            });
 
             modifParams.replaceWith(AppliquerBtn);
             AppliquerBtn.after(Annuler);
@@ -494,24 +522,31 @@ document.addEventListener("DOMContentLoaded", () => {
             Appliquer.textContent = "Appliquer";
             Appliquer.addEventListener("click", (evt) =>{
                 evt.preventDefault();
-                const formData = new FormData();
+                popupValidation(() => {
+                    const formData = new FormData();
 
-                formData.append("appliquerResum", 1);
-                formData.append("QuizTitle", title.value);
-                formData.append("QuizDescription", description.value);
+                    formData.append("appliquerResum", 1);
+                    formData.append("QuizTitle", title.value);
+                    formData.append("QuizDescription", description.value);
+                    
+                    fetch(URL, {
+                        method: "POST",
+                        body: formData
+                    }).then(() => {
+                        window.location.href = URL;
+                    });
+                })
                 
-                fetch(URL, {
-                    method: "POST",
-                    body: formData
-                }).then(() => {
-                    window.location.href = URL;
-                });
 
             });
             const Annuler = document.createElement("button");
             Annuler.type = "submit";
             Annuler.textContent = "Annuler";
             Annuler.name = "Annuler";
+            Annuler.addEventListener("click", (ev) =>{
+                ev.preventDefault();
+                window.location.reload();
+            });
 
             modifResum.replaceWith(Appliquer);
             Appliquer.after(Annuler);
@@ -528,16 +563,18 @@ document.addEventListener("DOMContentLoaded", () => {
             modif = true;
             ev.preventDefault();
             const i = ev.currentTarget.value;
-
-            const formData = new FormData();
-            formData.append("DelQuestion", i);
+            popupValidation(() => {
+                const formData = new FormData();
+                formData.append("DelQuestion", i);
+                
+                fetch(URL, {
+                    method: "POST",
+                    body: formData
+                }).then(() => {
+                    window.location.href = URL;
+                });
+            })
             
-            fetch(URL, {
-                method: "POST",
-                body: formData
-            }).then(() => {
-                window.location.href = URL;
-            });
 
         }
         else{
