@@ -35,9 +35,13 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             const AppliquerBtn = document.createElement("button");
             AppliquerBtn.type = "submit";
+            AppliquerBtn.classList.add("button");
             AppliquerBtn.name = "appliquerCat";
             AppliquerBtn.id = "appliquerCat";
-            AppliquerBtn.textContent = "Appliquer";
+            AppliquerBtn.appendChild(document.createElement("span"));
+            const pAppliquerBtn = document.createElement("p");
+            pAppliquerBtn.textContent = "Appliquer";
+            AppliquerBtn.appendChild(pAppliquerBtn);
             AppliquerBtn.addEventListener("click", (evt) =>{
                 evt.preventDefault();
                 popupValidation(() => {
@@ -56,14 +60,18 @@ document.addEventListener("DOMContentLoaded", () => {
                     }).then(() => {
                         window.location.href = URL;
                     });
-                });
+                },"L'élément sera modifé de façon permanente.\n Etes-vous sûr d'accepter les modification ?");
                 
 
             });
             const Annuler = document.createElement("button");
             Annuler.type = "submit";
-            Annuler.textContent = "Annuler";
+            Annuler.classList.add("button");
             Annuler.name = "Annuler";
+            Annuler.appendChild(document.createElement("span"));
+            const pAnnulerCat = document.createElement("p");
+            pAnnulerCat.textContent = "Annuler";
+            Annuler.appendChild(pAnnulerCat);
             Annuler.addEventListener("click", (ev) =>{
                 ev.preventDefault();
                 window.location.reload();
@@ -95,9 +103,13 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             const AppliquerBtnPublish = document.createElement("button");
             AppliquerBtnPublish.type = "submit";
+            AppliquerBtnPublish.classList.add("button");
             AppliquerBtnPublish.name = "appliquerDispo";
             AppliquerBtnPublish.id = "appliquerDispo";
-            AppliquerBtnPublish.textContent = "Appliquer";
+            AppliquerBtnPublish.appendChild(document.createElement("span"));
+            const pAppliquerBtnPublish = document.createElement("p");
+            pAppliquerBtnPublish.textContent = "Appliquer";
+            AppliquerBtnPublish.appendChild(pAppliquerBtnPublish);
             AppliquerBtnPublish.addEventListener("click", (evt) =>{
                 evt.preventDefault();
                 popupValidation(() => {
@@ -117,15 +129,19 @@ document.addEventListener("DOMContentLoaded", () => {
                     }).then(() => {
                         window.location.href = URL;
                     });
-                });
+                },"L'élément sera modifé de façon permanente.\n Etes-vous sûr d'accepter les modification ?");
                 
 
             });
 
             const Annuler = document.createElement("button");
             Annuler.type = "submit";
-            Annuler.textContent = "Annuler";
+            Annuler.classList.add("button");
             Annuler.name = "Annuler";
+            Annuler.appendChild(document.createElement("span"));
+            const pAnnulerPublish = document.createElement("p");
+            pAnnulerPublish.textContent = "Annuler";
+            Annuler.appendChild(pAnnulerPublish);
             Annuler.addEventListener("click", (ev) =>{
                 ev.preventDefault();
                 window.location.reload();
@@ -264,10 +280,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const applyModif = document.createElement("button");
             applyModif.type = "submit";
+            applyModif.classList.add("button");
             applyModif.name = "applyModif";
             applyModif.id = "applyModif"+i;
             applyModif.value = i;
-            applyModif.textContent = "Appliquer";
+            applyModif.appendChild(document.createElement("span"));
+            const pApplyModif = document.createElement("p");
+            pApplyModif.textContent = "Appliquer";
+            applyModif.appendChild(pApplyModif);
             applyModif.addEventListener("click", (evt)=>{
                 evt.preventDefault();
                 popupValidation(() => {
@@ -298,7 +318,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     else{
                         popupAvertissement("Veuillez vérifier que la question possède des champs complets et qu'il y ait au moins ne réponse juste et fausse.");
                     }
-                })
+                },"L'élément sera modifé de façon permanente.\n Etes-vous sûr d'accepter les modification ?")
                 
                 
             });
@@ -307,8 +327,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const Annuler = document.createElement("button");
             Annuler.type = "submit";
-            Annuler.textContent = "Annuler";
+            Annuler.classList.add("button");
             Annuler.name = "Annuler";
+            Annuler.appendChild(document.createElement("span"));
+            const pAnnuler = document.createElement("p");
+            pAnnuler.textContent = "Annuler";
+            Annuler.appendChild(pAnnuler);
             Annuler.addEventListener("click", (ev) =>{
                 ev.preventDefault();
                 window.location.reload();
@@ -416,9 +440,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const AppliquerBtn = document.createElement("button");
             AppliquerBtn.type = "submit";
+            AppliquerBtn.classList.add("button");
             AppliquerBtn.name = "appliquerParam";
             AppliquerBtn.id = "appliquerParam";
-            AppliquerBtn.textContent = "Appliquer";
+            AppliquerBtn.appendChild(document.createElement("span"));
+            const pAppliquerBtnParam = document.createElement("p");
+            pAppliquerBtnParam.textContent = "Appliquer";
+            AppliquerBtn.appendChild(pAppliquerBtnParam);
             AppliquerBtn.addEventListener("click", (evt) =>{
                 evt.preventDefault();
                 popupValidation(() => {
@@ -441,14 +469,18 @@ document.addEventListener("DOMContentLoaded", () => {
                     }).then(() => {
                         window.location.href = URL;
                     });
-                })
+                },"L'élément sera modifé de façon permanente.\n Etes-vous sûr d'accepter les modification ?")
                 
 
             });
             const Annuler = document.createElement("button");
             Annuler.type = "submit";
-            Annuler.textContent = "Annuler";
+            Annuler.classList.add("button");
             Annuler.name = "Annuler";
+            Annuler.appendChild(document.createElement("span"));
+            const pAnnulerParam = document.createElement("p");
+            pAnnulerParam.textContent = "Annuler";
+            Annuler.appendChild(pAnnulerParam);
             Annuler.addEventListener("click", (ev) =>{
                 ev.preventDefault();
                 window.location.reload();
@@ -517,9 +549,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const Appliquer = document.createElement("button");
             Appliquer.type = "submit";
+            Appliquer.classList.add("button");
             Appliquer.name = "appliquerResum";
             Appliquer.id = "appliquerResum";
-            Appliquer.textContent = "Appliquer";
+            Appliquer.appendChild(document.createElement("span"));
+            const pAppliquer = document.createElement("p");
+            pAppliquer.textContent = "Appliquer";
+            Appliquer.appendChild(pAppliquer);
             Appliquer.addEventListener("click", (evt) =>{
                 evt.preventDefault();
                 popupValidation(() => {
@@ -535,14 +571,18 @@ document.addEventListener("DOMContentLoaded", () => {
                     }).then(() => {
                         window.location.href = URL;
                     });
-                })
+                },"L'élément sera modifé de façon permanente.\n Etes-vous sûr d'accepter les modification ?");
                 
 
             });
             const Annuler = document.createElement("button");
             Annuler.type = "submit";
-            Annuler.textContent = "Annuler";
+            Annuler.classList.add("button");
             Annuler.name = "Annuler";
+            Annuler.appendChild(document.createElement("span"));
+            const pAnnulerResum = document.createElement("p");
+            pAnnulerResum.textContent = "Annuler";
+            Annuler.appendChild(pAnnulerResum);
             Annuler.addEventListener("click", (ev) =>{
                 ev.preventDefault();
                 window.location.reload();
@@ -573,7 +613,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }).then(() => {
                     window.location.href = URL;
                 });
-            })
+            },"L'élément sera supprimer définitivement. Etes-vous sûr de vouloir continuer ?");
             
 
         }

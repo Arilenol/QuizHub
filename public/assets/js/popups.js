@@ -26,7 +26,7 @@ function popupAvertissement(texte){
     btn.addEventListener("click", () => supprAllChilds(popupOverlay));
 }
 
-function popupValidation(fonction){
+function popupValidation(fonction, texte){
     const popupOverlay = document.createElement("div");
     popupOverlay.classList.add("popup_overlay");
 
@@ -34,7 +34,7 @@ function popupValidation(fonction){
     popup.classList.add("popup");
 
     const message = document.createElement("p");
-    message.textContent = "L'élément sera modifé de façon permanente.\n Etes-vous sûr d'accepter les modification ?";
+    message.textContent = texte;
     message.classList.add("popup_msg");
 
     const btnAnnuler = document.createElement("button");
