@@ -445,6 +445,26 @@ function constructionBD(PDO $conn)
 
         $conn->exec($sql);
 
+        $sql="CREATE TRIGGER trg_after_delete_part
+            AFTER DELETE ON Partie
+            BEGIN
+                UPDATE Partie 
+                SET numeroPartie = numeroPartie - 1 
+                WHERE lecon_id = OLD.lecon_id AND numeroPartie > OLD.numeroPartie;
+            END;";
+
+        $conn->exec($sql);
+
+        $sql="CREATE TRIGGER trg_after_delete_example
+            AFTER DELETE ON Exemple
+            BEGIN
+                UPDATE Partie 
+                SET numeroExemple = numeroExemple - 1 
+                WHERE partie_id = OLD.partie_id AND numeroExemple > OLD.numeroExemple;
+            END;";
+
+        $conn->exec($sql);
+
         // Insertions de données fictives
 
 
