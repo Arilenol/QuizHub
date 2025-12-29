@@ -7,11 +7,33 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 30px;
-  align-items: flex-start;
+  align-items: stretch;
+}
+
+/* Place the "Ajouter un Exemple" button under the left column */
+.newPart > button[name="addEx"] {
+  grid-column: 1;
+  justify-self: center;
+  margin-top: 10px;
 }
 
 .partContent {
   grid-column: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.partContent .textarea {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.partContent .textarea textarea {
+  flex: 1;
+  resize: vertical;
+  overflow: hidden;
+  overflow-y: auto;
 }
 
 .example {
@@ -29,10 +51,11 @@
 }
 
 .example .textarea textarea {
-  resize: none;
+  resize: vertical;
   overflow: hidden;
-  min-height: 60px;
-  max-height: 400px;
+  overflow-y: auto;
+  min-height: 120px;
+  max-height: 600px;
 }
 
 .example button {

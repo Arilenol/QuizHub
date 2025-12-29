@@ -299,7 +299,6 @@ class LessonController {
     }
 
     public function modifyLesson($id){
-        
         session_start();
         $idLesson = (int)$id;
         //die("erreur :".$idQuiz);
@@ -334,27 +333,68 @@ class LessonController {
             header('Location: ' . $_SERVER['REQUEST_URI']);
             exit;
         }
-        if(isset($_POST['applyModif'])){
-            $iPart = (int)$_POST['applyModif'];
-            $TAB_EXEMPLES = [];
-            if (isset($_POST['consigne'.$iPart]) && isset($_POST['reponse'.$iPart])){
-                for ($i = 0; $i < count($_POST['consigne'.$iPart]); $i++){
-                    $TAB_EXEMPLES[] = array('consigne' => $_POST['consigne'.$iPart][$i], 'reponse' => $_POST['reponse'.$iPart][$i],'numero' => $i);
-                }
-            }
-            $partTitle = ( isset($_POST['title'.$iPart]) && !empty($_POST['title'.$iPart]) ) ? $_POST['title'.$iPart] : '';
-            $partContent = ( isset($_POST['partContent'.$iPart]) && !empty($_POST['partContent'.$iPart]) ) ? $_POST['partContent'.$iPart] : '';
-            if ($this->modifPartValidite($partContent,$TAB_EXEMPLES)){
+        if(isset($_POST['appliquerAssoc'])){
+            $quizAssoc = $_POST['appliquerAssoc'];
+            $this->model->updateQuizAssociated($idLesson, $quizAssoc);
+            unset($_POST['appliquerAssoc']);
+            header('Location: ' . $_SERVER['REQUEST_URI']);
+            exit;
+        }
+        if(isset($_POST['appliquerPart'])){
+            $iPart = (int)$_POST['appliquerPart'];
+            $partTitle = ( isset($_POST['title']) && !empty($_POST['title']) ) ? $_POST['title'] : '';
+            $partContent = ( isset($_POST['content']) && !empty($_POST['content']) ) ? $_POST['content'] : '';
+            
+            if ($this->modifPartValidite($partTitle, $partContent)){
                 if ($taille < $iPart + 1){
-                    $this->model->addPartToLesson($idLesson, $iPart+1, $partTitle, $partContent, $TAB_EXEMPLES);
+                    $this->model->addPartToLesson($idLesson, $iPart+1, $partTitle, $partContent);
                 }
-                $this->model->updatePartLesson($idLesson, $iPart+1, $partTitle, $partContent, $TAB_EXEMPLES);
+                $this->model->updatePartLesson($idLesson, $iPart+1, $partTitle, $partContent);
             }
             else{
-                die("Erreur de validation des données de la question ".$iPart);
+                die('erreur de validation du contenu d\'une partie');
             }
-            unset($_POST['applyModif']);
-            unset($_POST['part'.$iPart]);
+            unset($_POST['appliquerPart']);
+            unset($_POST['title']);
+            unset($_POST['content']);
+            header('Location: ' . $_SERVER['REQUEST_URI']);
+            exit;
+        }
+        if (isset($_POST['appliquerEx'])){
+            if(isset($_POST['appliquerEx']) && isset($_POST['numExemple'])){
+                $iPart = (int)$_POST['appliquerEx'];
+                $kEx = (int)$_POST['numExemple'];
+                $consigne = isset($_POST['textConsigne']) && !empty($_POST['textConsigne']) ? $_POST['textConsigne'] : '';
+                $reponse = isset($_POST['textReponse']) && !empty($_POST['textReponse']) ? $_POST['textReponse'] : '';
+                
+                if ($this->modifierExValidite($consigne, $reponse)){
+                    $taillek = $this->model->getNumberExFromPart($idLesson, $iPart+1);
+                    if ($taillek < $kEx+1){
+                        $this->model->addExToPart($idLesson, $iPart+1, $kEx+1, $consigne, $reponse);
+                    }
+                    else{
+                        $this->model->updateExFromPart($idLesson, $iPart+1, $kEx+1, $consigne, $reponse);
+                    }
+                }
+                else{
+                    die('erreur de validation du contenu d\'un exemple');
+                }
+                unset($_POST['appliquerEx']);
+                unset($_POST['numExemple']);
+                unset($_POST['textConsigne']);
+                unset($_POST['textReponse']);
+                header('Location: ' . $_SERVER['REQUEST_URI']);
+                exit;
+            }
+        }
+        if(isset($_POST['delEx'])){
+            if(isset($_POST['delNumEx'])){
+                $iPart = (int)$_POST['delEx'];
+                $kEx = (int)$_POST['delNumEx'];
+               $this->model->deleteExFromPart($idLesson, $iPart+1, $kEx+1);
+            }
+            unset($_POST['delEx']);
+            unset($_POST['delNumEx']);
             header('Location: ' . $_SERVER['REQUEST_URI']);
             exit;
         }
@@ -390,6 +430,7 @@ class LessonController {
 
         
         $lessonInfos = $this->model->getLessonInfos($idLesson);
+        $quizzes = $this->model->getQuizByAuthor($user_id);
         $TAB_PART = $this->model->getPartsExFromLesson($idLesson);
         $TAB_CATEGORIES = $this->model->getCategoriesFromLesson($idLesson);
         $ALL_CATEGORIES = $this->model->getAllCategories();
@@ -413,23 +454,21 @@ class LessonController {
         return true;
     }
 
-    public function modifPartValidite(string $questionContent, array $TAB_EXEMPLES): bool{
-        if( empty($questionContent)){
+    public function modifPartValidite(string $title, string $content): bool{
+        if( empty($content)){
             return false;
         }
-        if (isset($TAB_EXEMPLES)){
-            if (empty($TAB_EXEMPLES)){
-                return false;
-            }
-            else{
-                foreach ($TAB_EXEMPLES as $exemple){
-                    if (!isset($exemple['consigne']) || empty($exemple['consigne']) || !isset($exemple['reponse']) || empty($exemple['reponse'])){
-                        return false;
-                    }
-                }
-            }
+        if (empty($title)){
+            return false;
         }
-        else{
+        return true;
+    }
+
+    public function modifierExValidite(string $consigne, string $content){
+        if( empty($content)){
+            return false;
+        }
+        if (empty($consigne)){
             return false;
         }
         return true;

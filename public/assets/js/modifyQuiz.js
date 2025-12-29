@@ -35,13 +35,9 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             const AppliquerBtn = document.createElement("button");
             AppliquerBtn.type = "submit";
-            AppliquerBtn.classList.add("button");
             AppliquerBtn.name = "appliquerCat";
             AppliquerBtn.id = "appliquerCat";
-            AppliquerBtn.appendChild(document.createElement("span"));
-            const pAppliquerBtn = document.createElement("p");
-            pAppliquerBtn.textContent = "Appliquer";
-            AppliquerBtn.appendChild(pAppliquerBtn);
+            AppliquerBtn.textContent = "Appliquer";
             AppliquerBtn.addEventListener("click", (evt) =>{
                 evt.preventDefault();
                 popupValidation(() => {
@@ -66,12 +62,8 @@ document.addEventListener("DOMContentLoaded", () => {
             });
             const Annuler = document.createElement("button");
             Annuler.type = "submit";
-            Annuler.classList.add("button");
             Annuler.name = "Annuler";
-            Annuler.appendChild(document.createElement("span"));
-            const pAnnulerCat = document.createElement("p");
-            pAnnulerCat.textContent = "Annuler";
-            Annuler.appendChild(pAnnulerCat);
+            Annuler.textContent = "Annuler";
             Annuler.addEventListener("click", (ev) =>{
                 ev.preventDefault();
                 window.location.reload();
@@ -103,13 +95,9 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             const AppliquerBtnPublish = document.createElement("button");
             AppliquerBtnPublish.type = "submit";
-            AppliquerBtnPublish.classList.add("button");
             AppliquerBtnPublish.name = "appliquerDispo";
             AppliquerBtnPublish.id = "appliquerDispo";
-            AppliquerBtnPublish.appendChild(document.createElement("span"));
-            const pAppliquerBtnPublish = document.createElement("p");
-            pAppliquerBtnPublish.textContent = "Appliquer";
-            AppliquerBtnPublish.appendChild(pAppliquerBtnPublish);
+            AppliquerBtnPublish.textContent = "Appliquer";
             AppliquerBtnPublish.addEventListener("click", (evt) =>{
                 evt.preventDefault();
                 popupValidation(() => {
@@ -136,12 +124,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const Annuler = document.createElement("button");
             Annuler.type = "submit";
-            Annuler.classList.add("button");
             Annuler.name = "Annuler";
-            Annuler.appendChild(document.createElement("span"));
-            const pAnnulerPublish = document.createElement("p");
-            pAnnulerPublish.textContent = "Annuler";
-            Annuler.appendChild(pAnnulerPublish);
+            Annuler.textContent = "Annuler";
             Annuler.addEventListener("click", (ev) =>{
                 ev.preventDefault();
                 window.location.reload();
@@ -440,13 +424,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const AppliquerBtn = document.createElement("button");
             AppliquerBtn.type = "submit";
-            AppliquerBtn.classList.add("button");
             AppliquerBtn.name = "appliquerParam";
             AppliquerBtn.id = "appliquerParam";
-            AppliquerBtn.appendChild(document.createElement("span"));
-            const pAppliquerBtnParam = document.createElement("p");
-            pAppliquerBtnParam.textContent = "Appliquer";
-            AppliquerBtn.appendChild(pAppliquerBtnParam);
+            AppliquerBtn.textContent = "Appliquer";
             AppliquerBtn.addEventListener("click", (evt) =>{
                 evt.preventDefault();
                 popupValidation(() => {
@@ -475,12 +455,8 @@ document.addEventListener("DOMContentLoaded", () => {
             });
             const Annuler = document.createElement("button");
             Annuler.type = "submit";
-            Annuler.classList.add("button");
             Annuler.name = "Annuler";
-            Annuler.appendChild(document.createElement("span"));
-            const pAnnulerParam = document.createElement("p");
-            pAnnulerParam.textContent = "Annuler";
-            Annuler.appendChild(pAnnulerParam);
+            Annuler.textContent = "Annuler";
             Annuler.addEventListener("click", (ev) =>{
                 ev.preventDefault();
                 window.location.reload();
@@ -549,13 +525,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const Appliquer = document.createElement("button");
             Appliquer.type = "submit";
-            Appliquer.classList.add("button");
             Appliquer.name = "appliquerResum";
             Appliquer.id = "appliquerResum";
-            Appliquer.appendChild(document.createElement("span"));
-            const pAppliquer = document.createElement("p");
-            pAppliquer.textContent = "Appliquer";
-            Appliquer.appendChild(pAppliquer);
+            Appliquer.textContent = "Appliquer";
             Appliquer.addEventListener("click", (evt) =>{
                 evt.preventDefault();
                 popupValidation(() => {
@@ -577,12 +549,8 @@ document.addEventListener("DOMContentLoaded", () => {
             });
             const Annuler = document.createElement("button");
             Annuler.type = "submit";
-            Annuler.classList.add("button");
             Annuler.name = "Annuler";
-            Annuler.appendChild(document.createElement("span"));
-            const pAnnulerResum = document.createElement("p");
-            pAnnulerResum.textContent = "Annuler";
-            Annuler.appendChild(pAnnulerResum);
+            Annuler.textContent = "Annuler";
             Annuler.addEventListener("click", (ev) =>{
                 ev.preventDefault();
                 window.location.reload();
@@ -600,7 +568,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function delQuestionFunction(ev){
         if (!modif){
-            modif = true;
             ev.preventDefault();
             const i = ev.currentTarget.value;
             popupValidation(() => {

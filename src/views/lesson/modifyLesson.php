@@ -12,21 +12,21 @@
     <input type="hidden" name="idLesson" id="idLesson" value="<?php echo htmlspecialchars($idLesson) ?>">
     <button class="button" type = "submit" name = "Retour" value = "yes"><span></span><p> < Retour</p></button>
     <h2>Résumé de la leçon
-        <button class="modifResum" id ="modifResum" >Modifier</button>
+        <button class="modifResum" id ="modifResum">Modifier</button>
     </h2>
     <p class="name">Nom de la leçon</p>
     <div class="input">
         <span></span>
-        <input type="text" name ="QuizTitle" id="QuizTitle" value = "<?php echo htmlspecialchars($lessonInfos['title']) ?>" disabled>
+        <input type="text" name ="LessonTitle" id="LessonTitle" form="no" value = "<?php echo htmlspecialchars($lessonInfos['title']) ?>" disabled>
     </div>
     <p class="description">Description</p>
     <div class="input">
         <span></span>
-        <input type="text" name ="QuizDescription" id="QuizDescription" value = "<?php echo htmlspecialchars($lessonInfos['description']) ?>" disabled>
+        <input type="text" name ="LessonDescription" id="LessonDescription" form="no" value = "<?php echo htmlspecialchars($lessonInfos['description']) ?>" disabled>
     </div>
 
-    <h2 style="display : inline;">Catégories
-        <button id="modifCategories" type = "button ">Modifier</button>
+    <h2>Catégories
+        <button id="modifCategories" type = "button">Modifier</button>
     </h2>
     <div class="categoriesList">
         <?php
@@ -42,61 +42,89 @@
 
     </div>
 
-    <div style="display: flex; flex-direction: column; gap: 20px">
+    <div id = "parts" style="display: flex; flex-direction: column; gap: 20px">
         <?php
         for($i = 0; $i < $taille ; $i = $i +1){
-            echo '<div class="newPart" id = "LessonPart'.$i.'">';
-            echo '<div class="question" style="grid-row-start: 1; grid-row-end: '. $TAB_PART[$i]['nbExemple'] + 1 .';">
-                <p>Partie '. $i+1 .'</p>
-                <p>Titre</p>
-                <div class="textarea" id = "question'.($i+1).'" style="width: calc(100% - 40px); height: calc(100% - 90px)">
+            echo '<div class="newPart" id = "LessonPart'.$i.'" value="'.$i.'">';
+            echo '<div class="partContent question" style="grid-row-start: 1; grid-row-end: '. $TAB_PART[$i]['nbExemple'] + 1 .';">
+                <p class="section-title">Partie '. $i+1 .'
+                <button class="button modifPart" name = "modifPart" id="modifPart'.$i.'" type="submit" value='.$i.'>Modifier</button>';
+                if ($i != 0 || $taille > 1){
+                    echo '<button class="button delPartButton" name = "DelPart" id="DelPart'.$i.'" type="submit" value='.$i.'>Supprimer</button>';
+                }
+                echo '</p>';
+                echo '<p>Titre</p>
+                <div class="textarea" id = "partTitle'.($i+1).'" style="width: calc(100% - 40px); height: calc(100% - 90px)">
                     <span></span>
-                    <textarea type = "text" name ="title'.$i.'" id="textarea'.$i.'" placeholder="titre de la partie" disabled>'.htmlspecialchars($TAB_PART[$i]['title']).'</textarea>
+                    <textarea type = "text" name ="title'.$i.'" id="title'.$i.'" placeholder="titre de la partie" disabled>'.htmlspecialchars($TAB_PART[$i]['title']).'</textarea>
                 </div>
                 <p>Contenu</p>
-                <div class="textarea" id = "question'.($i+1).'" style="width: calc(100% - 40px); height: calc(100% - 90px)">
+                <div class="textarea" id = "partContent'.($i+1).'" style="width: calc(100% - 40px); height: calc(100% - 90px)">
                     <span></span>
-                    <textarea type = "text" name ="partContent'.$i.'" id="textarea'.$i.'" placeholder="contenu de la partie" disabled>'.htmlspecialchars($TAB_PART[$i]['partContent']).'</textarea>
+                    <textarea type = "text" name ="partContent'.$i.'" id="content'.$i.'" placeholder="contenu de la partie" disabled>'.htmlspecialchars($TAB_PART[$i]['partContent']).'</textarea>
                 </div>
                 </div>';
             
             
             for ($k = 0; $k < $TAB_PART[$i]['nbExemple'];$k = $k +1){
-                echo '<div class="reponse" style="grid-row-start: '. 1 + $k .'; grid-row-end: '. 2 + $k .'; grid-column-start: 2; grid-column-end: 3;">
-                <p>Exemples '.($k+1).' :</p>
-                <div class="input" style="width: calc(100% - 40px);">
+                echo '<div class="reponse example" style="grid-row-start: '. 1 + $k .'; grid-row-end: '. 2 + $k .'; grid-column-start: 2; grid-column-end: 3;">
+                <p class="section-title">Exemple '.($k+1).' :</p>
+                <div class="textarea" style="width: calc(100% - 40px);">
                     <span></span>
-                    <input name ="consigne'.$i.'[]" value = "'.htmlspecialchars($TAB_PART[$i]['exemples'][$k]['consigne']).'" disabled></input>
+                    <textarea name="consigne'.$i.'-ex'.$k.'" id= "consigne'.$i.'-ex'.$k.'" disabled>'.htmlspecialchars($TAB_PART[$i]['exemples'][$k]['consigne']).'</textarea>
                 </div>
-                <div class="input" style="width: calc(100% - 40px);">
+                <div class="textarea" style="width: calc(100% - 40px);">
                     <span></span>
-                    <input name ="reponse'.$i.'[]" value = "'.htmlspecialchars($TAB_PART[$i]['exemples'][$k]['reponse']).'" disabled></input>
+                    <textarea name ="reponse'.$i.'-ex'.$k.'" id ="reponse'.$i.'-ex'.$k.'"disabled>'.htmlspecialchars($TAB_PART[$i]['exemples'][$k]['reponse']).'</textarea>
+                </div>
+                <div class="exampleBtns">
+                <button class="button modifierEx" type = "submit" id ="modifier'.$i.'-ex'.$k.'" name="modifierEx" value='.$k.'>
+                    <span></span>
+                    <p>Modifier</p>
+                </button>
+                <button class="button supprimerEx" type = "submit" id ="supprimer'.$i.'-ex'.$k.'" name="supprimerEx" value='.$k.'>
+                    <span></span>
+                    <p>Supprimer l\'exemple</p>
+                </button>
                 </div>
                 </div>
                 ';
             }
-            echo '<div id="partFooter'.$i.'" class="partFooter" style="display: flex; flex-direction: row;gap:10px; grid-column-start: 2; grid-column-end: 3;">
-                        <button class="button modifierPart" type = "submit" id ="modifier'.$i.'" name="modifierPart" value='.$i.'>
-                            <span></span>
-                            <p>Modifier</p>
-                        </button>
-                </div>';
-            if ($i != 0 || $taille > 1){
-                echo '<button class="button delQuestionButton" name = "DelQuestion" id="DelQuestion'.$i.'" type="submit" value='.$i.'><span></span><p>Supprimer cette question</p></button>';
-            }
+            echo '<button class="button addEx" type = "submit" name = "addEx" id="addEx'.$i.'" value ="'.$i.'" >
+                    <span></span>
+                    <p>Ajouter un Exemple</p>
+                </button>';
             echo '</div>';
         }
         ?>
         </div>
-        <button class="button" type = "submit" name = "addQuestion" id="addQuestion" value = "yes">
+        <button class="button" type = "submit" name = "addPart" id="addPart" value = "yes">
             <span></span>
-            <p>Ajouter une question</p>
+            <p>Ajouter une partie</p>
         </button>
     </div>
-
-    <?php //-----------------------------------------------------ici---------------------------------------------------------?>
+    <div class="associationQuiz" >
+        <p class="section-title">Quiz associé <button id ="modifQuizAssoc">Modifier</button></p>
+        <select name="quizUser" id="quizUser" disabled>
+            <?php
+                $sel = '';
+                if (empty($lessonInfos['quiz_id'])){
+                    $sel = 'selected';
+                }
+                echo '<option value="Aucun" '.$sel.'>Aucun</option>';
+                $sel = '';
+                foreach($quizzes as $quiz){
+                    if ($lessonInfos['quiz_id'] === $quiz['id']){
+                        $sel = 'selected';
+                    }
+                    echo '<option value="'.htmlspecialchars($quiz['id']).'" '.$sel.'>'.htmlspecialchars($quiz['title']).'</option>';
+                    $sel = '';
+                }
+            ?>
+        </select>
+    </div>
     <div class = "disponibilite">
-        <p>Mode de publication <button id="modifDispo" >Modifier</button></p>
+        <p class="section-title">Mode de publication <button id="modifDispo">Modifier</button></p>
         <select name="disponibilite" id="disponibilite" disabled>
             <?php $dispo = '';
             $dispo = $lessonInfos['disponibilite'] == 'public' ? 'selected' : '';
@@ -108,7 +136,6 @@
             <option value="private" <?= $dispo ?> >seulement vous</option>
         </select>
         <?php
-        //-----------------------------------------------------ici---------------------------------------------------------
         if ($lessonInfos['disponibilite'] == "ami"){
             $hidden2 = '';
         } 
@@ -133,7 +160,6 @@
         ?>
     </div>
     <?php
-    //-----------------------------------------------------ici---------------------------------------------------------
         if ($erreur){
             echo '<p class="erreur">Chaque champ doit être rempli<br>Au moins une catégorie doit être sélectionnée</p>';
         } 

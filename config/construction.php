@@ -458,7 +458,7 @@ function constructionBD(PDO $conn)
         $sql="CREATE TRIGGER trg_after_delete_example
             AFTER DELETE ON Exemple
             BEGIN
-                UPDATE Partie 
+                UPDATE Exemple 
                 SET numeroExemple = numeroExemple - 1 
                 WHERE partie_id = OLD.partie_id AND numeroExemple > OLD.numeroExemple;
             END;";
