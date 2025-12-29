@@ -1,6 +1,6 @@
 <?php
     $title = 'création de quiz';
-    $style = './assets/style/createQuiz.css';
+    $style = './assets/style/modifyQuiz.css';
     error_reporting(E_ALL);
     ini_set('display_errors', 1);
     require __DIR__ . '/../partials/header.php';
@@ -12,21 +12,21 @@
     <input type="hidden" name="idQuiz" id="idQuiz" value="<?php echo htmlspecialchars($idQuiz) ?>">
     <button class="button" type = "submit" name = "Retour" value = "yes"><span></span><p> < Retour</p></button>
     <h2>Résumé du quiz
-        <button class="modifResum" id ="modifResum" >Modifier</button>
+        <button class="modifResum" id ="modifResum">Modifier</button>
     </h2>
     <p class="name">Nom du quiz</p>
     <div class="input">
         <span></span>
-        <input type="text" name ="QuizTitle" id="QuizTitle" value = "<?php echo htmlspecialchars($quizInfos['title']) ?>" disabled>
+        <input form="no" type="text" name ="QuizTitle" id="QuizTitle" value = "<?php echo htmlspecialchars($quizInfos['title']) ?>" disabled>
     </div>
     <p class="description">Description</p>
     <div class="input">
         <span></span>
-        <input type="text" name ="QuizDescription" id="QuizDescription" value = "<?php echo htmlspecialchars($quizInfos['description']) ?>" disabled>
+        <input form="no" type="text" name ="QuizDescription" id="QuizDescription" value = "<?php echo htmlspecialchars($quizInfos['description']) ?>" disabled>
     </div>
 
-    <h2 style="display : inline;">Catégories
-        <button id="modifCategories" type = "button ">Modifier</button>
+    <h2>Catégories
+        <button id="modifCategories" type = "button">Modifier</button>
     </h2>
     <div class="categoriesList">
         <?php
@@ -48,7 +48,7 @@
             echo '<div class="newQuiz" id = "quizQuestion'.$i.'">';
             echo '<p class="validite">réponse valide ?</p>';
             echo '<div class="question" style="grid-row-start: 1; grid-row-end: '. $TAB_QUESTIONS[$i]['nbReponse'] + 1 .';">
-                <p>Question '. $i+1 .'</p>
+                <p class="section-title">Question '. $i+1 .'</p>
                 <div class="textarea" id = "question'.($i+1).'" style="width: calc(100% - 40px); height: calc(100% - 90px)">
                     <span></span>
                     <textarea type = "text" name ="question'.$i.'" id="textarea'.$i.'" placeholder="nom de la question" disabled>'.htmlspecialchars($TAB_QUESTIONS[$i]['question']).'</textarea>
@@ -61,7 +61,7 @@
                 <p>Réponse '.($k+1).' :</p>
                 <div class="input" style="width: calc(100% - 40px);">
                     <span></span>
-                    <input name ="reponse'.$i.'[]" value = "'.htmlspecialchars($TAB_QUESTIONS[$i]['reponses'][$k]['reponse']).'" disabled></input>
+                    <input form="no" name ="reponse'.$i.'[]" value = "'.htmlspecialchars($TAB_QUESTIONS[$i]['reponses'][$k]['reponse']).'" disabled></input>
                 </div>
                 </div>
                 <div class="checkbox" style="grid-row-start: '. 1 + $k .'; grid-row-end: '. 2 + $k .'; grid-column-start: 3; grid-column-end: 4;align-self: end;">
@@ -125,7 +125,7 @@
                             $hidden = 'hidden';
                         }
                         echo '<p class = "timerP" id="timerP" '. $hidden .'>Temps en minutes entre 0 et 120<br>(0 ne sera pas compté) :</p>';
-                        echo '<input type="number" name="timerValue" id="timerV" value="'.htmlspecialchars($TAB_PARAMS[$indice]).'" min="0" max="120" '. $hidden . ' disabled/>';
+                        echo '<input type="number" form="no" name="timerValue" id="timerV" value="'.htmlspecialchars($TAB_PARAMS[$indice]).'" min="0" max="120" '. $hidden . ' disabled/>';
                     }
                 echo '</div>';
             }
@@ -134,7 +134,7 @@
     </div>
     <?php //-----------------------------------------------------ici---------------------------------------------------------?>
     <div class = "disponibilite">
-        <p>Mode de publication <button id="modifDispo" >Modifier</button></p>
+        <p class="section-title">Mode de publication <button id="modifDispo">Modifier</button></p>
         <select name="disponibilite" id="disponibilite" disabled>
             <?php $dispo = '';
             $dispo = $quizInfos['disponibilite'] == 'public' ? 'selected' : '';
@@ -177,6 +177,7 @@
         } 
     ?>
 </form>
+<script src = "./assets/js/popups.js"></script>
 <script src = "./assets/js/modifyQuiz.js"></script>
 <script src = "./assets/js/sauvegardeScroll.js"></script>
 <script src = "./assets/js/selectDispo.js"></script>

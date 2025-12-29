@@ -1,0 +1,136 @@
+.popup {
+  background: #FFC067;
+  padding: 30px;
+  border: 2px solid #E38D15BF;
+  border-radius: 20px;
+  box-shadow: 0px 8px 2px #00000040;
+  min-width: 250px;
+  max-width: 90vw;
+  width: clamp(300px, 50vw, 600px);
+  font-family: "Inter", sans-serif;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.popup_overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.popup_msg {
+  flex-basis: 100%;
+  margin-bottom: 10px;
+  font-size: 1rem;
+  color: #222;
+  line-height: 1.5;
+}
+
+.popup_btn {
+  all: unset;
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 30px;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.popup_btn > span {
+  position: absolute;
+  inset: 0;
+  padding-left: 5%;
+  padding-right: 5%;
+  background: #0AB1BD;
+  border-radius: calc(infinity * 1px);
+  cursor: pointer;
+  z-index: 0;
+  /*box-shadow: 0px 8px 2px #007881BF;*/
+  transition: background ease-out 0.5s;
+}
+
+.popup_btn > span:hover {
+  background-color: #fff;
+  /*box-shadow: 0px 8px 2px #CACACABF;*/
+}
+
+.popup_btn:has(span:active) {
+  transition: none;
+  filter: none;
+  transform: translate(0px, 8px);
+}
+
+.popup_btn > span:active {
+  box-shadow: none;
+}
+
+.popup_btn > p {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #fff;
+  margin: 0;
+  z-index: 1;
+  user-select: none;
+  pointer-events: none;
+  transition: color ease-out 0.2s;
+}
+
+.popup_btn:has(span:hover) p {
+  color: #0AB1BD;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .popup {
+    padding: 24px;
+    width: clamp(280px, 85vw, 500px);
+    border-radius: 15px;
+  }
+
+  .popup_msg {
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+  }
+
+  .popup_btn {
+    padding: 12px 25px;
+  }
+
+  .popup_btn > p {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .popup {
+    padding: 20px;
+    width: clamp(250px, 90vw, 450px);
+    border-radius: 12px;
+  }
+
+  .popup_msg {
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+  }
+
+  .popup_overlay {
+    padding: 15px;
+  }
+
+  .popup_btn {
+    padding: 10px 20px;
+  }
+
+  .popup_btn > p {
+    font-size: 0.85rem;
+  }
+}

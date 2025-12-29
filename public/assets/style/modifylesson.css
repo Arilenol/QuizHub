@@ -1,0 +1,185 @@
+@import url("popup.css");
+
+/*code à remplir pour le style de la page*/
+
+/* Layout 2 colonnes pour les parties */
+.newPart {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  align-items: stretch;
+}
+
+/* Place the "Ajouter un Exemple" button under the left column */
+.newPart > button[name="addEx"] {
+  grid-column: 1;
+  justify-self: center;
+  margin-top: 10px;
+}
+
+.partContent {
+  grid-column: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.partContent .textarea {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.partContent .textarea textarea {
+  flex: 1;
+  resize: vertical;
+  overflow: hidden;
+  overflow-y: auto;
+}
+
+.example {
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.exampleBtns {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.example .textarea textarea {
+  resize: vertical;
+  overflow: hidden;
+  overflow-y: auto;
+  min-height: 120px;
+  max-height: 600px;
+}
+
+.example button {
+  flex: 0 1 auto;
+  min-width: max-content;
+}
+
+/* Augmenter la taille des titres */
+p.name,
+p.description,
+.question > p:first-of-type,
+.reponse > p:first-of-type {
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+/* Styles pour les titres avec boutons */
+h2 {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  font-size: 1.3rem;
+}
+
+h2 button {
+  all: unset;
+  display: inline-flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 25px;
+  cursor: pointer;
+  background: #0AB1BD;
+  border-radius: 9999px;
+  box-shadow: 0px 8px 2px #007881BF;
+  color: #fff;
+  font-size: 0.95rem;
+  user-select: none;
+  transition: all ease-out 0.2s;
+}
+
+h2 button:hover {
+  background-color: #fff;
+  color: #0AB1BD;
+  box-shadow: 0px 8px 2px #CACACABF;
+}
+
+h2 button:active {
+  transform: translate(0px, 8px);
+  box-shadow: none;
+  transition: none;
+}
+
+/* Styles pour les sections avec boutons (Partie N, Exemples, etc) */
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.section-title button {
+  all: unset;
+  display: inline-flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 25px;
+  cursor: pointer;
+  background: #0AB1BD;
+  border-radius: 9999px;
+  box-shadow: 0px 8px 2px #007881BF;
+  color: #fff;
+  font-size: 0.95rem;
+  user-select: none;
+  transition: all ease-out 0.2s;
+}
+
+.section-title button:hover {
+  background-color: #fff;
+  color: #0AB1BD;
+  box-shadow: 0px 8px 2px #CACACABF;
+}
+
+.section-title button:active {
+  transform: translate(0px, 8px);
+  box-shadow: none;
+  transition: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  h2, .section-title {
+    gap: 10px;
+  }
+
+  h2 button, .section-title button {
+    padding: 10px 20px;
+    font-size: 0.85rem;
+  }
+
+  .newPart {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .example {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  h2, .section-title {
+    gap: 8px;
+  }
+
+  h2 button, .section-title button {
+    padding: 8px 15px;
+    font-size: 0.8rem;
+  }
+
+  .newPart {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+}

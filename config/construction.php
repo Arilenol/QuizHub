@@ -155,9 +155,11 @@ function constructionBD(PDO $conn)
                 quiz_id INTEGER,
                 title TEXT NOT NULL,
                 description TEXT,
+                disponibilite TEXT,
                 date DATE DEFAULT CURRENT_DATE,
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-                FOREIGN KEY (quiz_id) REFERENCES quiz(id) ON DELETE CASCADE
+                FOREIGN KEY (quiz_id) REFERENCES quiz(id) ON DELETE CASCADE,
+                CHECK (disponibilite IN ('public','private','ami'))
             );";
         $conn->exec($sql);
 
@@ -439,6 +441,26 @@ function constructionBD(PDO $conn)
                 UPDATE Question 
                 SET numeroQuiz = numeroQuiz - 1 
                 WHERE quiz_id = OLD.quiz_id AND numeroQuiz > OLD.numeroQuiz;
+            END;";
+
+        $conn->exec($sql);
+
+        $sql="CREATE TRIGGER trg_after_delete_part
+            AFTER DELETE ON Partie
+            BEGIN
+                UPDATE Partie 
+                SET numeroPartie = numeroPartie - 1 
+                WHERE lecon_id = OLD.lecon_id AND numeroPartie > OLD.numeroPartie;
+            END;";
+
+        $conn->exec($sql);
+
+        $sql="CREATE TRIGGER trg_after_delete_example
+            AFTER DELETE ON Exemple
+            BEGIN
+                UPDATE Exemple 
+                SET numeroExemple = numeroExemple - 1 
+                WHERE partie_id = OLD.partie_id AND numeroExemple > OLD.numeroExemple;
             END;";
 
         $conn->exec($sql);
