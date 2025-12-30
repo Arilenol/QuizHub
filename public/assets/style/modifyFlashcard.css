@@ -1,1 +1,213 @@
 @import url("popup.css");
+
+/* ------------------------------------------------------------------------------------------------
+c'est un début de css pour la page mais ça cassait un peu le reste donc je l'ai mis en commentaire
+---------------------------------------------------------------------------------------------------
+
+.modify-flashcard-container {
+	max-width: 1000px;
+	margin: 0 auto;
+	padding: 18px;
+}
+
+
+.newCard {
+	background: transparent;
+	border: none;
+	border-radius: 0;
+	padding: 0;
+	margin-bottom: 12px;
+}
+
+.partContent { display: block; }
+
+
+.section-title { display: flex; align-items: center; justify-content: flex-start; gap: 10px; font-weight: 600; }
+
+
+.textarea {
+	width: 80%;
+	max-width: 900px;
+	margin: 12px auto 0 auto;
+}
+
+.textarea textarea {
+	width: 100%;
+	min-height: 320px;
+	padding: 14px;
+	border: 1px solid rgba(255,255,255,0.12);
+	border-radius: 6px;
+	resize: vertical;
+	font-family: inherit;
+	background: transparent;
+	color: white;
+}
+
+
+.partContent > p:not(.section-title):not(.name):not(.description) {
+	width: 80%;
+	max-width: 900px;
+	margin: 8px auto 6px auto;
+	text-align: left;
+	padding-left: 6px;
+	font-weight: 600;
+}
+
+
+h2, .h2 {
+	display: flex;
+	align-items: center;
+	gap: 15px;
+	flex-wrap: wrap;
+	font-size: 1.3rem;
+}
+
+h2 button {
+	all: unset;
+	display: inline-flex;
+	position: relative;
+	align-items: center;
+	justify-content: center;
+	padding: 12px 25px;
+	cursor: pointer;
+	background: #0AB1BD;
+	border-radius: 9999px;
+	box-shadow: 0px 8px 2px #007881BF;
+	color: #fff;
+	font-size: 0.95rem;
+	user-select: none;
+	transition: all ease-out 0.2s;
+}
+
+h2 button:hover {
+	background-color: #fff;
+	color: #0AB1BD;
+	box-shadow: 0px 8px 2px #CACACABF;
+}
+
+h2 button:active {
+	transform: translate(0px, 8px);
+	box-shadow: none;
+	transition: none;
+}
+
+.section-title {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.section-title button {
+	all: unset;
+	display: inline-flex;
+	position: relative;
+	align-items: center;
+	justify-content: center;
+	padding: 12px 25px;
+	cursor: pointer;
+	background: #0AB1BD;
+	border-radius: 9999px;
+	box-shadow: 0px 8px 2px #007881BF;
+	color: #fff;
+	font-size: 0.95rem;
+	user-select: none;
+	transition: all ease-out 0.2s;
+}
+
+.section-title button:hover {
+	background-color: #fff;
+	color: #0AB1BD;
+	box-shadow: 0px 8px 2px #CACACABF;
+}
+
+.section-title button:active {
+	transform: translate(0px, 8px);
+	box-shadow: none;
+	transition: none;
+}
+
+
+.categoriesList label, .friends { display: inline-flex; align-items: center; gap: 8px; margin-right: 10px; margin-bottom: 6px; }
+
+.erreur { color: #c62828; font-weight: 700; }
+
+
+@media (max-width: 640px) {
+	.section-title { font-size: 14px; }
+	.textarea { width: 95%; }
+	.partContent > p:not(.section-title):not(.name):not(.description) { width: 95%; }
+	.textarea textarea { min-height: 220px; }
+}
+
+
+.modify-flashcard-container { max-width: 1000px !important; }
+
+
+.textarea {
+	width: 80% !important;
+	max-width: 900px !important;
+	margin: 12px auto 0 auto !important;
+}
+.textarea textarea {
+	min-height: 380px !important;
+	padding: 16px !important;
+	box-sizing: border-box !important;
+}
+
+
+.partContent > p:not(.section-title):not(.name):not(.description) {
+	width: 80% !important;
+	max-width: 900px !important;
+	margin: 8px auto 6px auto !important;
+	text-align: left !important;
+	padding-left: 8px !important;
+}
+
+
+.section-title {
+	justify-content: flex-start !important;
+	gap: 10px !important;
+	width: 80% !important;
+	max-width: 900px !important;
+	margin: 0 auto !important;
+}
+
+.section-title .button {
+	width: auto !important;
+	padding: 8px 14px !important;
+	height: auto !important;
+	display: inline-flex !important;
+}
+
+
+@media (max-width: 640px) {
+	.textarea { width: 95% !important; }
+	.partContent > p:not(.section-title):not(.name):not(.description) { width: 95% !important; }
+	.section-title { width: 95% !important; }
+	.textarea textarea { min-height: 260px !important; }
+}
+
+/*on essaye de régler un problème*/
+.disponibilite {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.disponibilite .section-title {
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+}
+
+.disponibilite .section-title {
+    justify-content: flex-start !important;
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+}
+
+.friends[hidden] {
+    display: none !important;
+}
