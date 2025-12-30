@@ -272,7 +272,7 @@ class QuizModel
     {
         try {
             $newQuizCategorie = $this->db->prepare("INSERT INTO categorie_quiz(category_id, quiz_id) VALUES (?, ?);");
-            $newQuizCategorie->bindValue(1, $categorie_id);
+            $newQuizCategorie->bindValue(1, (int)$categorie_id);
             $newQuizCategorie->bindValue(2, $quiz_id);
 
             $reussite = $newQuizCategorie->execute();
@@ -471,7 +471,7 @@ class QuizModel
      */
     public function getAllCategories(): mixed{
         try{
-            $sql = $this->db->prepare("SELECT DISTINCT id,CategorieName FROM categories;");
+            $sql = $this->db->prepare("SELECT DISTINCT id,categorieName FROM categories;");
             $sql->execute();
             $categories = $sql->fetchAll(PDO::FETCH_ASSOC);
             return $categories;
@@ -479,6 +479,437 @@ class QuizModel
             die("Fetching categories failed: " . $e->getMessage());
         }catch(Exception $e){
             die("Error: " . $e->getMessage());
+        }
+    }
+    /**
+     * Retourne le nombre de questions pour un quiz.
+     *
+     * @param int $quizId Identifiant du quiz.
+     * @return int Nombre total de questions (0 si aucune).
+     */
+    public function getQuizSize(int $quizId): int{
+        try{
+            $stmt = $this->db->prepare("SELECT COUNT(*) AS totalQuestions FROM question WHERE quiz_id = ?;");
+            $stmt->execute([$quizId]);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            return intval($row['totalQuestions']);
+        } catch (PDOException $e) {
+            die("Fetching quiz size failed: " . $e->getMessage());
+        }
+        
+    }
+    
+    /**
+     * Récupère les informations principales d'un quiz.
+     *
+     * Retourne le titre, la description, la disponibilité et le genre.
+     *
+     * @param int $quizId Identifiant du quiz.
+     * @return array|false Tableau associatif des informations ou false en cas d'erreur.
+     */
+    public function getQuizInfos(int $quizId){
+        try{
+            $quiz = $this->db->prepare("SELECT title, description, disponibilite, genre FROM quiz WHERE id = ?;");
+            $quiz->bindvalue(1,$quizId);
+            $quiz->execute();
+            return $quiz->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            die("Fetching quiz infos failed: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Récupère toutes les questions d'un quiz avec leurs réponses.
+     *
+     * Le format retourné est un tableau de questions, chaque question
+     * contenant un sous-tableau `reponses` avec les réponses associées
+     * et `nbReponse` avec le nombre de réponses.
+     *
+     * @param int $idQuiz Identifiant du quiz.
+     * @return array Tableau des questions et réponses.
+     */
+    public function getQuestionsRepFromQuiz(int $idQuiz){
+        try{
+            $questions = $this->db->prepare("SELECT id, question FROM Question WHERE quiz_id = ? ORDER BY numeroQuiz ASC;");
+            $questions->bindValue(1,$idQuiz);
+            $questions->execute();
+            $TAB_QUESTIONS = $questions->fetchAll(PDO::FETCH_ASSOC);
+            foreach($TAB_QUESTIONS as $index => $question){
+                $reponses = $this->db->prepare("SELECT id, reponse, estCorrecte FROM Reponse WHERE question_id = ? ;");
+                $reponses->bindValue(1,$question['id']);
+                $reponses->execute();
+                $TAB_QUESTIONS[$index]['reponses'] = $reponses->fetchAll(PDO::FETCH_ASSOC);
+                $TAB_QUESTIONS[$index]['nbReponse'] = count( $TAB_QUESTIONS[$index]['reponses']);
+            }
+            return $TAB_QUESTIONS;
+        } catch(PDOException $e){
+            die("Fetching questions and answers from quiz failed: " . $e->getMessage());
+        }
+        
+    }
+
+    /**
+     * Récupère les catégories associées à un quiz.
+     *
+     * @param int $idQuiz Identifiant du quiz.
+     * @return array Tableau associatif contenant les catégories (id, categorieName).
+     */
+    public function getCategoriesFromQuiz(int $idQuiz){
+        try{
+            $categories = $this->db->prepare("SELECT categories.id, categories.categorieName FROM categories 
+            INNER JOIN categorie_quiz ON categories.id = categorie_quiz.category_id WHERE categorie_quiz.quiz_id = ?;");
+            $categories->bindValue(1,$idQuiz);
+            $categories->execute();
+            return $categories->fetchAll(PDO::FETCH_ASSOC);
+        } catch(PDOException $e){
+            die("Fetching categories from quiz failed: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Récupère les paramètres d'un quiz.
+     *
+     * Retourne un tableau indexé représentant les paramètres
+     * (minuterie, repasserErreurs, ordreAleatoire, afficherScore,
+     * afficherAvancement, recapitulatifFin). Si aucun paramètre n'est
+     * défini, retourne un tableau de six zéros.
+     *
+     * @param int $idQuiz Identifiant du quiz.
+     * @return array Tableau de paramètres.
+     */
+    public function getQuizParametres(int $idQuiz){
+        try{
+            $params = $this->db->prepare("SELECT minuterie, repasserErreurs, ordreAleatoire, afficherScore, afficherAvancement, recapitulatifFin FROM parametreQuiz WHERE quiz_id = ?;");
+            $params->bindValue(1,$idQuiz);
+            $params->execute();
+            $parametres = $params->fetch(PDO::FETCH_ASSOC);
+            
+            if (!$parametres){
+                $TAB_PARAMS = array(0,0,0,0,0,0);
+            }
+            else{
+                $TAB_PARAMS = array();
+                $TAB_PARAMS[0] = $parametres['minuterie'];
+                $TAB_PARAMS[1] = $parametres['repasserErreurs'];
+                $TAB_PARAMS[2] = $parametres['ordreAleatoire'];
+                $TAB_PARAMS[3] = $parametres['afficherScore'];
+                $TAB_PARAMS[4] = $parametres['afficherAvancement'];
+                $TAB_PARAMS[5] = $parametres['recapitulatifFin'];
+            }
+            return $TAB_PARAMS;
+        } catch(PDOException $e){
+            die("Fetching quiz parameters failed: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Récupère la liste des amis autorisés pour un quiz.
+     *
+     * Retourne un tableau d'identifiants d'amis (entiers).
+     *
+     * @param int $quiz_id Identifiant du quiz.
+     * @return array Tableau d'IDs d'amis.
+     */
+    public function getAmisSelection(int $quiz_id){
+        try{
+            $amis = $this->db->prepare("SELECT ami_id FROM amiDisponibilite WHERE quiz_id = ?;");
+            $amis->bindvalue(1,$quiz_id);
+            $amis->execute();
+            $result = $amis->fetchAll(PDO::FETCH_ASSOC);
+            $TAB_AMIS = array();
+            foreach($result as $ami){
+                $TAB_AMIS[] = $ami['ami_id'];
+            }
+            return $TAB_AMIS;
+        } catch (PDOException $e) {
+            die("Fetching selected friends failed: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Récupère l'identifiant de l'utilisateur propriétaire d'un quiz.
+     *
+     * @param int $quiz_id Identifiant du quiz.
+     * @return int|false ID de l'utilisateur ou false si non trouvé.
+     */
+    public function getUserIdFromQuiz(int $quiz_id): int{
+        try{
+            $quiz = $this->db->prepare("SELECT user_id FROM quiz WHERE id = ?;");
+            $quiz->bindvalue(1,$quiz_id);
+            $quiz->execute();
+            $result = $quiz->fetch(PDO::FETCH_ASSOC);
+            if(!empty($result)){
+                return (int)$result['user_id'];
+            }
+            else{
+                return false;
+            }
+        } catch (PDOException $e) {
+            die("Fetching user ID from quiz failed: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Met à jour les catégories associées à un quiz.
+     *
+     * Supprime d'abord les associations existantes puis insère
+     * les nouvelles catégories fournies.
+     *
+     * @param int   $quiz_id    Identifiant du quiz.
+     * @param array $categories Tableau d'IDs de catégories.
+     * @return bool True si la mise à jour réussit.
+     */
+    public function updateCategoriesQuiz(int $quiz_id, array $categories){
+        try{
+            $delete = $this->db->prepare("DELETE FROM categorie_quiz WHERE quiz_id = ?;");
+            $delete->bindValue(1,$quiz_id);
+            $delete->execute();
+            foreach($categories as $categorie){
+                $this->insertQuizCategorie($quiz_id, (int)$categorie);
+            }
+            return true;
+        } catch(PDOException $e){
+            die("Updating categories for quiz failed: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Met à jour la disponibilité d'un quiz et les amis autorisés.
+     *
+     * Si la disponibilité est 'ami', insère les enregistrements dans
+     * `amiDisponibilite` pour chaque ami fourni.
+     *
+     * @param int    $quiz_id       Identifiant du quiz.
+     * @param string $disponibilite Nouvelle disponibilité ('public','ami',...).
+     * @param array  $amis          Tableau d'IDs d'amis (entiers).
+     * @return bool True si la mise à jour réussit.
+     */
+    public function updateDisponibiliteQuiz(int $quiz_id, string $disponibilite, array $amis){
+        try{
+            $delete = $this->db->prepare("DELETE FROM amiDisponibilite WHERE quiz_id = ?;");
+            $delete->bindValue(1,$quiz_id);
+            $delete->execute();
+            $update = $this->db->prepare("UPDATE quiz SET disponibilite = ? WHERE id = ?;");
+            $update->bindValue(1,$disponibilite);
+            $update->bindValue(2,$quiz_id);
+            $update->execute();
+            if ($disponibilite == 'ami'){
+                foreach($amis as $ami){
+                    $this->insertAmiDispo($quiz_id, (int)$ami);
+                }
+            }
+            return true;
+        } catch(PDOException $e){
+            die("Updating disponibilite for quiz failed: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Met à jour le contenu d'une question d'un quiz et ses réponses.
+     *
+     * Met à jour le texte de la question identifié par `quiz_id` et
+     * `numeroQuiz` puis délègue la mise à jour des réponses à
+     * `updateReponses`.
+     *
+     * @param int   $quizId          ID du quiz.
+     * @param int   $numeroQuiz      Numéro de la question dans le quiz.
+     * @param string $questionContent Nouveau texte de la question.
+     * @param array $reponsesContent  Tableau des textes de réponses.
+     * @param array $checksContent    Tableau des indicateurs de validité (0/1).
+     * @return bool True si la mise à jour réussit.
+     */
+    public function updateQuestionQuiz(int $quizId, int $numeroQuiz, string $questionContent, array $reponsesContent, array $checksContent){
+        try{
+            $updateQuestion = $this->db->prepare("UPDATE question SET question = ? WHERE quiz_id = ? AND numeroQuiz = ? RETURNING id;");
+            $updateQuestion->bindValue(1,$questionContent);
+            $updateQuestion->bindValue(2,$quizId);
+            $updateQuestion->bindValue(3,$numeroQuiz);
+            $updateQuestion->execute();
+
+            $idQuestion = $updateQuestion->fetchColumn();
+
+            $this->updateReponses($idQuestion, $reponsesContent, $checksContent);
+            return true;
+
+            
+        } catch(PDOException $e){
+            die("Updating question in quiz failed: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Met à jour les réponses existantes d'une question et en ajoute de nouvelles.
+     *
+     * Pour chaque réponse existante, met à jour ou supprime si le nouveau
+     * tableau ne contient plus d'entrée. Ajoute ensuite les réponses
+     * supplémentaires présentes dans `$reponsesContent`.
+     *
+     * @param int   $questionId      ID de la question.
+     * @param array $reponsesContent Tableau des textes de réponses.
+     * @param array $checksContent   Tableau des indicateurs de validité (0/1 ou 'on').
+     * @return bool True si la mise à jour réussit.
+     */
+    public function updateReponses(int $questionId, array $reponsesContent, array $checksContent){
+        try{
+            $getReponses = $this->db->prepare("SELECT id FROM reponse WHERE question_id = ? ORDER BY id ASC;");
+            $getReponses->bindValue(1,$questionId);
+            $getReponses->execute();
+            $existingReponses = $getReponses->fetchAll(PDO::FETCH_ASSOC);
+            $nbRep = count($existingReponses);
+            foreach($existingReponses as $index => $reponse){
+                if(count($reponsesContent) <= $index){
+                    $deleteReponse = $this->db->prepare("DELETE FROM reponse WHERE id = ?;");
+                    $deleteReponse->bindValue(1,$reponse['id']);
+                    $deleteReponse->execute();
+                    continue;
+                }
+                $updateReponse = $this->db->prepare("UPDATE reponse SET reponse = ?, estCorrecte = ? WHERE id = ?;");
+                $updateReponse->bindValue(1,$reponsesContent[$index]);
+                $updateReponse->bindValue(2,(int)$checksContent[$index]);
+                $updateReponse->bindValue(3,$reponse['id']);
+                $updateReponse->execute();
+            }
+            foreach(array_slice($reponsesContent, count($existingReponses)) as $index => $reponse){
+                $valid = (int)$checksContent[count($existingReponses)+$index] == 1 ? "on" : "";
+                $this->insertReponse($questionId, $reponse, $valid);
+            }
+            return true;
+        } catch(PDOException $e){
+            die("Updating responses in quiz failed: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Ajoute une nouvelle question au quiz avec ses réponses.
+     *
+     * Insère la question avec `numeroQuiz` fourni puis insère
+     * chacune des réponses associées.
+     *
+     * @param int $quizId ID du quiz.
+     * @param int $numQuestion Numéro de la question à ajouter.
+     * @param string $questionContent Texte de la question.
+     * @param array $reponsesContent Textes des réponses.
+     * @param array $checksContent Indicateurs de validité (0/1).
+     * @return bool True si l'ajout réussit.
+     */
+    public function addQuestionToQuiz(int $quizId,int $numQuestion, string $questionContent, array $reponsesContent, array $checksContent){
+        try{
+            $newQuestionId = $this->insertQuestion($numQuestion, $quizId, $questionContent);
+            foreach($reponsesContent as $index => $reponse){
+                $valid = (int)$checksContent[$index] == 1 ? "on" : "";
+                $this->insertReponse($newQuestionId, $reponse, $valid);
+            }
+            return true;
+        } catch(PDOException $e){
+            die("Adding question to quiz failed: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Met à jour les paramètres d'un quiz existant.
+     *
+     * Met à jour l'enregistrement `parametreQuiz` correspondant au quiz
+     * avec les valeurs fournies.
+     *
+     * @param int $quizId Identifiant du quiz.
+     * @param array $params Tableau des paramètres (indices 1-6 pour chaque flag).
+     * @param int $timer Durée de la minuterie (minutes).
+     * @return bool True si la mise à jour réussit.
+     */
+    public function updateParametresQuiz(int $quizId, array $params, int $timer){
+        try{
+            $updateParams = $this->db->prepare("UPDATE parametreQuiz SET minuterie = ?, repasserErreurs = ?, ordreAleatoire = ?, afficherScore = ?, afficherAvancement = ?, recapitulatifFin = ? WHERE quiz_id = ?;");
+            if (!empty($params[0])){
+                $updateParams->bindValue(1, $timer);
+            }
+            else{
+                $updateParams->bindValue(1, 0);
+            }
+            $val = !empty($params[1]) ? 1 : 0;
+            $updateParams->bindValue(2, $val);
+            $val = !empty($params[2]) ? 1 : 0;
+            $updateParams->bindValue(3, $val);
+            $val = !empty($params[3]) ? 1 : 0;
+            $updateParams->bindValue(4, $val);
+            $val = !empty($params[4]) ? 1 : 0;
+            $updateParams->bindValue(5, $val);
+            $val = !empty($params[5]) ? 1 : 0;
+            $updateParams->bindValue(6, $val);
+            $updateParams->bindValue(7, $quizId);
+
+            $updateParams->execute();
+            return true;
+        } catch(PDOException $e){
+            die("Updating quiz parameters failed: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Met à jour le genre d'un quiz.
+     *
+     * @param int $quizId ID du quiz.
+     * @param string $genre Nouveau genre.
+     * @return bool True si la mise à jour réussit.
+     */
+    public function updateGenreQuiz(int $quizId, string $genre){
+        try{
+            $updateGenre = $this->db->prepare("UPDATE quiz SET genre = ? WHERE id = ?;");
+            $updateGenre->bindValue(1,$genre);
+            $updateGenre->bindValue(2,$quizId);
+            $updateGenre->execute();
+            return true;
+        } catch(PDOException $e){
+            die("Updating quiz genre failed: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Met à jour le titre et la description (résumé) d'un quiz.
+     *
+     * @param int $quizId ID du quiz.
+     * @param string $title Nouveau titre.
+     * @param string $description Nouvelle description.
+     * @return bool True si la mise à jour réussit.
+     */
+    public function updateResumQuiz(int $quizId, string $title, string $description){
+        try{
+            $updateResum = $this->db->prepare("UPDATE quiz SET title = ?, description = ? WHERE id = ?;");
+            $updateResum->bindValue(1,$title);
+            $updateResum->bindValue(2,$description);
+            $updateResum->bindValue(3,$quizId);
+            $updateResum->execute();
+            return true;
+        } catch(PDOException $e){
+            die("Updating quiz resum failed: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Supprime une question d'un quiz identifiée par son numéro.
+     *
+     * Recherche l'ID de la question correspondant à `quiz_id` et
+     * `numeroQuiz` puis supprime l'enregistrement si trouvé.
+     *
+     * @param int $quizId ID du quiz.
+     * @param int $numeroQuiz Numéro de la question à supprimer.
+     * @return bool True si l'opération réussit.
+     */
+    public function deleteQuestionFromQuiz(int $quizId, int $numeroQuiz){
+        try{
+            $getQuestion = $this->db->prepare("SELECT id FROM question WHERE quiz_id = ? AND numeroQuiz = ?;");
+            $getQuestion->bindValue(1,$quizId);
+            $getQuestion->bindValue(2,$numeroQuiz);
+            $getQuestion->execute();
+            $question = $getQuestion->fetch(PDO::FETCH_ASSOC);
+            if ($question){
+                $deleteQuestion = $this->db->prepare("DELETE FROM question WHERE id = ?;");
+                $deleteQuestion->bindValue(1,$question['id']);
+                $deleteQuestion->execute();
+      
+            }
+            return true;
+        } catch(PDOException $e){
+            die("Deleting question from quiz failed: " . $e->getMessage());
         }
     }
 }

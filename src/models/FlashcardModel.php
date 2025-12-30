@@ -1,5 +1,5 @@
 <?php
-class FlashCardModel
+class FlashcardModel
 {
     private PDO $db;
 
@@ -14,7 +14,7 @@ class FlashCardModel
      * @param int $quizId Identifiant du quiz
      * @return array Tableau des IDs des questions (vide si aucune)
      */
-    public function getFlashCardById(int $quizId): array
+    public function getFlashcardById(int $quizId): array
     {
         $stmt = $this->db->prepare("SELECT id FROM carte WHERE quiz_id = ? ORDER BY numeroCarte ASC");
         $stmt->execute([$quizId]);
@@ -27,7 +27,7 @@ class FlashCardModel
      * @param int $id Identifiant de la question
      * @return array|null Tableau associatif des infos de la question ou null si non trouvé
      */
-    public function getInfoFlashCardById(int $id): ?array
+    public function getInfoFlashcardById(int $id): ?array
     {
         $stmt = $this->db->prepare("SELECT * FROM carte WHERE id = ?");
         $stmt->execute([$id]);
@@ -53,28 +53,29 @@ class FlashCardModel
      *
      * @return bool  true si la création est réussie, false en cas d'erreur.
      */
-    public function createFlashcard(int $nbCartes, int $user_id, string $title, string $desc, array $TAB_CONTENU, array $TAB_AMI_CHOISI, array $TAB_CATEGORIE_CHOISI, string $disponibilite){
-        try{
+    public function createFlashcard(int $nbCartes, int $user_id, string $title, string $desc, array $TAB_CONTENU, array $TAB_AMI_CHOISI, array $TAB_CATEGORIE_CHOISI, string $disponibilite)
+    {
+        try {
             $this->db->beginTransaction();
             $newFlashcard = $this->insertFlashcard($user_id, $title, $desc);
-            if (!$newFlashcard){
+            if (!$newFlashcard) {
                 throw new PDOException("erreur dans l\'insertion de la flashcard dans FlashcardModel.php/createFlashcard");
             }
-            for ($i = 0; $i < $nbCartes ; $i++){
-                $newCarte = $this->insertCarte($newFlashcard, $i+1, $TAB_CONTENU[$i]['question'], $TAB_CONTENU[$i]['reponse']);
-                if (!$newFlashcard){
+            for ($i = 0; $i < $nbCartes; $i++) {
+                $newCarte = $this->insertCarte($newFlashcard, $i + 1, $TAB_CONTENU[$i]['question'], $TAB_CONTENU[$i]['reponse']);
+                if (!$newFlashcard) {
                     throw new PDOException("erreur dans l\'insertion d\'une carte dans FlashcardModel.php/createFlashcard");
                 }
             }
-            if ($disponibilite == 'ami'){
-                foreach($TAB_AMI_CHOISI as $ami){
+            if ($disponibilite == 'ami') {
+                foreach ($TAB_AMI_CHOISI as $ami) {
                     $newAmiDispo = $this->insertAmiDispo($newFlashcard, (int)$ami);
                     if (!$newAmiDispo) {
                         throw new PDOException("erreur dans l\'insertion des amis dans QuizModel.php/createQuiz");
                     }
                 }
             }
-            foreach($TAB_CATEGORIE_CHOISI as $categorie){
+            foreach ($TAB_CATEGORIE_CHOISI as $categorie) {
                 $newCategorie = $this->insertQuizCategorie($newFlashcard, (int)$categorie);
                 if (!$newCategorie) {
                     throw new PDOException("erreur dans l\'insertion des catégories dans FlashcardModel.php/createFlashcard");
@@ -82,7 +83,7 @@ class FlashCardModel
             }
             $this->db->commit();
             return true;
-        }catch (PDOException $e){
+        } catch (PDOException $e) {
             error_log("Erreur création de flashcard : " . $e->getMessage());
             $this->db->rollBack();
             return false;
@@ -102,28 +103,28 @@ class FlashCardModel
      *
      * @return int|false  Retourne l'ID de la flashcard insérée, ou false en cas d'erreur.
      */
-    public function insertFlashcard(int $user_id, string $title, string $desc){
-        try{
+    public function insertFlashcard(int $user_id, string $title, string $desc)
+    {
+        try {
             $newFlashcard = $this->db->prepare("INSERT INTO Quiz (user_id, title, description, difficulty, disponibilite, nbjaime, nbjaimepas, date, genre)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?); ");
-            $newFlashcard->bindValue(1,$user_id);
-            $newFlashcard->bindValue(2,$title);
-            $newFlashcard->bindValue(3,$desc);
-            $newFlashcard->bindValue(4,1);
-            $newFlashcard->bindValue(5,'public');
-            $newFlashcard->bindValue(6,0);
-            $newFlashcard->bindValue(7,0);
-            $newFlashcard->bindValue(8,date('Y-m-d'));
+            $newFlashcard->bindValue(1, $user_id);
+            $newFlashcard->bindValue(2, $title);
+            $newFlashcard->bindValue(3, $desc);
+            $newFlashcard->bindValue(4, 1);
+            $newFlashcard->bindValue(5, 'public');
+            $newFlashcard->bindValue(6, 0);
+            $newFlashcard->bindValue(7, 0);
+            $newFlashcard->bindValue(8, date('Y-m-d'));
             $newFlashcard->bindValue(9, 'flashcard');
 
             $reussite = $newFlashcard->execute();
-            if (!$reussite){
+            if (!$reussite) {
                 return false;
-            }else{
+            } else {
                 return $this->db->lastInsertId();
             }
-
-        }catch (PDOException $e){
+        } catch (PDOException $e) {
             error_log("Erreur d'insertion de flashcard : " . $e->getMessage());
             return false;
         }
@@ -172,30 +173,30 @@ class FlashCardModel
      *
      * @return int|false  Retourne l'ID de la carte insérée, ou false en cas d'erreur.
      */
-    public function insertCarte(int $flashcard_id, int $numero, string $question, string $reponse){
-        try{
+    public function insertCarte(int $flashcard_id, int $numero, string $question, string $reponse)
+    {
+        try {
             $newCarte = $this->db->prepare("INSERT INTO Carte (quiz_id, numeroCarte, question, reponse)
             VALUES (?, ?, ?, ?);");
 
-            $newCarte->bindValue(1,$flashcard_id );
-            $newCarte->bindValue(2,$numero );
+            $newCarte->bindValue(1, $flashcard_id);
+            $newCarte->bindValue(2, $numero);
             $newCarte->bindValue(3, $question);
             $newCarte->bindValue(4, $reponse);
 
             $reussite = $newCarte->execute();
-            if (!$reussite){
+            if (!$reussite) {
                 return false;
-            }else{
+            } else {
                 return $this->db->lastInsertId();
             }
-
-        }catch (PDOException $e){
+        } catch (PDOException $e) {
             error_log("Erreur d'insertion de carte : " . $e->getMessage());
             return false;
         }
     }
 
-    
+
 
     /**
      * Récupère tous les amis d'un utilisateur.
@@ -207,7 +208,8 @@ class FlashCardModel
      *
      * @return array  Tableau de tableaux associatifs contenant 'ami_id' et 'username' pour chaque ami.
      */
-    public function getAmis(int $user_id){
+    public function getAmis(int $user_id)
+    {
         $amis = $this->db->prepare("SELECT 
                                 CASE 
                                 WHEN user1_id = ? THEN user2_id
@@ -215,15 +217,14 @@ class FlashCardModel
                                 END AS ami_id , username
                                 FROM amis JOIN users ON ami_id = users.id 
                                 WHERE ? = user1_id OR ? = user2_id;");
-        $amis->bindvalue(1,$user_id);
-        $amis->bindvalue(2,$user_id);
-        $amis->bindvalue(3,$user_id);
+        $amis->bindvalue(1, $user_id);
+        $amis->bindvalue(2, $user_id);
+        $amis->bindvalue(3, $user_id);
 
         $amis->execute();
 
         $result = $amis->fetchAll(PDO::FETCH_ASSOC);
         return $result;
-        
     }
 
     /**
@@ -264,15 +265,16 @@ class FlashCardModel
      *
      * @return array|false  Tableau associatif des catégories, ou false en cas d'erreur.
      */
-    public function getAllCategories(): mixed{
-        try{
+    public function getAllCategories(): mixed
+    {
+        try {
             $sql = $this->db->prepare("SELECT DISTINCT id,CategorieName FROM categories;");
             $sql->execute();
             $categories = $sql->fetchAll(PDO::FETCH_ASSOC);
             return $categories;
-        }catch(PDOException $e){
+        } catch (PDOException $e) {
             die("Fetching categories failed: " . $e->getMessage());
-        }catch(Exception $e){
+        } catch (Exception $e) {
             die("Error: " . $e->getMessage());
         }
     }

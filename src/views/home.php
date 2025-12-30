@@ -49,7 +49,7 @@ include 'partials/header.php';
                     <?php endforeach; ?>
                 <?php endif; ?>
             </div>
-            <p class="quiz-genre"><?= htmlspecialchars($lessons[$i]['genre'] ?? '') ?></p>
+            <p class="quiz-genre"> leçon </p>
             <br>
             <p class="quiz-title"><?= htmlspecialchars($lessons[$i]['lecon_title'] ?? '') ?></p>
             <br>

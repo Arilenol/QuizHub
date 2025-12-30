@@ -2,22 +2,31 @@
 require_once ROOT . '/src/models/LessonModel.php';
 require_once ROOT . '/config/config.php';
 
+
 class LessonController {
+
+    private LessonModel $model;
+    private $db;
+
+    public function __construct()
+    {
+        $this->db = getDbConnection();
+        $this->model = new LessonModel($this->db);
+    }
+
     public function index($id) {
-        $db = getDbConnection();
-        $model = new LessonModel($db);
         // récupère les données de la leçon
-        $lesson = $model->getLesson($id);
+        $lesson = $this->model->getLesson($id);
         if (!$lesson) {
             echo "Leçon non trouvée";
             return;
         }
         // récupère les parties
-        $parties = $model->getPart($id) ?: []; 
+        $parties = $this->model->getPart($id) ?: []; 
         // récupère les exemples pour chaque partie
         $resultats = [];
         foreach ($parties as $part) {
-            $exemples = $model->getExemple($part['id']);
+            $exemples = $this->model->getExemple($part['id']);
             $resultats[] = $exemples;
         }
         // afficher la vue
@@ -30,9 +39,6 @@ class LessonController {
         ini_set('display_errors', 1);
         ini_set('display_startup_errors', 1);
         error_reporting(E_ALL);
-
-        $db = getDbConnection();
-        $model = new LessonModel($db);
 
         session_start();
 
@@ -157,7 +163,7 @@ class LessonController {
         $LessonTitle = isset($_SESSION['POST']['LessonTitle']) ? $_SESSION['POST']['LessonTitle'] : '';
         $desc = isset($_SESSION['POST']['LessonDescription']) ? $_SESSION['POST']['LessonDescription'] : '';
 
-        $TAB_CATEGORIE = $model->getAllCategories();
+        $TAB_CATEGORIE = $this->model->getAllCategories();
         $TAB_CATEGORIE_CHOISI = array();
         if (isset($_SESSION['POST']['categories'])){
             $TAB_CATEGORIE_CHOISI = $_SESSION['POST']['categories'];
@@ -180,7 +186,7 @@ class LessonController {
             }
             $TAB_CONTENU[] = $partContent;
         }
-        $TAB_AMI = $model->getAmis($_SESSION['id']);
+        $TAB_AMI = $this->model->getAmis($_SESSION['id']);
 
         $TAB_AMI_CHOISI = array();
         if (isset($_SESSION['POST']['amiDispo'])){
@@ -192,7 +198,7 @@ class LessonController {
             $desc = $_POST['LessonDescription'];
             $this->contentFusionSessionPost();
             if ($this->verifValidite()){
-                $reussi = $model->createLesson($id, $LessonTitle, $desc, $_SESSION['nbParts'],$_SESSION['nbExemple'],$TAB_CONTENU,$TAB_AMI_CHOISI, $TAB_CATEGORIE_CHOISI, $_SESSION['POST']['disponibilite'],$quizSelected);
+                $reussi = $this->model->createLesson($id, $LessonTitle, $desc, $_SESSION['nbParts'],$_SESSION['nbExemple'],$TAB_CONTENU,$TAB_AMI_CHOISI, $TAB_CATEGORIE_CHOISI, $_SESSION['POST']['disponibilite'],$quizSelected);
                 //je mets une redirecion pour être sûr qu'on ne l'oublie pas après
                 if($reussi){
                     unset($_SESSION['nbExemple']);
@@ -222,7 +228,7 @@ class LessonController {
         }
 
 
-        $quizzes = $model->getQuizByAuthor($id);
+        $quizzes = $this->model->getQuizByAuthor($id);
 
         $_SESSION['bouton'] = false;
 
@@ -290,6 +296,182 @@ class LessonController {
         if(isset($_POST['categories'])){
             $_SESSION['POST']['categories'] = $_POST['categories'];
         }
+    }
+
+    public function modifyLesson($id){
+        session_start();
+        $idLesson = (int)$id;
+        //die("erreur :".$idQuiz);
+        $taille = $this->model->getLessonSize($idLesson);
+        $user_id = $this->model->getUserIdFromLesson($idLesson);
+        if (!isset($_SESSION['id']) || $user_id != $_SESSION['id']){
+            header('Location: index.php?page=home');
+            exit;
+        }
+        if ($taille === 0){
+            header('Location: index.php?page=home');
+            exit;
+        }
+        if (isset($_POST['Retour']) && $_POST['Retour'] === "yes") {
+            unset($_POST);
+            header('Location: index.php?page=createContent');
+            exit;
+        }
+        if(isset($_POST['categories']) && !empty($_POST['categories'])){
+            $this->model->updateCategoriesLesson($idLesson, $_POST['categories']);
+            unset($_POST['categories']);
+            header('Location: ' . $_SERVER['REQUEST_URI']);
+            exit;
+        }
+        if(isset($_POST['appliquerDispo'])){
+            $disponibilite = isset($_POST['disponibilite']) ? $_POST['disponibilite'] : 'public';
+            $amiDispo = isset($_POST['amiDispo']) && is_array($_POST['amiDispo']) ? $_POST['amiDispo'] : [];
+            $this->model->updateDisponibiliteLesson($idLesson, $disponibilite, $amiDispo);
+            unset($_POST['appliquerDispo']);
+            unset($_POST['disponibilite']);
+            unset($_POST['amiDispo']);
+            header('Location: ' . $_SERVER['REQUEST_URI']);
+            exit;
+        }
+        if(isset($_POST['appliquerAssoc'])){
+            $quizAssoc = $_POST['appliquerAssoc'];
+            $this->model->updateQuizAssociated($idLesson, $quizAssoc);
+            unset($_POST['appliquerAssoc']);
+            header('Location: ' . $_SERVER['REQUEST_URI']);
+            exit;
+        }
+        if(isset($_POST['appliquerPart'])){
+            $iPart = (int)$_POST['appliquerPart'];
+            $partTitle = ( isset($_POST['title']) && !empty($_POST['title']) ) ? $_POST['title'] : '';
+            $partContent = ( isset($_POST['content']) && !empty($_POST['content']) ) ? $_POST['content'] : '';
+            
+            if ($this->modifPartValidite($partTitle, $partContent)){
+                if ($taille < $iPart + 1){
+                    $this->model->addPartToLesson($idLesson, $iPart+1, $partTitle, $partContent);
+                }
+                $this->model->updatePartLesson($idLesson, $iPart+1, $partTitle, $partContent);
+            }
+            else{
+                die('erreur de validation du contenu d\'une partie');
+            }
+            unset($_POST['appliquerPart']);
+            unset($_POST['title']);
+            unset($_POST['content']);
+            header('Location: ' . $_SERVER['REQUEST_URI']);
+            exit;
+        }
+        if (isset($_POST['appliquerEx'])){
+            if(isset($_POST['appliquerEx']) && isset($_POST['numExemple'])){
+                $iPart = (int)$_POST['appliquerEx'];
+                $kEx = (int)$_POST['numExemple'];
+                $consigne = isset($_POST['textConsigne']) && !empty($_POST['textConsigne']) ? $_POST['textConsigne'] : '';
+                $reponse = isset($_POST['textReponse']) && !empty($_POST['textReponse']) ? $_POST['textReponse'] : '';
+                
+                if ($this->modifierExValidite($consigne, $reponse)){
+                    $taillek = $this->model->getNumberExFromPart($idLesson, $iPart+1);
+                    if ($taillek < $kEx+1){
+                        $this->model->addExToPart($idLesson, $iPart+1, $kEx+1, $consigne, $reponse);
+                    }
+                    else{
+                        $this->model->updateExFromPart($idLesson, $iPart+1, $kEx+1, $consigne, $reponse);
+                    }
+                }
+                else{
+                    die('erreur de validation du contenu d\'un exemple');
+                }
+                unset($_POST['appliquerEx']);
+                unset($_POST['numExemple']);
+                unset($_POST['textConsigne']);
+                unset($_POST['textReponse']);
+                header('Location: ' . $_SERVER['REQUEST_URI']);
+                exit;
+            }
+        }
+        if(isset($_POST['delEx'])){
+            if(isset($_POST['delNumEx'])){
+                $iPart = (int)$_POST['delEx'];
+                $kEx = (int)$_POST['delNumEx'];
+               $this->model->deleteExFromPart($idLesson, $iPart+1, $kEx+1);
+            }
+            unset($_POST['delEx']);
+            unset($_POST['delNumEx']);
+            header('Location: ' . $_SERVER['REQUEST_URI']);
+            exit;
+        }
+        if (isset($_POST['appliquerResum'])){
+            $title = isset($_POST['LessonTitle']) ? $_POST['LessonTitle'] : '';
+            $description = isset($_POST['LessonDescription']) ? $_POST['LessonDescription'] : '';
+            if ($this->modifResumValidite($title, $description)){
+                $this->model->updateResumLesson($idLesson, $title, $description);
+            }
+            else{
+                die("Erreur de validation du résumé");
+            }
+            unset($_POST['appliquerResum']);
+            unset($_POST['LessonTitle']);
+            unset($_POST['LessonDescription']);
+            header('Location: ' . $_SERVER['REQUEST_URI']);
+            exit;
+        }
+        if(isset($_POST['DelPart'])){
+            $iPart = (int)$_POST['DelPart'];
+            $this->model->deletePartFromLesson($idLesson, $iPart+1);
+            unset($_POST['DelPart']);
+            header('Location: ' . $_SERVER['REQUEST_URI']);
+            exit;
+        }
+        if(isset($_POST['Annuler'])){
+            unset($_POST);
+            header('Location: ' . $_SERVER['REQUEST_URI']);
+            exit;
+        }
+
+
+
+        
+        $lessonInfos = $this->model->getLessonInfos($idLesson);
+        $quizzes = $this->model->getQuizByAuthor($user_id);
+        $TAB_PART = $this->model->getPartsExFromLesson($idLesson);
+        $TAB_CATEGORIES = $this->model->getCategoriesFromLesson($idLesson);
+        $ALL_CATEGORIES = $this->model->getAllCategories();
+        $ALL_AMIS = $this->model->getAmis($user_id);
+        $TAB_AMIS = $this->model->getAmisSelection($idLesson);
+
+
+        
+
+        //var_dump($_POST);
+        //var_dump($_SESSION);
+        $erreur = false;
+
+        require ROOT . '/src/views/lesson/modifyLesson.php';
+    }
+
+    public function modifResumValidite(string $title, string $description): bool{
+        if (empty($title) || empty($description)){
+            return false;
+        }
+        return true;
+    }
+
+    public function modifPartValidite(string $title, string $content): bool{
+        if( empty($content)){
+            return false;
+        }
+        if (empty($title)){
+            return false;
+        }
+        return true;
+    }
+
+    public function modifierExValidite(string $consigne, string $content){
+        if( empty($content)){
+            return false;
+        }
+        if (empty($consigne)){
+            return false;
+        }
+        return true;
     }
 
 }
