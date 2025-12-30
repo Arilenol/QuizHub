@@ -4,7 +4,7 @@ window.addEventListener("load", () => {
     }
 })
 
-window.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
     const checkboxs = document.querySelectorAll(".checkbox");
     if(checkboxs.length > 0){
         fetch("assets/images/checkbox.svg")

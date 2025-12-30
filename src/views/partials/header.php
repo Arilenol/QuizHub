@@ -19,16 +19,19 @@
 
 <body>
     <header>
-        <img onclick="window.location.href='?page=home'" style="cursor: pointer;" src="./assets/images/logo.svg" alt="Logo">
+        <picture onclick="window.location.href='?page=home'" alt="Logo">
+            <source srcset="./assets/images/logo.svg" media="(width >= 1300px)">
+            <img src="./assets/images/icon.png">
+        </picture>
         <form action="index.php" method="GET">
-            <div class="input" style="width: 100%;">
+            <div class="input">
                 <span></span>
                 <img src="./assets/images/loupe.svg" alt="Search Icon">
                 <input type="text" name="contenu" placeholder="Rechercher des créations..." <?php $s = isset($_GET['contenu']) ? 'value="'.$_GET['contenu'].'"' : ''; echo $s; ?>/>
                 <input type="hidden" name="page" value="catalogue">
             </div>
         </form>
-        <div style="display: flex; flex-direction: row; gap: 25px;">
+        <div>
             <?php
             if (session_status() === PHP_SESSION_NONE) {
                 session_start();
