@@ -1,5 +1,5 @@
 <?php
-    $title = 'création de quiz';
+    $title = 'modification de quiz';
     $style = './assets/style/modifyQuiz.css';
     error_reporting(E_ALL);
     ini_set('display_errors', 1);
