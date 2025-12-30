@@ -465,6 +465,16 @@ function constructionBD(PDO $conn)
 
         $conn->exec($sql);
 
+        $sql="CREATE TRIGGER trg_after_delete_card
+            AFTER DELETE ON Carte
+            BEGIN
+                UPDATE Carte 
+                SET numeroCarte = numeroCarte - 1 
+                WHERE quiz_id = OLD.quiz_id AND numeroCarte > OLD.numeroCarte;
+            END;";
+
+        $conn->exec($sql);
+
         // Insertions de données fictives
 
 
