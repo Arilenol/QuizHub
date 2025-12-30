@@ -187,7 +187,7 @@ h2 button:active {
 	.textarea textarea { min-height: 260px !important; }
 }
 
-/*on essaye de régler un problème*/
+
 .disponibilite {
     display: flex;
     flex-direction: column;

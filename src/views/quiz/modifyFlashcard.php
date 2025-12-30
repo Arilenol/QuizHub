@@ -42,7 +42,7 @@
 
     </div>
 
-    <div id = "parts" style="display: flex; flex-direction: column; gap: 20px">
+    <div id = "cards" style="display: flex; flex-direction: column; gap: 20px">
         <?php
         for($i = 0; $i < $taille ; $i = $i +1){
             echo '<div class="newCard" id = "Card'.$i.'" value="'.$i.'">';
@@ -56,12 +56,12 @@
                 echo '<p>Question</p>
                 <div class="textarea" id = "cardQuestion'.($i+1).'" style="width: calc(100% - 40px); height: calc(100% - 90px)">
                     <span></span>
-                    <textarea type = "text" name ="cardQuestion'.$i.'" id="cardQuestion'.$i.'" placeholder="question de la carte" disabled>'.htmlspecialchars($TAB_CARD[$i]['question']).'</textarea>
+                    <textarea type = "text" name ="cardQuestion'.$i.'" id="question'.$i.'" placeholder="question de la carte" disabled>'.htmlspecialchars($TAB_CARD[$i]['question']).'</textarea>
                 </div>
                 <p>Réponse</p>
                 <div class="textarea" id = "cardResponse'.($i+1).'" style="width: calc(100% - 40px); height: calc(100% - 90px)">
                     <span></span>
-                    <textarea type = "text" name ="cardResponse'.$i.'" id="cardResponse'.$i.'" placeholder="réponse à la question" disabled>'.htmlspecialchars($TAB_CARD[$i]['reponse']).'</textarea>
+                    <textarea type = "text" name ="cardResponse'.$i.'" id="response'.$i.'" placeholder="réponse à la question" disabled>'.htmlspecialchars($TAB_CARD[$i]['reponse']).'</textarea>
                 </div>
                 </div>';
             
