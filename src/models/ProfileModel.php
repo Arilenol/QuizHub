@@ -9,10 +9,10 @@ class ProfileModel
     }
 
     /**
-     * Récupère un utilisateur via son adresse email.
+     * Récupère toutes les informations liées à un utilisateur via son id.
      *
      * Cette méthode interroge la base de données afin de retrouver
-     * les informations d’un utilisateur à partir de son email.  
+     * les informations d’un utilisateur à partir de son id.  
      * Si un utilisateur correspond, ses données sont retournées sous forme de tableau
      * associatif. Sinon, la méthode retourne false.
      *
@@ -22,12 +22,13 @@ class ProfileModel
      *                     (id, username, email, password, etc.) ou false si aucun
      *                     utilisateur ne correspond.
      */
-    public function getIdUserFromEmail(string $id)
+    public function getCredentials(string $id)
     {
         $stmt = $this->db->prepare("SELECT * FROM users WHERE id = ?");
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
 
     /**
      * Compte le nombre de créations (quiz) appartenant à un utilisateur.
@@ -59,10 +60,56 @@ class ProfileModel
      */
     public function getGamesNumber(int|string $id): int
     {
-        $stmt = $this->db->prepare("SELECT COUNT(id) AS resultat FROM quiz WHERE user_id = ?");
+        $stmt = $this->db->prepare("SELECT COUNT(id) AS resultat FROM resultat WHERE user_id = ?");
         $stmt->execute([$id]);
+
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return (int)$result['resultat'];
+    }
+
+
+    /**
+     * Compte le nombre de parties jouées (quiz)
+     *
+     * Cette méthode exécute une requête SQL afin de déterminer combien de
+     * quiz ont été jouées par un utilisateur spécifique en fonction de son ID.
+     *
+     * @param int $id|string L'identifiant de l'utilisateur.
+     *
+     * @return int Le nombre total de quiz jouées par l'utilisateur.
+     */
+    public function getQuizPlayed(int|string $id): array|false
+    {
+        $stmt = $this->db->prepare("SELECT 
+                q.id,
+                q.genre, 
+                q.date, 
+                u.username AS user_name,
+                r.dateRealisation AS dateRealisation,
+                (
+                    SELECT GROUP_CONCAT(DISTINCT c.categorieName)
+                    FROM categorie_quiz cq
+                    JOIN categories c ON c.id = cq.category_id
+                    WHERE cq.quiz_id = q.id
+                ) AS categories,
+                q.title, 
+                q.difficulty, 
+                q.description,
+                (SELECT COUNT(*) FROM likes l WHERE l.quiz_id = q.id) AS nbjaime,
+                (SELECT COUNT(*) FROM dislikes d WHERE d.quiz_id = q.id) AS nbjaimepas
+            FROM quiz q
+            JOIN users u ON u.id = q.user_id
+            JOIN resultat r on r.quiz_id = q.id
+            WHERE r.user_id = ?");
+        $stmt->execute([$id]);
+
+        
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($results as &$row) {
+            $row['categories'] = explode(',', $row['categories']);
+        }
+
+        return $results;
     }
 
     /**
@@ -101,5 +148,48 @@ class ProfileModel
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return !empty($results) ? $results : false;
+    }
+
+
+    /**
+     * Récupère toutes les informations des quiz avec l'utilisateur associé
+     *
+     * Inclut : genre, date, nom d'utilisateur, titre, difficulté, description.
+     *
+     * @return array Tableau associatif de quiz enrichis avec info utilisateur
+     */
+    public function getAllCreationsByUser(string|int $id): array
+    {
+        $stmt = $this->db->prepare("
+            SELECT 
+                q.id,
+                q.genre, 
+                q.date, 
+                u.username AS user_name,
+                (
+                    SELECT GROUP_CONCAT(DISTINCT c.categorieName)
+                    FROM categorie_quiz cq
+                    JOIN categories c ON c.id = cq.category_id
+                    WHERE cq.quiz_id = q.id
+                ) AS categories,
+                q.title, 
+                q.difficulty, 
+                q.description,
+                (SELECT COUNT(*) FROM likes l WHERE l.quiz_id = q.id) AS nbjaime,
+                (SELECT COUNT(*) FROM dislikes d WHERE d.quiz_id = q.id) AS nbjaimepas
+            FROM quiz q
+            JOIN users u ON u.id = q.user_id
+            WHERE u.id = ?
+        ");
+
+        $stmt->execute([$id]);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // transformation des catégories en tableau
+        foreach ($results as &$row) {
+            $row['categories'] = explode(',', $row['categories']);
+        }
+
+
+        return $results;
     }
 }

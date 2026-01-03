@@ -23,9 +23,11 @@ class LessonModel
             l.description, 
             l.date AS 'date', 
             u.username AS username, 
-            l.quiz_id
+            l.quiz_id,
+            q.genre AS genre
         FROM lecon l
         JOIN users u ON u.id = l.user_id
+        JOIN quiz q ON q.id = l.quiz_id
         WHERE l.id = ?
         LIMIT 1
     ");

@@ -160,13 +160,16 @@ p.fin {
   font-size: 1.7rem;
 }
 .quiz-reactions .like {
-  cursor: pointer;
-  color: #ff3b3b;
-  background-color: rgba(255, 59, 59, 0.08);
-  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.04);
+  background-color: #31c414bf;  
+  box-shadow: 0px 10px 2px #22810ebf;
 }
- .quiz-reactions .dislike {
-  cursor: pointer;
-  color: #666;
-  background-color: rgba(0, 0, 0, 0.03);
+
+.quiz-reactions .dislike {
+  background-color: #c62828;  /* fond rouge foncé */
+  box-shadow: 0px 10px 2px #8a1c1c;
+}
+
+.quiz-reactions .reaction:hover {
+  background-color: #ff1f1f; /* légèrement plus clair au survol */
+  color: white;
 }

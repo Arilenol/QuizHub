@@ -38,7 +38,7 @@ require_once '../src/views/partials/header.php';
                 <div class="quiz-reactions">
                     <?php if (isset($_SESSION['id'])) : ?>
                         <form method="POST" action="?page=standard&idQuestion=<?= $idQuestion ?>&id=<?= $quizId ?>">
-                            <button class="dislike" type="submit" name="reaction" value="like" class="reaction like">
+                            <button class="like" type="submit" name="reaction" value="like" class="reaction like">
                                 👍 <?= htmlspecialchars($reactions['nbjaime'] ?? 0) ?>
                             </button>
                         </form>

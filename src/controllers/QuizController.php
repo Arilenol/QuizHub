@@ -339,7 +339,8 @@ class QuizController
         return true;
     }
 
-    public function modifyQuiz($id){
+    public function modifyQuiz($id)
+    {
         error_reporting(E_ALL);
         ini_set('display_errors', 1);
 
@@ -348,19 +349,19 @@ class QuizController
         //die("erreur :".$idQuiz);
         $taille = $this->model->getQuizSize($idQuiz);
         $user_id = $this->model->getUserIdFromQuiz($idQuiz);
-        if (!isset($_SESSION['id']) || $user_id != $_SESSION['id']){
+        if (!isset($_SESSION['id']) || $user_id != $_SESSION['id']) {
             header('Location: index.php?page=home');
             exit;
         }
-        if ($taille === 0){
+        if ($taille === 0) {
             header('Location: index.php?page=home');
             exit;
         }
         $tabParametres = array(
             array('name' => 'timer', 'desc' => 'minuterie'),
-            array('name' => 'retryError','desc' => 'rééssayer les questions échouées'),
-            array('name' => 'noOrder','desc' => 'faire dans le désordre par défaut'),
-            array('name' => 'score','desc' => 'afficher le score'),
+            array('name' => 'retryError', 'desc' => 'rééssayer les questions échouées'),
+            array('name' => 'noOrder', 'desc' => 'faire dans le désordre par défaut'),
+            array('name' => 'score', 'desc' => 'afficher le score'),
             array('name' => 'avancement', 'desc' => 'afficher l\'avancement'),
             array('name' => 'recap', 'desc' => 'afficher un recapitulatif à la fin')
         );
@@ -369,13 +370,13 @@ class QuizController
             header('Location: index.php?page=createContent');
             exit;
         }
-        if(isset($_POST['categories']) && !empty($_POST['categories'])){
+        if (isset($_POST['categories']) && !empty($_POST['categories'])) {
             $this->model->updateCategoriesQuiz($idQuiz, $_POST['categories']);
             unset($_POST['categories']);
             header('Location: ' . $_SERVER['REQUEST_URI']);
             exit;
         }
-        if(isset($_POST['appliquerDispo'])){
+        if (isset($_POST['appliquerDispo'])) {
             $disponibilite = isset($_POST['disponibilite']) ? $_POST['disponibilite'] : 'public';
             $amiDispo = isset($_POST['amiDispo']) && is_array($_POST['amiDispo']) ? $_POST['amiDispo'] : [];
             $this->model->updateDisponibiliteQuiz($idQuiz, $disponibilite, $amiDispo);
@@ -385,34 +386,32 @@ class QuizController
             header('Location: ' . $_SERVER['REQUEST_URI']);
             exit;
         }
-        if(isset($_POST['applyModif'])){
+        if (isset($_POST['applyModif'])) {
             $iQuestion = (int)$_POST['applyModif'];
-            $questionContent = ( isset($_POST['question'.$iQuestion]) && !empty($_POST['question'.$iQuestion]) ) ? $_POST['question'.$iQuestion] : '';
-            $reponsesContent = isset($_POST['reponse'.$iQuestion]) && is_array($_POST['reponse'.$iQuestion]) && !empty($_POST['reponse'.$iQuestion]) ? $_POST['reponse'.$iQuestion] : [];
-            $checksContent = isset($_POST['checkbox'.$iQuestion]) && is_array($_POST['checkbox'.$iQuestion]) ? $_POST['checkbox'.$iQuestion] : [];
-            if ($this->modifQuestionValidite($questionContent, $reponsesContent, $checksContent)){
-                if ($taille < $iQuestion + 1){
-                    $this->model->addQuestionToQuiz($idQuiz, $iQuestion+1, $questionContent, $reponsesContent, $checksContent);
+            $questionContent = (isset($_POST['question' . $iQuestion]) && !empty($_POST['question' . $iQuestion])) ? $_POST['question' . $iQuestion] : '';
+            $reponsesContent = isset($_POST['reponse' . $iQuestion]) && is_array($_POST['reponse' . $iQuestion]) && !empty($_POST['reponse' . $iQuestion]) ? $_POST['reponse' . $iQuestion] : [];
+            $checksContent = isset($_POST['checkbox' . $iQuestion]) && is_array($_POST['checkbox' . $iQuestion]) ? $_POST['checkbox' . $iQuestion] : [];
+            if ($this->modifQuestionValidite($questionContent, $reponsesContent, $checksContent)) {
+                if ($taille < $iQuestion + 1) {
+                    $this->model->addQuestionToQuiz($idQuiz, $iQuestion + 1, $questionContent, $reponsesContent, $checksContent);
                 }
-                $this->model->updateQuestionQuiz($idQuiz, $iQuestion+1, $questionContent, $reponsesContent, $checksContent);
-            }
-            else{
-                die("Erreur de validation des données de la question ".$iQuestion);
+                $this->model->updateQuestionQuiz($idQuiz, $iQuestion + 1, $questionContent, $reponsesContent, $checksContent);
+            } else {
+                die("Erreur de validation des données de la question " . $iQuestion);
             }
             unset($_POST['applyModif']);
-            unset($_POST['question'.$iQuestion]);
-            unset($_POST['reponse'.$iQuestion]);
-            unset($_POST['checkbox'.$iQuestion]);
+            unset($_POST['question' . $iQuestion]);
+            unset($_POST['reponse' . $iQuestion]);
+            unset($_POST['checkbox' . $iQuestion]);
             header('Location: ' . $_SERVER['REQUEST_URI']);
             exit;
         }
-        if (isset($_POST['appliquerParam'])){
+        if (isset($_POST['appliquerParam'])) {
             $tabParams = isset($_POST['params']) && is_array($_POST['params']) ? $_POST['params'] : [];
             $timer = isset($_POST['timerValue']) ? (int)$_POST['timerValue'] : 0;
-            if ($this->modifParamValidite($tabParams, $timer)){
+            if ($this->modifParamValidite($tabParams, $timer)) {
                 $this->model->updateParametresQuiz($idQuiz, $tabParams, $timer);
-            }
-            else{
+            } else {
                 die("Erreur de validation des paramètres");
             }
             unset($_POST['appliquerParam']);
@@ -421,7 +420,7 @@ class QuizController
             header('Location: ' . $_SERVER['REQUEST_URI']);
             exit;
         }
-        if(isset($_POST['changerGenre'])){
+        if (isset($_POST['changerGenre'])) {
             $genre = isset($_POST['genre']) && ($_POST['genre'] === 'test' || $_POST['genre'] === 'standard') ? $_POST['genre'] : 'standard';
             $this->model->updateGenreQuiz($idQuiz, $genre);
             unset($_POST['changerGenre']);
@@ -429,13 +428,12 @@ class QuizController
             header('Location: ' . $_SERVER['REQUEST_URI']);
             exit;
         }
-        if (isset($_POST['appliquerResum'])){
+        if (isset($_POST['appliquerResum'])) {
             $title = isset($_POST['QuizTitle']) ? $_POST['QuizTitle'] : '';
             $description = isset($_POST['QuizDescription']) ? $_POST['QuizDescription'] : '';
-            if ($this->modifResumValidite($title, $description)){
+            if ($this->modifResumValidite($title, $description)) {
                 $this->model->updateResumQuiz($idQuiz, $title, $description);
-            }
-            else{
+            } else {
                 die("Erreur de validation du résumé");
             }
             unset($_POST['appliquerResum']);
@@ -444,14 +442,14 @@ class QuizController
             header('Location: ' . $_SERVER['REQUEST_URI']);
             exit;
         }
-        if(isset($_POST['DelQuestion'])){
+        if (isset($_POST['DelQuestion'])) {
             $iQuestion = (int)$_POST['DelQuestion'];
-            $this->model->deleteQuestionFromQuiz($idQuiz, $iQuestion+1);
+            $this->model->deleteQuestionFromQuiz($idQuiz, $iQuestion + 1);
             unset($_POST['DelQuestion']);
             header('Location: ' . $_SERVER['REQUEST_URI']);
             exit;
         }
-        if(isset($_POST['Annuler'])){
+        if (isset($_POST['Annuler'])) {
             unset($_POST);
             header('Location: ' . $_SERVER['REQUEST_URI']);
             exit;
@@ -459,7 +457,7 @@ class QuizController
 
 
 
-        
+
         $quizInfos = $this->model->getQuizInfos($idQuiz);
         $TAB_QUESTIONS = $this->model->getQuestionsRepFromQuiz($idQuiz);
         $TAB_PARAMS = $this->model->getQuizParametres($idQuiz);
@@ -469,7 +467,7 @@ class QuizController
         $TAB_AMIS = $this->model->getAmisSelection($idQuiz);
 
 
-        
+
 
         //var_dump($_POST);
         //var_dump($_SESSION);
@@ -478,42 +476,45 @@ class QuizController
         require ROOT . '/src/views/quiz/modifyQuiz.php';
     }
 
-    public function modifParamValidite(array $paramsContent, int $timer): bool{
+    public function modifParamValidite(array $paramsContent, int $timer): bool
+    {
         $allowedParams = array('timer', 'retryError', 'noOrder', 'score', 'avancement', 'recap');
-        if (count($paramsContent) != count($allowedParams)){
+        if (count($paramsContent) != count($allowedParams)) {
             return false;
         }
-        if ($timer < 0 || $timer > 120){
+        if ($timer < 0 || $timer > 120) {
             return false;
         }
-        if ($timer == 0){
+        if ($timer == 0) {
             $paramsContent[0] = 0;
         }
         return true;
     }
 
-    public function modifResumValidite(string $title, string $description): bool{
-        if (empty($title) || empty($description)){
+    public function modifResumValidite(string $title, string $description): bool
+    {
+        if (empty($title) || empty($description)) {
             return false;
         }
         return true;
     }
 
-    public function modifQuestionValidite(string $questionContent, array $reponsesContent, array $cheksContent): bool{
-        if (!in_array(0,$cheksContent) || !in_array(1,$cheksContent)){
+    public function modifQuestionValidite(string $questionContent, array $reponsesContent, array $cheksContent): bool
+    {
+        if (!in_array(0, $cheksContent) || !in_array(1, $cheksContent)) {
             return false;
         }
-        if(count($reponsesContent) != count($cheksContent)){
+        if (count($reponsesContent) != count($cheksContent)) {
             return false;
         }
-        if(count($reponsesContent) < 2 || count($cheksContent) < 2){
+        if (count($reponsesContent) < 2 || count($cheksContent) < 2) {
             return false;
         }
-        if( empty($questionContent)){
+        if (empty($questionContent)) {
             return false;
         }
-        foreach($reponsesContent as $rep){
-            if (empty($rep)){
+        foreach ($reponsesContent as $rep) {
+            if (empty($rep)) {
                 return false;
             }
         }
@@ -540,14 +541,17 @@ class QuizController
             $idQuestion = isset($_POST['idQuestion']) ? intval($_POST['idQuestion']) : 1;
 
             // Stocker la réponse ou tableau vide si rien coché
-            $answers = !empty($_POST['answer']) ? array_map('intval', $_POST['answer']) : [];
-            $_SESSION['answers'][$idQuestion] = [
-                $this->isCorrect($quizId, $idQuestion, $answers),
-                $answers
-            ];
+            if ($idQuestion <= $max) {
 
-            // Passer à la question suivante
-            $idQuestion++;
+                $answers = !empty($_POST['answer']) ? array_map('intval', $_POST['answer']) : [];
+                $_SESSION['answers'][$idQuestion] = [
+                    $this->isCorrect($quizId, $idQuestion, $answers),
+                    $answers
+                ];
+
+                // Passer à la question suivante
+                $idQuestion++;
+            }
         }
 
         // Standard (GET)
@@ -569,6 +573,7 @@ class QuizController
             require_once ROOT . '/src/models/LikeModel.php';
             $modelLike = new LikeModel($this->db);
             $reactions = $modelLike->getReactions($quizId);
+
             // Like/Dislike en POST
             if (isset($_POST['reaction'])) {
                 if ($_POST['reaction'] === "like") {
@@ -594,6 +599,8 @@ class QuizController
                 ksort($_SESSION['answers']);
                 $question = null;
                 $reponse = [];
+                $hasLiked = isset($_SESSION['id']) && $modelLike->hasLiked($quizId, $_SESSION['id']);
+                $hasDisliked = isset($_SESSION['id']) && $modelLike->hasDisliked($quizId, $_SESSION['id']);
                 require ROOT . '/src/views/quiz/endTest.php';
             } else {
                 $question = null;

@@ -101,14 +101,14 @@ class HomeModel
         ");
 
         $stmt->execute([$id]);
-        $resultsBis = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         // transformation des catégories en tableau
-        // foreach ($resultsBis as &$row) {
-        //     $row['categories'] = explode(',', $row['categories']);
-        // }
-        // var_dump($resultsBis);
-        return $resultsBis;
+        foreach ($results as &$row) {
+            $row['categories'] = explode(',', $row['categories']);
+        }
+
+
+        return $results;
     }
 
     /**

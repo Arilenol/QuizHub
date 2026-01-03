@@ -1,7 +1,7 @@
 <?php
 $title = "Leçon";
-$style = '../public/assets/style/lesson/show.css';
-include __DIR__ . '/../partials/header.php';
+$style = './assets/style/lesson/show.css';
+require_once '../src/views/partials/header.php';
 ?>
 <div class="buttonAction">
     <button onclick="window.location.href='?page=home'" class="back-btn">← Retour</button>
@@ -56,7 +56,7 @@ include __DIR__ . '/../partials/header.php';
         <p>
             Cette leçon offre un quiz pour vérifier ses connaissances
         </p>
-        <a href="?page=standard&id=<?= $lesson['quiz_id'] ?>">Cliquez-ici pour commencer</a>
+        <a href="?page=<?= $lesson['genre'] ?>&id=<?= $lesson['quiz_id'] ?> <?= $lesson['genre'] === "flashcard" ? "&action=start" : "" ?>">Cliquez-ici pour commencer</a>
     </div>
 </main>
 

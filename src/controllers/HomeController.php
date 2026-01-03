@@ -3,6 +3,7 @@ require_once ROOT . '/src/models/HomeModel.php';
 require_once ROOT . '/config/config.php';
 require_once ROOT . '/src/models/LessonModel.php';
 
+
 class HomeController
 {
     public function index()
