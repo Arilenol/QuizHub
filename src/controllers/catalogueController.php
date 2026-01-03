@@ -13,7 +13,7 @@ class CatalogueController
         //constructionBD($db);
         $this->model = new CatalogueModel($db);
         // afficher la vue
-
+        session_start();
 
         $cats = $this->model->getCategories();
 
@@ -30,24 +30,34 @@ class CatalogueController
             'genre_desc' => 'Genre (Z → A)'
         ];
 
-        $recherche_cat = isset($_GET['categorie']) && !empty($_GET['categorie']) && htmlspecialchars($_GET['categorie']) != 'Toutes les catégories' ? $_GET['categorie'] : '';
-        $recherche_contenu = isset($_GET['contenu']) && !empty($_GET['contenu']) ? htmlspecialchars($_GET['contenu']) : '';
-        $recherche_auteur = isset($_GET['searchAuthor']) && !empty($_GET['searchAuthor']) ? htmlspecialchars($_GET['searchAuthor']) : '';
+        $genres = [
+            'standard' => 'Quiz standard',
+            'test' => 'Quiz de type test',
+            'flashcard' => 'Flashcards',
+            'leçon' => 'Leçons'
+        ];
+
+        $recherche_cat = isset($_GET['categorie']) && !empty($_GET['categorie']) && htmlspecialchars($_GET['categorie']) != 'Toutes les catégories' ? (int)$_GET['categorie'] : null;
+        $recherche_contenu = isset($_GET['contenu']) && (!empty($_GET['contenu']) || $_GET['contenu'] == '0') ? htmlspecialchars($_GET['contenu']) : '';
+        $recherche_auteur = isset($_GET['searchAuthor']) && (!empty($_GET['searchAuthor']) || $_GET['searchAuthor'] == '0') ? htmlspecialchars($_GET['searchAuthor']) : '';
         $tri = isset($_GET['tri']) && !empty($_GET['tri']) ? $_GET['tri'] : null;
-        if ($recherche_cat != '') {
-            $quiz_correspondants = $this->model->searchQuizByAll($recherche_cat, $recherche_contenu, $recherche_auteur, $tri);
-        } else {
-            $quiz_correspondants = $this->model->searchQuizByContentAndAuthor($recherche_contenu, $recherche_auteur, $tri);
-        }
+        $user = isset($_SESSION['id']) ? (int)$_SESSION['id'] : null;
+        $genre = isset($_GET['genre']) && !empty($_GET['genre']) ? $_GET['genre'] : '';
+        $quiz_correspondants = $this->model->searchContentByAll($user, $recherche_cat, $recherche_contenu,  $recherche_auteur, $genre, $tri);
+        
 
         $quizzes = $quiz_correspondants;
         foreach ($quizzes as $index => $quiz) {
-            $quizzes[$index]['categories'] = $this->model->getCategoriesFromQuiz($quiz['id']);
-            $quizzes[$index]['nom_auteur'] = $this->model->getNomAuteur($quiz['user_id']);
-
-            $quizzes[$index]['likes'] = isset($quiz['likes']) ? (int)$quiz['likes'] : 0;
-            $quizzes[$index]['dislikes'] = isset($quiz['dislikes']) ? (int)$quiz['dislikes'] : 0;
+            if ($quizzes[$index]['genre'] == 'leçon'){
+                $quizzes[$index]['categories'] = $this->model->getCategoriesFromLesson($quiz['id']);
+            }
+            else{
+                $quizzes[$index]['categories'] = $this->model->getCategoriesFromQuiz($quiz['id']);
+            }
+            
         }
+        var_dump($recherche_auteur);
+        var_dump($recherche_contenu);
         require ROOT . '/src/views/catalogue.php';
     }
 }
