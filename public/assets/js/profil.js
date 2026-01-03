@@ -35,3 +35,37 @@ if (eye1!==null){
         eye1.classList.toggle("fa-eye-slash");
     });
 }
+
+
+const deleteModal = document.getElementById('deleteModal')
+const deleteText = document.getElementById('deleteText')
+
+let quizIdToDelete = null
+let quizGenreToDelete = null
+
+document.querySelectorAll('.deleteQuiz').forEach(btn => {
+    btn.addEventListener('click', e => {
+        e.preventDefault()
+
+        quizIdToDelete = btn.dataset.id
+        quizGenreToDelete = btn.dataset.genre
+
+        deleteText.innerHTML =
+            `Voulez-vous vraiment supprimer : <strong>${btn.dataset.title}</strong> ?`
+
+        deleteModal.style.display = 'flex'
+    })
+})
+
+// fermer
+document.getElementById('closeDeleteModal').onclick =
+document.getElementById('cancelDelete').onclick = () => {
+    deleteModal.style.display = 'none'
+}
+
+// clic overlay
+deleteModal.addEventListener('click', e => {
+    if (e.target === deleteModal) {
+        deleteModal.style.display = 'none'
+    }
+})

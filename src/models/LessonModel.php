@@ -423,4 +423,61 @@ class LessonModel
             die("Error: " . $e->getMessage());
         }
     }
+
+
+    /**
+     * Récupère la liste des leçons créées par un utilisateur
+     *
+     * Cette méthode retourne un tableau associatif contenant les leçons
+     * (id, title, date, ...).
+     *
+     * @return array|false  Tableau associatif des lecons, ou false en cas d'erreur.
+     */
+    public function getAllInfoLessonsByUser(string|int $id): array|false
+    {
+        $stmt = $this->db->prepare("
+        SELECT
+            l.id AS id,
+            l.title AS title,
+            l.description AS description,
+            l.date AS date,
+
+            u.id AS user_id,
+            u.username AS user_name,
+
+            q.id AS quiz_id,
+            q.title AS quiz_title,
+            'lesson' as genre,
+            q.difficulty,
+            q.description AS quiz_description,
+
+            (
+                SELECT GROUP_CONCAT(DISTINCT c.categorieName)
+                FROM categorie_quiz cq
+                JOIN categories c ON c.id = cq.category_id
+                WHERE cq.quiz_id = q.id
+            ) AS categories,
+
+            (SELECT COUNT(*) FROM likes l2 WHERE l2.quiz_id = q.id) AS nbjaime,
+            (SELECT COUNT(*) FROM dislikes d2 WHERE d2.quiz_id = q.id) AS nbjaimepas
+
+        FROM Lecon l
+        JOIN users u ON u.id = l.user_id
+        LEFT JOIN quiz q ON q.id = l.quiz_id
+        WHERE l.user_id = ?
+        ORDER BY l.date DESC;
+    ");
+
+        $stmt->execute([$id]);
+
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($results as &$row) {
+            $row['categories'] = $row['categories']
+                ? explode(',', $row['categories'])
+                : [];
+        }
+
+        return $results;
+    }
 }

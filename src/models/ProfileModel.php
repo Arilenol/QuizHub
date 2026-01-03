@@ -103,7 +103,7 @@ class ProfileModel
             WHERE r.user_id = ?");
         $stmt->execute([$id]);
 
-        
+
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($results as &$row) {
             $row['categories'] = explode(',', $row['categories']);
@@ -148,48 +148,5 @@ class ProfileModel
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return !empty($results) ? $results : false;
-    }
-
-
-    /**
-     * Récupère toutes les informations des quiz avec l'utilisateur associé
-     *
-     * Inclut : genre, date, nom d'utilisateur, titre, difficulté, description.
-     *
-     * @return array Tableau associatif de quiz enrichis avec info utilisateur
-     */
-    public function getAllCreationsByUser(string|int $id): array
-    {
-        $stmt = $this->db->prepare("
-            SELECT 
-                q.id,
-                q.genre, 
-                q.date, 
-                u.username AS user_name,
-                (
-                    SELECT GROUP_CONCAT(DISTINCT c.categorieName)
-                    FROM categorie_quiz cq
-                    JOIN categories c ON c.id = cq.category_id
-                    WHERE cq.quiz_id = q.id
-                ) AS categories,
-                q.title, 
-                q.difficulty, 
-                q.description,
-                (SELECT COUNT(*) FROM likes l WHERE l.quiz_id = q.id) AS nbjaime,
-                (SELECT COUNT(*) FROM dislikes d WHERE d.quiz_id = q.id) AS nbjaimepas
-            FROM quiz q
-            JOIN users u ON u.id = q.user_id
-            WHERE u.id = ?
-        ");
-
-        $stmt->execute([$id]);
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        // transformation des catégories en tableau
-        foreach ($results as &$row) {
-            $row['categories'] = explode(',', $row['categories']);
-        }
-
-
-        return $results;
     }
 }

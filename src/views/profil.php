@@ -99,9 +99,16 @@ require_once 'partials/header.php';
                                 <br>
                                 <div class="editQuizPart">
                                     <!-- a dev -->
-                                    <button id="deleteQuiz" onclick="window.location.href='?page=home'">Supprimer le quiz</button>
-                                    <button id="editQuiz" onclick="window.location.href='?page=standard&categorie=modify&id=<?= $quiz[$i]['id'] ?>'">Modifier le quiz</button>
-                                    <button id="playQuiz" onclick="window.location.href='./?page=<?= $quiz[$i]['genre'] ?>&id=<?= $quiz[$i]['id'] ?> <?= $quiz[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?>'">Jouer</button>
+                                    <button
+                                        class="deleteQuiz"
+                                        data-id="<?= $quiz[$i]['id'] ?>"
+                                        data-title="<?= htmlspecialchars($quiz[$i]['title']) ?>"
+                                        data-genre="<?= $quiz[$i]['genre'] ?>">
+                                        <?= $quiz[$i]['genre'] == 'lesson' ? 'Supprimer la leçon' : 'Supprimer le quiz' ?>
+                                    </button>
+
+                                    <button id="editQuiz" onclick="window.location.href='?page=<?= $quiz[$i]['genre'] ?>&categorie=modify&id=<?= $quiz[$i]['id'] ?>'"><?= $quiz[$i]['genre'] == 'lesson' ? 'Modifier la leçon' : ' Modifier le quiz' ?></button>
+                                    <button id="playQuiz" onclick="window.location.href='./?page=<?= $quiz[$i]['genre'] ?>&id=<?= $quiz[$i]['id'] ?> <?= $quiz[$i]['genre'] == 'lesson' ? '&categorie=view' : '' ?>'" <?= $quiz[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?>'">Jouer</button>
                                 </div>
                                 <div class="quiz-footer">
                                     <p class="quiz-auteur">Par : Vous</p>
@@ -114,10 +121,27 @@ require_once 'partials/header.php';
                             </article>
                         <?php endfor; ?>
 
-
                     <?php endif; ?>
+
+                    <div class="modal-overlay" id="deleteModal">
+                        <div class="modal">
+                            <button class="close-modal" id="closeDeleteModal">&times;</button>
+
+                            <h2>Supprimer</h2>
+                            <p id="deleteText"></p>
+
+                            <div class="modal-actions">
+                                <button class="danger-btn" id="confirmDelete">Supprimer</button>
+                                <button class="cancel-btn" id="cancelDelete">Annuler</button>
+                            </div>
+                        </div>
+                    </div>
+
                 <?php elseif (isset($hist)) : ?>
                     <div class="newCreations">
+                        <?php if (empty($hist)) {
+                            echo '<p class ="no-content"> Vous avez aucun historique </p>';
+                        } ?>
                         <?php for ($i = 0; $i < count($hist); $i++): ?>
                             <article class="quiz">
                                 <div class="quiz-cat">

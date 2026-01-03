@@ -81,7 +81,7 @@ class HomeModel
         $stmt = $this->db->prepare("
             SELECT 
                 q.id,
-                q.genre, 
+                q.genre AS genre, 
                 q.date, 
                 u.username AS user_name,
                 (
@@ -97,10 +97,10 @@ class HomeModel
                 (SELECT COUNT(*) FROM dislikes d WHERE d.quiz_id = q.id) AS nbjaimepas
             FROM quiz q
             JOIN users u ON u.id = q.user_id
-            WHERE u.id = ?
+            WHERE u.id = :id
         ");
 
-        $stmt->execute([$id]);
+        $stmt->execute(['id' => $id]);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         // transformation des catégories en tableau
         foreach ($results as &$row) {

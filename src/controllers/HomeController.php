@@ -17,6 +17,10 @@ class HomeController
         $lessons = $modelLesson->getAllInfoLessons();
         if (isset($_SESSION['id']) && !empty($_SESSION['id'])) {
             $quizNextPart = $model->getAllCreationsByUser($_SESSION['id']);
+            $lessonsByUser = $modelLesson->getAllInfoLessonsByUser($_SESSION['id']);
+            if ($lessonsByUser!==false && !empty($lessonsByUser)){
+                $quizNextPart[] = $lessonsByUser[0];
+            }
         } else {
             $quizNextPart = $model->getAllNewCreations();
         }

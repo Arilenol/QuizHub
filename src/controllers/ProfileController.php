@@ -6,14 +6,15 @@ class ProfileController
 {
 
     private ProfileModel $model;
+    private $db;
 
     public function __construct()
     {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
-        $db = getDbConnection();
-        $this->model = new ProfileModel($db);
+        $this->db = getDbConnection();
+        $this->model = new ProfileModel($this->db);
     }
 
     public function showProfile(?string $option = null)
@@ -28,8 +29,14 @@ class ProfileController
             if ($option !== null && $option === "showHistory") {
                 $hist = $this->model->getQuizPlayed($_SESSION['id']);
             }
-            if ($creation > 0) {
-                $quiz = $this->model->getAllCreationsByUser($_SESSION['id']);
+            if ($option === null && $creation > 0) {
+                require_once ROOT . '/src/models/HomeModel.php';
+                require_once ROOT . '/src/models/LessonModel.php';
+                $modelHome = new HomeModel($this->db);
+                $modelLesson = new LessonModel($this->db);
+                $quiz = $modelHome->getAllCreationsByUser($_SESSION['id']);
+                $lessons = $modelLesson->getAllInfoLessonsByUser($_SESSION['id']);
+                $quiz[] = $lessons[0]; 
             }
             $activeTab = $_GET['action'] ?? 'creations';
             $activeTab = $activeTab === 'displayFriends' ? 'friends' : ($activeTab === 'showHistory' ? 'history' : 'creations');

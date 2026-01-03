@@ -25,7 +25,7 @@ include 'partials/header.php';
 
             <br>
             <div class="quiz-footer">
-                <p class="quiz-auteur">Par : <?= htmlspecialchars($quiz[$i]['user_name'] ?? '') ?></p>
+                <p class="quiz-auteur">Par : <span class="nom-auteur"> <?= htmlspecialchars($quiz[$i]['user_name'] ?? '') ?> </span></p>
                 <p class="quiz-date">Publié le : <?= htmlspecialchars($quiz[$i]['date'] ?? '') ?></p>
                 <div class="quiz-reactions">
                     <span class="reaction like">👍 <?= htmlspecialchars($quiz[$i]['nbjaime'] ?? 0) ?></span>
@@ -58,7 +58,7 @@ include 'partials/header.php';
 
             <br>
             <div class="quiz-footer">
-                <p class="quiz-auteur">Par : <?= htmlspecialchars($lessons[$i]['user_name'] ?? '') ?></p>
+                <p class="quiz-auteur">Par : <span class="nom-auteur"> <?= htmlspecialchars($lessons[$i]['user_name'] ?? '') ?></span></p>
                 <p class="quiz-date">Publié le : <?= htmlspecialchars($lessons[$i]['lecon_date'] ?? '') ?></p>
                 <div class="quiz-reactions">
                     <span class="reaction like">👍 <?= htmlspecialchars($lessons[$i]['nbjaime'] ?? 0) ?></span>
@@ -82,7 +82,7 @@ include 'partials/header.php';
 <?php else: ?>
     <div class="newCreations">
         <?php for ($i = 0; $i < count($quizNextPart); $i++): ?>
-            <article onclick="window.location.href='./?page=<?= $quizNextPart[$i]['genre'] ?>&id=<?= $quizNextPart[$i]['id'] ?> <?= $quizNextPart[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?>'" class="quiz">
+            <article onclick="window.location.href='./?page=<?= $quizNextPart[$i]['genre'] ?>&id=<?= $quizNextPart[$i]['id'] ?> <?= $quizNextPart[$i]['genre'] == 'lesson' ? '&categorie=view' : '' ?>'" <?= $quizNextPart[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?>'" class="quiz">
                 <div class="quiz-cat">
                     <?php if (!empty($quizNextPart[$i]['categories'])): ?>
                         <?php foreach ($quizNextPart[$i]['categories'] as $cat): ?>
@@ -99,7 +99,7 @@ include 'partials/header.php';
 
                 <br>
                 <div class="quiz-footer">
-                    <p class="quiz-auteur">Par : <?= htmlspecialchars($quizNextPart[$i]['user_name'] ?? '') ?></p>
+                    <p class="quiz-auteur">Par : <span class="nom-auteur"> <?= htmlspecialchars($quizNextPart[$i]['user_name'] ?? '') ?></span></p>
                     <p class="quiz-date">Publié le : <?= htmlspecialchars($quizNextPart[$i]['date'] ?? '') ?></p>
                     <div class="quiz-reactions">
                         <span class="reaction like">👍 <?= htmlspecialchars($quizNextPart[$i]['nbjaime'] ?? 0) ?></span>

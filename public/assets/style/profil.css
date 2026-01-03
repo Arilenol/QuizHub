@@ -11,8 +11,8 @@ button {
   color: white;
   border: none;
   padding: 21px 36px;
-  font-size: 1.575rem;
-  min-height: 60px;
+  font-size: 1.3rem;
+  min-height: 50px;
   cursor: pointer;
   box-shadow: 0 12px 0 #087b86;
 }
@@ -26,7 +26,6 @@ button {
 
 .edit {
   padding: 15px;
-  font-size: 1.4rem;
 }
 
 .no-content {
@@ -40,7 +39,6 @@ button {
 
 .logout {
   padding: 15px;
-  font-size: 1.4rem;
   background-color: #8e2a2a;
   box-shadow: 0 12px 0 #5e1d1d;
 }
@@ -52,24 +50,29 @@ button {
 .save-btn:hover,
 #editQuiz:hover,
 #playQuiz:hover,
-#deleteQuiz:hover {
+.deleteQuiz:hover,
+.cancel-btn:hover,
+.danger-btn:hover,
+#closeDeleteModal:hover {
   background-color: #fff;
   color: #087b86;
   box-shadow: 0px 8px 2px #cacacabf;
 }
 
-.editQuizPart{
+.editQuizPart {
   display: flex;
   flex-direction: row-reverse;
-  gap: 1;
+  gap: 1%;
 }
 
-#deleteQuiz{
+.deleteQuiz {
   background-color: #8e2a2a;
   box-shadow: 0 12px 0 #5e1d1d;
 }
 
-#editQuiz, #deleteQuiz, #playQuiz{
+#editQuiz,
+.deleteQuiz,
+#playQuiz {
   align-content: end;
   margin-bottom: 10%;
   padding-right: 20px;
@@ -200,7 +203,6 @@ button {
 
 .newCreations .quiz {
   position: relative;
-  cursor: pointer;
   border: 2px solid #ccc;
   border-radius: 50px;
   padding: 15px;
@@ -423,4 +425,36 @@ h3 {
 
 .save-btn {
   margin-top: 10%;
+}
+
+.modal-actions {
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 2%;
+}
+
+.cancel-btn {
+  margin-top: 5%;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.danger-btn {
+  margin-top: 5%;
+  background: #d9534f;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 12px 0 #5e1d1d;
+}
+
+#closeDeleteModal {
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
 }
