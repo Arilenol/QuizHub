@@ -80,8 +80,8 @@ require 'partials/header.php';
                 <div class="quiz-footer">
                     <p class="quiz-date">publié le : ' . htmlspecialchars($quiz['date'] ?? '') . '</p>
                         <div class="quiz-reactions">
-                            <span class="reaction like">♥ ' . htmlspecialchars($quiz['likes'] ?? 0) . '</span>
-                            <span class="reaction dislike">♡ ' . htmlspecialchars($quiz['dislikes'] ?? 0) . '</span>
+                            <span class="reaction like">👍 ' . htmlspecialchars($quiz['likes'] ?? 0) . '</span>
+                            <span class="reaction dislike">👎 ' . htmlspecialchars($quiz['dislikes'] ?? 0) . '</span>
                         </div>
                     </div>
                 </article>

@@ -6,8 +6,14 @@ require_once '../src/views/partials/header.php';
 
 ?>
 <div class="buttonAction">
-	<button class="retour" onclick="window.location.href = '?page=home'">← Retour</button>
-	<button class="signalement" onclick="window.location.href='?page=signalement'">Signaler ce quiz</button>
+	<div class="button" onclick="window.location.href = '?page=home'">
+		<span></span>
+		<p>← Retour</p>
+	</div>
+	<div class="button signalement" onclick="window.location.href = '?page=signalement'">
+		<span></span>
+		<p>Signaler ce quiz</p>
+	</div>
 </div>
 <?php if (!($viewData === null)) :
 	// Extraire les données envoyées depuis le contrôleur
