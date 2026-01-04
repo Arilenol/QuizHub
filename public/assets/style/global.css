@@ -53,6 +53,28 @@ header>*:nth-child(3) {
 	all: unset;
 }
 
+select{
+	background: #0AB1BD;
+    padding: 20px;
+    border-radius: 50px;
+    color: white;
+    border: none;
+    font-size: 20px;
+}
+
+.signalement > span{
+  background-color: rgb(167, 48, 48) !important;
+  box-shadow: 0 12px 0 rgb(114, 34, 34) !important;
+}
+
+.signalement > span:hover {
+  background-color: #fff !important;
+  box-shadow: 0px 8px 2px #CACACABF !important;
+}
+.signalement:has(span:hover) p {
+	color: rgb(114, 34, 34) !important;
+}
+
 .button,
 .searchbar,
 .input,
@@ -159,7 +181,7 @@ svg {
 }
 
 .button>span:active {
-	box-shadow: none;
+	box-shadow: none !important;
 }
 
 .checkbox {

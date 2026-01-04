@@ -6,7 +6,7 @@ require_once 'partials/header.php'; ?>
 
 <body>
 
-    <button onclick="window.location.href='?page=home'" class="btn retour">&lt; Retour</button>
+    <button onclick="window.location.href='?page=home'" class="button" style="margin: 20px 0 0 20px"><span></span><p>&lt; Retour</p></button>
 
     <div class="container">
 
@@ -29,8 +29,8 @@ require_once 'partials/header.php'; ?>
                     </div>
                 </div>
                 <div class = "action">
-                <button class="edit">Modifier le profil</button>
-                <button class="logout" onclick="window.location.href='?page=log&typelog=logout'">Déconnexion</button>
+                <button class="button"><span></span><p>Modifier le profil</p></button>
+                <button class="button signalement" onclick="window.location.href='?page=log&typelog=logout'"><span></span><p>Déconnexion</p></button>
                 </div>
             </div>
         </div>
