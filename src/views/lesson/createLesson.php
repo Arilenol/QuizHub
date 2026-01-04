@@ -6,18 +6,24 @@
     require __DIR__ . '/../partials/header.php';
 ?>
 
-<form method = "post" action = "index.php?page=lesson&categorie=create">
-    <button type = "submit" name = "Retour" value = "yes"><span> < </span>Retour</button>
+<form method = "post" action = "index.php?page=lesson&categorie=create" style="display: flex;flex-direction: column;gap: 10px;align-items: flex-start;margin: 20px;">
+    <button type = "submit" name = "Retour" value = "yes" class="button"><span></span><p>< Retour</p></button>
     <h1>Créer une leçon</h1>
     <input type = "hidden" name="page" value="lesson">
     <input type="hidden" name ="categorie" value = "create">
     <h2>Nom de la leçon</h2>
-    <input type="text" name ="LessonTitle" value = "<?php echo htmlspecialchars($LessonTitle) ?>">
-    <p class="description">Description</p>
-    <input type="text" name ="LessonDescription" value = "<?php echo htmlspecialchars($desc) ?>">
-
-    <h2 style="display : inline;">Catégories
-        <button id="hiddenCategories" type = "button ">▼</button>
+    <div class="input">
+        <span></span>
+        <input type="text" name ="LessonTitle" value = "<?php echo htmlspecialchars($LessonTitle) ?>">
+    </div>
+    
+    <h2 class="description">Description</h2>
+    <div class="input">
+        <span></span>
+        <input type="text" name ="LessonDescription" value = "<?php echo htmlspecialchars($desc) ?>">
+    </div>
+    <h2>Catégories
+        <button id="hiddenCategories" type = "button ">◀</button>
     </h2>
     <div class="categoriesList">
         <?php
@@ -34,31 +40,44 @@
     </div>
 
     <div class = "newLesson">
-    <p class = "LessonParts">Parties</p>
+    <h2 class = "LessonParts">Parties</h2>
     <?php
     for($i = 0; $i < $_SESSION['nbParts'] ; $i = $i +1){
         echo '<div class="LessonPart">
-        <p>Partie '.($i+1).'</p>
-        <input type = "text" name ="namePart'.$i.'" value = "'.htmlspecialchars($TAB_CONTENU[$i]['name']).'" placeholder="nom de la partie">
-        <p>Leçon :</p>
-        <textarea name = "contentPart'.$i.'">'.htmlspecialchars($TAB_CONTENU[$i]['content']).'</textarea>';
+        <h3>Partie '.($i+1).'</h3>
+        <div class="input">
+            <span></span>
+            <input type = "text" name ="namePart'.$i.'" value = "'.htmlspecialchars($TAB_CONTENU[$i]['name']).'" placeholder="nom de la partie">
+        </div>
+        <h3>Leçon :</h3>
+        <div class="textarea">
+            <span></span>
+            <textarea name = "contentPart'.$i.'">'.htmlspecialchars($TAB_CONTENU[$i]['content']).'</textarea>
+        </div>';
         
         for ($k = 0; $k < $_SESSION['nbExemple'][$i];$k = $k +1){
             echo '<div class="exemple">
-            <p>Exemple '.($k+1).' :</p>
-            <p>consigne : <p>
-            <textarea name ="exemple'.$k.'-part'.$i.'">'.htmlspecialchars($TAB_CONTENU[$i]['exemples'][$k]['consigne']).'</textarea>
-            <p>réponse : <p>
-            <textarea name ="reponse'.$k.'-part'.$i.'">'.htmlspecialchars($TAB_CONTENU[$i]['exemples'][$k]['reponse']).'</textarea>
-            <button name= "delExemple'.$k.'-part'.$i.'" value="yes" type="submit"> Supprimer cet exemple</button>
+            <h3>Exemple '.($k+1).' :</h3>
+            <p>consigne : </p>
+            <div class="textarea">
+                <span></span>
+                <textarea name ="exemple'.$k.'-part'.$i.'">'.htmlspecialchars($TAB_CONTENU[$i]['exemples'][$k]['consigne']).'</textarea>
+            </div>
+            
+            <p>réponse : </p>
+            <div class="textarea">
+                <span></span>
+                <textarea name ="reponse'.$k.'-part'.$i.'">'.htmlspecialchars($TAB_CONTENU[$i]['exemples'][$k]['reponse']).'</textarea>
+            </div>
+            <button name= "delExemple'.$k.'-part'.$i.'" value="yes" type="submit" class="button"><span></span><p>Supprimer cet exemple</p></button>
             </div>';
 
         }
-        echo '<button type = "submit" name="addExemple" value='.$i.'>Ajouter un exemple</button>
-        <button name = "DelPart" type="submit" value='.$i.'>Supprimer cette partie</button>
+        echo '<button type = "submit" name="addExemple" class="button" value='.$i.'><span></span><p>Ajouter un exemple</p></button>
+        <button name = "DelPart" type="submit" value='.$i.' class="button"><span></span><p>Supprimer cette partie</p></button>
         </div>';
     }
-    echo '<button type = "submit" name = "addPart" value = "yes">Ajouter une nouvelle partie</button>'
+    echo '<button type = "submit" name = "addPart" value = "yes" class="button"><span></span><p>Ajouter une nouvelle partie</p></button>'
     ?>
     </div>
 
@@ -118,7 +137,7 @@
             echo '<p class="erreur">Chaque champ doit être rempli<br>Chaque partie peut avoir autant d\'exemple que nécessaire<br>Au moins une catégorie doit être sélectionnée</p>';
         } 
     ?>
-    <button type = "submit" name = "create" value = "yes">Créer la leçon</button>
+    <button type = "submit" name = "create" value = "yes" class="button"><span></span><p>Créer la leçon</p></button>
 </form>
 <script src = "./assets/js/sauvegardeScroll.js"></script>
 <script src = "./assets/js/selectDispo.js"></script>

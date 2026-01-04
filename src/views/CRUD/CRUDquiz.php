@@ -37,8 +37,8 @@
                     <div class="quiz-footer">
                         <p class="quiz-date">publié le : <?= htmlspecialchars($quiz['date'] ?? '') ?></p>
                         <div class="quiz-reactions">
-                            <span class="reaction like">♥ <?= htmlspecialchars($quiz['nbjaime'] ?? 0) ?></span>
-                            <span class="reaction dislike">♡ <?= htmlspecialchars($quiz['nbjaimepas'] ?? 0) ?></span>
+                            <span class="reaction like">👍 <?= htmlspecialchars($quiz['nbjaime'] ?? 0) ?></span>
+                            <span class="reaction dislike">👎 <?= htmlspecialchars($quiz['nbjaimepas'] ?? 0) ?></span>
                         </div>
                     </div>
 
