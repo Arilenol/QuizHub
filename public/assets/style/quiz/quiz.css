@@ -12,33 +12,11 @@
 
 .buttonAction {
   display: flex;
+  width: 95%;
   flex-direction: row;
   justify-content: space-between;
-  width: 100%;
-  margin-top: 10px;
-}
-
-.quiz-réalisation button {
-  border-radius: 75px;
-  background-color: #0AB1BD;
-  color: white;
-  border: none;
-  padding: 21px 36px;
-  font-size: 1.575rem;
-  min-height: 69px;
-  cursor: pointer;
-  box-shadow: 0 12px 0 #087b86;
-}
-
-.quiz-réalisation button:hover {
-  background-color: #fff;
-  color: #087b86;
-  box-shadow: 0px 8px 2px #CACACABF;
-}
-
-.retour {
-  margin-left: 1%;
-  margin-top: 1%;
+  padding: 0 25px;
+  margin-top: 25px;
 }
 
 /* ----------- QUESTION ----------- */
@@ -63,20 +41,6 @@
   grid-column: 1 / -1;
   justify-self: center;
   width: 50%;
-}
-
-.quiz-réalisation .signalement {
-  padding: 21px 36px;
-  font-size: 1.575rem;
-  min-height: 69px;
-  margin-right: 1%;
-  margin-top: 1%;
-  background-color: rgb(167, 48, 48);
-  box-shadow: 0 12px 0 rgb(114, 34, 34);
-}
-
-.quiz-réalisation .signalement:hover {
-  color: rgb(167, 48, 48);
 }
 
 .réponse {
@@ -132,7 +96,8 @@ button.submit {
 
 div.actions-fin {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: auto auto auto;
+  gap: 20px;
 }
 
 p.fin {
