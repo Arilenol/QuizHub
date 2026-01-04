@@ -24,11 +24,15 @@ require_once 'partials/header.php';
                 <div class="stats">
                     <div>
                         <span class="number"><?= $creation ?></span>
-                        <span class="label">Quiz créés</span>
+                        <span class="label">Quiz créé(s)</span>
+                    </div>
+                    <div>
+                        <span class="number"><?= $lessonCreated ?></span>
+                        <span class="label">Leçon(s) créée(s)</span>
                     </div>
                     <div>
                         <span class="number"><?= $played ?></span>
-                        <span class="label">Quiz joués</span>
+                        <span class="label">Quiz joué(s)</span>
                     </div>
                 </div>
                 <div class="action">
@@ -111,7 +115,7 @@ require_once 'partials/header.php';
                                     <button id="playQuiz" onclick="window.location.href='./?page=<?= $quiz[$i]['genre'] ?>&id=<?= $quiz[$i]['id'] ?> <?= $quiz[$i]['genre'] == 'lesson' ? '&categorie=view' : '' ?>'" <?= $quiz[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?>'">Jouer</button>
                                 </div>
                                 <div class="quiz-footer">
-                                    <p class="quiz-auteur">Par : Vous</p>
+                                    <p class="quiz-auteur">Par : <span class="author">Vous</span></p>
                                     <p class="quiz-date">Publié le : <?= htmlspecialchars($quiz[$i]['date'] ?? '') ?></p>
                                     <div class="quiz-reactions">
                                         <span class="reaction like">👍 <?= htmlspecialchars($quiz[$i]['nbjaime'] ?? 0) ?></span>
@@ -125,15 +129,21 @@ require_once 'partials/header.php';
 
                     <div class="modal-overlay" id="deleteModal">
                         <div class="modal">
-                            <button class="close-modal" id="closeDeleteModal">&times;</button>
+
+                            <button type="button" class="close-modal" id="closeDeleteModal">&times;</button>
 
                             <h2>Supprimer</h2>
                             <p id="deleteText"></p>
 
-                            <div class="modal-actions">
-                                <button class="danger-btn" id="confirmDelete">Supprimer</button>
-                                <button class="cancel-btn" id="cancelDelete">Annuler</button>
-                            </div>
+                            <form method="POST" action="?page=profil&action=deleteQuiz">
+                                <input type="hidden" name="quiz_id" id="deleteQuizId">
+
+                                <div class="modal-actions">
+                                    <button type="submit" class="danger-btn">Supprimer</button>
+                                    <button type="button" class="cancel-btn" id="cancelDelete">Annuler</button>
+                                </div>
+                            </form>
+
                         </div>
                     </div>
 
@@ -182,7 +192,13 @@ require_once 'partials/header.php';
                             <button class="close-modal" id="closeModal">&times;</button>
 
                             <h2>Modifier le profil</h2>
-
+                            <p class="success">
+                                <?= isset($messageSuccess) ? $messageSuccess : '' ?>
+                            </p>
+                            <br>
+                            <p class="error">
+                                <?= isset($messageError) ? $messageError : '' ?>
+                            </p>
                             <form method="POST" action="?page=profil&action=updateProfile">
                                 <div class="form-group">
                                     <label for="username">Nom d'utilisateur</label>
@@ -214,7 +230,7 @@ require_once 'partials/header.php';
                                 <div class="form-group">
                                     <label for="passwordVerif">Confirmer le mot de passe</label>
                                     <div class="input-wrapper">
-                                        <input type="password" id="passwordVerif"
+                                        <input type="password" name="passwordVerif" id="passwordVerif"
                                             placeholder="Laisser vide pour ne pas changer">
                                         <i id="eyeVerif" class="fa-solid fa-eye"></i>
                                     </div>
@@ -226,7 +242,11 @@ require_once 'partials/header.php';
 
                         </div>
                     </div>
-
+                    <?php if (!empty($showProfileModal)) : ?>
+                        <script>
+                            document.getElementById('profileModal').style.display = 'flex';
+                        </script>
+                    <?php endif; ?>
 </body>
 
 </html>

@@ -458,3 +458,15 @@ h3 {
   border-radius: 8px;
   cursor: pointer;
 }
+
+p.success{
+  color: green;
+}
+
+p.error{
+  color: red;
+}
+
+.author{
+  font-weight: bold;
+}

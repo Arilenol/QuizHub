@@ -40,7 +40,7 @@ switch ($page) {
         // $controller->sendReaction($reactions);
         break;
 
-        case 'lesson':
+    case 'lesson':
         $categorie = $_GET['categorie'] ?? null;
         switch ($categorie) {
 
@@ -153,6 +153,8 @@ switch ($page) {
                 $controller->showProfile("showFriends");
             } else if ($_GET['action'] === 'showHistory') {
                 $controller->showProfile("showHistory");
+            } else if ($_GET['action'] === 'updateProfile') {
+                $controller->saveNewInfo();
             }
         } else {
             $controller->showProfile();
@@ -180,6 +182,7 @@ switch ($page) {
         require_once ROOT . '/src/controllers/QuizController.php';
         $controller = new QuizController();
 
+        $controller->saveHistoric($id);
         $controller->showQuiz($id, $idQuestion, $showAnswer);
         break;
     case 'createContent':

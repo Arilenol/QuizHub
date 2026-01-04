@@ -605,6 +605,8 @@ class QuizController
             } else {
                 $question = null;
                 $reponse = [];
+                $hasLiked = isset($_SESSION['id']) && $modelLike->hasLiked($quizId, $_SESSION['id']);
+                $hasDisliked = isset($_SESSION['id']) && $modelLike->hasDisliked($quizId, $_SESSION['id']);
                 require ROOT . '/src/views/quiz/show.php';
             }
 
@@ -634,5 +636,17 @@ class QuizController
 
         // Retourner true si les deux tableaux sont identiques
         return $correctAnswers === $userIds;
+    }
+
+    public function saveHistoric(string|int $quizId)
+    {
+        require ROOT . '/src/models/HistoricModel.php';
+        $modelHistoric = new HistoricModel($this->db);
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        if (isset($_SESSION['id'])) {
+            $test = $modelHistoric->saveHistoric($quizId, $_SESSION['id']);
+        }
     }
 }

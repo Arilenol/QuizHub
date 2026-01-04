@@ -24,6 +24,11 @@ class FlashcardController
             return;
         }
         $firstId = $_SESSION['remainingQuestions'][0];
+        require ROOT . '/src/models/HistoricModel.php';
+        $modelHistoric = new HistoricModel($this->db);
+        if (isset($_SESSION['id'])){
+            $modelHistoric->saveHistoric($quizId, $_SESSION['id']);
+        }
         $this->showQuestion($firstId);
     }
 
@@ -238,12 +243,14 @@ class FlashcardController
         }
         return true;
     }
-    
-    public function modifyFlashcard($id){
+
+    public function modifyFlashcard($id)
+    {
         require ROOT . '/src/views/Quiz/createFlashcard.php';
     }
 
-    public function endFlashcard(){
+    public function endFlashcard()
+    {
         $viewData = null;
         $quizId = $_GET['id'];
         require_once ROOT . '/src/models/LikeModel.php';
@@ -267,6 +274,8 @@ class FlashcardController
             exit;
         }
         $reactions = $modelLike->getReactions($quizId);
+        $hasLiked = isset($_SESSION['id']) && $modelLike->hasLiked($quizId, $_SESSION['id']);
+        $hasDisliked = isset($_SESSION['id']) && $modelLike->hasDisliked($quizId, $_SESSION['id']);
         require ROOT . '/src/views/quiz/flashcard.php';
     }
 }
