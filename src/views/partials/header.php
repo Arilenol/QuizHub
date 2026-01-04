@@ -29,6 +29,10 @@
                 <img src="./assets/images/loupe.svg" alt="Search Icon">
                 <input type="text" name="contenu" placeholder="Rechercher des créations..." value="<?php echo isset($_GET['contenu']) ? htmlspecialchars($_GET['contenu']) : ''; ?>" />
                 <input type="hidden" name="page" value="catalogue">
+                <input type="hidden" name="searchAuthor" value="<?php echo isset($_GET['searchAuthor']) ? $_GET['searchAuthor'] : '' ?>">
+                <input type="hidden" name="categorie" value="<?php echo isset($_GET['categorie']) ? $_GET['categorie'] : '' ?>">
+                <input type="hidden" name="tri" value="<?php echo isset($_GET['tri']) ? $_GET['tri'] : '' ?>">
+                <input type="hidden" name="genre" value="<?php echo isset($_GET['genre']) ? $_GET['genre'] : '' ?>">
             </div>
         </form>
         <div>
