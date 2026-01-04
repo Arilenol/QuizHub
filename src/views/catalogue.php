@@ -11,6 +11,7 @@ require 'partials/header.php';
         < Retour </button>
             <form method="GET" action="index.php">
                 <input type="hidden" name="page" value="catalogue">
+                <input type="hidden" name="numPage" value="<?php isset($page) ? $page : 1 ?>">
                 <div class="search-author">
                     <?php
                     echo '<input type="text" name="searchAuthor" placeholder="Rechercher un auteur par mot-clé" value="' . (isset($_GET['searchAuthor']) ? htmlspecialchars($_GET['searchAuthor']) : '') . '">';

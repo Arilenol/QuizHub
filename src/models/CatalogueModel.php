@@ -88,8 +88,8 @@ class CatalogueModel {
             if ($tris && isset($allowedOrder[$tris])) {
                 $baseSql .= ' ORDER BY ' . $allowedOrder[$tris];
             }
-
-            $sql = $this->db->prepare($baseSql . ';');
+            
+            $sql = $this->db->prepare($baseSql . ' LIMIT 500;');
             $sql->bindValue(1,$user_id);
             $sql->bindValue(2,$user_id);
             $sql->bindValue(3,$recherche_cat);
@@ -136,7 +136,7 @@ class CatalogueModel {
             die("Error: " . $e->getMessage());
         }
     }
-    
+
     /**
      * Récupère les catégories associées à un quiz donné.
      *

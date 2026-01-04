@@ -44,7 +44,7 @@ class CatalogueController
         $user = isset($_SESSION['id']) ? (int)$_SESSION['id'] : null;
         $genre = isset($_GET['genre']) && !empty($_GET['genre']) ? $_GET['genre'] : '';
         $quiz_correspondants = $this->model->searchContentByAll($user, $recherche_cat, $recherche_contenu,  $recherche_auteur, $genre, $tri);
-        
+        $page = isset($_GET['numPage']) && !empty($_GET['numPage']) && (int)$_GET['numPage'] > 0 ? (int)$_GET['numPage'] : 1;
 
         $quizzes = $quiz_correspondants;
         foreach ($quizzes as $index => $quiz) {
@@ -56,8 +56,8 @@ class CatalogueController
             }
             
         }
-        var_dump($recherche_auteur);
-        var_dump($recherche_contenu);
+        $nbPages = ceil(count($quizzes)/30);
+
         require ROOT . '/src/views/catalogue.php';
     }
 }
