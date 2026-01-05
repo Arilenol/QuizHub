@@ -29,6 +29,8 @@ class LessonController {
             $exemples = $this->model->getExemple($part['id']);
             $resultats[] = $exemples;
         }
+
+        
         // afficher la vue
         require ROOT . '/src/views/lesson/show.php';
     }

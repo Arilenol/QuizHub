@@ -40,19 +40,55 @@ require_once '../src/views/partials/header.php';
 <p class="fin">Vous avez aimé le quiz ? N'hésiter pas à le noter : </p>
 <div class="quiz-reactions">
     <?php if (isset($_SESSION['id'])) : ?>
-        <form method="POST" action="?page=test&action=end&id=<?= $quizId ?>">
-            <button type="submit" name="reaction" value="like" class="reaction like">
+        <?php if (!$hasDisliked) : ?>
+            <form method="POST" action="?page=test&id=<?= $quizId ?>">
+                <button type="submit"
+                    name="reaction"
+                    value="like"
+                    class="like"
+                    id=<?= $hasDisliked ? 'disabled' : '' ?>>
+                    👍 <?= htmlspecialchars($reactions['nbjaime'] ?? 0) ?>
+                </button>
+                <input type="hidden" name="idQuestion" value=<?= $idQuestion ?>>
+            </form>
+        <?php endif; ?>
+        <?php if ($hasDisliked) : ?>
+            <button type=<?= $hasDisliked ? '' : 'submit' ?>
+                name="reaction"
+                value="like"
+                class="like"
+                id=<?= $hasDisliked ? 'disabled' : '' ?>>
                 👍 <?= htmlspecialchars($reactions['nbjaime'] ?? 0) ?>
             </button>
-        </form>
-        <form method="POST" action="?page=test&action=end&id=<?= $quizId ?>">
-            <button type="submit" name="reaction" value="dislike" class="reaction dislike">
-                👎 <?= htmlspecialchars($reactions['nbjaimepas'] ?? 0) ?>
-            </button>
-        </form>
-    <?php else : ?>
+        <?php endif; ?>
+        <?php if (!$hasLiked) : ?>
+            <form method="POST" action="?page=test&id=<?= $quizId ?>">
+                <button type='submit'
+                    name="reaction"
+                    value="dislike"
+                    class="dislike"
+                    id=<?= $hasLiked ? 'disabled' : '' ?>>
+                    👎 <?= htmlspecialchars($reactions['nbjaimepas'] ?? 0) ?>
+                </button>
+                <input type="hidden" name="idQuestion" value=<?= $idQuestion ?>>
+            <?php endif; ?>
+            <?php if ($hasLiked) : ?>
+                <button type='submit'
+                    name="reaction"
+                    value="dislike"
+                    class="dislike"
+                    id=<?= $hasLiked ? 'disabled' : '' ?>>
+                    👎 <?= htmlspecialchars($reactions['nbjaimepas'] ?? 0) ?>
+                </button>
+            <?php endif; ?>
+            </form>
+        <?php else : ?>
 
-        <p>Pour débloquer cette fonctionnalité <a href="?page=log&typelog=connection"> Connectez-vous</a> d'abord</p>
+            <p>Pour débloquer cette fonctionnalité <a href="?page=log&typelog=connection"> Connectez-vous</a> d'abord</p>
 
-    <?php endif; ?>
+        <?php endif; ?>
 </div>
+
+</body>
+
+</html>

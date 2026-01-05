@@ -286,9 +286,10 @@ function constructionBD(PDO $conn)
                 quiz_id INTEGER,
                 score INTEGER,
                 tempsPris INTEGER,
-                dateRealisation DATE,
+                dateRealisation DATETIME DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
                 FOREIGN KEY (quiz_id) REFERENCES quiz(id) ON DELETE CASCADE
+                )
             );";
 
         $conn->exec($sql);
@@ -435,7 +436,7 @@ function constructionBD(PDO $conn)
             END;";
         $conn->exec($sql);
 
-        $sql="CREATE TRIGGER trg_after_delete_question
+        $sql = "CREATE TRIGGER trg_after_delete_question
             AFTER DELETE ON Question
             BEGIN
                 UPDATE Question 
@@ -513,147 +514,298 @@ function constructionBD(PDO $conn)
 
         $conn->beginTransaction();
         try {
-            mt_srand(12345); // seed reproductible
+            mt_srand(12345);
 
-            // ---------- 10 users ----------
+            /* ===================== USERS (FAKE) ===================== */
             $users = [];
-            $stmtUser = $conn->prepare("INSERT INTO users (username, password, email) VALUES (?, ?, ?)");
+            $stmtUser = $conn->prepare(
+                "INSERT INTO users (username, password, email) VALUES (?, ?, ?)"
+            );
+
             for ($i = 1; $i <= 10; $i++) {
-                $username = "user{$i}";
-                $password = password_hash("pass{$i}", PASSWORD_DEFAULT);
-                $email = "user{$i}@exemple.test";
-                $stmtUser->execute([$username, $password, $email]);
+                $stmtUser->execute([
+                    "user$i",
+                    password_hash("pass$i", PASSWORD_DEFAULT),
+                    "user$i@exemple.test"
+                ]);
                 $users[] = $conn->lastInsertId();
             }
 
-            // ---------- 20 categories ----------
-            $stmtCat = $conn->prepare("INSERT INTO categories (categorieName, description) VALUES (?, ?)");
-            for ($i = 1; $i <= 20; $i++) {
-                $name = "Catégorie {$i}";
-                $desc = "Description pour la catégorie {$i}";
-                $stmtCat->execute([$name, $desc]);
+            /* ===================== CATEGORIES ===================== */
+            $realCategories = [
+                ['Mathématiques', 'Calcul, algèbre et logique'],
+                ['Histoire', 'Histoire française et mondiale'],
+                ['Géographie', 'Pays, capitales et continents'],
+                ['Informatique', 'Programmation et bases informatiques'],
+                ['Culture générale', 'Questions variées'],
+                ['Sciences', 'Physique, chimie et biologie'],
+                ['Français', 'Orthographe et grammaire'],
+                ['Anglais', 'Vocabulaire et grammaire'],
+                ['Développement web', 'HTML, CSS, JavaScript'],
+                ['Bases de données', 'SQL et modélisation'],
+            ];
+
+            $categories = [];
+            $stmtCat = $conn->prepare(
+                "INSERT INTO categories (categorieName, description) VALUES (?, ?)"
+            );
+
+            foreach ($realCategories as $cat) {
+                $stmtCat->execute($cat);
                 $categories[] = $conn->lastInsertId();
             }
 
-            // helper prepared statements
-            // include user_id so each quiz is linked to its owner
-            $stmtQuiz = $conn->prepare("INSERT INTO quiz (user_id, title, description, difficulty, disponibilite, date, genre) VALUES (?, ?, ?, ?, ?, ?, ?)");
-            //---------- modified line --------------
-            $stmtParam = $conn->prepare("INSERT OR REPLACE INTO parametreQuiz (quiz_id, afficherAvancement, minuterie, afficherScore, recapitulatifFin, ordreAleatoire, repasserErreurs) VALUES (?, ?, ?, ?, ?, ?, ?)");
-            $stmtTestStat = $conn->prepare("INSERT INTO TestStatistiques (quiz_id, difficulty, moyenne) VALUES (?, ?, ?)");
-            $stmtCatQuiz = $conn->prepare("INSERT INTO categorie_quiz (category_id, quiz_id) VALUES (?, ?)");
-            $stmtLecon = $conn->prepare("INSERT INTO Lecon (user_id, quiz_id, title, description) VALUES (?, ?, ?, ?)");
-            $stmtPartie = $conn->prepare("INSERT INTO Partie (numeroPartie, lecon_id, title, content) VALUES (?, ?, ?, ?)");
-            $stmtEx = $conn->prepare("INSERT INTO Exemple (numeroExemple, partie_id, consigne, reponse) VALUES (?, ?, ?, ?)");
-            $stmtCarte = $conn->prepare("INSERT INTO Carte (quiz_id, numeroCarte, question, reponse) VALUES (?, ?, ?, ?)");
-            $stmtQuestion = $conn->prepare("INSERT INTO Question (numeroQuiz, quiz_id, question) VALUES (?, ?, ?)");
-            $stmtReponse = $conn->prepare("INSERT INTO Reponse (question_id, reponse, estCorrecte) VALUES (?, ?, ?)");
-            $stmtResult = $conn->prepare("INSERT INTO resultat (user_id, quiz_id, score, tempsPris, dateRealisation) VALUES (?, ?, ?, ?, ?)");
-            $stmtAmiDisp = $conn->prepare("INSERT INTO amiDisponibilite (quiz_id, ami_id) VALUES (?, ?)");
-            $stmtDemande = $conn->prepare("INSERT INTO demandeAmi (demandeur_id, receveur_id) VALUES (?, ?)");
-            $stmtAmis = $conn->prepare("INSERT INTO amis (user1_id, user2_id) VALUES (?, ?)");
-            $stmtRecherche = $conn->prepare("INSERT INTO rechercheHistorique (user_id, recherche, dateRecherche) VALUES (?, ?, ?)");
+            /* ===================== PREPARED STATEMENTS ===================== */
+            $stmtQuiz = $conn->prepare(
+                "INSERT INTO quiz (user_id, title, description, difficulty, disponibilite, date, genre)
+         VALUES (?, ?, ?, ?, ?, ?, ?)"
+            );
 
-            // ---------- Create ~30 quizzes (moyenne 3 par user) ----------
+            $stmtParam = $conn->prepare(
+                "INSERT OR REPLACE INTO parametreQuiz
+        (quiz_id, afficherAvancement, minuterie, afficherScore, recapitulatifFin, ordreAleatoire, repasserErreurs)
+        VALUES (?, ?, ?, ?, ?, ?, ?)"
+            );
+
+            $stmtTestStat = $conn->prepare(
+                "INSERT INTO TestStatistiques (quiz_id, difficulty, moyenne) VALUES (?, ?, ?)"
+            );
+
+            $stmtCatQuiz = $conn->prepare(
+                "INSERT INTO categorie_quiz (category_id, quiz_id) VALUES (?, ?)"
+            );
+
+            $stmtLecon = $conn->prepare(
+                "INSERT INTO Lecon (user_id, quiz_id, title, description) VALUES (?, ?, ?, ?)"
+            );
+
+            $stmtPartie = $conn->prepare(
+                "INSERT INTO Partie (numeroPartie, lecon_id, title, content) VALUES (?, ?, ?, ?)"
+            );
+
+            $stmtEx = $conn->prepare(
+                "INSERT INTO Exemple (numeroExemple, partie_id, consigne, reponse) VALUES (?, ?, ?, ?)"
+            );
+
+            $stmtCarte = $conn->prepare(
+                "INSERT INTO Carte (quiz_id, numeroCarte, question, reponse) VALUES (?, ?, ?, ?)"
+            );
+
+            $stmtQuestion = $conn->prepare(
+                "INSERT INTO Question (numeroQuiz, quiz_id, question) VALUES (?, ?, ?)"
+            );
+
+            $stmtReponse = $conn->prepare(
+                "INSERT INTO Reponse (question_id, reponse, estCorrecte) VALUES (?, ?, ?)"
+            );
+
+            $stmtResult = $conn->prepare(
+                "INSERT INTO resultat (user_id, quiz_id, score, tempsPris, dateRealisation)
+         VALUES (?, ?, ?, ?, ?)"
+            );
+
+            $stmtAmiDisp = $conn->prepare(
+                "INSERT INTO amiDisponibilite (quiz_id, ami_id) VALUES (?, ?)"
+            );
+
+            $stmtDemande = $conn->prepare(
+                "INSERT INTO demandeAmi (demandeur_id, receveur_id) VALUES (?, ?)"
+            );
+
+            $stmtAmis = $conn->prepare(
+                "INSERT INTO amis (user1_id, user2_id) VALUES (?, ?)"
+            );
+
+            $stmtRecherche = $conn->prepare(
+                "INSERT INTO rechercheHistorique (user_id, recherche, dateRecherche) VALUES (?, ?, ?)"
+            );
+
+            /* ===================== QUIZ ===================== */
+            $quizData = [
+                [
+                    'title' => 'Capitales du monde',
+                    'desc' => 'Testez vos connaissances sur les capitales',
+                    'genre' => 'standard',
+                    'difficulty' => 2,
+                    'questions' => [
+                        ['Quelle est la capitale du Canada ?', ['Ottawa', 'Toronto', 'Vancouver'], 0],
+                        ['Quelle est la capitale du Japon ?', ['Tokyo', 'Osaka', 'Kyoto'], 0],
+                    ]
+                ],
+                [
+                    'title' => 'Bases du SQL',
+                    'desc' => 'Requêtes SQL fondamentales',
+                    'genre' => 'test',
+                    'difficulty' => 3,
+                    'questions' => [
+                        ['Quelle commande permet de lire des données ?', ['SELECT', 'INSERT', 'DELETE'], 0],
+                        ['Quelle clause filtre les résultats ?', ['WHERE', 'ORDER BY', 'GROUP BY'], 0],
+                    ]
+                ],
+                [
+                    'title' => 'Flashcards HTML',
+                    'desc' => 'Balises HTML essentielles',
+                    'genre' => 'flashcard',
+                    'difficulty' => 1,
+                    'cards' => [
+                        ['<p>', 'Paragraphe'],
+                        ['<a>', 'Lien hypertexte'],
+                        ['<img>', 'Image'],
+                    ]
+                ],
+            ];
+
             $quiz_ids = [];
-            $totalQuizzes = 30;
-            $genres = ['flashcard', 'standard', 'test'];
-            $dispos = ['public', 'private', 'ami'];
-            for ($q = 1; $q <= $totalQuizzes; $q++) {
-                $owner = $users[($q - 1) % count($users)]; // distribue les quizzes sur les users
-                $title = "Quiz {$q}";
-                $desc = "Description pour quiz {$q}";
-                $difficulty = mt_rand(1, 5);
-                $disponibilite = $dispos[array_rand($dispos)];
-                $date = date('Y-m-d', strtotime("-" . mt_rand(0, 365) . " days"));
-                $genre = $genres[array_rand($genres)];
-                // pass owner as first parameter to populate user_id
-                $stmtQuiz->execute([$owner, $title, $desc, $difficulty, $disponibilite, $date, $genre]);
+
+            foreach ($quizData as $i => $qz) {
+
+                $owner = $users[$i % count($users)];
+                $stmtQuiz->execute([
+                    $owner,
+                    $qz['title'],
+                    $qz['desc'],
+                    $qz['difficulty'],
+                    'public',
+                    date('Y-m-d'),
+                    $qz['genre']
+                ]);
+
                 $quiz_id = $conn->lastInsertId();
-                $quiz_ids[] = ['id' => $quiz_id, 'genre' => $genre, 'difficulty' => $difficulty];
+                $quiz_ids[] = ['id' => $quiz_id, 'genre' => $qz['genre'], 'difficulty' => $qz['difficulty']];
 
-                // categories link: assign 1-3 categories
-                $numCats = mt_rand(1, 3);
-                $used = [];
-                for ($c = 0; $c < $numCats; $c++) {
-                    $cat = $categories[array_rand($categories)];
-                    if (in_array($cat, $used)) continue;
-                    $used[] = $cat;
-                    $stmtCatQuiz->execute([$cat, $quiz_id]);
-                }
+                $stmtParam->execute([$quiz_id, 1, 300, 1, 1, 1, 0]);
 
-                // amiDisponibilite: si disponibilite='ami' link to a couple of friends (placeholder)
-                if ($disponibilite === 'ami') {
-                    $friendId = $users[array_rand($users)];
-                    $stmtAmiDisp->execute([$quiz_id, $friendId]);
-                }
+                //Insertion lecon
+                $lessonTemplates = [
+                    'SQL' => [
+                        [
+                            'title' => 'Introduction au SQL',
+                            'desc'  => 'Comprendre le rôle et l’utilité du langage SQL',
+                            'parts' => [
+                                [
+                                    'title' => 'Qu’est-ce que SQL ?',
+                                    'content' => 'SQL est un langage permettant de manipuler des bases de données relationnelles.',
+                                    'examples' => [
+                                        ['Identifier une base', 'Une base contient des tables.'],
+                                    ]
+                                ],
+                                [
+                                    'title' => 'Première requête',
+                                    'content' => 'La requête SELECT permet de lire des données.',
+                                    'examples' => [
+                                        ['SELECT * FROM users;', 'Récupère tous les utilisateurs.'],
+                                    ]
+                                ],
+                            ]
+                        ],
+                    ],
 
-                // parametres pour chaque quiz
-                $affAv = mt_rand(0, 1);
-                $minuterie = mt_rand(0, 600); // secondes
-                $affScore = mt_rand(0, 1);
-                $recap = mt_rand(0, 1);
-                $ordre = mt_rand(0, 1);
-                $repasser = mt_rand(0, 1);
-                $stmtParam->execute([$quiz_id, $affAv, $minuterie, $affScore, $recap, $ordre, $repasser]);
+                    'HTML' => [
+                        [
+                            'title' => 'Bases du HTML',
+                            'desc'  => 'Structure d’une page HTML',
+                            'parts' => [
+                                [
+                                    'title' => 'Balises principales',
+                                    'content' => 'HTML utilise des balises pour structurer le contenu.',
+                                    'examples' => [
+                                        ['<p>', 'Paragraphe'],
+                                        ['<h1>', 'Titre principal'],
+                                    ]
+                                ],
+                                [
+                                    'title' => 'Images et liens',
+                                    'content' => 'Les balises <img> et <a> permettent d’afficher des images et des liens.',
+                                    'examples' => [
+                                        ['<img src="">', 'Affiche une image'],
+                                        ['<a href="">', 'Lien cliquable'],
+                                    ]
+                                ],
+                            ]
+                        ],
+                    ],
 
-                // TestStatistiques si genre == 'test'
-                if ($genre === 'test') {
-                    $moy = round(mt_rand(50, 95) / 10, 2) + $difficulty; // pseudo moyenne
-                    $stmtTestStat->execute([$quiz_id, $difficulty, $moy]);
-                }
+                    'Général' => [
+                        [
+                            'title' => 'Introduction au thème',
+                            'desc'  => 'Présentation générale du sujet du quiz',
+                            'parts' => [
+                                [
+                                    'title' => 'Notions clés',
+                                    'content' => 'Cette partie présente les concepts importants à retenir.',
+                                    'examples' => [
+                                        ['Concept clé', 'Définition simple'],
+                                    ]
+                                ],
+                                [
+                                    'title' => 'Points importants',
+                                    'content' => 'Résumé des éléments essentiels.',
+                                    'examples' => [
+                                        ['À retenir', 'Information essentielle'],
+                                    ]
+                                ],
+                            ]
+                        ],
+                    ]
+                ];
 
-                // === Prepare statements ===
-                $stmtLecon = $conn->prepare("
-                    INSERT INTO Lecon (user_id, quiz_id, title, description)
-                    VALUES (?, ?, ?, ?)
-                ");
+                foreach ($quiz_ids as $quiz) {
 
-                $stmtPartie = $conn->prepare("
-                    INSERT INTO Partie (numeroPartie, lecon_id, title, content)
-                    VALUES (?, ?, ?, ?)
-                ");
+                    // récupération du titre du quiz
+                    $stmtTitle = $conn->prepare("SELECT title, user_id FROM quiz WHERE id = ?");
+                    $stmtTitle->execute([$quiz['id']]);
+                    $quizRow = $stmtTitle->fetch(PDO::FETCH_ASSOC);
 
-                $stmtEx = $conn->prepare("
-                    INSERT INTO Exemple (numeroExemple, partie_id, consigne, reponse)
-                    VALUES (?, ?, ?, ?)
-                ");
+                    if (!$quizRow) continue;
 
+                    $quizTitle = $quizRow['title'];
+                    $owner     = $quizRow['user_id'];
 
-                if ($q <= 10) {
+                    // choix du template
+                    if (stripos($quizTitle, 'SQL') !== false) {
+                        $templates = $lessonTemplates['SQL'];
+                    } elseif (stripos($quizTitle, 'HTML') !== false) {
+                        $templates = $lessonTemplates['HTML'];
+                    } else {
+                        $templates = $lessonTemplates['Général'];
+                    }
 
-                    // 2 Leçons par quiz
-                    for ($ln = 1; $ln <= 2; $ln++) {
+                    // 1 ou 2 leçons par quiz
+                    $nbLessons = mt_rand(1, 2);
+                    for ($l = 0; $l < $nbLessons; $l++) {
+
+                        $tpl = $templates[array_rand($templates)];
 
                         $stmtLecon->execute([
                             $owner,
-                            $quiz_id,
-                            "Leçon {$ln} du quiz {$q}",
-                            "Description de la leçon {$ln} liée au quiz {$q}"
+                            $quiz['id'],
+                            $tpl['title'],
+                            $tpl['desc']
                         ]);
 
                         $lecon_id = $conn->lastInsertId();
 
-                        // 2 Parties par leçon
-                        for ($pnum = 1; $pnum <= 2; $pnum++) {
+                        // parties
+                        $partNum = 1;
+                        foreach ($tpl['parts'] as $part) {
 
                             $stmtPartie->execute([
-                                $pnum,
+                                $partNum++,
                                 $lecon_id,
-                                "Partie {$pnum} - Leçon {$ln}",
-                                "Contenu expliqué pour la partie {$pnum} de la leçon {$ln}."
+                                $part['title'],
+                                $part['content']
                             ]);
 
                             $partie_id = $conn->lastInsertId();
 
-                            // 2 Exemples par partie
-                            for ($exnum = 1; $exnum <= 2; $exnum++) {
-
+                            // exemples
+                            $exNum = 1;
+                            foreach ($part['examples'] as $ex) {
                                 $stmtEx->execute([
-                                    $exnum,
+                                    $exNum++,
                                     $partie_id,
-                                    "Consigne exemple {$exnum} pour la partie {$pnum}",
-                                    "Réponse exemple {$exnum} pour la partie {$pnum}"
+                                    $ex[0],
+                                    $ex[1]
                                 ]);
                             }
                         }
@@ -662,142 +814,103 @@ function constructionBD(PDO $conn)
 
 
 
+                shuffle($categories);
+                foreach (array_slice($categories, 0, 2) as $cat) {
+                    $stmtCatQuiz->execute([$cat, $quiz_id]);
+                }
 
-                // Cartes pour flashcard quizzes
-                if ($genre === 'flashcard') {
-                    $numCartes = mt_rand(3, 6);
-                    for ($ci = 1; $ci <= $numCartes; $ci++) {
-                        $stmtCarte->execute([$quiz_id, $ci, "Question carte {$ci} (quiz {$quiz_id})", "Réponse carte {$ci}"]);
+                if ($qz['genre'] === 'test') {
+                    $stmtTestStat->execute([$quiz_id, $qz['difficulty'], mt_rand(60, 90)]);
+                }
+
+                if (!empty($qz['questions'])) {
+                    foreach ($qz['questions'] as $idx => $q) {
+                        $stmtQuestion->execute([$idx + 1, $quiz_id, $q[0]]);
+                        $qid = $conn->lastInsertId();
+
+                        foreach ($q[1] as $ri => $rep) {
+                            $stmtReponse->execute([$qid, $rep, $ri === $q[2] ? 1 : 0]);
+                        }
                     }
                 }
 
-                // Questions & Réponses: entre 5 et 10 questions, each 2-6 answers
-                $nbQuestions = mt_rand(5, 10);
-                for ($qi = 1; $qi <= $nbQuestions; $qi++) {
-                    $stmtQuestion->execute([$qi, $quiz_id, "Question {$qi} pour le quiz {$quiz_id}"]);
-                    $question_id = $conn->lastInsertId();
-                    $nbReponses = mt_rand(2, 6);
-                    // ensure at least one correct answer
-                    $correctIndex = mt_rand(1, $nbReponses);
-                    for ($ri = 1; $ri <= $nbReponses; $ri++) {
-                        $isCorrect = ($ri === $correctIndex) ? 1 : 0;
-                        $stmtReponse->execute([$question_id, "Réponse {$ri} pour question {$question_id}", $isCorrect]);
+                if ($qz['genre'] === 'flashcard') {
+                    foreach ($qz['cards'] as $ci => $c) {
+                        $stmtCarte->execute([$quiz_id, $ci + 1, "À quoi sert {$c[0]} ?", $c[1]]);
                     }
                 }
             }
 
+            $stmtLike = $conn->prepare(
+                "INSERT OR IGNORE INTO likes (quiz_id, user_id) VALUES (?, ?)"
+            );
 
+            $stmtDislike = $conn->prepare(
+                "INSERT OR IGNORE INTO dislikes (quiz_id, user_id) VALUES (?, ?)"
+            );
 
             foreach ($quiz_ids as $quiz) {
-                $quiz_id = $quiz['id'];
 
-                // Nombre aléatoire de likes et dislikes
-                $nbLikes = mt_rand(0, 5);
+                shuffle($users);
+
+                $nbLikes = mt_rand(0, count($users));
                 $nbDislikes = mt_rand(0, 3);
 
-                // Shuffle des users pour éviter doublons
-                $shuffledUsers = $users;
-                shuffle($shuffledUsers);
-
-                // Insertion des likes
-                for ($i = 0; $i < $nbLikes && $i < count($shuffledUsers); $i++) {
-                    $user_id = $shuffledUsers[$i];
-                    $stmt = $conn->prepare("
-                        INSERT OR IGNORE INTO likes (quiz_id, user_id)
-                        VALUES (?, ?)
-                    ");
-                    $stmt->execute([$quiz_id, $user_id]);
+                // likes
+                for ($i = 0; $i < $nbLikes; $i++) {
+                    $stmtLike->execute([$quiz['id'], $users[$i]]);
                 }
 
-                // Re-shuffle pour dislikes
-                $shuffledUsers = $users;
-                shuffle($shuffledUsers);
-
-                // Insertion des dislikes
-                for ($i = 0; $i < $nbDislikes && $i < count($shuffledUsers); $i++) {
-                    $user_id = $shuffledUsers[$i];
-                    $stmt = $conn->prepare("
-                        INSERT OR IGNORE INTO dislikes (quiz_id, user_id)
-                        VALUES (?, ?)
-                    ");
-                    $stmt->execute([$quiz_id, $user_id]);
+                // dislikes (reshuffle)
+                shuffle($users);
+                for ($i = 0; $i < $nbDislikes; $i++) {
+                    $stmtDislike->execute([$quiz['id'], $users[$i]]);
                 }
             }
 
-
-            // ---------- resultats : moyenne 2 par user, 1 user with 13 ----------
-            $stmtCountResult = $conn->prepare("SELECT COUNT(*) FROM resultat WHERE user_id = ?");
-            $stmtInsertRes = $stmtResult;
-            // pick a user to have 13
-            $heavyUser = $users[0];
-            foreach ($users as $uid) {
-                $target = ($uid == $heavyUser) ? 13 : mt_rand(1, 3); // others 1-3 avg ~2
-                for ($r = 0; $r < $target; $r++) {
-                    $quiz = $quiz_ids[array_rand($quiz_ids)];
-                    $score = mt_rand(0, 100);
-                    $temps = mt_rand(10, 3600);
-                    $date = date('Y-m-d', strtotime("-" . mt_rand(0, 365) . " days"));
-                    $stmtInsertRes->execute([$uid, $quiz['id'], $score, $temps, $date]);
+            /* ===================== RESULTATS ===================== */
+            foreach ($users as $u) {
+                $n = ($u === $users[0]) ? 13 : mt_rand(1, 3);
+                for ($i = 0; $i < $n; $i++) {
+                    $q = $quiz_ids[array_rand($quiz_ids)];
+                    $stmtResult->execute([
+                        $u,
+                        $q['id'],
+                        mt_rand(40, 100),
+                        mt_rand(60, 1800),
+                        date('Y-m-d')
+                    ]);
                 }
             }
 
-            // ---------- demandes d'ami en attente : 5 ----------
-            // generate 5 pending requests with distinct pairs and not friends
-            $pairs = [];
-            while (count($pairs) < 5) {
-                $a = $users[array_rand($users)];
-                $b = $users[array_rand($users)];
-                if ($a == $b) continue;
-                $key = $a . '-' . $b;
-                $rev = $b . '-' . $a;
-                if (isset($pairs[$key]) || isset($pairs[$rev])) continue;
-                $pairs[$key] = [$a, $b];
-                $stmtDemande->execute([$a, $b]);
-            }
-
-            // ---------- amis : ~10 relations (bidirectional single entry per pair) ----------
+            /* ===================== SOCIAL ===================== */
             $friendPairs = [];
             $tries = 0;
+
             while (count($friendPairs) < 10 && $tries < 200) {
+                $tries++;
+
                 $a = $users[array_rand($users)];
                 $b = $users[array_rand($users)];
-                $tries++;
-                if ($a == $b) continue;
-                $k = min($a, $b) . '-' . max($a, $b);
-                if (isset($friendPairs[$k])) continue;
-                // insert one direction
-                $stmtAmis->execute([$a, $b]);
-                $friendPairs[$k] = [$a, $b];
+
+                if ($a === $b) continue;
+
+                // normalisation de la paire
+                $u1 = min($a, $b);
+                $u2 = max($a, $b);
+
+                $key = $u1 . '-' . $u2;
+
+                // déjà inséré → skip
+                if (isset($friendPairs[$key])) continue;
+
+                $stmtAmis->execute([$u1, $u2]);
+                $friendPairs[$key] = true;
             }
 
-            // ---------- rechercheHistorique : keep many users with up to 10 each but trigger will trim ----------
-            foreach ($users as $uid) {
-                $nb = mt_rand(3, 12);
-                for ($i = 0; $i < $nb; $i++) {
-                    $q = "recherche_{$uid}_" . ($i + 1);
-                    $date = date('Y-m-d', strtotime("-" . mt_rand(0, 60) . " days"));
-                    $stmtRecherche->execute([$uid, $q, $date]);
-                }
-            }
 
-            // ensure at least 3 rows in some smaller tables if necessary:
-            // amiDisponibilite already had some. Add a few more arbitrary links
-            foreach (array_slice($quiz_ids, 0, 6) as $qi) {
-                $a = $users[array_rand($users)];
-                $stmtAmiDisp->execute([$qi['id'], $a]);
-            }
 
-            $stmtCatLecon = $conn->prepare("INSERT INTO categorie_lecon(category_id, lesson_id) VALUES (?, ?)");
 
-            // On prend entre 1 et 3 catégories au hasard
-            $numCats = rand(1, 10);
-            $used = [];
-            for ($c = 0; $c < $numCats; $c++) {
-                $cat = $categories[array_rand($categories)];
-                if (in_array($cat, $used)) continue;
-                $used[] = $cat;
-                $stmtCatLecon->execute([$cat, $lecon_id]);
-            }
 
             // Insert a few rows into resultat already done; ensure categorie_quiz has many rows (done).
             // Ensure Question/Reponse > 3 rows created via quiz loop.

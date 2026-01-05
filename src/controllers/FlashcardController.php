@@ -24,6 +24,11 @@ class FlashcardController
             return;
         }
         $firstId = $_SESSION['remainingQuestions'][0];
+        require ROOT . '/src/models/HistoricModel.php';
+        $modelHistoric = new HistoricModel($this->db);
+        if (isset($_SESSION['id'])) {
+            $modelHistoric->saveHistoric($quizId, $_SESSION['id']);
+        }
         $this->showQuestion($firstId);
     }
 
@@ -238,17 +243,18 @@ class FlashcardController
         }
         return true;
     }
-    
-    public function modifyFlashcard($id){
+
+    public function modifyFlashcard($id)
+    {
         $idFlashcard = (int)$id;
         //die("erreur :".$idQuiz);
         $taille = $this->model->getFlashcardSize($idFlashcard);
         $user_id = $this->model->getUserIdFromFlashcard($idFlashcard);
-        if (!isset($_SESSION['id']) || $user_id != $_SESSION['id']){
+        if (!isset($_SESSION['id']) || $user_id != $_SESSION['id']) {
             header('Location: index.php?page=home');
             exit;
         }
-        if ($taille === 0){
+        if ($taille === 0) {
             header('Location: index.php?page=home');
             exit;
         }
@@ -257,13 +263,13 @@ class FlashcardController
             header('Location: index.php?page=createContent');
             exit;
         }
-        if(isset($_POST['categories']) && !empty($_POST['categories'])){
+        if (isset($_POST['categories']) && !empty($_POST['categories'])) {
             $this->model->updateCategoriesFlashcard($idFlashcard, $_POST['categories']);
             unset($_POST['categories']);
             header('Location: ' . $_SERVER['REQUEST_URI']);
             exit;
         }
-        if(isset($_POST['appliquerDispo'])){
+        if (isset($_POST['appliquerDispo'])) {
             $disponibilite = isset($_POST['disponibilite']) ? $_POST['disponibilite'] : 'public';
             $amiDispo = isset($_POST['amiDispo']) && is_array($_POST['amiDispo']) ? $_POST['amiDispo'] : [];
             $this->model->updateDisponibiliteFlashcard($idFlashcard, $disponibilite, $amiDispo);
@@ -273,18 +279,17 @@ class FlashcardController
             header('Location: ' . $_SERVER['REQUEST_URI']);
             exit;
         }
-        if(isset($_POST['appliquerCard'])){
+        if (isset($_POST['appliquerCard'])) {
             $iCard = (int)$_POST['appliquerCard'];
-            $cardQuestion = ( isset($_POST['cardQuestion']) && !empty($_POST['cardQuestion']) ) ? $_POST['cardQuestion'] : '';
-            $cardResponse = ( isset($_POST['cardResponse']) && !empty($_POST['cardResponse']) ) ? $_POST['cardResponse'] : '';
-            
-            if ($this->modifCardValidite($cardQuestion, $cardResponse)){
-                if ($taille < $iCard + 1){
-                    $this->model->addCardToFlashcard($idFlashcard, $iCard+1, $cardQuestion, $cardResponse);
+            $cardQuestion = (isset($_POST['cardQuestion']) && !empty($_POST['cardQuestion'])) ? $_POST['cardQuestion'] : '';
+            $cardResponse = (isset($_POST['cardResponse']) && !empty($_POST['cardResponse'])) ? $_POST['cardResponse'] : '';
+
+            if ($this->modifCardValidite($cardQuestion, $cardResponse)) {
+                if ($taille < $iCard + 1) {
+                    $this->model->addCardToFlashcard($idFlashcard, $iCard + 1, $cardQuestion, $cardResponse);
                 }
-                $this->model->updateCardFromFlashcard($idFlashcard, $iCard+1, $cardQuestion, $cardResponse);
-            }
-            else{
+                $this->model->updateCardFromFlashcard($idFlashcard, $iCard + 1, $cardQuestion, $cardResponse);
+            } else {
                 die('erreur de validation du contenu d\'une partie');
             }
             unset($_POST['appliquerCard']);
@@ -293,13 +298,12 @@ class FlashcardController
             header('Location: ' . $_SERVER['REQUEST_URI']);
             exit;
         }
-        if (isset($_POST['appliquerResum'])){
+        if (isset($_POST['appliquerResum'])) {
             $title = isset($_POST['FlashcardTitle']) ? $_POST['FlashcardTitle'] : '';
             $description = isset($_POST['FlashcardDescription']) ? $_POST['FlashcardDescription'] : '';
-            if ($this->modifResumValidite($title, $description)){
+            if ($this->modifResumValidite($title, $description)) {
                 $this->model->updateResumFlashcard($idFlashcard, $title, $description);
-            }
-            else{
+            } else {
                 die("Erreur de validation du résumé");
             }
             unset($_POST['appliquerResum']);
@@ -308,14 +312,14 @@ class FlashcardController
             header('Location: ' . $_SERVER['REQUEST_URI']);
             exit;
         }
-        if(isset($_POST['DelCard'])){
+        if (isset($_POST['DelCard'])) {
             $iCard = (int)$_POST['DelCard'];
-            $this->model->deleteCardFromFlashcard($idFlashcard, $iCard+1);
+            $this->model->deleteCardFromFlashcard($idFlashcard, $iCard + 1);
             unset($_POST['DelCard']);
             header('Location: ' . $_SERVER['REQUEST_URI']);
             exit;
         }
-        if(isset($_POST['Annuler'])){
+        if (isset($_POST['Annuler'])) {
             unset($_POST);
             header('Location: ' . $_SERVER['REQUEST_URI']);
             exit;
@@ -323,7 +327,7 @@ class FlashcardController
 
 
 
-        
+
         $flashcardInfos = $this->model->getFlashcardInfos($idFlashcard);
         $TAB_CARD = $this->model->getCardsFromFlashcard($idFlashcard);
         $TAB_CATEGORIES = $this->model->getCategoriesFromFlashcard($idFlashcard);
@@ -332,7 +336,7 @@ class FlashcardController
         $TAB_AMIS = $this->model->getAmisSelection($idFlashcard);
 
 
-        
+
 
         //var_dump($_POST);
         //var_dump($_SESSION);
@@ -341,21 +345,24 @@ class FlashcardController
         require ROOT . '/src/views/Quiz/modifyFlashcard.php';
     }
 
-    public function modifCardValidite(string $cardQuestion, string $cardResponse){
-        if (empty($cardQuestion) || empty($cardResponse)){
+    public function modifCardValidite(string $cardQuestion, string $cardResponse)
+    {
+        if (empty($cardQuestion) || empty($cardResponse)) {
             return false;
         }
         return true;
     }
 
-    public function modifResumValidite(string $title, string $description){
-        if (empty($title) || empty($description)){
+    public function modifResumValidite(string $title, string $description)
+    {
+        if (empty($title) || empty($description)) {
             return false;
         }
         return true;
     }
 
-    public function endFlashcard(){
+    public function endFlashcard()
+    {
         $viewData = null;
         $quizId = $_GET['id'];
         require_once ROOT . '/src/models/LikeModel.php';
@@ -379,6 +386,8 @@ class FlashcardController
             exit;
         }
         $reactions = $modelLike->getReactions($quizId);
+        $hasLiked = isset($_SESSION['id']) && $modelLike->hasLiked($quizId, $_SESSION['id']);
+        $hasDisliked = isset($_SESSION['id']) && $modelLike->hasDisliked($quizId, $_SESSION['id']);
         require ROOT . '/src/views/quiz/flashcard.php';
     }
 }

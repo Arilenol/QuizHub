@@ -31,6 +31,14 @@ switch ($page) {
         //header('Location: catalogue.php');
         break;
 
+    case 'save-reactions':
+        require_once ROOT . '/src/controllers/LikeController.php';
+        $controller = new LikeController();
+        $input = file_get_contents('php://input');
+        $reactions = json_decode($input, true); // récupère le tableau JS
+        var_dump($reactions);
+        // $controller->sendReaction($reactions);
+        break;
 
     case 'lesson':
         $categorie = $_GET['categorie'] ?? null;
@@ -113,7 +121,7 @@ switch ($page) {
             //routine pour créer le controlleur
             $controller->createFlashcard();
             break;
-        }elseif(isset($_GET['categorie']) && $_GET['categorie'] === 'modify'){
+        } elseif (isset($_GET['categorie']) && $_GET['categorie'] === 'modify') {
             $id = $_GET['id'] ?? null;
             $controller->modifyFlashcard($id);
             break;
@@ -143,6 +151,10 @@ switch ($page) {
         if (isset($_GET['action'])) {
             if ($_GET['action'] === 'displayFriends') {
                 $controller->showProfile("showFriends");
+            } else if ($_GET['action'] === 'showHistory') {
+                $controller->showProfile("showHistory");
+            } else if ($_GET['action'] === 'updateProfile') {
+                $controller->saveNewInfo();
             }
         } else {
             $controller->showProfile();
@@ -155,15 +167,14 @@ switch ($page) {
             $controller = new QuizController();
             $controller->createQuiz();
             exit;
-        }
-        elseif(isset($_GET['categorie']) && $_GET['categorie'] === 'modify'){
+        } elseif (isset($_GET['categorie']) && $_GET['categorie'] === 'modify') {
             $id = $_GET['id'] ?? null;
             require_once ROOT . '/src/controllers/QuizController.php';
             $controller = new QuizController();
             $controller->modifyQuiz($id);
             exit;
         }
-        
+
         $id = $_GET['id'] ?? null;
         $idQuestion = $_GET['idQuestion'] ?? 1;
         $showAnswer = isset($_GET['reponse']) && $_GET['reponse'] === 'visible';
@@ -171,6 +182,7 @@ switch ($page) {
         require_once ROOT . '/src/controllers/QuizController.php';
         $controller = new QuizController();
 
+        $controller->saveHistoric($id);
         $controller->showQuiz($id, $idQuestion, $showAnswer);
         break;
     case 'createContent':

@@ -16,6 +16,7 @@ require_once '../src/views/partials/header.php';
             </form>
 
         <?php else: ?>
+            <button class="retour" onclick="window.location.href='?page=home'">🏠 Accueil</button>
             <button class="button" onclick="window.location.href='?page=home'">
                 <span></span>
                 <p>← Retour</p>
@@ -26,6 +27,13 @@ require_once '../src/views/partials/header.php';
             <p>Signaler ce quiz</p>
         </button>
     </div>
+    <?php if (($_GET['page']) === 'standard' && (isset($_GET['idQuestion']) && ($_GET['idQuestion']) > 1)
+        || (($_GET['page']) === 'standard' && (isset($_GET['reponse']) && ($_GET['reponse']) === 'visible'))
+    ): ?>
+        <?php if (!isset($_GET['test'])) : ?>
+            <button class="retourBis" style="align-self: start; " onclick="history.back()">← Revenir en arrière</button>
+        <?php endif; ?>
+    <?php endif; ?>
     <?php if (empty($question)) : ?>
 
 
@@ -36,32 +44,70 @@ require_once '../src/views/partials/header.php';
 
             <?php if ($_GET['page'] === 'standard') : ?>
                 <div class="actions-fin">
-                    <button class="button" onclick="window.location.href='?page=standard&id=<?= $quizId ?>'"><span></span><p>Recommencer le quiz</p></button>
-                    <button class="button" onclick="window.location.href='?page=catalogue'"><span></span><p>Voir d’autres quiz</p></button>
-                    <button class="button" onclick="window.location.href='?page=home'"><span></span><p>Retour à l’accueil</p></button>
+                    <button class="button" onclick="window.location.href='?page=standard&id=<?= $quizId ?>'"><span></span>
+                        <p>Recommencer le quiz</p>
+                    </button>
+                    <button class="button" onclick="window.location.href='?page=catalogue'"><span></span>
+                        <p>Voir d’autres quiz</p>
+                    </button>
+                    <button class="button" onclick="window.location.href='?page=home'"><span></span>
+                        <p>Retour à l’accueil</p>
+                    </button>
                 </div>
                 <p class="fin">Vous avez aimé le quiz ? N'hésiter pas à le noter : </p>
                 <div class="quiz-reactions">
                     <?php if (isset($_SESSION['id'])) : ?>
-                        <form method="POST" action="?page=standard&idQuestion=<?= $idQuestion ?>&id=<?= $quizId ?>">
-                            <button class="dislike" type="submit" name="reaction" value="like" class="reaction like">
+                        <?php if (!$hasDisliked) : ?>
+                            <form method="POST" action="?page=standard&id=<?= $quizId ?>&idQuestion=<?= $idQuestion ?>">
+                                <button type="submit"
+                                    name="reaction"
+                                    value="like"
+                                    class="like"
+                                    id=<?= $hasDisliked ? 'disabled' : '' ?>>
+                                    👍 <?= htmlspecialchars($reactions['nbjaime'] ?? 0) ?>
+                                </button>
+                                <input type="hidden" name="idQuestion" value=<?= $idQuestion ?>>
+                            </form>
+                        <?php endif; ?>
+                        <?php if ($hasDisliked) : ?>
+                            <button type=<?= $hasDisliked ? '' : 'submit' ?>
+                                name="reaction"
+                                value="like"
+                                class="like"
+                                id=<?= $hasDisliked ? 'disabled' : '' ?>>
                                 👍 <?= htmlspecialchars($reactions['nbjaime'] ?? 0) ?>
                             </button>
-                        </form>
-                        <form method="POST" action="?page=standard&idQuestion=<?= $idQuestion ?>&id=<?= $quizId ?>">
-                            <button class="dislike" type="submit" name="reaction" value="dislike" class="reaction dislike">
-                                👎 <?= htmlspecialchars($reactions['nbjaimepas'] ?? 0) ?>
-                            </button>
-                        </form>
+                        <?php endif; ?>
+                        <?php if (!$hasLiked) : ?>
+                            <form method="POST" action="?page=standard&id=<?= $quizId ?>&idQuestion=<?= $idQuestion ?>">
+                                <button type='submit'
+                                    name="reaction"
+                                    value="dislike"
+                                    class="dislike"
+                                    id=<?= $hasLiked ? 'disabled' : '' ?>>
+                                    👎 <?= htmlspecialchars($reactions['nbjaimepas'] ?? 0) ?>
+                                </button>
+                                <input type="hidden" name="idQuestion" value=<?= $idQuestion ?>>
+                            <?php endif; ?>
+                            <?php if ($hasLiked) : ?>
+                                <button type='submit'
+                                    name="reaction"
+                                    value="dislike"
+                                    class="dislike"
+                                    id=<?= $hasLiked ? 'disabled' : '' ?>>
+                                    👎 <?= htmlspecialchars($reactions['nbjaimepas'] ?? 0) ?>
+                                </button>
+                            <?php endif; ?>
+                            </form>
 
-                    <?php else : ?>
+                        <?php else : ?>
 
-                        <p>
-                            Pour débloquer cette fonctionnalité
-                            <a href="?page=log&typelog=connection">Connectez-vous</a> d'abord
-                        </p>
+                            <p>
+                                Pour débloquer cette fonctionnalité
+                                <a href="?page=log&typelog=connection">Connectez-vous</a> d'abord
+                            </p>
 
-                    <?php endif; ?>
+                        <?php endif; ?>
                 </div>
 
         </div>

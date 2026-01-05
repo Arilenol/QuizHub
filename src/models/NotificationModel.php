@@ -70,6 +70,8 @@ class NotificationModel
 
         if ($receveur === false) {
             return false;
+        } if ($_SESSION['id'] === $receveur['id']){
+            return false;
         }
         // Vérifie si une demande existe déjà
         $checkStmt = $this->db->prepare("

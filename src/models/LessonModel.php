@@ -23,9 +23,11 @@ class LessonModel
             l.description, 
             l.date AS 'date', 
             u.username AS username, 
-            l.quiz_id
+            l.quiz_id,
+            q.genre AS genre
         FROM lecon l
         JOIN users u ON u.id = l.user_id
+        JOIN quiz q ON q.id = l.quiz_id
         WHERE l.id = ?
         LIMIT 1
     ");
@@ -430,21 +432,78 @@ class LessonModel
         }
     }
 
+
+    /**
+     * Récupère la liste des leçons créées par un utilisateur
+     *
+     * Cette méthode retourne un tableau associatif contenant les leçons
+     * (id, title, date, ...).
+     *
+     * @return array|false  Tableau associatif des lecons, ou false en cas d'erreur.
+     */
+    public function getAllInfoLessonsByUser(string|int $id): array|false
+    {
+        $stmt = $this->db->prepare("
+        SELECT
+            l.id AS id,
+            l.title AS title,
+            l.description AS description,
+            l.date AS date,
+
+            u.id AS user_id,
+            u.username AS user_name,
+
+            q.id AS quiz_id,
+            q.title AS quiz_title,
+            'lesson' as genre,
+            q.difficulty,
+            q.description AS quiz_description,
+
+            (
+                SELECT GROUP_CONCAT(DISTINCT c.categorieName)
+                FROM categorie_quiz cq
+                JOIN categories c ON c.id = cq.category_id
+                WHERE cq.quiz_id = q.id
+            ) AS categories,
+
+            (SELECT COUNT(*) FROM likes l2 WHERE l2.quiz_id = q.id) AS nbjaime,
+            (SELECT COUNT(*) FROM dislikes d2 WHERE d2.quiz_id = q.id) AS nbjaimepas
+
+        FROM Lecon l
+        JOIN users u ON u.id = l.user_id
+        LEFT JOIN quiz q ON q.id = l.quiz_id
+        WHERE l.user_id = ?
+        ORDER BY l.date DESC;
+    ");
+
+        $stmt->execute([$id]);
+
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($results as &$row) {
+            $row['categories'] = $row['categories']
+                ? explode(',', $row['categories'])
+                : [];
+        }
+
+        return $results;
+    }
     /**
      * Récupère le nombre de parties dans une leçon.
      *
      * @param int $idLesson  Identifiant de la leçon.
      * @return int           Nombre de parties dans la leçon.
      */
-    public function getLessonSize(int $idLesson){
-        try{
+    public function getLessonSize(int $idLesson)
+    {
+        try {
             $sql = $this->db->prepare("SELECT COUNT(id) AS taille FROM Partie WHERE lecon_id = ?;");
-            $sql->bindValue(1,$idLesson);
+            $sql->bindValue(1, $idLesson);
             $sql->execute();
             $size = $sql->fetchAll(PDO::FETCH_ASSOC);
             return intval($size[0]['taille']);
         } catch (PDOException $e) {
-    
+
             die("Fetching categories failed: " . $e->getMessage());
         } catch (Exception $e) {
             die("Error: " . $e->getMessage());
@@ -457,15 +516,16 @@ class LessonModel
      * @param int $idLesson  Identifiant de la leçon.
      * @return int           Identifiant de l'utilisateur créateur.
      */
-    public function getUserIdFromLesson(int $idLesson){
-        try{
+    public function getUserIdFromLesson(int $idLesson)
+    {
+        try {
             $sql = $this->db->prepare("SELECT user_id FROM Lecon WHERE id = ?;");
-            $sql->bindValue(1,$idLesson);
+            $sql->bindValue(1, $idLesson);
             $sql->execute();
             $user = $sql->fetchAll(PDO::FETCH_ASSOC);
             return intval($user[0]['user_id']);
         } catch (PDOException $e) {
-    
+
             die("Fetching categories failed: " . $e->getMessage());
         } catch (Exception $e) {
             die("Error: " . $e->getMessage());
@@ -481,20 +541,21 @@ class LessonModel
      * @param array $categories Tableau des IDs de catégories à associer.
      * @return bool             true en cas de succès.
      */
-    public function updateCategoriesLesson(int $lesson_id, array $categories){
-    
-        try{
+    public function updateCategoriesLesson(int $lesson_id, array $categories)
+    {
+
+        try {
             $delete = $this->db->prepare("DELETE FROM categorie_lecon WHERE lesson_id = ?;");
-            $delete->bindValue(1,$lesson_id);
+            $delete->bindValue(1, $lesson_id);
             $delete->execute();
-            foreach($categories as $categorie){
+            foreach ($categories as $categorie) {
                 $this->insertLessonCategorie($lesson_id, (int)$categorie);
             }
             return true;
-        } catch(PDOException $e){
+        } catch (PDOException $e) {
             die("Updating categories for quiz failed: " . $e->getMessage());
-        } catch(Exception $e){
-            die("erreur : ".$e->getMessage());
+        } catch (Exception $e) {
+            die("erreur : " . $e->getMessage());
         }
     }
 
@@ -509,27 +570,28 @@ class LessonModel
      * @param array  $amis           Tableau des IDs d'amis autorisés (si dispo='ami').
      * @return bool                  true en cas de succès.
      */
-    public function updateDisponibiliteLesson(int $lesson_id, string $disponibilite, array $amis){
-        try{
+    public function updateDisponibiliteLesson(int $lesson_id, string $disponibilite, array $amis)
+    {
+        try {
             $delete = $this->db->prepare("DELETE FROM amiDisponibilite WHERE lesson_id = ?;");
-            $delete->bindValue(1,$lesson_id);
+            $delete->bindValue(1, $lesson_id);
             $delete->execute();
             $update = $this->db->prepare("UPDATE Lecon SET disponibilite = ? WHERE id = ?;");
-            $update->bindValue(1,$disponibilite);
-            $update->bindValue(2,$lesson_id);
+            $update->bindValue(1, $disponibilite);
+            $update->bindValue(2, $lesson_id);
             $update->execute();
-            if ($disponibilite == 'ami'){
-                foreach($amis as $ami){
+            if ($disponibilite == 'ami') {
+                foreach ($amis as $ami) {
                     $this->insertAmiDispo($lesson_id, (int)$ami);
                 }
             }
             return true;
-        } catch(PDOException $e){
+        } catch (PDOException $e) {
             die("Updating disponibilite for quiz failed: " . $e->getMessage());
         }
     }
 
-    
+
     /**
      * Ajoute une nouvelle partie à une leçon.
      *
@@ -539,11 +601,12 @@ class LessonModel
      * @param string $partContent  Contenu de la partie.
      * @return bool                true en cas de succès.
      */
-    public function addPartToLesson(int $idLesson,int $numPart,string $partTitle, string $partContent){
-        try{
-            $newPartId = $this->insertPart($numPart, $idLesson,$partTitle, $partContent);
+    public function addPartToLesson(int $idLesson, int $numPart, string $partTitle, string $partContent)
+    {
+        try {
+            $newPartId = $this->insertPart($numPart, $idLesson, $partTitle, $partContent);
             return true;
-        } catch(PDOException $e){
+        } catch (PDOException $e) {
             die("Adding question to quiz failed: " . $e->getMessage());
         }
     }
@@ -557,23 +620,24 @@ class LessonModel
      * @param int $idLesson  Identifiant de la leçon.
      * @return array         Tableau contenant les parties avec leurs exemples.
      */
-    public function getPartsExFromLesson(int $idLesson){
-        try{
+    public function getPartsExFromLesson(int $idLesson)
+    {
+        try {
             $parts = $this->db->prepare("SELECT id, title,content AS partContent FROM Partie WHERE lecon_id = ? ORDER BY numeroPartie ASC;");
-            $parts->bindValue(1,$idLesson);
+            $parts->bindValue(1, $idLesson);
             $parts->execute();
             $TAB_PART = $parts->fetchAll(PDO::FETCH_ASSOC);
-            foreach($TAB_PART as $index => $question){
+            foreach ($TAB_PART as $index => $question) {
                 $reponses = $this->db->prepare("SELECT id, consigne, reponse FROM Exemple WHERE partie_id = ? ;");
-                $reponses->bindValue(1,$question['id']);
+                $reponses->bindValue(1, $question['id']);
                 $reponses->execute();
                 $TAB_PART[$index]['exemples'] = $reponses->fetchAll(PDO::FETCH_ASSOC);
-                $TAB_PART[$index]['nbExemple'] = count( $TAB_PART[$index]['exemples']);
+                $TAB_PART[$index]['nbExemple'] = count($TAB_PART[$index]['exemples']);
             }
             return $TAB_PART;
-        } catch(PDOException $e){
+        } catch (PDOException $e) {
             die("Fetching parts and examples from lesson failed: " . $e->getMessage());
-        }  
+        }
     }
 
     /**
@@ -584,10 +648,11 @@ class LessonModel
      * @param int $idLesson  Identifiant de la leçon.
      * @return array|false   Tableau associatif des infos, ou false si non trouvé.
      */
-    public function getLessonInfos(int $idLesson){
-        try{
+    public function getLessonInfos(int $idLesson)
+    {
+        try {
             $quiz = $this->db->prepare("SELECT title, description, disponibilite, quiz_id FROM Lecon WHERE id = ?;");
-            $quiz->bindvalue(1,$idLesson);
+            $quiz->bindvalue(1, $idLesson);
             $quiz->execute();
             return $quiz->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
@@ -601,14 +666,15 @@ class LessonModel
      * @param int $idLesson  Identifiant de la leçon.
      * @return array         Tableau des catégories avec id et nom.
      */
-    public function getCategoriesFromLesson(int $idLesson){
-        try{
+    public function getCategoriesFromLesson(int $idLesson)
+    {
+        try {
             $categories = $this->db->prepare("SELECT categories.id, categories.categorieName FROM categories 
             INNER JOIN categorie_lecon ON categories.id = categorie_lecon.category_id WHERE categorie_lecon.lesson_id = ?;");
-            $categories->bindValue(1,$idLesson);
+            $categories->bindValue(1, $idLesson);
             $categories->execute();
             return $categories->fetchAll(PDO::FETCH_ASSOC);
-        } catch(PDOException $e){
+        } catch (PDOException $e) {
             die("Fetching categories from quiz failed: " . $e->getMessage());
         }
     }
@@ -619,14 +685,15 @@ class LessonModel
      * @param int $lesson_id  Identifiant de la leçon.
      * @return array          Tableau des IDs d'amis autorisés.
      */
-    public function getAmisSelection(int $lesson_id){
-        try{
+    public function getAmisSelection(int $lesson_id)
+    {
+        try {
             $amis = $this->db->prepare("SELECT ami_id FROM amiDisponibilite WHERE lesson_id = ?;");
-            $amis->bindvalue(1,$lesson_id);
+            $amis->bindvalue(1, $lesson_id);
             $amis->execute();
             $result = $amis->fetchAll(PDO::FETCH_ASSOC);
             $TAB_AMIS = array();
-            foreach($result as $ami){
+            foreach ($result as $ami) {
                 $TAB_AMIS[] = $ami['ami_id'];
             }
             return $TAB_AMIS;
@@ -644,23 +711,22 @@ class LessonModel
      * @param string $partContent  Nouveau contenu de la partie.
      * @return bool                true en cas de succès.
      */
-    public function updatePartLesson(int $idLesson, int $numPart, string $partTitle, string $partContent){
-        try{
+    public function updatePartLesson(int $idLesson, int $numPart, string $partTitle, string $partContent)
+    {
+        try {
             $updatePart = $this->db->prepare("UPDATE Partie SET title = ?, content = ? WHERE lecon_id = ? AND numeroPartie = ? ;");
-            $updatePart->bindValue(1,$partTitle);
-            $updatePart->bindValue(2,$partContent);
-            $updatePart->bindValue(3,(int)$idLesson);
-            $updatePart->bindValue(4,(int)$numPart);
+            $updatePart->bindValue(1, $partTitle);
+            $updatePart->bindValue(2, $partContent);
+            $updatePart->bindValue(3, (int)$idLesson);
+            $updatePart->bindValue(4, (int)$numPart);
             $updatePart->execute();
 
-            if ($updatePart->rowCount() === 0){
+            if ($updatePart->rowCount() === 0) {
                 throw new PDOException("aucune ligne modifiées");
             }
 
             return true;
-
-            
-        } catch(PDOException $e){
+        } catch (PDOException $e) {
             die("Updating question in quiz failed: " . $e->getMessage());
         }
     }
@@ -673,15 +739,16 @@ class LessonModel
      * @param string $description  Nouvelle description de la leçon.
      * @return bool                true en cas de succès.
      */
-    public function updateResumLesson(int $idLesson, string $title, string $description){
-        try{
+    public function updateResumLesson(int $idLesson, string $title, string $description)
+    {
+        try {
             $updateResum = $this->db->prepare("UPDATE lecon SET title = ?, description = ? WHERE id = ?;");
-            $updateResum->bindValue(1,$title);
-            $updateResum->bindValue(2,$description);
-            $updateResum->bindValue(3,$idLesson);
+            $updateResum->bindValue(1, $title);
+            $updateResum->bindValue(2, $description);
+            $updateResum->bindValue(3, $idLesson);
             $updateResum->execute();
             return true;
-        } catch(PDOException $e){
+        } catch (PDOException $e) {
             die("Updating lesson resum failed: " . $e->getMessage());
         }
     }
@@ -693,21 +760,21 @@ class LessonModel
      * @param int $numPart   Numéro d'ordre de la partie à supprimer.
      * @return bool          true en cas de succès.
      */
-    public function deletePartFromLesson(int $idLesson, int $numPart){
-        try{
+    public function deletePartFromLesson(int $idLesson, int $numPart)
+    {
+        try {
             $getQuestion = $this->db->prepare("SELECT id FROM Partie WHERE lecon_id = ? AND numeroPartie = ?;");
-            $getQuestion->bindValue(1,$idLesson);
-            $getQuestion->bindValue(2,$numPart);
+            $getQuestion->bindValue(1, $idLesson);
+            $getQuestion->bindValue(2, $numPart);
             $getQuestion->execute();
             $question = $getQuestion->fetch(PDO::FETCH_ASSOC);
-            if ($question){
+            if ($question) {
                 $deleteQuestion = $this->db->prepare("DELETE FROM Partie WHERE id = ?;");
-                $deleteQuestion->bindValue(1,$question['id']);
+                $deleteQuestion->bindValue(1, $question['id']);
                 $deleteQuestion->execute();
-      
             }
             return true;
-        } catch(PDOException $e){
+        } catch (PDOException $e) {
             die("Deleting question from quiz failed: " . $e->getMessage());
         }
     }
@@ -719,23 +786,22 @@ class LessonModel
      * @param int|string  $quiz      Identifiant du quiz, ou 'Aucun' pour supprimer l'association.
      * @return bool                  true en cas de succès.
      */
-    public function updateQuizAssociated(int $idLesson, int|string $quiz){
-        try{
-            if ($quiz === "Aucun"){
+    public function updateQuizAssociated(int $idLesson, int|string $quiz)
+    {
+        try {
+            if ($quiz === "Aucun") {
                 $updateQuiz = $this->db->prepare("UPDATE Lecon SET quiz_id = NULL WHERE id = ?");
-                $updateQuiz->bindValue(1,$idLesson);
-            }
-            else{
+                $updateQuiz->bindValue(1, $idLesson);
+            } else {
                 $updateQuiz = $this->db->prepare("UPDATE Lecon SET quiz_id = ? WHERE id = ?");
-                $updateQuiz->bindValue(1,(int)$quiz);
-                $updateQuiz->bindValue(2,$idLesson);
+                $updateQuiz->bindValue(1, (int)$quiz);
+                $updateQuiz->bindValue(2, $idLesson);
             }
             $updateQuiz->execute();
             return true;
-        } catch(PDOException $e){
+        } catch (PDOException $e) {
             die("updating quiz_id from lecon failed: " . $e->getMessage());
         }
-
     }
 
     /**
@@ -745,17 +811,19 @@ class LessonModel
      * @param int $numeroPartie Numéro d'ordre de la partie.
      * @return int              Nombre d'exemples dans la partie.
      */
-    public function getNumberExFromPart(int $idLesson, int $numeroPartie){
-        try{
+    public function getNumberExFromPart(int $idLesson, int $numeroPartie)
+    {
+        try {
             $getNumberLesson = $this->db->prepare(
                 "SELECT COUNT(Exemple.id) AS nombre FROM Partie JOIN Exemple ON Partie.id = Exemple.partie_id
-                WHERE Partie.lecon_id = ? AND Partie.numeroPartie = ?");
+                WHERE Partie.lecon_id = ? AND Partie.numeroPartie = ?"
+            );
             $getNumberLesson->bindValue(1, (int)$idLesson);
             $getNumberLesson->bindValue(2, (int)$numeroPartie);
             $getNumberLesson->execute();
             $result = $getNumberLesson->fetchColumn();
             return (int)$result;
-        } catch(PDOException $e){
+        } catch (PDOException $e) {
             die("selecting number of exemples from partie failed: " . $e->getMessage());
         }
     }
@@ -770,24 +838,23 @@ class LessonModel
      * @param string $reponse   Texte de la réponse.
      * @return bool             true en cas de succès.
      */
-    public function addExToPart(int $idLesson, int $iPart, int  $kEx, string $consigne, string $reponse){
-        try{
+    public function addExToPart(int $idLesson, int $iPart, int  $kEx, string $consigne, string $reponse)
+    {
+        try {
             $part = $this->db->prepare("SELECT id FROM Partie WHERE lecon_id = ? AND numeroPartie = ?");
-            $part->bindValue(1,$idLesson);
-            $part->bindValue(2,$iPart);
+            $part->bindValue(1, $idLesson);
+            $part->bindValue(2, $iPart);
             $part->execute();
             $resultPart = $part->fetchAll(PDO::FETCH_ASSOC);
-            $reussite = $this->insertExample($kEx, $resultPart[0]['id'], $consigne , $reponse);
-            if (!$reussite){
+            $reussite = $this->insertExample($kEx, $resultPart[0]['id'], $consigne, $reponse);
+            if (!$reussite) {
                 throw new PDOException("erreur d'insertion d'exemple");
-            }
-            else{
+            } else {
                 return true;
             }
-        } catch(PDOException $e){
+        } catch (PDOException $e) {
             die("inserting exemple in partie failed: " . $e->getMessage());
         }
-        
     }
 
     /**
@@ -800,26 +867,26 @@ class LessonModel
      * @param string $reponse   Nouvelle réponse.
      * @return bool             true en cas de succès.
      */
-    public function updateExFromPart(int $idLesson, int $iPart, int  $kEx, string $consigne, string $reponse){
-        try{
+    public function updateExFromPart(int $idLesson, int $iPart, int  $kEx, string $consigne, string $reponse)
+    {
+        try {
             $part = $this->db->prepare("SELECT id FROM Partie WHERE lecon_id = ? AND numeroPartie = ?");
-            $part->bindValue(1,$idLesson);
-            $part->bindValue(2,$iPart);
+            $part->bindValue(1, $idLesson);
+            $part->bindValue(2, $iPart);
             $part->execute();
             $resultPart = $part->fetchColumn();
-            
+
             $updateExemple = $this->db->prepare("UPDATE Exemple SET consigne = ?, reponse = ? WHERE partie_id = ? AND numeroExemple = ?");
-            $updateExemple->bindValue(1,$consigne);
-            $updateExemple->bindValue(2,$reponse);
-            $updateExemple->bindValue(3,$resultPart);
-            $updateExemple->bindValue(4,$kEx);
+            $updateExemple->bindValue(1, $consigne);
+            $updateExemple->bindValue(2, $reponse);
+            $updateExemple->bindValue(3, $resultPart);
+            $updateExemple->bindValue(4, $kEx);
             $updateExemple->execute();
 
             return true;
-        } catch(PDOException $e){
+        } catch (PDOException $e) {
             die("inserting exemple in partie failed: " . $e->getMessage());
         }
-        
     }
 
     /**
@@ -830,11 +897,12 @@ class LessonModel
      * @param int $kEx       Numéro d'ordre de l'exemple à supprimer.
      * @return bool          true en cas de succès.
      */
-    public function deleteExFromPart(int $idLesson,int $iPart, int $kEx){
-        try{
+    public function deleteExFromPart(int $idLesson, int $iPart, int $kEx)
+    {
+        try {
             $part = $this->db->prepare("SELECT id FROM Partie WHERE lecon_id = ? AND numeroPartie = ?");
-            $part->bindValue(1,$idLesson);
-            $part->bindValue(2,$iPart);
+            $part->bindValue(1, $idLesson);
+            $part->bindValue(2, $iPart);
             $part->execute();
             $resultPart = $part->fetchColumn();
             if ($resultPart === false) {
@@ -847,12 +915,11 @@ class LessonModel
             if ($deleteEx->rowCount() !== 1) {
                 throw new PDOException("Example not found");
             }
-            
+
 
             return true;
-        } catch(PDOException $e){
+        } catch (PDOException $e) {
             die("deleting exemple in partie failed: " . $e->getMessage());
         }
     }
-
 }

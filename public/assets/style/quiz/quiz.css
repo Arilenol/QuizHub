@@ -15,8 +15,38 @@
   width: 95%;
   flex-direction: row;
   justify-content: space-between;
+  width: 100%;
   padding: 0 25px;
   margin-top: 25px;
+
+}
+
+.quiz-réalisation button {
+  border-radius: 75px;
+  background-color: #0ab1bd;
+  color: white;
+  border: none;
+  padding: 21px 36px;
+  font-size: 1.575rem;
+  min-height: 69px;
+  cursor: pointer;
+  box-shadow: 0 12px 0 #087b86;
+}
+
+.quiz-réalisation button:hover {
+  background-color: #fff;
+  color: #087b86;
+  box-shadow: 0px 8px 2px #cacacabf;
+}
+
+.retour {
+  margin-left: 1%;
+  margin-top: 1%;
+}
+
+.retourBis {
+  margin-left: 1%;
+  align-self: start;
 }
 
 /* ----------- QUESTION ----------- */
@@ -47,7 +77,7 @@
   width: 100%;
 }
 
-.réponse input[type=checkbox] {
+.réponse input[type='checkbox'] {
   display: none;
 }
 
@@ -62,14 +92,14 @@
   min-height: 132px;
   font-size: 1.688rem;
   text-align: center;
-  background-color: #0AB1BD;
+  background-color: #0ab1bd;
   color: white;
   box-shadow: 0 12px 0 #087b86;
   transition: transform 0.08s ease, box-shadow 0.08s ease;
 }
 
 /* Effet click (checkbox cachée) */
-.réponse input[type=checkbox]:checked+label {
+.réponse input[type='checkbox']:checked+label {
   transform: translateY(9px);
   background-color: #067178;
   box-shadow: 0 4.5px 0 #0cabb7;
@@ -113,6 +143,7 @@ p.fin {
   align-items: center;
   margin: 0;
 }
+
 .quiz-reactions .reaction {
   display: inline-flex;
   align-items: center;
@@ -124,14 +155,35 @@ p.fin {
   background-color: rgba(0, 0, 0, 0.03);
   font-size: 1.7rem;
 }
+
 .quiz-reactions .like {
-  cursor: pointer;
-  color: #ff3b3b;
-  background-color: rgba(255, 59, 59, 0.08);
-  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.04);
+  background-color: #31c414bf;
+  box-shadow: 0px 10px 2px #22810ebf;
 }
- .quiz-reactions .dislike {
-  cursor: pointer;
-  color: #666;
-  background-color: rgba(0, 0, 0, 0.03);
+
+.quiz-reactions .dislike {
+  background-color: #c62828;
+  /* fond rouge foncé */
+  box-shadow: 0px 10px 2px #8a1c1c;
+}
+
+.quiz-reactions .reaction:hover {
+  background-color: #ff1f1f;
+  /* légèrement plus clair au survol */
+  color: white;
+}
+
+#disabled {
+  background-color: rgb(173, 173, 173);
+  box-shadow: 0px 8px 2px #747474bf;
+  opacity: 0.65;
+  box-shadow: none;
+  /* enlève l'effet relief */
+  transform: none;
+  /* pas d'animation */
+}
+
+#disabled:hover {
+  color: white;
+  cursor: not-allowed;
 }
