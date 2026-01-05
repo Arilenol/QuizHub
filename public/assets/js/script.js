@@ -4,7 +4,7 @@ window.addEventListener("load", () => {
     }
 })
 
-window.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
     initCheckboxSVG();
 });
 

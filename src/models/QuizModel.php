@@ -481,7 +481,12 @@ class QuizModel
             die("Error: " . $e->getMessage());
         }
     }
-
+    /**
+     * Retourne le nombre de questions pour un quiz.
+     *
+     * @param int $quizId Identifiant du quiz.
+     * @return int Nombre total de questions (0 si aucune).
+     */
     public function getQuizSize(int $quizId): int{
         try{
             $stmt = $this->db->prepare("SELECT COUNT(*) AS totalQuestions FROM question WHERE quiz_id = ?;");
@@ -493,12 +498,7 @@ class QuizModel
         }
         
     }
-    /**
-     * Retourne le nombre de questions pour un quiz.
-     *
-     * @param int $quizId Identifiant du quiz.
-     * @return int Nombre total de questions (0 si aucune).
-     */
+    
     /**
      * Récupère les informations principales d'un quiz.
      *

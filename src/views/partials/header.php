@@ -19,16 +19,23 @@
 
 <body>
     <header>
-        <img onclick="window.location.href='?page=home'" style="cursor: pointer;" src="./assets/images/logo.svg" alt="Logo">
+        <picture onclick="window.location.href='?page=home'" alt="Logo">
+            <source srcset="./assets/images/logo.svg" media="(width >= 1300px)">
+            <img src="./assets/images/icon.png">
+        </picture>
         <form action="index.php" method="GET">
-            <div class="input" style="width: 100%;">
+            <div class="input">
                 <span></span>
                 <img src="./assets/images/loupe.svg" alt="Search Icon">
                 <input type="text" name="contenu" placeholder="Rechercher des créations..." value="<?php echo isset($_GET['contenu']) ? htmlspecialchars($_GET['contenu']) : ''; ?>" />
                 <input type="hidden" name="page" value="catalogue">
+                <input type="hidden" name="searchAuthor" value="<?php echo isset($_GET['searchAuthor']) ? $_GET['searchAuthor'] : '' ?>">
+                <input type="hidden" name="categorie" value="<?php echo isset($_GET['categorie']) ? $_GET['categorie'] : '' ?>">
+                <input type="hidden" name="tri" value="<?php echo isset($_GET['tri']) ? $_GET['tri'] : '' ?>">
+                <input type="hidden" name="genre" value="<?php echo isset($_GET['genre']) ? $_GET['genre'] : '' ?>">
             </div>
         </form>
-        <div style="display: flex; flex-direction: row; gap: 25px;">
+        <div>
             <?php
             if (session_status() === PHP_SESSION_NONE) {
                 session_start();

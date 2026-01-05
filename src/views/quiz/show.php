@@ -17,8 +17,15 @@ require_once '../src/views/partials/header.php';
 
         <?php else: ?>
             <button class="retour" onclick="window.location.href='?page=home'">🏠 Accueil</button>
+            <button class="button" onclick="window.location.href='?page=home'">
+                <span></span>
+                <p>← Retour</p>
+            </button>
         <?php endif; ?>
-        <button class="signalement" onclick="window.location.href='?page=signalement'">Signaler ce quiz</button>
+        <button class="button signalement" onclick="window.location.href='?page=signalement'">
+            <span></span>
+            <p>Signaler ce quiz</p>
+        </button>
     </div>
     <?php if (($_GET['page']) === 'standard' && (isset($_GET['idQuestion']) && ($_GET['idQuestion']) > 1)
         || (($_GET['page']) === 'standard' && (isset($_GET['reponse']) && ($_GET['reponse']) === 'visible'))
@@ -37,9 +44,15 @@ require_once '../src/views/partials/header.php';
 
             <?php if ($_GET['page'] === 'standard') : ?>
                 <div class="actions-fin">
-                    <button class="valider" onclick="window.location.href='?page=standard&id=<?= $quizId ?>'">Recommencer le quiz</button>
-                    <button class="valider" onclick="window.location.href='?page=catalogue'">Voir d’autres quiz</button>
-                    <button class="valider" onclick="window.location.href='?page=home'">Retour à l’accueil</button>
+                    <button class="button" onclick="window.location.href='?page=standard&id=<?= $quizId ?>'"><span></span>
+                        <p>Recommencer le quiz</p>
+                    </button>
+                    <button class="button" onclick="window.location.href='?page=catalogue'"><span></span>
+                        <p>Voir d’autres quiz</p>
+                    </button>
+                    <button class="button" onclick="window.location.href='?page=home'"><span></span>
+                        <p>Retour à l’accueil</p>
+                    </button>
                 </div>
                 <p class="fin">Vous avez aimé le quiz ? N'hésiter pas à le noter : </p>
                 <div class="quiz-reactions">
@@ -175,18 +188,23 @@ require_once '../src/views/partials/header.php';
 
                 <?php if (!$showAnswer && !$isTest): ?>
                     <!-- STANDARD → première étape → validateur -->
-                    <button class="submit" type="submit" form="quizForm">Valider</button>
+                    <button class="button" type="submit" form="quizForm" style="margin-top: 20px;">
+                        <span></span>
+                        <p>Valider</p>
+                    </button>
 
                 <?php elseif ($isTest): ?>
                     <!-- TEST → toujours POST -->
-                    <button class="valider" type="submit" form="quizForm">Continuer</button>
+                    <button class="button" type="submit" form="quizForm" style="margin-top: 20px;">
+                        <span></span>
+                        <p>Continuer</p>
+                    </button>
 
                 <?php else: ?>
                     <!-- STANDARD → réponse affichée → suivant en GET -->
-                    <button
-                        class="valider"
-                        onclick="window.location.href='?page=standard&id=<?= $question['quiz_id'] ?>&idQuestion=<?= $question['numeroQuiz'] + 1 ?>'">
-                        Continuer
+                    <button class="button" onclick="window.location.href='?page=standard&id=<?= $question['quiz_id'] ?>&idQuestion=<?= $question['numeroQuiz'] + 1 ?>'" style="margin-top: 20px;">
+                        <span></span>
+                        <p>Continuer</p>
                     </button>
                 <?php endif; ?>
             <?php endif; ?>

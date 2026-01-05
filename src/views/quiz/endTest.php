@@ -5,7 +5,10 @@ require_once '../src/views/partials/header.php';
 ?>
 
 <div class="quiz-réalisation">
-    <button class="retour" onclick="window.location.href='?page=home'">Retour à l'accueil</button>
+    <button class="button" style="margin-top: 20px; margin-left: 20px;" onclick="window.location.href='?page=home'">
+        <span></span>
+        <p>Retour à l'accueil</p>
+    </button>
     <h2>Vos réponses</h2>
     <div class="answers">
         <?php foreach ($_SESSION['answers'] as $questionNumber => $a) : ?>
@@ -21,9 +24,18 @@ require_once '../src/views/partials/header.php';
 </div>
 
 <div class="actions-fin">
-    <button class="valider" onclick="window.location.href='?page=test&id=<?= $quizId ?>'">Recommencer le quiz</button>
-    <button class="valider" onclick="window.location.href='?page=catalogue'">Voir d’autres quiz</button>
-    <button class="valider" onclick="window.location.href='?page=home'">Retour à l’accueil</button>
+    <button class="button" onclick="window.location.href='?page=test&id=<?= $quizId ?>'">
+        <span></span>
+        <p>Recommencer le quiz</p>
+    </button>
+    <button class="button" onclick="window.location.href='?page=catalogue'">
+        <span></span>
+        <p>Voir d’autres quiz</p>
+    </button>
+    <button class="button" onclick="window.location.href='?page=home'">
+        <span></span>
+        <p>Retour à l’accueil</p>
+    </button>
 </div>
 <p class="fin">Vous avez aimé le quiz ? N'hésiter pas à le noter : </p>
 <div class="quiz-reactions">

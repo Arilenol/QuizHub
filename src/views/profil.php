@@ -9,7 +9,9 @@ require_once 'partials/header.php';
 
 <body>
 
-    <button onclick="window.location.href='?page=home'" class="btn retour">&lt; Retour</button>
+    <button onclick="window.location.href='?page=home'" class="button" style="margin: 20px 0 0 20px"><span></span>
+        <p>&lt; Retour</p>
+    </button>
 
     <div class="container">
 
@@ -36,8 +38,12 @@ require_once 'partials/header.php';
                     </div>
                 </div>
                 <div class="action">
-                    <button class="edit">Modifier le profil</button>
-                    <button class="logout" onclick="window.location.href='?page=log&typelog=logout'">Déconnexion</button>
+                    <button id="editProfil" class="button"><span></span>
+                        <p>Modifier le profil</p>
+                    </button>
+                    <button class="button signalement" onclick="window.location.href='?page=log&typelog=logout'"><span></span>
+                        <p>Déconnexion</p>
+                    </button>
                 </div>
             </div>
         </div>
@@ -169,7 +175,7 @@ require_once 'partials/header.php';
                                 <br>
                                 <br>
                                 <div class="quiz-footer">
-                                    <p class="quiz-auteur">Par : Vous</p>
+                                    <p class="quiz-auteur">Par : <span class="author">Vous</span></p>
                                     <p class="quiz-date">Fait le : <?= htmlspecialchars($hist[$i]['dateRealisation'] ?? '') ?></p>
                                     <div class="quiz-reactions">
                                         <span class="reaction like">👍 <?= htmlspecialchars($hist[$i]['nbjaime'] ?? 0) ?></span>

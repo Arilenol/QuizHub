@@ -1,0 +1,15 @@
+.newLesson{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.LessonPart{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.exemple{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}

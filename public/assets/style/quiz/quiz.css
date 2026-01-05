@@ -12,10 +12,13 @@
 
 .buttonAction {
   display: flex;
+  width: 95%;
   flex-direction: row;
   justify-content: space-between;
   width: 100%;
-  margin-top: 10px;
+  padding: 0 25px;
+  margin-top: 25px;
+
 }
 
 .quiz-réalisation button {
@@ -70,20 +73,6 @@
   width: 50%;
 }
 
-.quiz-réalisation .signalement {
-  padding: 21px 36px;
-  font-size: 1.575rem;
-  min-height: 69px;
-  margin-right: 1%;
-  margin-top: 1%;
-  background-color: rgb(167, 48, 48);
-  box-shadow: 0 12px 0 rgb(114, 34, 34);
-}
-
-.quiz-réalisation .signalement:hover {
-  color: rgb(167, 48, 48);
-}
-
 .réponse {
   width: 100%;
 }
@@ -110,7 +99,7 @@
 }
 
 /* Effet click (checkbox cachée) */
-.réponse input[type='checkbox']:checked + label {
+.réponse input[type='checkbox']:checked+label {
   transform: translateY(9px);
   background-color: #067178;
   box-shadow: 0 4.5px 0 #0cabb7;
@@ -137,7 +126,8 @@ button.submit {
 
 div.actions-fin {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: auto auto auto;
+  gap: 20px;
 }
 
 p.fin {
@@ -153,6 +143,7 @@ p.fin {
   align-items: center;
   margin: 0;
 }
+
 .quiz-reactions .reaction {
   display: inline-flex;
   align-items: center;
@@ -164,18 +155,21 @@ p.fin {
   background-color: rgba(0, 0, 0, 0.03);
   font-size: 1.7rem;
 }
+
 .quiz-reactions .like {
   background-color: #31c414bf;
   box-shadow: 0px 10px 2px #22810ebf;
 }
 
 .quiz-reactions .dislike {
-  background-color: #c62828; /* fond rouge foncé */
+  background-color: #c62828;
+  /* fond rouge foncé */
   box-shadow: 0px 10px 2px #8a1c1c;
 }
 
 .quiz-reactions .reaction:hover {
-  background-color: #ff1f1f; /* légèrement plus clair au survol */
+  background-color: #ff1f1f;
+  /* légèrement plus clair au survol */
   color: white;
 }
 
@@ -183,8 +177,10 @@ p.fin {
   background-color: rgb(173, 173, 173);
   box-shadow: 0px 8px 2px #747474bf;
   opacity: 0.65;
-  box-shadow: none; /* enlève l'effet relief */
-  transform: none; /* pas d'animation */
+  box-shadow: none;
+  /* enlève l'effet relief */
+  transform: none;
+  /* pas d'animation */
 }
 
 #disabled:hover {

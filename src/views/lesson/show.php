@@ -4,8 +4,12 @@ $style = './assets/style/lesson/show.css';
 require_once '../src/views/partials/header.php';
 ?>
 <div class="buttonAction">
-    <button onclick="window.location.href='?page=home'" class="back-btn">← Retour</button>
-    <button class="signalement" onclick="window.location.href='?page=signalement'">Signaler cette leçon</button>
+    <button onclick="window.location.href='?page=home'" class="button"><span></span>
+        <p>← Retour</p>
+    </button>
+    <button class="button signalement" onclick="window.location.href='?page=signalement'"><span></span>
+        <p>Signaler cette leçon</p>
+    </button>
 </div>
 <main class="lesson-page">
 
