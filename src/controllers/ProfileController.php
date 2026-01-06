@@ -37,7 +37,9 @@ class ProfileController
                 $modelLesson = new LessonModel($this->db);
                 $quiz = $modelHome->getAllCreationsByUser($_SESSION['id']);
                 $lessons = $modelLesson->getAllInfoLessonsByUser($_SESSION['id']);
-                $quiz[] = $lessons[0];
+                if ($lessons[0] !== null) {
+                    $quiz[] = $lessons[0];
+                }
             }
             if ($option === 'showProfile') {
                 $showProfileModal = true;
