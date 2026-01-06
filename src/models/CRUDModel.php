@@ -22,10 +22,12 @@ class CRUDModel {
     public function searchQuizByAll($recherche_cat,$recherche_contenu,$recherche,$genre = '',$tris = null): mixed{
         try{
             $baseSql = "SELECT DISTINCT quiz.id, title, quiz.description, difficulty, quiz.user_id, date, genre,
-            quiz.nbjaime,quiz.nbjaimepas FROM quiz 
+            COALESCE(l.nbjaime, 0) as nbjaime, COALESCE(d.nbjaimepas, 0) as nbjaimepas FROM quiz 
             INNER JOIN categorie_quiz ON categorie_quiz.quiz_id = quiz.id 
             INNER JOIN categories ON categories.id = categorie_quiz.category_id 
             INNER JOIN users ON users.id = quiz.user_id
+            LEFT JOIN (SELECT quiz_id, COUNT(*) as nbjaime FROM likes GROUP BY quiz_id) l ON l.quiz_id = quiz.id
+            LEFT JOIN (SELECT quiz_id, COUNT(*) as nbjaimepas FROM dislikes GROUP BY quiz_id) d ON d.quiz_id = quiz.id
             WHERE categories.id = ? AND (quiz.title LIKE ? OR quiz.description LIKE ?) AND users.username LIKE ? AND (? = '' OR quiz.genre = ?)";
 
             
@@ -67,10 +69,12 @@ class CRUDModel {
     public function searchQuizByTitle($recherche_titre, $genre = '', $tris = null): mixed{
         try{
             $baseSql = "SELECT DISTINCT quiz.id, title, quiz.description, difficulty, quiz.user_id, date, genre,
-            quiz.nbjaime,quiz.nbjaimepas FROM quiz 
+            COALESCE(l.nbjaime, 0) as nbjaime, COALESCE(d.nbjaimepas, 0) as nbjaimepas FROM quiz 
             INNER JOIN categorie_quiz ON categorie_quiz.quiz_id = quiz.id 
             INNER JOIN categories ON categories.id = categorie_quiz.category_id 
             INNER JOIN users ON users.id = quiz.user_id
+            LEFT JOIN (SELECT quiz_id, COUNT(*) as nbjaime FROM likes GROUP BY quiz_id) l ON l.quiz_id = quiz.id
+            LEFT JOIN (SELECT quiz_id, COUNT(*) as nbjaimepas FROM dislikes GROUP BY quiz_id) d ON d.quiz_id = quiz.id
             WHERE quiz.title LIKE ? AND (? = '' OR quiz.genre = ?)";
 
             $allowedOrder = [
@@ -122,10 +126,12 @@ class CRUDModel {
     public function searchQuizByContentAndAuthor($recherche_contenu,$recherche,$genre = '',$tris = null): mixed{
         try{
             $baseSql = "SELECT DISTINCT quiz.id, title, quiz.description, difficulty, quiz.user_id, date, genre,
-            quiz.nbjaime,quiz.nbjaimepas FROM quiz 
+            COALESCE(l.nbjaime, 0) as nbjaime, COALESCE(d.nbjaimepas, 0) as nbjaimepas FROM quiz 
             INNER JOIN categorie_quiz ON categorie_quiz.quiz_id = quiz.id 
             INNER JOIN categories ON categories.id = categorie_quiz.category_id 
             INNER JOIN users ON users.id = quiz.user_id
+            LEFT JOIN (SELECT quiz_id, COUNT(*) as nbjaime FROM likes GROUP BY quiz_id) l ON l.quiz_id = quiz.id
+            LEFT JOIN (SELECT quiz_id, COUNT(*) as nbjaimepas FROM dislikes GROUP BY quiz_id) d ON d.quiz_id = quiz.id
             WHERE (quiz.title LIKE ? OR quiz.description LIKE ?) AND users.username LIKE ? AND (? = '' OR quiz.genre = ?)";
 
             $allowedOrder = [
@@ -202,13 +208,33 @@ class CRUDModel {
     }
 
     /**
+     * Récupère toutes les informations d'un auteur (sauf password)
+     */
+    public function getAuthorInfo($author_id): mixed {
+        try {
+            $sql = $this->db->prepare("SELECT id, username, email, description, admin FROM users WHERE id = ?");
+            $sql->bindParam(1, $author_id);
+            $sql->execute();
+
+            $author = $sql->fetch(PDO::FETCH_ASSOC);
+            return $author;
+        } catch(PDOException $e) {
+            die("Fetching author info failed: " . $e->getMessage());
+        } catch(Exception $e) {
+            die("Error: " . $e->getMessage());
+        }
+    }
+
+    /**
      * Récupère tous les quizzes créés par un auteur spécifique
      */
     public function getQuizzesByAuthor($author_id): mixed {
         try {
             $sql = $this->db->prepare("SELECT quiz.id, quiz.title, quiz.description, quiz.difficulty, 
-                                              quiz.user_id, quiz.date, quiz.genre, quiz.nbjaime, quiz.nbjaimepas 
+                                              quiz.user_id, quiz.date, quiz.genre, COALESCE(l.nbjaime, 0) as nbjaime, COALESCE(d.nbjaimepas, 0) as nbjaimepas 
                                        FROM quiz 
+                                       LEFT JOIN (SELECT quiz_id, COUNT(*) as nbjaime FROM likes GROUP BY quiz_id) l ON l.quiz_id = quiz.id
+                                       LEFT JOIN (SELECT quiz_id, COUNT(*) as nbjaimepas FROM dislikes GROUP BY quiz_id) d ON d.quiz_id = quiz.id
                                        WHERE quiz.user_id = ? 
                                        ORDER BY quiz.date DESC");
             $sql->bindParam(1, $author_id);
@@ -218,6 +244,43 @@ class CRUDModel {
             return $quizzes;
         } catch(PDOException $e) {
             die("Fetching author's quizzes failed: " . $e->getMessage());
+        } catch(Exception $e) {
+            die("Error: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Met à jour les informations d'un auteur
+     */
+    public function updateAuthor($author_id, $username, $email, $description): bool {
+        try {
+            $sql = $this->db->prepare("UPDATE users SET username = ?, email = ?, description = ? WHERE id = ?");
+            $sql->bindParam(1, $username);
+            $sql->bindParam(2, $email);
+            $sql->bindParam(3, $description);
+            $sql->bindParam(4, $author_id);
+            $sql->execute();
+
+            return $sql->rowCount() > 0;
+        } catch(PDOException $e) {
+            die("Updating author failed: " . $e->getMessage());
+        } catch(Exception $e) {
+            die("Error: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Supprime un auteur
+     */
+    public function deleteAuthor($author_id): bool {
+        try {
+            $sql = $this->db->prepare("DELETE FROM users WHERE id = ?");
+            $sql->bindParam(1, $author_id);
+            $sql->execute();
+
+            return $sql->rowCount() > 0;
+        } catch(PDOException $e) {
+            die("Deleting author failed: " . $e->getMessage());
         } catch(Exception $e) {
             die("Error: " . $e->getMessage());
         }
