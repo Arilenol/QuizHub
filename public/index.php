@@ -24,7 +24,7 @@ switch ($page) {
 
 
     case 'catalogue':
-        require_once ROOT . '/src/controllers/CatalogueController.php';
+        require_once ROOT . '/src/controllers/catalogueController.php';
         $controller = new CatalogueController();
         // va charger views/catalogue.php
         $controller->index();
