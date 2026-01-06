@@ -37,7 +37,7 @@ class ProfileController
                 $modelLesson = new LessonModel($this->db);
                 $quiz = $modelHome->getAllCreationsByUser($_SESSION['id']);
                 $lessons = $modelLesson->getAllInfoLessonsByUser($_SESSION['id']);
-                if ($lessons[0] !== null) {
+                if (!empty($lessons) && $lessons[0] !== null) {
                     $quiz[] = $lessons[0];
                 }
             }

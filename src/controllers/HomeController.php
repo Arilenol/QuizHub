@@ -11,6 +11,7 @@ class HomeController
         $db = getDbConnection();
         $model = new HomeModel($db);
         $modelLesson = new LessonModel($db);
+
         // récupère les données
         $quiz = $model->getAllInfo();
 
@@ -18,7 +19,7 @@ class HomeController
         if (isset($_SESSION['id']) && !empty($_SESSION['id'])) {
             $quizNextPart = $model->getAllCreationsByUser($_SESSION['id']);
             $lessonsByUser = $modelLesson->getAllInfoLessonsByUser($_SESSION['id']);
-            if ($lessonsByUser!==false && !empty($lessonsByUser)){
+            if ($lessonsByUser !== false && !empty($lessonsByUser)) {
                 $quizNextPart[] = $lessonsByUser[0];
             }
         } else {
