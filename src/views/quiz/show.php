@@ -16,10 +16,8 @@ require_once '../src/views/partials/header.php';
             </form>
 
         <?php else: ?>
-            <button class="retour" onclick="window.location.href='?page=home'">🏠 Accueil</button>
-            <button class="button" onclick="window.location.href='?page=home'">
-                <span></span>
-                <p>← Retour</p>
+            <button class="retour" onclick="window.location.href='?page=home'">
+                🏠 Accueil
             </button>
         <?php endif; ?>
         <button class="button signalement" onclick="window.location.href='?page=signalement'">
