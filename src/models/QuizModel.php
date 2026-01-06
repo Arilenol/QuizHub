@@ -233,17 +233,15 @@ class QuizModel
     public function insertQuiz(int $user_id, string $title, string $desc,string $dispo,  string $date, string $genre)
     {
         try {
-            $newQuiz = $this->db->prepare("INSERT INTO Quiz(user_id, title, description, difficulty, disponibilite, nbjaime, nbjaimepas, date, genre)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);");
+            $newQuiz = $this->db->prepare("INSERT INTO Quiz(user_id, title, description, difficulty, disponibilite, date, genre)
+            VALUES (?, ?, ?, ?, ?, ?, ?);");
             $newQuiz->bindValue(1, $user_id);
             $newQuiz->bindValue(2, $title);
             $newQuiz->bindValue(3, $desc);
             $newQuiz->bindValue(4, 1);
             $newQuiz->bindValue(5, $dispo);
-            $newQuiz->bindValue(6, 0);
-            $newQuiz->bindValue(7, 0);
-            $newQuiz->bindValue(8, $date);
-            $newQuiz->bindValue(9, $genre);
+            $newQuiz->bindValue(6, $date);
+            $newQuiz->bindValue(7, $genre);
 
             $reussite = $newQuiz->execute();
             if ($reussite === false) {
