@@ -289,7 +289,6 @@ function constructionBD(PDO $conn)
                 dateRealisation DATETIME DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
                 FOREIGN KEY (quiz_id) REFERENCES quiz(id) ON DELETE CASCADE
-                )
             );";
 
         $conn->exec($sql);
@@ -515,6 +514,13 @@ function constructionBD(PDO $conn)
         $conn->beginTransaction();
         try {
             mt_srand(12345);
+
+            $adminsql = $conn->prepare("INSERT INTO Users(username, password, email, admin) VALUES (?, ?,?, ? );");
+            $adminsql->bindValue(1, 'admin');
+            $adminsql->bindValue(2, password_hash("1234", PASSWORD_DEFAULT));
+            $adminsql->bindValue(3, "admin@gmail.com");
+            $adminsql->bindValue(4, 1);
+            $adminsql->execute();
 
             /* ===================== USERS (FAKE) ===================== */
             $users = [];

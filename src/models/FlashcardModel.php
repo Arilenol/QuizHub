@@ -106,17 +106,15 @@ class FlashcardModel
     public function insertFlashcard(int $user_id, string $title, string $desc)
     {
         try {
-            $newFlashcard = $this->db->prepare("INSERT INTO Quiz (user_id, title, description, difficulty, disponibilite, nbjaime, nbjaimepas, date, genre)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?); ");
+            $newFlashcard = $this->db->prepare("INSERT INTO Quiz (user_id, title, description, difficulty, disponibilite, date, genre)
+            VALUES (?, ?, ?, ?, ?, ?, ?); ");
             $newFlashcard->bindValue(1, $user_id);
             $newFlashcard->bindValue(2, $title);
             $newFlashcard->bindValue(3, $desc);
             $newFlashcard->bindValue(4, 1);
             $newFlashcard->bindValue(5, 'public');
-            $newFlashcard->bindValue(6, 0);
-            $newFlashcard->bindValue(7, 0);
-            $newFlashcard->bindValue(8, date('Y-m-d'));
-            $newFlashcard->bindValue(9, 'flashcard');
+            $newFlashcard->bindValue(6, date('Y-m-d'));
+            $newFlashcard->bindValue(7, 'flashcard');
 
             $reussite = $newFlashcard->execute();
             if (!$reussite) {
