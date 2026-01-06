@@ -18,11 +18,33 @@ class CRUDAuteurController
             die("ID auteur invalide");
         }
 
-        // Récupérer les infos de l'auteur (nom)
-        $author_name = $this->model->getNomAuteur($author_id);
-        if (!$author_name) {
+        // Gérer les actions POST
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (isset($_POST['action'])) {
+                if ($_POST['action'] === 'update') {
+                    $username = $_POST['username'];
+                    $email = $_POST['email'];
+                    $description = $_POST['description'];
+                    $this->model->updateAuthor($author_id, $username, $email, $description);
+                    // Rediriger pour éviter re-soumission
+                    header("Location: ?page=CRUDauteur&id=$author_id");
+                    exit;
+                } elseif ($_POST['action'] === 'delete') {
+                    $this->model->deleteAuthor($author_id);
+                    // Rediriger vers la recherche
+                    header("Location: ?page=CRUD");
+                    exit;
+                }
+            }
+        }
+
+        // Récupérer les infos complètes de l'auteur
+        $author_info = $this->model->getAuthorInfo($author_id);
+        if (!$author_info) {
             die("Auteur non trouvé");
         }
+
+        $author_name = $author_info['username'];
 
         // Récupérer tous les quizzes de cet auteur
         $quizzes = $this->model->getQuizzesByAuthor($author_id);

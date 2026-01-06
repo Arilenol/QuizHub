@@ -29,23 +29,33 @@
                         <?php endif; ?>
                     </div>
 
-                    <p class="quiz-genre"><?= htmlspecialchars($quiz['genre'] ?? '') ?></p>
-                    <p class="quiz-title"><?= htmlspecialchars($quiz['title'] ?? '') ?></p>
-                    <p class="quiz-description"><?= htmlspecialchars($quiz['description'] ?? '') ?></p>
-                    <p class="quiz-auteur">Par : <?= htmlspecialchars($quiz['nom_auteur'] ?? '') ?></p>
+                    <form method="POST" action="">
+                        <input type="hidden" name="action" value="update_quiz">
+                        <input type="hidden" name="quiz_id" value="<?= htmlspecialchars($quiz['id']) ?>">
 
-                    <div class="quiz-footer">
-                        <p class="quiz-date">publié le : <?= htmlspecialchars($quiz['date'] ?? '') ?></p>
-                        <div class="quiz-reactions">
-                            <span class="reaction like">👍 <?= htmlspecialchars($quiz['nbjaime'] ?? 0) ?></span>
-                            <span class="reaction dislike">👎 <?= htmlspecialchars($quiz['nbjaimepas'] ?? 0) ?></span>
+                        <p class="quiz-title" style="display: block;"><input type="text" name="title" value="<?= htmlspecialchars($quiz['title']) ?>" required style="width: 100%; border: none; background: transparent; font-size: inherit; font-weight: bold;"></p>
+                        <p class="quiz-description" style="display: block;"><textarea name="description" required style="width: 100%; border: none; background: transparent; font-size: inherit; resize: vertical; min-height: 60px;"><?= htmlspecialchars($quiz['description']) ?></textarea></p>
+                        <p class="quiz-genre" style="display: block; width: 60px;"><?= htmlspecialchars($quiz['genre'] ?? '') ?></p>
+                        <p class="quiz-auteur">Par : <?= htmlspecialchars($quiz['nom_auteur'] ?? '') ?></p>
+
+                        <div class="quiz-footer">
+                            <p class="quiz-date">publié le : <?= htmlspecialchars($quiz['date'] ?? '') ?></p>
+                            <div class="quiz-reactions">
+                                <span class="reaction like">👍 <?= htmlspecialchars($quiz['nbjaime'] ?? 0) ?></span>
+                                <span class="reaction dislike">👎 <?= htmlspecialchars($quiz['nbjaimepas'] ?? 0) ?></span>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="quiz-actions">
-                        <button onclick="alert('Modifier en développement')">Modifier</button>
-                        <button onclick="alert('Supprimer en développement')">Supprimer</button>
-                    </div>
+                        <div class="quiz-actions">
+                            <label>Difficulté: <input type="number" name="difficulty" value="<?= htmlspecialchars($quiz['difficulty']) ?>" min="1" max="10" required style="width: 60px;"></label>
+                            <button type="submit">Modifier Quiz</button>
+                            <button type="button" onclick="if(confirm('Supprimer ce quiz ?')) { document.getElementById('delete-form').submit(); }">Supprimer Quiz</button>
+                        </div>
+                    </form>
+                    <form id="delete-form" method="POST" action="" style="display: none;">
+                        <input type="hidden" name="action" value="delete_quiz">
+                        <input type="hidden" name="quiz_id" value="<?= htmlspecialchars($quiz['id']) ?>">
+                    </form>
                 </article>
             </div>
 
@@ -55,8 +65,18 @@
             <?php if (!empty($questionsWithAnswers)): ?>
                 <?php foreach ($questionsWithAnswers as $question): ?>
                     <div id="question-<?= htmlspecialchars($question['id']) ?>" class="question-card">
-                        <h3>Question <?= htmlspecialchars($question['numeroQuiz']) ?></h3>
-                        <p class="question-text"><?= htmlspecialchars($question['enonce'] ?? '') ?></p>
+                        <form method="POST" action="" style="display: inline;">
+                            <input type="hidden" name="action" value="update_question">
+                            <input type="hidden" name="question_id" value="<?= htmlspecialchars($question['id']) ?>">
+                            <h3>Question <?= htmlspecialchars($question['numeroQuiz']) ?></h3>
+                            <p class="question-text"><input type="text" name="enonce" value="<?= htmlspecialchars($question['enonce']) ?>" required style="width: 100%; border: none; background: transparent; font-size: inherit;"></p>
+                            <button type="submit" style="margin-left: 10px;">Modifier</button>
+                        </form>
+                        <button type="button" onclick="if(confirm('Supprimer cette question ?')) { document.getElementById('delete-question-<?= $question['id'] ?>').submit(); }" style="margin-left: 10px;">Supprimer Question</button>
+                        <form id="delete-question-<?= $question['id'] ?>" method="POST" action="" style="display: none;">
+                            <input type="hidden" name="action" value="delete_question">
+                            <input type="hidden" name="question_id" value="<?= htmlspecialchars($question['id']) ?>">
+                        </form>
 
                         <?php if (!empty($question['answers']) && is_array($question['answers'])): ?>
                             <div class="answers">
@@ -64,10 +84,18 @@
                                 <ul>
                                     <?php foreach ($question['answers'] as $answer): ?>
                                         <li class="answer <?= $answer['est_correct'] ? 'correct' : '' ?>">
-                                            <?= htmlspecialchars($answer['texte']) ?>
-                                            <?php if ($answer['est_correct']): ?>
-                                                <span class="correct-badge">✓ Correct</span>
-                                            <?php endif; ?>
+                                            <form method="POST" action="" style="display: inline;">
+                                                <input type="hidden" name="action" value="update_answer">
+                                                <input type="hidden" name="answer_id" value="<?= htmlspecialchars($answer['id']) ?>">
+                                                <input type="text" name="texte" value="<?= htmlspecialchars($answer['texte']) ?>" required style="border: none; background: transparent;">
+                                                <label><input type="checkbox" name="est_correct" <?= $answer['est_correct'] ? 'checked' : '' ?>> Correct</label>
+                                                <button type="submit">Mod</button>
+                                            </form>
+                                            <button type="button" onclick="if(confirm('Supprimer cette réponse ?')) { document.getElementById('delete-answer-<?= $answer['id'] ?>').submit(); }">Sup</button>
+                                            <form id="delete-answer-<?= $answer['id'] ?>" method="POST" action="" style="display: none;">
+                                                <input type="hidden" name="action" value="delete_answer">
+                                                <input type="hidden" name="answer_id" value="<?= htmlspecialchars($answer['id']) ?>">
+                                            </form>
                                         </li>
                                     <?php endforeach; ?>
                                 </ul>
@@ -75,6 +103,7 @@
                         <?php else: ?>
                             <p class="no-answers">Aucune réponse pour cette question</p>
                         <?php endif; ?>
+
                     </div>
                 <?php endforeach; ?>
             <?php else: ?>

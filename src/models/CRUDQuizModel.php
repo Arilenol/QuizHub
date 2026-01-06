@@ -13,8 +13,10 @@ class CRUDQuizModel {
     public function getQuizInfo($quiz_id): mixed {
         try {
             $sql = $this->db->prepare("SELECT quiz.id, quiz.title, quiz.description, quiz.difficulty, 
-                                              quiz.user_id, quiz.date, quiz.genre, quiz.nbjaime, quiz.nbjaimepas 
+                                              quiz.user_id, quiz.date, quiz.genre, COALESCE(l.nbjaime, 0) as nbjaime, COALESCE(d.nbjaimepas, 0) as nbjaimepas 
                                        FROM quiz 
+                                       LEFT JOIN (SELECT quiz_id, COUNT(*) as nbjaime FROM likes GROUP BY quiz_id) l ON l.quiz_id = quiz.id
+                                       LEFT JOIN (SELECT quiz_id, COUNT(*) as nbjaimepas FROM dislikes GROUP BY quiz_id) d ON d.quiz_id = quiz.id
                                        WHERE quiz.id = ?");
             $sql->bindParam(1, $quiz_id);
             $sql->execute();
@@ -106,6 +108,116 @@ class CRUDQuizModel {
     }
 
     /**
+     * Met à jour une question
+     */
+    public function updateQuestion($question_id, $enonce): bool {
+        try {
+            $sql = $this->db->prepare("UPDATE question SET question = ? WHERE id = ?");
+            $sql->bindParam(1, $enonce);
+            $sql->bindParam(2, $question_id, PDO::PARAM_INT);
+            $sql->execute();
+
+            return $sql->rowCount() > 0;
+        } catch(PDOException $e) {
+            die("Updating question failed: " . $e->getMessage());
+        } catch(Exception $e) {
+            die("Error: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Supprime une question
+     */
+    public function deleteQuestion($question_id): bool {
+        try {
+            $sql = $this->db->prepare("DELETE FROM question WHERE id = ?");
+            $sql->bindParam(1, $question_id, PDO::PARAM_INT);
+            $sql->execute();
+
+            return $sql->rowCount() > 0;
+        } catch(PDOException $e) {
+            die("Deleting question failed: " . $e->getMessage());
+        } catch(Exception $e) {
+            die("Error: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Met à jour une réponse
+     */
+    public function updateAnswer($answer_id, $texte, $est_correct): bool {
+        try {
+            $sql = $this->db->prepare("UPDATE reponse SET reponse = ?, estCorrecte = ? WHERE id = ?");
+            $sql->bindParam(1, $texte);
+            $sql->bindParam(2, $est_correct, PDO::PARAM_INT);
+            $sql->bindParam(3, $answer_id, PDO::PARAM_INT);
+            $sql->execute();
+
+            return $sql->rowCount() > 0;
+        } catch(PDOException $e) {
+            die("Updating answer failed: " . $e->getMessage());
+        } catch(Exception $e) {
+            die("Error: " . $e->getMessage());
+        }
+    }
+
+
+    /**
+     * Supprime un quiz
+     */
+    public function deleteQuiz($quiz_id): bool {
+        try {
+            $sql = $this->db->prepare("DELETE FROM quiz WHERE id = ?");
+            $sql->bindParam(1, $quiz_id, PDO::PARAM_INT);
+            $sql->execute();
+
+            return $sql->rowCount() > 0;
+        } catch(PDOException $e) {
+            die("Deleting quiz failed: " . $e->getMessage());
+        } catch(Exception $e) {
+            die("Error: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Met à jour les informations d'un quiz
+     */
+    public function updateQuiz($quiz_id, $title, $description, $difficulty, $genre): bool {
+        try {
+            $sql = $this->db->prepare("UPDATE quiz SET title = ?, description = ?, difficulty = ?, genre = ? WHERE id = ?");
+            $sql->bindParam(1, $title);
+            $sql->bindParam(2, $description);
+            $sql->bindParam(3, $difficulty, PDO::PARAM_INT);
+            $sql->bindParam(4, $genre);
+            $sql->bindParam(5, $quiz_id, PDO::PARAM_INT);
+            $sql->execute();
+
+            return $sql->rowCount() > 0;
+        } catch(PDOException $e) {
+            die("Updating quiz failed: " . $e->getMessage());
+        } catch(Exception $e) {
+            die("Error: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Supprime une réponse
+     */
+    public function deleteAnswer($answer_id): bool {
+        try {
+            $sql = $this->db->prepare("DELETE FROM reponse WHERE id = ?");
+            $sql->bindParam(1, $answer_id, PDO::PARAM_INT);
+            $sql->execute();
+
+            return $sql->rowCount() > 0;
+        } catch(PDOException $e) {
+            die("Deleting answer failed: " . $e->getMessage());
+        } catch(Exception $e) {
+            die("Error: " . $e->getMessage());
+        }
+    }
+
+    /**
      * Récupère le nom de l'auteur
      */
     public function getNomAuteur($user_id): mixed {
@@ -122,5 +234,6 @@ class CRUDQuizModel {
             die("Error: " . $e->getMessage());
         }
     }
+
 }
 ?>
