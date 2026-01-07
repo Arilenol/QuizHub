@@ -35,6 +35,32 @@ class FlashcardModel
         return $result ?: null;
     }
 
+    /**
+     * Retourne le nombre total de questions d’une Flashcard.
+     *
+     * Cette méthode compte toutes les entrées de la table `carte` associées
+     * à une flashcard donné via son identifiant. Si aucune question n'existe,
+     * elle renvoie 0.
+     *
+     * @param int $id  Identifiant de la flashcard dont on souhaite connaître le nombre de questions.
+     *
+     * @return int  Nombre total de questions du quiz. 0 si aucune question n’est trouvée.
+     */
+
+    public function getMaxNbQuestion(int $id): int
+    {
+        $stmt = $this->db->prepare("
+        SELECT MAX(numeroCarte) AS maxi
+        FROM carte
+        WHERE quiz_id = ?
+    ");
+        $stmt->execute([$id]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        var_dump($id);
+        var_dump($row['maxi']);
+        return intval($row['maxi']);
+    }
+
 
     /**
      * Crée une flashcard complète avec toutes ses cartes et restrictions d'amis.
@@ -281,8 +307,9 @@ class FlashcardModel
      * @param int $idFlashcard Identifiant de la flashcard (quiz).
      * @return int Nombre total de cartes (0 si aucune).
      */
-    public function getFlashcardSize(int $idFlashcard): int{
-        try{
+    public function getFlashcardSize(int $idFlashcard): int
+    {
+        try {
             $stmt = $this->db->prepare("SELECT COUNT(*) AS totalQuestions FROM Carte WHERE quiz_id = ?;");
             $stmt->execute([$idFlashcard]);
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -290,7 +317,6 @@ class FlashcardModel
         } catch (PDOException $e) {
             die("Fetching quiz size failed: " . $e->getMessage());
         }
-        
     }
 
     /**
@@ -299,10 +325,11 @@ class FlashcardModel
      * @param int $idFlashcard Identifiant de la flashcard (quiz).
      * @return array|null Tableau associatif contenant 'title', 'description', 'disponibilite', 'genre' ou null si non trouvé.
      */
-    public function getFlashcardInfos(int $idFlashcard){
-        try{
+    public function getFlashcardInfos(int $idFlashcard)
+    {
+        try {
             $quiz = $this->db->prepare("SELECT title, description, disponibilite, genre FROM quiz WHERE id = ?;");
-            $quiz->bindvalue(1,$idFlashcard);
+            $quiz->bindvalue(1, $idFlashcard);
             $quiz->execute();
             return $quiz->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
@@ -316,17 +343,17 @@ class FlashcardModel
      * @param int $idFlashcard Identifiant de la flashcard (quiz).
      * @return array Tableau de tableaux associatifs contenant 'id', 'question' et 'reponse'.
      */
-    public function getCardsFromFlashcard(int $idFlashcard){
-        try{
+    public function getCardsFromFlashcard(int $idFlashcard)
+    {
+        try {
             $cartes = $this->db->prepare("SELECT id, question, reponse FROM Carte WHERE quiz_id = ? ORDER BY numeroCarte ASC;");
-            $cartes->bindValue(1,$idFlashcard);
+            $cartes->bindValue(1, $idFlashcard);
             $cartes->execute();
             $TAB_CARD = $cartes->fetchAll(PDO::FETCH_ASSOC);
             return $TAB_CARD;
-        } catch(PDOException $e){
+        } catch (PDOException $e) {
             die("Fetching questions and answers from quiz failed: " . $e->getMessage());
         }
-        
     }
 
     /**
@@ -335,14 +362,15 @@ class FlashcardModel
      * @param int $idFlashcard Identifiant de la flashcard (quiz).
      * @return array Tableau associatif des catégories (chaque élément contient 'id' et 'categorieName').
      */
-    public function getCategoriesFromFlashcard(int $idFlashcard){
-        try{
+    public function getCategoriesFromFlashcard(int $idFlashcard)
+    {
+        try {
             $categories = $this->db->prepare("SELECT categories.id, categories.categorieName FROM categories 
             INNER JOIN categorie_quiz ON categories.id = categorie_quiz.category_id WHERE categorie_quiz.quiz_id = ?;");
-            $categories->bindValue(1,$idFlashcard);
+            $categories->bindValue(1, $idFlashcard);
             $categories->execute();
             return $categories->fetchAll(PDO::FETCH_ASSOC);
-        } catch(PDOException $e){
+        } catch (PDOException $e) {
             die("Fetching categories from quiz failed: " . $e->getMessage());
         }
     }
@@ -353,16 +381,16 @@ class FlashcardModel
      * @param int $idFlashcard Identifiant de la flashcard (quiz).
      * @return int|false L'ID de l'utilisateur si trouvé, ou false sinon.
      */
-    public function getUserIdFromFlashcard(int $idFlashcard): int{
-        try{
+    public function getUserIdFromFlashcard(int $idFlashcard): int
+    {
+        try {
             $quiz = $this->db->prepare("SELECT user_id FROM quiz WHERE id = ?;");
-            $quiz->bindvalue(1,$idFlashcard);
+            $quiz->bindvalue(1, $idFlashcard);
             $quiz->execute();
             $result = $quiz->fetch(PDO::FETCH_ASSOC);
-            if(!empty($result)){
+            if (!empty($result)) {
                 return (int)$result['user_id'];
-            }
-            else{
+            } else {
                 return false;
             }
         } catch (PDOException $e) {
@@ -379,16 +407,17 @@ class FlashcardModel
      * @param array $categories Tableau d'IDs de catégories à associer.
      * @return bool true en cas de succès.
      */
-    public function updateCategoriesFlashcard(int $idFlashcard, array $categories){
-        try{
+    public function updateCategoriesFlashcard(int $idFlashcard, array $categories)
+    {
+        try {
             $delete = $this->db->prepare("DELETE FROM categorie_quiz WHERE quiz_id = ?;");
-            $delete->bindValue(1,$idFlashcard);
+            $delete->bindValue(1, $idFlashcard);
             $delete->execute();
-            foreach($categories as $categorie){
+            foreach ($categories as $categorie) {
                 $this->insertQuizCategorie($idFlashcard, (int)$categorie);
             }
             return true;
-        } catch(PDOException $e){
+        } catch (PDOException $e) {
             die("Updating categories for quiz failed: " . $e->getMessage());
         }
     }
@@ -401,22 +430,23 @@ class FlashcardModel
      * @param array $amis Tableau d'IDs d'amis autorisés (utilisé si la disponibilité est 'ami').
      * @return bool true en cas de succès.
      */
-    public function updateDisponibiliteFlashcard(int $idFlashcard, string $disponibilite, array $amis){
-        try{
+    public function updateDisponibiliteFlashcard(int $idFlashcard, string $disponibilite, array $amis)
+    {
+        try {
             $delete = $this->db->prepare("DELETE FROM amiDisponibilite WHERE quiz_id = ?;");
-            $delete->bindValue(1,$idFlashcard);
+            $delete->bindValue(1, $idFlashcard);
             $delete->execute();
             $update = $this->db->prepare("UPDATE quiz SET disponibilite = ? WHERE id = ?;");
-            $update->bindValue(1,$disponibilite);
-            $update->bindValue(2,$idFlashcard);
+            $update->bindValue(1, $disponibilite);
+            $update->bindValue(2, $idFlashcard);
             $update->execute();
-            if ($disponibilite == 'ami'){
-                foreach($amis as $ami){
+            if ($disponibilite == 'ami') {
+                foreach ($amis as $ami) {
                     $this->insertAmiDispo($idFlashcard, (int)$ami);
                 }
             }
             return true;
-        } catch(PDOException $e){
+        } catch (PDOException $e) {
             die("Updating disponibilite for quiz failed: " . $e->getMessage());
         }
     }
@@ -430,16 +460,17 @@ class FlashcardModel
      * @param string $reponseContent Nouveau texte de la réponse.
      * @return bool true en cas de succès.
      */
-    public function updateCardFromFlashcard(int $idFlashcard, int $numeroCarte, string $questionContent, string $reponseContent){
-        try{
+    public function updateCardFromFlashcard(int $idFlashcard, int $numeroCarte, string $questionContent, string $reponseContent)
+    {
+        try {
             $updateCarte = $this->db->prepare("UPDATE Carte SET question = ?, reponse = ? WHERE quiz_id = ? AND numeroCarte = ? RETURNING id;");
-            $updateCarte->bindValue(1,$questionContent);
-            $updateCarte->bindValue(2,$reponseContent);
-            $updateCarte->bindValue(3,$idFlashcard);
-            $updateCarte->bindValue(4,$numeroCarte);
+            $updateCarte->bindValue(1, $questionContent);
+            $updateCarte->bindValue(2, $reponseContent);
+            $updateCarte->bindValue(3, $idFlashcard);
+            $updateCarte->bindValue(4, $numeroCarte);
             $updateCarte->execute();
             return true;
-        } catch(PDOException $e){
+        } catch (PDOException $e) {
             die("Updating question in quiz failed: " . $e->getMessage());
         }
     }
@@ -453,12 +484,13 @@ class FlashcardModel
      * @param string $reponseContent Texte de la réponse.
      * @return bool true en cas de succès.
      */
-    public function addCardToFlashcard(int $idFlashcard,int $numCarte, string $questionContent, string $reponseContent){
-        try{
+    public function addCardToFlashcard(int $idFlashcard, int $numCarte, string $questionContent, string $reponseContent)
+    {
+        try {
             $this->insertCarte($idFlashcard, $numCarte, $idFlashcard, $questionContent, $reponseContent);
-            
+
             return true;
-        } catch(PDOException $e){
+        } catch (PDOException $e) {
             die("Adding question to quiz failed: " . $e->getMessage());
         }
     }
@@ -471,15 +503,16 @@ class FlashcardModel
      * @param string $description Nouvelle description.
      * @return bool true en cas de succès.
      */
-    public function updateResumflashcard(int $idFlashcard, string $title, string $description){
-        try{
+    public function updateResumflashcard(int $idFlashcard, string $title, string $description)
+    {
+        try {
             $updateResum = $this->db->prepare("UPDATE quiz SET title = ?, description = ? WHERE id = ?;");
-            $updateResum->bindValue(1,$title);
-            $updateResum->bindValue(2,$description);
-            $updateResum->bindValue(3,$idFlashcard);
+            $updateResum->bindValue(1, $title);
+            $updateResum->bindValue(2, $description);
+            $updateResum->bindValue(3, $idFlashcard);
             $updateResum->execute();
             return true;
-        } catch(PDOException $e){
+        } catch (PDOException $e) {
             die("Updating quiz resum failed: " . $e->getMessage());
         }
     }
@@ -490,14 +523,15 @@ class FlashcardModel
      * @param int $idFlashcard Identifiant de la flashcard (quiz).
      * @return array Tableau d'IDs d'amis.
      */
-    public function getAmisSelection(int $idFlashcard){
-        try{
+    public function getAmisSelection(int $idFlashcard)
+    {
+        try {
             $amis = $this->db->prepare("SELECT ami_id FROM amiDisponibilite WHERE quiz_id = ?;");
-            $amis->bindvalue(1,$idFlashcard);
+            $amis->bindvalue(1, $idFlashcard);
             $amis->execute();
             $result = $amis->fetchAll(PDO::FETCH_ASSOC);
             $TAB_AMIS = array();
-            foreach($result as $ami){
+            foreach ($result as $ami) {
                 $TAB_AMIS[] = $ami['ami_id'];
             }
             return $TAB_AMIS;
@@ -513,21 +547,21 @@ class FlashcardModel
      * @param int $numeroCarte Numéro d'ordre de la carte à supprimer.
      * @return bool true en cas de succès.
      */
-    public function deleteCardFromFlashcard(int $idFlashcard, int $numeroCarte){
-        try{
+    public function deleteCardFromFlashcard(int $idFlashcard, int $numeroCarte)
+    {
+        try {
             $getCard = $this->db->prepare("SELECT id FROM Carte WHERE quiz_id = ? AND numeroCarte = ?;");
-            $getCard->bindValue(1,$idFlashcard);
-            $getCard->bindValue(2,$numeroCarte);
+            $getCard->bindValue(1, $idFlashcard);
+            $getCard->bindValue(2, $numeroCarte);
             $getCard->execute();
             $question = $getCard->fetch(PDO::FETCH_ASSOC);
-            if ($question){
+            if ($question) {
                 $deleteCard = $this->db->prepare("DELETE FROM Carte WHERE id = ?;");
-                $deleteCard->bindValue(1,$question['id']);
+                $deleteCard->bindValue(1, $question['id']);
                 $deleteCard->execute();
-      
             }
             return true;
-        } catch(PDOException $e){
+        } catch (PDOException $e) {
             die("Deleting question from quiz failed: " . $e->getMessage());
         }
     }

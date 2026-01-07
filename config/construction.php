@@ -104,6 +104,7 @@ function constructionBD(PDO $conn)
                 email TEXT NOT NULL,
                 description TEXT DEFAULT '',
                 admin BOOLEAN DEFAULT 0,
+                avatar_path TEXT DEFAULT NULL,
                 UNIQUE(email)
             );";
 

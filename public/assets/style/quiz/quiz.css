@@ -187,3 +187,37 @@ p.fin {
   color: white;
   cursor: not-allowed;
 }
+
+.progress-container {
+  width: 100%;
+  max-width: 400px;
+  height: 12px;
+  border-radius: 999px;
+  overflow: hidden;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.progress-container::-webkit-progress-bar {
+  background-color: #e6f6f7;
+}
+
+.progress-container::-webkit-progress-value {
+  background: linear-gradient(
+    90deg,
+    #0ab1bd,
+    #5ad7df
+  );
+}
+
+.progression{
+  text-align: center;
+  width: 20%;
+  margin-top: 2%;
+  color: #0ab1bd;
+  font-weight: bold;
+}
+
+.progression > p {
+  text-align: center;
+}
