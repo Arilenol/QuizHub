@@ -544,9 +544,14 @@ class QuizController
             if ($idQuestion <= $max) {
 
                 $answers = !empty($_POST['answer']) ? array_map('intval', $_POST['answer']) : [];
+                $result=[];
+                foreach ($answers as $answer) {
+                    $result[] = $this->model->getLabelAnswer($answer);
+                }
+
                 $_SESSION['answers'][$idQuestion] = [
                     $this->isCorrect($quizId, $idQuestion, $answers),
-                    $answers
+                    $result
                 ];
 
                 // Passer à la question suivante

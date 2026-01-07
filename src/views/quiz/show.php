@@ -12,13 +12,19 @@ require_once '../src/views/partials/header.php';
             </button>
 
             <form id="retourForm" method="post" action="?page=test&id=<?= $quizId ?>">
-                <input type="hidden" name="idQuestion" value="<?= $max ?>">
+                <input type="hidden" name="idQuestion" value="<?= $max +1 ?>">
             </form>
 
         <?php else: ?>
             <button class="retour" onclick="window.location.href='?page=home'">
                 🏠 Accueil
             </button>
+        <?php endif; ?>
+        <?php if (!isset($_GET['test']) && ($idQuestion <= $max)): ?>
+            <div class="progression">
+                <progress class="progress-container" value="<?= $idQuestion ?>" max="<?= $max ?>"></progress>
+                <p><?= $idQuestion ?>/<?= $max ?> question(s) réalisée(s)</p>
+            </div>
         <?php endif; ?>
         <button class="button signalement" onclick="window.location.href='?page=signalement'">
             <span></span>

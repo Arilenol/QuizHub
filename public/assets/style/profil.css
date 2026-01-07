@@ -459,14 +459,20 @@ h3 {
   cursor: pointer;
 }
 
-p.success{
+p.success {
   color: green;
 }
 
-p.error{
+p.error {
   color: red;
 }
 
-.author{
+.author {
   font-weight: bold;
+}
+
+.profilPicture {
+  width: 150px;
+  height: 150px;
+  border-radius: 100%;
 }

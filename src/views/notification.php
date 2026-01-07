@@ -7,22 +7,28 @@ include 'partials/header.php';
 <button class="retour" onclick="history.back()">← Retour</button>
 <div class="friend-requests">
     <h2>Demandes d'amis reçues</h2>
+    <?php if (!isset($allFriendRequests) || empty($allFriendRequests)): ?>
 
-    <?php foreach ($allFriendRequests as $friend) : ?>
-        <div class="request">
-            <div class="request-info">
-                <div class="avatar"><?= $friend['username'][0] ?></div>
-                <div>
-                    <strong><?= $friend['username'] ?></strong><br>
-                    <small><?= $friend['email'] ?></small>
+        <p class="notif">Aucune demande d'amis reçues</p>
+
+    <?php else: ?>
+
+        <?php foreach ($allFriendRequests as $friend) : ?>
+            <div class="request">
+                <div class="request-info">
+                    <div class="avatar"><?= $friend['username'][0] ?></div>
+                    <div>
+                        <strong><?= $friend['username'] ?></strong><br>
+                        <small><?= $friend['email'] ?></small>
+                    </div>
+                </div>
+                <div class="request-buttons">
+                    <button class="accept" onclick='window.location.href="?page=notification&action=add&id=<?= $friend["id"] ?>"'>Accepter</button>
+                    <button class="reject" onclick='window.location.href="?page=notification&action=delete&id=<?= $friend["id"] ?>"'>Refuser</button>
                 </div>
             </div>
-            <div class="request-buttons">
-                <button class="accept" onclick='window.location.href="?page=notification&action=add&id=<?= $friend["id"] ?>"'>Accepter</button>
-                <button class="reject" onclick='window.location.href="?page=notification&action=delete&id=<?= $friend["id"] ?>"'>Refuser</button>
-            </div>
-        </div>
-    <?php endforeach; ?>
+        <?php endforeach; ?>
+    <?php endif; ?>
 </div>
 
 <div class="friend-requests">

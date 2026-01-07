@@ -16,7 +16,7 @@ require_once 'partials/header.php';
     <div class="container">
 
         <div class="profile-card">
-            <img src="./assets/images/profil.jpg" alt="Photo de profil" class="avatar" />
+            <img src="./assets/images/profil.jpg" alt="Photo de profil" class="profilPicture" />
 
             <div class="info">
                 <h2><?= $infosUser['username'] ?></h2>

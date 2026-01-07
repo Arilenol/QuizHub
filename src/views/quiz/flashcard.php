@@ -5,22 +5,29 @@ require_once '../src/views/partials/header.php';
 
 
 ?>
-<div class="buttonAction">
-	<div class="button" onclick="window.location.href = '?page=home'">
-		<span></span>
-		<p>← Retour</p>
-	</div>
-	<div class="button signalement" onclick="window.location.href = '?page=signalement'">
-		<span></span>
-		<p>Signaler ce quiz</p>
-	</div>
-</div>
 <?php if (!($viewData === null)) :
 	// Extraire les données envoyées depuis le contrôleur
 	// crée $question, $quizId, $showAnswer, $prevId, $nextId
 	extract($viewData);
 
 ?>
+	<div class="buttonAction">
+		<div class="button" onclick="window.location.href = '?page=home'">
+			<span></span>
+			<p>← Retour</p>
+		</div>
+		<?php if ($id <= count($_SESSION['remainingQuestions'])) : ?>
+			<div class="progression">
+				<progress class="progress-container" value="<?= $id ?>" max="<?= count($_SESSION['remainingQuestions']) ?>"></progress>
+				<p><?= $id ?>/<?= count($_SESSION['remainingQuestions']) ?> question(s) réalisée(s)</p>
+			</div>
+		<?php endif; ?>
+		<div class="button signalement" onclick="window.location.href = '?page=signalement'">
+			<span></span>
+			<p>Signaler ce quiz</p>
+		</div>
+	</div>
+
 	<div class="container">
 
 		<div class="card" style="grid-column-start: 1; grid-column-end: 8; grid-row-start: 2; grid-row-end: 3;">
