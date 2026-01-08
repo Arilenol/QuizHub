@@ -1,11 +1,12 @@
 .lesson-page {
   margin: 30px auto;
-  width: 90%;
+  width: 100%;
   max-width: 1200px;
   padding: 40px;
   border-radius: 40px;
   background: #ffdba9;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  box-sizing: "border-box";
 }
 
 .back-btn, .signalement {

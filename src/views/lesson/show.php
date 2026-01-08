@@ -3,6 +3,8 @@ $title = "Leçon";
 $style = './assets/style/lesson/show.css';
 require_once '../src/views/partials/header.php';
 ?>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="./assets/js/lessonToPdf.js" defer></script>
 <div class="buttonAction">
     <button onclick="window.location.href='?page=home'" class="button"><span></span>
         <p>← Retour</p>
@@ -19,6 +21,9 @@ require_once '../src/views/partials/header.php';
         <div class="meta-info">
             <p><?= htmlspecialchars($lesson['username'] ?? '') ?> — <?= htmlspecialchars($lesson['date'] ?? '') ?></p>
         </div>
+        <button class="button" onclick="save()"><span></span>
+            <p>Télécharger la leçon</p>
+        </button>
     </section>
 
     <!-- Introduction -->
