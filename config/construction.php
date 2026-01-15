@@ -66,6 +66,9 @@ function constructionBD(PDO $conn)
         $sql = "DROP VIEW IF EXISTS recemmenfait;";
         $conn->exec($sql);
 
+        $sql = "DROP TABLE IF EXISTS user_streaks;";
+        $conn->exec($sql);
+
         $sql = "DROP TRIGGER IF EXISTS trg_bef_insert_demandeAmi;";
         $conn->exec($sql);
 
@@ -357,6 +360,16 @@ function constructionBD(PDO $conn)
             );";
 
         $conn->exec($sql);
+
+        $sql = "CREATE TABLE user_streaks (
+                                    user_id INT PRIMARY KEY,
+                                    current_streak INT NOT NULL DEFAULT 0,
+                                    longest_streak INT NOT NULL DEFAULT 0,
+                                    last_activity_date DATE
+                                    );";
+
+        $conn->exec($sql);
+
 
         $sql = "CREATE TRIGGER trg_bef_insert_demandeAmi
             BEFORE INSERT ON demandeAmi

@@ -4,72 +4,6 @@ $style = './assets/style/home.css';
 include 'partials/header.php';
 ?>
 
-<h1>Créations populaires</h1>
-
-<div class="newCreations">
-    <?php for ($i = 0; $i < count($quiz); $i++): ?>
-        <article onclick="window.location.href='./?page=<?= $quiz[$i]['genre'] ?>&id=<?= $quiz[$i]['id'] ?> <?= $quiz[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?>'" class="quiz">
-            <div class="quiz-cat">
-                <?php if (!empty($quiz[$i]['categories'])): ?>
-                    <?php foreach ($quiz[$i]['categories'] as $cat): ?>
-                        <span class="category"><?= htmlspecialchars($cat) ?></span>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </div>
-            <p class="quiz-genre"><?= htmlspecialchars($quiz[$i]['genre'] ?? '') ?></p>
-            <br>
-            <p class="quiz-title"><?= htmlspecialchars($quiz[$i]['title'] ?? '') ?></p>
-            <br>
-            <p class="quiz-description"><?= htmlspecialchars($quiz[$i]['description'] ?? '') ?></p>
-            <br>
-
-            <br>
-            <div class="quiz-footer">
-                <p class="quiz-auteur">Par : <span class="nom-auteur"> <?= htmlspecialchars($quiz[$i]['user_name'] ?? '') ?> </span></p>
-                <p class="quiz-date">Publié le : <?= htmlspecialchars($quiz[$i]['date'] ?? '') ?></p>
-                <div class="quiz-reactions">
-                    <span class="reaction like">👍 <?= htmlspecialchars($quiz[$i]['nbjaime'] ?? 0) ?></span>
-                    <span class="reaction dislike">👎 <?= htmlspecialchars($quiz[$i]['nbjaimepas'] ?? 0) ?></span>
-                </div>
-            </div>
-        </article>
-    <?php endfor; ?>
-
-</div>
-
-<h1>Leçons populaires</h1>
-
-<div class="newCreations">
-    <?php for ($i = 0; $i < count($lessons); $i++): ?>
-        <article onclick="window.location.href='./?page=lesson&categorie=view&id=<?= $lessons[$i]['lecon_id'] ?>'" class="quiz">
-            <div class="quiz-cat">
-                <?php if (!empty($lessons[$i]['categories'])): ?>
-                    <?php foreach ($lessons[$i]['categories'] as $cat): ?>
-                        <span class="category"><?= htmlspecialchars($cat) ?></span>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </div>
-            <p class="quiz-genre"> leçon </p>
-            <br>
-            <p class="quiz-title"><?= htmlspecialchars($lessons[$i]['lecon_title'] ?? '') ?></p>
-            <br>
-            <p class="quiz-description"><?= htmlspecialchars($lessons[$i]['lecon_description'] ?? '') ?></p>
-            <br>
-
-            <br>
-            <div class="quiz-footer">
-                <p class="quiz-auteur">Par : <span class="nom-auteur"> <?= htmlspecialchars($lessons[$i]['user_name'] ?? '') ?></span></p>
-                <p class="quiz-date">Publié le : <?= htmlspecialchars($lessons[$i]['lecon_date'] ?? '') ?></p>
-                <div class="quiz-reactions">
-                    <span class="reaction like">👍 <?= htmlspecialchars($lessons[$i]['nbjaime'] ?? 0) ?></span>
-                    <span class="reaction dislike">👎 <?= htmlspecialchars($lessons[$i]['nbjaimepas'] ?? 0) ?></span>
-                </div>
-            </div>
-        </article>
-    <?php endfor; ?>
-
-</div>
-
 
 <?php if (isset($_SESSION['id']) && !empty($_SESSION['id'])): ?>
     <h1>Vos créations</h1>
@@ -111,6 +45,74 @@ include 'partials/header.php';
 
     <?php endif; ?>
     </div>
+
+
+    <h1>Créations populaires</h1>
+
+    <div class="newCreations">
+        <?php for ($i = 0; $i < count($quiz); $i++): ?>
+            <article onclick="window.location.href='./?page=<?= $quiz[$i]['genre'] ?>&id=<?= $quiz[$i]['id'] ?> <?= $quiz[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?>'" class="quiz">
+                <div class="quiz-cat">
+                    <?php if (!empty($quiz[$i]['categories'])): ?>
+                        <?php foreach ($quiz[$i]['categories'] as $cat): ?>
+                            <span class="category"><?= htmlspecialchars($cat) ?></span>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
+                <p class="quiz-genre"><?= htmlspecialchars($quiz[$i]['genre'] ?? '') ?></p>
+                <br>
+                <p class="quiz-title"><?= htmlspecialchars($quiz[$i]['title'] ?? '') ?></p>
+                <br>
+                <p class="quiz-description"><?= htmlspecialchars($quiz[$i]['description'] ?? '') ?></p>
+                <br>
+
+                <br>
+                <div class="quiz-footer">
+                    <p class="quiz-auteur">Par : <span class="nom-auteur"> <?= htmlspecialchars($quiz[$i]['user_name'] ?? '') ?> </span></p>
+                    <p class="quiz-date">Publié le : <?= htmlspecialchars($quiz[$i]['date'] ?? '') ?></p>
+                    <div class="quiz-reactions">
+                        <span class="reaction like">👍 <?= htmlspecialchars($quiz[$i]['nbjaime'] ?? 0) ?></span>
+                        <span class="reaction dislike">👎 <?= htmlspecialchars($quiz[$i]['nbjaimepas'] ?? 0) ?></span>
+                    </div>
+                </div>
+            </article>
+        <?php endfor; ?>
+
+    </div>
+
+    <h1>Leçons populaires</h1>
+
+    <div class="newCreations">
+        <?php for ($i = 0; $i < count($lessons); $i++): ?>
+            <article onclick="window.location.href='./?page=lesson&categorie=view&id=<?= $lessons[$i]['lecon_id'] ?>'" class="quiz">
+                <div class="quiz-cat">
+                    <?php if (!empty($lessons[$i]['categories'])): ?>
+                        <?php foreach ($lessons[$i]['categories'] as $cat): ?>
+                            <span class="category"><?= htmlspecialchars($cat) ?></span>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
+                <p class="quiz-genre"> leçon </p>
+                <br>
+                <p class="quiz-title"><?= htmlspecialchars($lessons[$i]['lecon_title'] ?? '') ?></p>
+                <br>
+                <p class="quiz-description"><?= htmlspecialchars($lessons[$i]['lecon_description'] ?? '') ?></p>
+                <br>
+
+                <br>
+                <div class="quiz-footer">
+                    <p class="quiz-auteur">Par : <span class="nom-auteur"> <?= htmlspecialchars($lessons[$i]['user_name'] ?? '') ?></span></p>
+                    <p class="quiz-date">Publié le : <?= htmlspecialchars($lessons[$i]['lecon_date'] ?? '') ?></p>
+                    <div class="quiz-reactions">
+                        <span class="reaction like">👍 <?= htmlspecialchars($lessons[$i]['nbjaime'] ?? 0) ?></span>
+                        <span class="reaction dislike">👎 <?= htmlspecialchars($lessons[$i]['nbjaimepas'] ?? 0) ?></span>
+                    </div>
+                </div>
+            </article>
+        <?php endfor; ?>
+
+    </div>
+
 
     </body>
 

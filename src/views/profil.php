@@ -227,7 +227,7 @@ require_once 'partials/header.php';
                                 <div class="form-group">
                                     <label for="password">Nouveau mot de passe</label>
                                     <div class="input-wrapper">
-                                        <input type="password" name="password" id="password"
+                                        <input type="password" name="password" id="password" autocomplete="on"
                                             placeholder="Laisser vide pour ne pas changer">
                                         <i id="eyeMdp" class="fa-solid fa-eye"></i>
                                     </div>
@@ -236,7 +236,7 @@ require_once 'partials/header.php';
                                 <div class="form-group">
                                     <label for="passwordVerif">Confirmer le mot de passe</label>
                                     <div class="input-wrapper">
-                                        <input type="password" name="passwordVerif" id="passwordVerif"
+                                        <input type="password" name="passwordVerif" id="passwordVerif" autocomplete="on"
                                             placeholder="Laisser vide pour ne pas changer">
                                         <i id="eyeVerif" class="fa-solid fa-eye"></i>
                                     </div>
