@@ -43,6 +43,7 @@
                 <select name="filtre">
                     <option value="quiz" <?= $filtreSelected === 'quiz' ? 'selected' : '' ?>>recherche quiz</option>
                     <option value="auteur" <?= $filtreSelected === 'auteur' ? 'selected' : '' ?>>recherche auteur</option>
+                    <option value="lecon" <?= $filtreSelected === 'lecon' ? 'selected' : '' ?>>recherche leçon</option>
                 </select>
 
                 <select name="genre">
@@ -135,6 +136,38 @@
                         <div class="quiz-reactions">
                             <span class="reaction like">👍 ' . htmlspecialchars($quiz['nbjaime'] ?? 0) . '</span>
                             <span class="reaction dislike">👎 ' . htmlspecialchars($quiz['nbjaimepas'] ?? 0) . '</span>
+                        </div>
+                    </div>
+                </article>
+            </div>';
+                }
+                ?>
+            </div>
+
+            <!-- Résultats: Leçons -->
+            <div class="quiz-affichage" id="lesson-affichage">
+                <?php
+                foreach ($lessons as $lesson) {
+                    echo '<div class="quiz" onclick="window.location.href=\'index.php?page=CRUDlesson&id=' . $lesson['id'] . '\'">
+                <article>
+                    <div class="quiz-cat">';
+                    if (!empty($lesson['categories']) && is_array($lesson['categories'])) {
+                        foreach ($lesson['categories'] as $cat) {
+                            $catName = $cat['categorieName'] ?? $cat['CategorieName'] ?? $cat['name'] ?? '';
+                            echo '<span class="category">' . htmlspecialchars($catName) . '</span>';
+                        }
+                    }
+                    echo '</div>
+                    <p class="quiz-genre">leçon</p>
+                    <br><p class="quiz-title">' . htmlspecialchars($lesson['title'] ?? '') . '</p>
+                    <br><p class="quiz-description">' . htmlspecialchars($lesson['description'] ?? '') . '</p>
+                    <br><p class="quiz-auteur">Par : ' . htmlspecialchars($lesson['username'] ?? '') . '</p>
+                    
+                    <div class="quiz-footer">
+                        <p class="quiz-date">publié le : ' . htmlspecialchars($lesson['date'] ?? '') . '</p>
+                        <div class="quiz-reactions">
+                            <span class="reaction like">👍 ' . htmlspecialchars($lesson['nbjaime'] ?? 0) . '</span>
+                            <span class="reaction dislike">👎 ' . htmlspecialchars($lesson['nbjaimepas'] ?? 0) . '</span>
                         </div>
                     </div>
                 </article>

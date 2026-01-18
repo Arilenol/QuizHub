@@ -285,5 +285,104 @@ class CRUDModel {
             die("Error: " . $e->getMessage());
         }
     }
+
+    /**
+     * Recherche les leçons par titre et/ou auteur
+     */
+    public function searchLessonByTitle($recherche_titre, $tris = null): mixed{
+        try{
+            $baseSql = "SELECT DISTINCT l.id, l.title, l.description, l.date, u.username, u.id as user_id,
+            COALESCE(lk.nbjaime, 0) as nbjaime, COALESCE(dk.nbjaimepas, 0) as nbjaimepas FROM lecon l
+            INNER JOIN users u ON u.id = l.user_id
+            LEFT JOIN (SELECT quiz_id, COUNT(*) as nbjaime FROM likes GROUP BY quiz_id) lk ON lk.quiz_id = l.quiz_id
+            LEFT JOIN (SELECT quiz_id, COUNT(*) as nbjaimepas FROM dislikes GROUP BY quiz_id) dk ON dk.quiz_id = l.quiz_id
+            WHERE l.title LIKE ?";
+
+            $allowedOrder = [
+                'date_desc' => 'l.date DESC',
+                'date_asc' => 'l.date ASC',
+                'title_asc' => 'l.title ASC',
+                'title_desc' => 'l.title DESC',
+                'author_asc' => 'u.username ASC',
+                'author_desc' => 'u.username DESC'
+            ];
+
+            if ($tris && isset($allowedOrder[$tris])) {
+                $baseSql .= ' ORDER BY ' . $allowedOrder[$tris];
+            }
+
+            $sql = $this->db->prepare($baseSql . ';');
+            $sql->bindValue(1,'%'.$recherche_titre.'%');
+            $sql->execute();
+
+            $lessons = $sql->fetchAll(PDO::FETCH_ASSOC);
+            return $lessons;
+        }catch(PDOException $e){
+            die("Searching lessons by title failed: " . $e->getMessage());
+        }catch(Exception $e){
+            die("Error: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Recherche les leçons par contenu et auteur
+     */
+    public function searchLessonByContentAndAuthor($recherche_contenu, $recherche, $tris = null): mixed{
+        try{
+            $baseSql = "SELECT DISTINCT l.id, l.title, l.description, l.date, u.username, u.id as user_id,
+            COALESCE(lk.nbjaime, 0) as nbjaime, COALESCE(dk.nbjaimepas, 0) as nbjaimepas FROM lecon l
+            INNER JOIN users u ON u.id = l.user_id
+            LEFT JOIN (SELECT quiz_id, COUNT(*) as nbjaime FROM likes GROUP BY quiz_id) lk ON lk.quiz_id = l.quiz_id
+            LEFT JOIN (SELECT quiz_id, COUNT(*) as nbjaimepas FROM dislikes GROUP BY quiz_id) dk ON dk.quiz_id = l.quiz_id
+            WHERE (l.title LIKE ? OR l.description LIKE ?) AND u.username LIKE ?";
+
+            $allowedOrder = [
+                'date_desc' => 'l.date DESC',
+                'date_asc' => 'l.date ASC',
+                'title_asc' => 'l.title ASC',
+                'title_desc' => 'l.title DESC',
+                'author_asc' => 'u.username ASC',
+                'author_desc' => 'u.username DESC'
+            ];
+            if ($tris && isset($allowedOrder[$tris])) {
+                $baseSql .= ' ORDER BY ' . $allowedOrder[$tris];
+            }
+
+            $sql = $this->db->prepare($baseSql . ';');
+            $sql->bindValue(1,'%'.$recherche_contenu.'%');
+            $sql->bindValue(2,'%'.$recherche_contenu.'%');
+            $sql->bindValue(3,'%'.$recherche.'%');
+            $sql->execute();
+
+            $lessons = $sql->fetchAll(PDO::FETCH_ASSOC);
+            return $lessons;
+        }catch(PDOException $e){
+            die("Searching lessons by content and author failed: " . $e->getMessage());
+        }catch(Exception $e){
+            die("Error: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Récupère les catégories associées à une leçon
+     */
+    public function getCategoriesFromLesson($lesson_id): mixed{
+        try{
+            $sql = $this->db->prepare("SELECT DISTINCT categories.id, categories.categorieName FROM categories 
+            INNER JOIN categorie_quiz ON categorie_quiz.category_id = categories.id 
+            INNER JOIN quiz ON quiz.id = categorie_quiz.quiz_id
+            INNER JOIN lecon ON lecon.quiz_id = quiz.id
+            WHERE lecon.id = ?;");
+            $sql->bindParam(1,$lesson_id);
+            $sql->execute();
+
+            $categories = $sql->fetchAll(PDO::FETCH_ASSOC);
+            return $categories;
+        }catch(PDOException $e){
+            die("Fetching categories from lesson failed: " . $e->getMessage());
+        }catch(Exception $e){
+            die("Error: " . $e->getMessage());
+        }
+    }
 }
 ?>
