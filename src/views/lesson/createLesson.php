@@ -80,7 +80,7 @@
     echo '<button type = "submit" name = "addPart" value = "yes" class="button"><span></span><p>Ajouter une nouvelle partie</p></button>'
     ?>
     </div>
-
+    <p>Quiz associé :</p>
     <select name="linkedQuiz" onchange = "this.form.submit()">
         <option value ="Aucun">Aucun</option>
         <?php
@@ -137,8 +137,10 @@
             echo '<p class="erreur">Chaque champ doit être rempli<br>Chaque partie peut avoir autant d\'exemple que nécessaire<br>Au moins une catégorie doit être sélectionnée</p>';
         } 
     ?>
-    <button type = "submit" name = "create" value = "yes" class="button"><span></span><p>Créer la leçon</p></button>
+    <button type = "submit" name = "create" id = "create" value = "yes" class="button"><span></span><p>Créer la leçon</p></button>
 </form>
+<script src ="./assets/js/popups.js"></script>
+<script src= "./assets/js/createLesson.js"></script>
 <script src = "./assets/js/sauvegardeScroll.js"></script>
 <script src = "./assets/js/selectDispo.js"></script>
 <script src = "./assets/js/createContent.js"></script>

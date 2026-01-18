@@ -1,3 +1,5 @@
+@import url("popup.css");
+
 .newLesson{
     display: flex;
     flex-direction: column;
