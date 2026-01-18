@@ -7,22 +7,10 @@ require 'partials/header.php';
 ?>
 
 <div class="catalogue">
-    <button onclick="window.location.href='index.php?page=home'" class="retour" type="submit">
-        < Retour </button>
-            <form method="GET" action="index.php">
-                <input type="hidden" name="page" value="catalogue">
-                <input type="hidden" name="numPage" value="<?php isset($page) ? $page : 1 ?>">
-                <div class="search-author">
-                    <?php
-                    echo '<input type="text" name="searchAuthor" placeholder="Rechercher un auteur par mot-clé" value="' . (isset($_GET['searchAuthor']) ? htmlspecialchars($_GET['searchAuthor']) : '') . '">';
-                    ?>
-                </div>
-                <div class="selects">
-                    <?php
-                    if (isset($_GET['contenu']) && $_GET['contenu'] !== '') {
-                        echo '<input type="hidden" name="contenu" value="' . htmlspecialchars($_GET['contenu']) . '">';
-                    }
-                    ?>
+    <button onclick="window.location.href='index.php?page=home'" class="button" type="submit">
+        <span></span>
+        <p>< Retour</p>
+    </button>
 
                     <p>Catégorie :</p>
                     <select name="categorie" onchange="this.form.submit()">
