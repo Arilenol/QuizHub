@@ -24,6 +24,7 @@ class LessonModel
             l.date AS 'date', 
             u.username AS username, 
             l.quiz_id,
+            l.disponibilite,
             q.genre AS genre
         FROM lecon l
         JOIN users u ON u.id = l.user_id
@@ -921,6 +922,24 @@ class LessonModel
             return true;
         } catch (PDOException $e) {
             die("deleting exemple in partie failed: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Met à jour la disponibilité d'une leçon (version simplifiée)
+     */
+    public function updateDisponibilite(int $lesson_id, string $disponibilite): bool {
+        try {
+            $update = $this->db->prepare("UPDATE Lecon SET disponibilite = ? WHERE id = ?");
+            $update->bindParam(1, $disponibilite);
+            $update->bindParam(2, $lesson_id, PDO::PARAM_INT);
+            $update->execute();
+
+            return $update->rowCount() > 0;
+        } catch (PDOException $e) {
+            die("Updating disponibilite failed: " . $e->getMessage());
+        } catch (Exception $e) {
+            die("Error: " . $e->getMessage());
         }
     }
 }

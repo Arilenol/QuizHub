@@ -26,6 +26,18 @@ class CRUDLessonController {
             die("Leçon non trouvée");
         }
 
+        // Gérer les actions POST
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (isset($_POST['action'])) {
+                if ($_POST['action'] === 'update_disponibilite') {
+                    $disponibilite = $_POST['disponibilite'];
+                    $this->lessonModel->updateDisponibilite($lesson_id, $disponibilite);
+                    header("Location: ?page=CRUDlesson&id=$lesson_id");
+                    exit;
+                }
+            }
+        }
+
         // Récupérer les parties de la leçon
         $parties = $this->lessonModel->getPart($lesson_id) ?: []; 
         

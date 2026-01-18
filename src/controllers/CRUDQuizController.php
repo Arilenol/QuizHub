@@ -37,6 +37,11 @@ class CRUDQuizController {
                     $this->model->deleteQuiz($quiz_id);
                     header("Location: ?page=CRUD");
                     exit;
+                } elseif ($_POST['action'] === 'update_disponibilite') {
+                    $disponibilite = $_POST['disponibilite'];
+                    $this->model->updateDisponibilite($quiz_id, $disponibilite);
+                    header("Location: ?page=CRUDquiz&id=$quiz_id");
+                    exit;
                 } elseif ($_POST['action'] === 'update_question') {
                     $question_id = (int)$_POST['question_id'];
                     $enonce = $_POST['enonce'];

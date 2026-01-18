@@ -31,6 +31,19 @@
                         <?php endforeach; ?>
                     </div>
                 <?php endif; ?>
+
+                <!-- Gestion de la disponibilité -->
+                <form method="POST" action="" style="margin-top: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 5px; background-color: #f9f9f9;">
+                    <input type="hidden" name="action" value="update_disponibilite">
+                    <input type="hidden" name="lesson_id" value="<?= htmlspecialchars($lesson['id']) ?>">
+                    <p style="font-weight: bold; margin-bottom: 10px;">Mode de publication :</p>
+                    <select name="disponibilite" required style="padding: 5px; font-size: inherit;">
+                        <option value="public" <?= ($lesson['disponibilite'] ?? '') === 'public' ? 'selected' : '' ?>>Publique</option>
+                        <option value="ami" <?= ($lesson['disponibilite'] ?? '') === 'ami' ? 'selected' : '' ?>>Seulement les amis</option>
+                        <option value="private" <?= ($lesson['disponibilite'] ?? '') === 'private' ? 'selected' : '' ?>>Privé</option>
+                    </select>
+                    <button type="submit" style="margin-top: 10px; margin-left: 10px;">Mettre à jour la disponibilité</button>
+                </form>
             </section>
 
             <!-- Description -->

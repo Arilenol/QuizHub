@@ -51,6 +51,16 @@
                             <button type="submit">Modifier Quiz</button>
                             <button type="button" onclick="if(confirm('Supprimer ce quiz ?')) { document.getElementById('delete-form').submit(); }">Supprimer Quiz</button>
                         </div>
+
+                        <div class="quiz-disponibilite" style="margin-top: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 5px; background-color: #f9f9f9;">
+                            <p style="font-weight: bold; margin-bottom: 10px;">Mode de publication :</p>
+                            <select name="disponibilite" required style="padding: 5px; font-size: inherit;">
+                                <option value="public" <?= ($quiz['disponibilite'] ?? '') === 'public' ? 'selected' : '' ?>>Publique</option>
+                                <option value="ami" <?= ($quiz['disponibilite'] ?? '') === 'ami' ? 'selected' : '' ?>>Seulement les amis</option>
+                                <option value="private" <?= ($quiz['disponibilite'] ?? '') === 'private' ? 'selected' : '' ?>>Privé</option>
+                            </select>
+                            <button type="submit" name="action" value="update_disponibilite" style="margin-top: 10px; margin-left: 10px;">Mettre à jour la disponibilité</button>
+                        </div>
                     </form>
                     <form id="delete-form" method="POST" action="" style="display: none;">
                         <input type="hidden" name="action" value="delete_quiz">
