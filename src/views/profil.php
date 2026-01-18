@@ -149,7 +149,7 @@ require_once 'partials/header.php';
                                     </button>
 
                                     <button id="editQuiz" onclick="window.location.href='?page=<?= $quiz[$i]['genre'] ?>&categorie=modify&id=<?= $quiz[$i]['id'] ?>'"><?= $quiz[$i]['genre'] == 'lesson' ? 'Modifier la leçon' : ' Modifier le quiz' ?></button>
-                                    <button id="playQuiz" onclick="window.location.href='./?page=<?= $quiz[$i]['genre'] ?>&id=<?= $quiz[$i]['id'] ?> <?= $quiz[$i]['genre'] == 'lesson' ? '&categorie=view' : '' ?> <?= $quiz[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?>'">Jouer</button>
+                                    <button id="playQuiz" onclick="window.location.href='./?page=<?= $quiz[$i]['genre'] == 'standard' || $quiz[$i]['genre'] == 'test' ? 'pageInterQuiz' : $quiz[$i]['genre'] ?>&id=<?= $quiz[$i]['id'] ?> <?= $quiz[$i]['genre'] == 'lesson' ? '&categorie=view' : '' ?> <?= $quiz[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?> <?= $quiz[$i]['genre'] == 'standard' ? '&type=standard' : '' ?> <?= $quiz[$i]['genre'] == 'test' ? '&type=test' : '' ?>'">Jouer</button>
                                 </div>
                                 <div class="quiz-footer">
                                     <p class="quiz-auteur">Par : <span class="author">Vous</span></p>

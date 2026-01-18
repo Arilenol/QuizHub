@@ -66,11 +66,11 @@ require 'partials/header.php';
                         $genre = 'flashcard';
                         $suite = '&action=start';
                     } elseif ($quiz['genre'] === 'standard') {
-                        $genre = 'standard';
-                        $suite = '';
+                        $genre = 'pageInterQuiz';
+                        $suite = '&type=standard';
                     } elseif ($quiz['genre'] === 'test') {
-                        $genre = 'test';
-                        $suite = '';
+                        $genre = 'pageInterQuiz';
+                        $suite = '&type=test';
                     }elseif ($quiz['genre'] === 'leçon'){
                         $genre = 'lesson';
                         $suite = '&categorie=view';
