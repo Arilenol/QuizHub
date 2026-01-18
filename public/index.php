@@ -24,7 +24,7 @@ switch ($page) {
 
 
     case 'catalogue':
-        require_once ROOT . '/src/controllers/catalogueController.php';
+        require_once ROOT . '/src/controllers/CatalogueController.php';
         $controller = new CatalogueController();
         // va charger views/catalogue.php
         $controller->index();
@@ -149,9 +149,7 @@ switch ($page) {
         require_once ROOT . '/src/controllers/ProfileController.php';
         $controller = new ProfileController();
         if (isset($_GET['action'])) {
-            if ($_GET['action'] === 'uploadPicture') {
-                $controller->saveNewPicture();
-            } else if ($_GET['action'] === 'displayFriends') {
+            if ($_GET['action'] === 'displayFriends') {
                 $controller->showProfile("showFriends");
             } else if ($_GET['action'] === 'showHistory') {
                 $controller->showProfile("showHistory");
@@ -228,6 +226,11 @@ switch ($page) {
     case 'CRUDauteur':
         require_once ROOT . '/src/controllers/CRUDAuteurController.php';
         $controller = new CRUDAuteurController();
+        $controller->index();
+        break;
+    case 'Categorie':
+        require_once ROOT . '/src/controllers/CategorieController.php';
+        $controller = new CategorieController();
         $controller->index();
         break;
     default:

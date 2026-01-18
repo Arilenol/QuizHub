@@ -16,6 +16,7 @@
 <body>
     <div class="catalogue">
         <button onclick="window.location.href='?page=home'" class="retour">&lt; Retour</button>
+        <button onclick="window.location.href='?page=Categorie'" class="retour" style="background-color: #28a745; box-shadow: 0 8px 0 #1e7e34;">📚 Gérer les catégories</button>
 
 
         <form method="GET" action=index.php>
