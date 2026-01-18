@@ -24,6 +24,12 @@ class ProfileController
             $creation = $this->model->getQuizCreated($_SESSION['id']);
             $played = $this->model->getGamesNumber($_SESSION['id']);
             $lessonCreated = $this->model->getLessonsCreated($_SESSION['id']);
+            if ($option === 'showProfile') {
+                $showProfileModal = true;
+                $messageSuccess = $optionSuccess;
+                $messageError = $optionError;
+                $option = null;
+            }
             if ($option !== null && $option === "showFriends") {
                 $friends = $this->model->getFriends($_SESSION['id']);
             }
@@ -41,10 +47,10 @@ class ProfileController
                     $quiz[] = $lessons[0];
                 }
             }
-            if ($option === 'showProfile') {
-                $showProfileModal = true;
-                $messageSuccess = $optionSuccess;
-                $messageError = $optionError;
+            if (isset($_GET['actionType'])) {
+                $test = $this->model->deleteFriend($_SESSION['id'], $_POST['idToDelete']);
+                header("Location: ?page=profil&action=displayFriends");
+                exit;
             }
             $activeTab = $_GET['action'] ?? 'creations';
             $activeTab = $activeTab === 'displayFriends' ? 'friends' : ($activeTab === 'showHistory' ? 'history' : 'creations');
@@ -87,11 +93,17 @@ class ProfileController
         }
         if (!empty($_POST['password'])) {
             if ($_POST['passwordVerif'] === $_POST['password']) {
-                $success = $this->model->savePassword($_POST['password'], $_SESSION['id']);
-                if ($success) {
-                    $saver[] = 'Mot de passe';
+                $pattern = '/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/';
+                $password = $_POST['password'] ?? '';
+                if (!preg_match($pattern, $password)) {
+                    $error[] = "Le mot de passe doit contenir au moins 8 caractères, une lettre et un chiffre";
                 } else {
-                    $error[] = "Mot de passe";
+                    $success = $this->model->savePassword($_POST['password'], $_SESSION['id']);
+                    if ($success) {
+                        $saver[] = 'Mot de passe';
+                    } else {
+                        $error[] = "Mot de passe";
+                    }
                 }
             } else {
                 $error[] = "Vous avez donné différents mot de passe";
@@ -104,5 +116,41 @@ class ProfileController
             $messageError = "Erreur lors de la mise à jour de : " . implode(',', $error);
         }
         $this->showProfile("showProfile", $messageSuccess, $messageError);
+    }
+
+    public function saveNewPicture()
+    {
+        if (!isset($_FILES['avatar']) || $_FILES['avatar']['error'] !== UPLOAD_ERR_OK) {
+            throw new Exception("Erreur lors de l'upload");
+        }
+
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        $mime = $finfo->file($_FILES['avatar']['tmp_name']);
+
+        $allowed = [
+            'image/jpeg' => 'jpg',
+            'image/png'  => 'png',
+            'image/webp' => 'webp'
+        ];
+
+        if (!array_key_exists($mime, $allowed)) {
+            throw new Exception("Format d'image interdit");
+        }
+
+        $userId = $_SESSION['id'];
+        $extension = $allowed[$mime];
+
+        $filename = "user_{$userId}_" . time() . "." . $extension;
+        $destination = ROOT . "/public/assets/uploads/avatars/" . $filename;
+
+        if (!move_uploaded_file($_FILES['avatar']['tmp_name'], $destination)) {
+            throw new Exception("Impossible de sauvegarder l'image");
+        }
+
+        $pathForDb = "assets/uploads/avatars/" . $filename;
+
+        $this->model->savePicture($pathForDb, $userId);
+        header("Location: ?page=profil");
+        exit;
     }
 }

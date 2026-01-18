@@ -11,10 +11,13 @@ require_once '../src/views/partials/header.php';
     </button>
     <h2>Vos réponses</h2>
     <div class="answers">
+        <?php $_SESSION['rightAnswers'] = 0; ?>
         <?php foreach ($_SESSION['answers'] as $questionNumber => $a) : ?>
-            <article onclick="window.location.href='?page=standard&id=<?= $quizId ?>&idQuestion=<?= $questionNumber ?>&reponse=visible&test=test'">
+            <article <?= $a[0] ? '' : 'class="falseAnswer"' ?> onclick="window.location.href='?page=standard&id=<?= $quizId ?>&idQuestion=<?= $questionNumber ?>&reponse=visible&test=test'">
                 <p><?= ($a[0]) ? 'Bonne réponse' : 'Mauvaise réponse' ?></p>
-
+                <?php if ($a[0]) {
+                    $_SESSION['rightAnswers']++;
+                } ?>
                 <p>Réponse(s) donnée(s) :
                     <?= implode(', ', $a[1]) ?>
                 </p>
@@ -22,6 +25,16 @@ require_once '../src/views/partials/header.php';
         <?php endforeach; ?>
     </div>
 </div>
+
+<div class="infoAnswer">
+    <p>
+        Votre note sur ce test :
+        <span class="score">
+            <?= $_SESSION['rightAnswers'] ?> / <?= count($_SESSION['answers']) ?>
+        </span>
+    </p>
+</div>
+<?php $this->saveScore($_SESSION['id'], $quizId, $_SESSION['rightAnswers'] . '/' . count($_SESSION['answers'])) ?>
 
 <div class="actions-fin">
     <button class="button" onclick="window.location.href='?page=test&id=<?= $quizId ?>'">

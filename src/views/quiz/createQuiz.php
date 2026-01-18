@@ -168,8 +168,9 @@
             echo '<p class="erreur">Chaque champ doit être rempli<br>Chaque question doit avoir au moins une réponse juste et une réponse fausse<br>Au moins une catégorie doit être sélectionnée</p>';
         } 
     ?>
-    <button class="button" type = "submit" name = "create" value = "yes"><span></span><p>Créer le quiz</p></button>
+    <button class="button" id = "create" type = "submit" name = "create" value = "yes"><span></span><p>Créer le quiz</p></button>
 </form>
+<script src="./assets/js/popups.js"></script>
 <script src = "./assets/js/createQuiz.js"></script>
 <script src = "./assets/js/sauvegardeScroll.js"></script>
 <script src = "./assets/js/selectDispo.js"></script>

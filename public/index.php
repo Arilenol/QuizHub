@@ -24,7 +24,7 @@ switch ($page) {
 
 
     case 'catalogue':
-        require_once ROOT . '/src/controllers/catalogueController.php';
+        require_once ROOT . '/src/controllers/CatalogueController.php';
         $controller = new CatalogueController();
         // va charger views/catalogue.php
         $controller->index();
@@ -226,6 +226,11 @@ switch ($page) {
     case 'CRUDauteur':
         require_once ROOT . '/src/controllers/CRUDAuteurController.php';
         $controller = new CRUDAuteurController();
+        $controller->index();
+        break;
+    case 'Categorie':
+        require_once ROOT . '/src/controllers/CategorieController.php';
+        $controller = new CategorieController();
         $controller->index();
         break;
     default:

@@ -145,6 +145,31 @@ p.quiz-genre {
 .newCreations .quiz .quiz-footer .quiz-reactions .dislike {
   color: #666;
   background-color: rgba(0, 0, 0, 0.03);
+}
+.endDirection {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.endDirection button {
+  width: 95%;
+  height: 100%;
+  border-radius: 75px;
+  background-color: #0ab1bd;
+  color: white;
+  border: none;
+  padding: 21px 36px;
+  font-size: 1.3rem;
+  min-height: 50px;
+  cursor: pointer;
+  box-shadow: 0 12px 0 #087b86;
+  margin-top: 1%;
+  margin-bottom: 1%;
+}
+.endDirection button:hover {
+  background-color: #fff;
+  color: #087b86;
+  box-shadow: 0px 8px 2px #cacacabf;
 } /*# sourceMappingURL=catalogue.css.map */
 
 @media (max-width: 600px) {

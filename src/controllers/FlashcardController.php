@@ -48,6 +48,8 @@ class FlashcardController
     {
         $question = $this->model->getInfoFlashcardById($id);
         $viewData = $this->prepareViewData($question);
+        $current = array_keys($_SESSION['remainingQuestions'], $id)[0] + 1;
+        $total = count($_SESSION['remainingQuestions']);
         require ROOT . '/src/views/quiz/flashcard.php';
     }
 

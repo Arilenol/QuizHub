@@ -43,8 +43,15 @@ class LogController
             return;
         }
 
+        $pattern = '/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/';
+        if (!preg_match($pattern, $password)) {
+            $error = "Le mot de passe doit contenir au moins 8 caractères, une lettre et un chiffre";
+            require ROOT . '/src/views/log/register.php';
+            return;
+        }
+
         // Vérification si les 2 mots de passes saisis sont identiques
-        if ($password!==$passwordVerif) {
+        if ($password !== $passwordVerif) {
             $error = "Les 2 mots de passes sont différents";
             require ROOT . '/src/views/log/register.php';
             return;

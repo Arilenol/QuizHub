@@ -95,7 +95,8 @@ class LessonModel
         JOIN users u ON u.id = l.user_id
         LEFT JOIN quiz q ON q.id = l.quiz_id
 
-        ORDER BY l.date DESC;
+        ORDER BY l.date DESC, (nbjaime - nbjaimepas) DESC
+
     ");
 
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -455,7 +456,7 @@ class LessonModel
 
             q.id AS quiz_id,
             q.title AS quiz_title,
-            'lesson' as genre,
+            'leçon' as genre,
             q.difficulty,
             q.description AS quiz_description,
 

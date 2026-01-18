@@ -53,7 +53,8 @@ button {
 .deleteQuiz:hover,
 .cancel-btn:hover,
 .danger-btn:hover,
-#closeDeleteModal:hover {
+#closeDeleteModal:hover,
+.deleteFriend:hover {
   background-color: #fff;
   color: #087b86;
   box-shadow: 0px 8px 2px #cacacabf;
@@ -65,14 +66,16 @@ button {
   gap: 1%;
 }
 
-.deleteQuiz {
+.deleteQuiz,
+.deleteFriend {
   background-color: #8e2a2a;
   box-shadow: 0 12px 0 #5e1d1d;
 }
 
 #editQuiz,
 .deleteQuiz,
-#playQuiz {
+#playQuiz,
+.deleteFriend {
   align-content: end;
   margin-bottom: 10%;
   padding-right: 20px;
@@ -98,14 +101,6 @@ button {
   gap: 3%;
   border-bottom: 3px solid #10b3c6;
   margin-top: 1%;
-}
-
-.avatar {
-  width: 35%;
-  aspect-ratio: 1/1;
-  border-radius: 50%;
-  -o-object-fit: cover;
-  object-fit: cover;
 }
 
 .info {
@@ -164,6 +159,7 @@ button {
   justify-content: center;
   gap: 5%;
   flex-wrap: wrap;
+  row-gap: 20px;
 }
 
 .quiz-card {
@@ -218,6 +214,30 @@ button {
   transition: all 0.3s ease;
 }
 
+.note {
+  position: absolute;
+  top: 35px;
+  left: 270px;
+  font-family: 'Comic Sans MS', 'Bradley Hand', 'Segoe Print', cursive;
+  color: #c1121f;
+  font-size: 1.6rem;
+  font-weight: bold;
+  transform: rotate(-3deg);
+  display: inline-block;
+  letter-spacing: 1px;
+}
+
+.note::after {
+  content: '';
+  position: absolute;
+  left: -5%;
+  bottom: -6px;
+  width: 110%;
+  height: 3px;
+  background: #c1121f;
+  transform: rotate(-2deg);
+}
+
 .newCreations .quiz:hover {
   transform: scale(1.04);
 }
@@ -229,6 +249,7 @@ button {
   margin-bottom: 10px;
   gap: 10px;
 }
+
 .category,
 p.quiz-genre {
   border-radius: 50px;
@@ -236,6 +257,7 @@ p.quiz-genre {
   font-size: small;
   padding: 8px 8px 8px 8px;
 }
+
 .newCreations .quiz p {
   display: inline-block;
   margin-top: 5px;
@@ -246,9 +268,11 @@ p.quiz-genre {
   font-weight: bold;
   font-size: 30px;
 }
+
 .newCreations .quiz p.quiz-description {
   font-size: 20px;
 }
+
 .newCreations .quiz p.quiz-date {
   font-size: small;
   color: grey;
@@ -272,6 +296,7 @@ p.quiz-genre {
 .newCreations .quiz .quiz-footer > *:nth-child(2) {
   justify-self: center;
 }
+
 .newCreations .quiz .quiz-footer > *:nth-child(3) {
   justify-self: right;
 }
@@ -282,12 +307,14 @@ p.quiz-genre {
   margin: 0;
   display: inline-block;
 }
+
 .newCreations .quiz .quiz-footer .quiz-reactions {
   display: flex;
   gap: 10px;
   align-items: center;
   margin: 0;
 }
+
 .newCreations .quiz .quiz-footer .quiz-reactions .reaction {
   display: inline-flex;
   align-items: center;
@@ -298,26 +325,31 @@ p.quiz-genre {
   color: #073238;
   background-color: rgba(0, 0, 0, 0.03);
 }
+
 .newCreations .quiz .quiz-footer .quiz-reactions .like {
   color: #ff3b3b;
   background-color: rgba(255, 59, 59, 0.08);
   box-shadow: 0 2px 0 rgba(0, 0, 0, 0.04);
 }
+
 .newCreations .quiz .quiz-footer .quiz-reactions .dislike {
   color: #666;
   background-color: rgba(0, 0, 0, 0.03);
 }
 
 .avatar {
-  width: 48px;
-  height: 48px;
+  height: 100px;
   background: #d8d8ff;
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: bold;
   margin-right: 5%;
+  width: 35%;
+  aspect-ratio: 1/1;
+  border-radius: 100%;
+  -o-object-fit: cover;
+  object-fit: cover;
 }
 
 p,
@@ -339,7 +371,7 @@ h3 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 3%;
+  padding: 2%;
   padding-right: 5%;
   gap: 5%;
 }
@@ -475,4 +507,22 @@ p.error {
   width: 150px;
   height: 150px;
   border-radius: 100%;
+}
+
+.friend-card button {
+  margin-top: 12%;
+}
+
+.avatarPrime {
+  width: 150px;
+  height: 150px;
+  border-radius: 100%;
+  background: #d8d8ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  aspect-ratio: 1/1;
+  -o-object-fit: cover;
+  object-fit: cover;
 }

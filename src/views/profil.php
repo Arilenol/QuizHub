@@ -16,7 +16,14 @@ require_once 'partials/header.php';
     <div class="container">
 
         <div class="profile-card">
-            <img src="./assets/images/profil.jpg" alt="Photo de profil" class="profilPicture" />
+            <?php if ($infosUser['picture_path'] !== null) : ?>
+                <img
+                    src="<?= htmlspecialchars($infosUser['picture_path']) ?>"
+                    alt="Photo de profil"
+                    class="profilPicture">
+            <?php else : ?>
+                <div class="avatarPrime"><?= htmlspecialchars($infosUser['username'][0]) ?></div>
+            <?php endif; ?>
 
             <div class="info">
                 <h2><?= $infosUser['username'] ?></h2>
@@ -41,6 +48,21 @@ require_once 'partials/header.php';
                     <button id="editProfil" class="button"><span></span>
                         <p>Modifier le profil</p>
                     </button>
+                    <form method="POST" action="?page=profil&action=uploadPicture" enctype="multipart/form-data" id="avatarForm">
+
+                        <input
+                            type="file"
+                            name="avatar"
+                            id="avatarInput"
+                            accept="image/*"
+                            hidden
+                            required>
+
+                        <button type="button" class="button" id="uploadBtn"><span></span>
+                            <p>Changer d'avatar</p>
+                        </button>
+                    </form>
+
                     <button class="button signalement" onclick="window.location.href='?page=log&typelog=logout'"><span></span>
                         <p>Déconnexion</p>
                     </button>
@@ -76,10 +98,18 @@ require_once 'partials/header.php';
                 <?php else : ?>
                     <?php foreach ($friends as $friend) : ?>
                         <div class="friend-card">
-                            <div class="avatar"><?= htmlspecialchars($friend['friend_name'][0]) ?></div>
+                            <?php if ($friend['friend_picture']) : ?>
+                                <img
+                                    src="<?= htmlspecialchars($friend['friend_picture']) ?>"
+                                    alt="Photo de profil"
+                                    class="avatar">
+                            <?php else : ?>
+                                <div class="avatar"><?= htmlspecialchars($friend['friend_name'][0]) ?></div>
+                            <?php endif; ?>
                             <div>
                                 <h3><?= htmlspecialchars($friend['friend_name']) ?></h3>
                                 <p><?= htmlspecialchars($friend['friend_email']) ?></p>
+                                <button data-action="deleteFriend" data-title="<?= $friend['friend_name'] ?>" data-id="<?= $friend['friend_id'] ?>" class="deleteFriend">Supprimer cet ami</button>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -113,12 +143,13 @@ require_once 'partials/header.php';
                                         class="deleteQuiz"
                                         data-id="<?= $quiz[$i]['id'] ?>"
                                         data-title="<?= htmlspecialchars($quiz[$i]['title']) ?>"
-                                        data-genre="<?= $quiz[$i]['genre'] ?>">
+                                        data-genre="<?= $quiz[$i]['genre'] ?>"
+                                        data-action="deleteQuiz">
                                         <?= $quiz[$i]['genre'] == 'lesson' ? 'Supprimer la leçon' : 'Supprimer le quiz' ?>
                                     </button>
 
                                     <button id="editQuiz" onclick="window.location.href='?page=<?= $quiz[$i]['genre'] ?>&categorie=modify&id=<?= $quiz[$i]['id'] ?>'"><?= $quiz[$i]['genre'] == 'lesson' ? 'Modifier la leçon' : ' Modifier le quiz' ?></button>
-                                    <button id="playQuiz" onclick="window.location.href='./?page=<?= $quiz[$i]['genre'] ?>&id=<?= $quiz[$i]['id'] ?> <?= $quiz[$i]['genre'] == 'lesson' ? '&categorie=view' : '' ?>'" <?= $quiz[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?>'">Jouer</button>
+                                    <button id="playQuiz" onclick="window.location.href='./?page=<?= $quiz[$i]['genre'] ?>&id=<?= $quiz[$i]['id'] ?> <?= $quiz[$i]['genre'] == 'lesson' ? '&categorie=view' : '' ?> <?= $quiz[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?>'">Jouer</button>
                                 </div>
                                 <div class="quiz-footer">
                                     <p class="quiz-auteur">Par : <span class="author">Vous</span></p>
@@ -133,26 +164,6 @@ require_once 'partials/header.php';
 
                     <?php endif; ?>
 
-                    <div class="modal-overlay" id="deleteModal">
-                        <div class="modal">
-
-                            <button type="button" class="close-modal" id="closeDeleteModal">&times;</button>
-
-                            <h2>Supprimer</h2>
-                            <p id="deleteText"></p>
-
-                            <form method="POST" action="?page=profil&action=deleteQuiz">
-                                <input type="hidden" name="quiz_id" id="deleteQuizId">
-
-                                <div class="modal-actions">
-                                    <button type="submit" class="danger-btn">Supprimer</button>
-                                    <button type="button" class="cancel-btn" id="cancelDelete">Annuler</button>
-                                </div>
-                            </form>
-
-                        </div>
-                    </div>
-
                 <?php elseif (isset($hist)) : ?>
                     <div class="newCreations">
                         <?php if (empty($hist)) {
@@ -166,6 +177,7 @@ require_once 'partials/header.php';
                                             <span class="category"><?= htmlspecialchars($cat) ?></span>
                                         <?php endforeach; ?>
                                     <?php endif; ?>
+                                    <p class="note"> <?= $hist[$i]['note'] !== null ? "Votre note : " . $hist[$i]['note'] : "" ?></p>
                                 </div>
                                 <p class="quiz-genre"><?= htmlspecialchars($hist[$i]['genre'] ?? '') ?></p>
                                 <br>
@@ -227,7 +239,9 @@ require_once 'partials/header.php';
                                 <div class="form-group">
                                     <label for="password">Nouveau mot de passe</label>
                                     <div class="input-wrapper">
-                                        <input type="password" name="password" id="password"
+                                        <input type="password" name="password" id="password" autocomplete="on"
+                                            pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
+                                            title="Le mot de passe doit contenir au moins 8 caractères, une lettre et un chiffre"
                                             placeholder="Laisser vide pour ne pas changer">
                                         <i id="eyeMdp" class="fa-solid fa-eye"></i>
                                     </div>
@@ -236,7 +250,7 @@ require_once 'partials/header.php';
                                 <div class="form-group">
                                     <label for="passwordVerif">Confirmer le mot de passe</label>
                                     <div class="input-wrapper">
-                                        <input type="password" name="passwordVerif" id="passwordVerif"
+                                        <input type="password" name="passwordVerif" id="passwordVerif" autocomplete="on"
                                             placeholder="Laisser vide pour ne pas changer">
                                         <i id="eyeVerif" class="fa-solid fa-eye"></i>
                                     </div>
@@ -253,6 +267,25 @@ require_once 'partials/header.php';
                             document.getElementById('profileModal').style.display = 'flex';
                         </script>
                     <?php endif; ?>
+
+                    <div class="modal-overlay" id="deleteModal">
+                        <div class="modal">
+
+                            <button type="button" class="close-modal" id="closeDeleteModal">&times;</button>
+
+                            <h2>Supprimer</h2>
+                            <p id="deleteText"></p>
+
+                            <form method="POST" action="?page=profil&action=displayFriends&actionType=delete">
+
+                                <div class="modal-actions">
+                                    <button type="submit" class="danger-btn">Supprimer</button>
+                                    <button type="button" class="cancel-btn" id="cancelDelete">Annuler</button>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
 </body>
 
 </html>
