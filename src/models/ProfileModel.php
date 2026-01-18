@@ -224,4 +224,21 @@ class ProfileModel
         $stmt = $this->db->prepare("UPDATE users SET email = ? WHERE id = ?");
         return $stmt->execute([trim($email), $id]);
     }
+
+    /**
+     * Supprime un ami à partir de son id
+     *
+     * @param int|string $idDeleteFriend    Identifiant de l'utilisateur ami à supprimer
+     * @param int|string $idCurrentSession    Identifiant de l'utilisateur de la session
+     *
+     * @return bool Retourne true si la suppresion a réussi, false sinon
+     */
+    public function deleteFriend(string|int $idDeleteFriend, string|int $idCurrentSession): bool
+    {
+        $stmt = $this->db->prepare("DELETE FROM amis WHERE user1_id = ? and user2_id = ?");
+
+        $stmt2 = $this->db->prepare("DELETE FROM amis WHERE user2_id = ? and user1_id = ?");
+
+        return $stmt->execute([$idCurrentSession, $idDeleteFriend]) || $stmt2->execute([$idCurrentSession, $idDeleteFriend]);
+    }
 }

@@ -80,6 +80,7 @@ require_once 'partials/header.php';
                             <div>
                                 <h3><?= htmlspecialchars($friend['friend_name']) ?></h3>
                                 <p><?= htmlspecialchars($friend['friend_email']) ?></p>
+                                <button data-action="deleteFriend" data-title="<?= $friend['friend_name'] ?>" data-id="<?= $friend['friend_id'] ?>" class="deleteFriend">Supprimer cet ami</button>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -113,7 +114,8 @@ require_once 'partials/header.php';
                                         class="deleteQuiz"
                                         data-id="<?= $quiz[$i]['id'] ?>"
                                         data-title="<?= htmlspecialchars($quiz[$i]['title']) ?>"
-                                        data-genre="<?= $quiz[$i]['genre'] ?>">
+                                        data-genre="<?= $quiz[$i]['genre'] ?>"
+                                        data-action="deleteQuiz">
                                         <?= $quiz[$i]['genre'] == 'lesson' ? 'Supprimer la leçon' : 'Supprimer le quiz' ?>
                                     </button>
 
@@ -132,26 +134,6 @@ require_once 'partials/header.php';
                         <?php endfor; ?>
 
                     <?php endif; ?>
-
-                    <div class="modal-overlay" id="deleteModal">
-                        <div class="modal">
-
-                            <button type="button" class="close-modal" id="closeDeleteModal">&times;</button>
-
-                            <h2>Supprimer</h2>
-                            <p id="deleteText"></p>
-
-                            <form method="POST" action="?page=profil&action=deleteQuiz">
-                                <input type="hidden" name="quiz_id" id="deleteQuizId">
-
-                                <div class="modal-actions">
-                                    <button type="submit" class="danger-btn">Supprimer</button>
-                                    <button type="button" class="cancel-btn" id="cancelDelete">Annuler</button>
-                                </div>
-                            </form>
-
-                        </div>
-                    </div>
 
                 <?php elseif (isset($hist)) : ?>
                     <div class="newCreations">
@@ -253,6 +235,25 @@ require_once 'partials/header.php';
                             document.getElementById('profileModal').style.display = 'flex';
                         </script>
                     <?php endif; ?>
+
+                    <div class="modal-overlay" id="deleteModal">
+                        <div class="modal">
+
+                            <button type="button" class="close-modal" id="closeDeleteModal">&times;</button>
+
+                            <h2>Supprimer</h2>
+                            <p id="deleteText"></p>
+
+                            <form method="POST" action="?page=profil&action=displayFriends&actionType=delete">
+
+                                <div class="modal-actions">
+                                    <button type="submit" class="danger-btn">Supprimer</button>
+                                    <button type="button" class="cancel-btn" id="cancelDelete">Annuler</button>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
 </body>
 
 </html>

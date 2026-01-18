@@ -46,6 +46,9 @@ class ProfileController
                 $messageSuccess = $optionSuccess;
                 $messageError = $optionError;
             }
+            if (isset($_GET['actionType'])){
+                $test = $this->model->deleteFriend($_SESSION['id'],$_POST['idToDelete']);
+            }
             $activeTab = $_GET['action'] ?? 'creations';
             $activeTab = $activeTab === 'displayFriends' ? 'friends' : ($activeTab === 'showHistory' ? 'history' : 'creations');
             require ROOT . '/src/views/profil.php';
