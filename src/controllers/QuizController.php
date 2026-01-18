@@ -544,7 +544,7 @@ class QuizController
             if ($idQuestion <= $max) {
 
                 $answers = !empty($_POST['answer']) ? array_map('intval', $_POST['answer']) : [];
-                $result=[];
+                $result = [];
                 foreach ($answers as $answer) {
                     $result[] = $this->model->getLabelAnswer($answer);
                 }
@@ -653,5 +653,10 @@ class QuizController
         if (isset($_SESSION['id'])) {
             $test = $modelHistoric->saveHistoric($quizId, $_SESSION['id']);
         }
+    }
+
+    public function saveScore(string|int $id, string|int $idQuiz, string $score): bool
+    {
+        return $this->model->saveScore($id,$idQuiz,$score);
     }
 }

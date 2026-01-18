@@ -937,4 +937,24 @@ class QuizModel
             die("Deleting question from quiz failed: " . $e->getMessage());
         }
     }
+
+    /**
+     * Enregistre ou met à jour le score d'un utilisateur pour un quiz.
+     *
+     * Cette méthode met à jour le score dans la table `resultat` pour un utilisateur
+     * et un quiz spécifiques. Elle permet de sauvegarder le résultat final d'une
+     * tentative de quiz pour un utilisateur donné.
+     *
+     * @param string|int $id       Identifiant de l'utilisateur (peut être une chaîne ou un entier).
+     * @param string|int $idQuiz   Identifiant du quiz (peut être une chaîne ou un entier).
+     * @param int        $score    Score obtenu par l'utilisateur.
+     *
+     * @return bool  true si la mise à jour réussit, false en cas d'erreur.
+     */
+    public function saveScore(string|int $id, string|int $idQuiz, string $score): bool
+    {
+        $stmt = $this->db->prepare("UPDATE resultat SET score = ? where quiz_id = ? and user_id = ?");
+
+        return $stmt->execute([$score,$idQuiz,$id]);
+    }
 }

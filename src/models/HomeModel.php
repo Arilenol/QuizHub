@@ -57,7 +57,7 @@ class HomeModel
             FROM quiz q
             JOIN users u ON u.id = q.user_id
             WHERE q.disponibilite = 'public'
-            ORDER BY nbjaime DESC;
+            ORDER BY nbjaime DESC, (nbjaime - nbjaimepas) DESC;
         ");
 
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -100,6 +100,7 @@ class HomeModel
             FROM quiz q
             JOIN users u ON u.id = q.user_id
             WHERE u.id = :id
+            ORDER BY nbjaime - nbjaimepas DESC
         ");
 
         $stmt->execute(['id' => $id]);
@@ -200,7 +201,7 @@ class HomeModel
             FROM quiz q
             JOIN users u ON u.id = q.user_id
             WHERE q.disponibilite = 'public'
-            ORDER BY q.date DESC;
+            ORDER BY q.date DESC, (nbjaime - nbjaimepas) DESC;
         ");
 
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -215,12 +216,12 @@ class HomeModel
 
     public function createInstance(int|string $id): bool
     {
-        // $today = (new DateTime())->format('Y-m-d');
+        $yesterday = (new DateTime('yesterday'))->format('Y-m-d');
         $stmt = $this->db->prepare("
         INSERT INTO user_streaks (user_id, current_streak, longest_streak, last_activity_date)
         VALUES (?, 0, 0, ?)
         ");
-        return $stmt->execute([$id, NULL]);
+        return $stmt->execute([$id, $yesterday]);
     }
 
     public function checkIfNotInstance(int|string $id): bool
