@@ -235,5 +235,62 @@ class CRUDQuizModel {
         }
     }
 
+    /**
+     * Récupère toutes les cartes d'une flashcard
+     */
+    public function getFlashcardCards($quiz_id): mixed {
+        try {
+            $sql = $this->db->prepare("SELECT id, quiz_id, numeroCarte, question, reponse
+                                       FROM carte 
+                                       WHERE quiz_id = ? 
+                                       ORDER BY numeroCarte ASC");
+            $sql->bindParam(1, $quiz_id);
+            $sql->execute();
+            
+            $cards = $sql->fetchAll(PDO::FETCH_ASSOC);
+            return $cards;
+        } catch(PDOException $e) {
+            die("Fetching flashcard cards failed: " . $e->getMessage());
+        } catch(Exception $e) {
+            die("Error: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Met à jour une carte flashcard
+     */
+    public function updateCard($card_id, $question, $reponse): bool {
+        try {
+            $sql = $this->db->prepare("UPDATE carte SET question = ?, reponse = ? WHERE id = ?");
+            $sql->bindParam(1, $question);
+            $sql->bindParam(2, $reponse);
+            $sql->bindParam(3, $card_id, PDO::PARAM_INT);
+            $sql->execute();
+
+            return $sql->rowCount() > 0;
+        } catch(PDOException $e) {
+            die("Updating card failed: " . $e->getMessage());
+        } catch(Exception $e) {
+            die("Error: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Supprime une carte flashcard
+     */
+    public function deleteCard($card_id): bool {
+        try {
+            $sql = $this->db->prepare("DELETE FROM carte WHERE id = ?");
+            $sql->bindParam(1, $card_id, PDO::PARAM_INT);
+            $sql->execute();
+
+            return $sql->rowCount() > 0;
+        } catch(PDOException $e) {
+            die("Deleting card failed: " . $e->getMessage());
+        } catch(Exception $e) {
+            die("Error: " . $e->getMessage());
+        }
+    }
+
 }
 ?>

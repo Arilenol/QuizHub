@@ -60,6 +60,18 @@ class CRUDQuizController {
                     $this->model->deleteAnswer($answer_id);
                     header("Location: ?page=CRUDquiz&id=$quiz_id");
                     exit;
+                } elseif ($_POST['action'] === 'update_card') {
+                    $card_id = (int)$_POST['card_id'];
+                    $question = $_POST['question'];
+                    $reponse = $_POST['reponse'];
+                    $this->model->updateCard($card_id, $question, $reponse);
+                    header("Location: ?page=CRUDquiz&id=$quiz_id");
+                    exit;
+                } elseif ($_POST['action'] === 'delete_card') {
+                    $card_id = (int)$_POST['card_id'];
+                    $this->model->deleteCard($card_id);
+                    header("Location: ?page=CRUDquiz&id=$quiz_id");
+                    exit;
                 }
             }
         }
@@ -70,14 +82,22 @@ class CRUDQuizController {
         // Récupérer le nom de l'auteur
         $quiz['nom_auteur'] = $this->model->getNomAuteur($quiz['user_id']);
 
-        // Récupérer toutes les questions du quiz
-        $questions = $this->model->getQuizQuestions($quiz_id);
-
-        // Pour chaque question, récupérer les réponses
+        // Récupérer les questions/cartes selon le type de quiz
         $questionsWithAnswers = [];
-        foreach ($questions as $question) {
-            $question['answers'] = $this->model->getQuestionAnswers($question['id']);
-            $questionsWithAnswers[] = $question;
+        $flashcardCards = [];
+        
+        if ($quiz['genre'] === 'flashcard') {
+            // Pour les flashcards, récupérer les cartes
+            $flashcardCards = $this->model->getFlashcardCards($quiz_id);
+        } else {
+            // Pour les quiz classiques, récupérer les questions et réponses
+            $questions = $this->model->getQuizQuestions($quiz_id);
+
+            // Pour chaque question, récupérer les réponses
+            foreach ($questions as $question) {
+                $question['answers'] = $this->model->getQuestionAnswers($question['id']);
+                $questionsWithAnswers[] = $question;
+            }
         }
 
         // Passer les données à la vue

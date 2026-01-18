@@ -109,6 +109,38 @@
             <?php else: ?>
                 <p class="no-questions">Aucune question trouvée pour ce quiz</p>
             <?php endif; ?>
+
+            <?php if (!empty($flashcardCards)): ?>
+                <!-- Liste des cartes flashcard -->
+                <h2>Cartes de la flashcard (<?= count($flashcardCards) ?>)</h2>
+                
+                <?php foreach ($flashcardCards as $card): ?>
+                    <div id="card-<?= htmlspecialchars($card['id']) ?>" class="question-card">
+                        <form method="POST" action="" style="display: inline;">
+                            <input type="hidden" name="action" value="update_card">
+                            <input type="hidden" name="card_id" value="<?= htmlspecialchars($card['id']) ?>">
+                            <h3>Carte <?= htmlspecialchars($card['numeroCarte']) ?></h3>
+                            
+                            <div style="margin: 10px 0;">
+                                <label style="display: block; margin-bottom: 5px;"><strong>Question :</strong></label>
+                                <textarea name="question" required style="width: 100%; border: 1px solid #ccc; padding: 5px; font-size: inherit; min-height: 60px;"><?= htmlspecialchars($card['question']) ?></textarea>
+                            </div>
+                            
+                            <div style="margin: 10px 0;">
+                                <label style="display: block; margin-bottom: 5px;"><strong>Réponse :</strong></label>
+                                <textarea name="reponse" required style="width: 100%; border: 1px solid #ccc; padding: 5px; font-size: inherit; min-height: 60px;"><?= htmlspecialchars($card['reponse']) ?></textarea>
+                            </div>
+                            
+                            <button type="submit" style="margin-top: 10px;">Modifier</button>
+                        </form>
+                        <button type="button" onclick="if(confirm('Supprimer cette carte ?')) { document.getElementById('delete-card-<?= $card['id'] ?>').submit(); }" style="margin-left: 10px;">Supprimer Carte</button>
+                        <form id="delete-card-<?= $card['id'] ?>" method="POST" action="" style="display: none;">
+                            <input type="hidden" name="action" value="delete_card">
+                            <input type="hidden" name="card_id" value="<?= htmlspecialchars($card['id']) ?>">
+                        </form>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
     </div>
 </body>
