@@ -16,7 +16,14 @@ require_once 'partials/header.php';
     <div class="container">
 
         <div class="profile-card">
-            <img src="./assets/images/profil.jpg" alt="Photo de profil" class="profilPicture" />
+            <?php if ($infosUser['picture_path'] !== null) : ?>
+                <img
+                    src="<?= htmlspecialchars($infosUser['picture_path']) ?>"
+                    alt="Photo de profil"
+                    class="profilPicture">
+            <?php else : ?>
+                <div class="avatarPrime"><?= htmlspecialchars($infosUser['username'][0]) ?></div>
+            <?php endif; ?>
 
             <div class="info">
                 <h2><?= $infosUser['username'] ?></h2>
@@ -41,6 +48,21 @@ require_once 'partials/header.php';
                     <button id="editProfil" class="button"><span></span>
                         <p>Modifier le profil</p>
                     </button>
+                    <form method="POST" action="?page=profil&action=uploadPicture" enctype="multipart/form-data" id="avatarForm">
+
+                        <input
+                            type="file"
+                            name="avatar"
+                            id="avatarInput"
+                            accept="image/*"
+                            hidden
+                            required>
+
+                        <button type="button" class="button" id="uploadBtn"><span></span>
+                            <p>Changer d'avatar</p>
+                        </button>
+                    </form>
+
                     <button class="button signalement" onclick="window.location.href='?page=log&typelog=logout'"><span></span>
                         <p>Déconnexion</p>
                     </button>
@@ -76,7 +98,14 @@ require_once 'partials/header.php';
                 <?php else : ?>
                     <?php foreach ($friends as $friend) : ?>
                         <div class="friend-card">
-                            <div class="avatar"><?= htmlspecialchars($friend['friend_name'][0]) ?></div>
+                            <?php if ($friend['friend_picture']) : ?>
+                                <img
+                                    src="<?= htmlspecialchars($friend['friend_picture']) ?>"
+                                    alt="Photo de profil"
+                                    class="avatar">
+                            <?php else : ?>
+                                <div class="avatar"><?= htmlspecialchars($friend['friend_name'][0]) ?></div>
+                            <?php endif; ?>
                             <div>
                                 <h3><?= htmlspecialchars($friend['friend_name']) ?></h3>
                                 <p><?= htmlspecialchars($friend['friend_email']) ?></p>
@@ -232,9 +261,6 @@ require_once 'partials/header.php';
                         </div>
                     </div>
                     <?php if (!empty($showProfileModal)) : ?>
-                        <script>
-                            document.getElementById('profileModal').style.display = 'flex';
-                        </script>
                     <?php endif; ?>
 
                     <div class="modal-overlay" id="deleteModal">

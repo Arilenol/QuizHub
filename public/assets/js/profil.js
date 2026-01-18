@@ -85,3 +85,19 @@ deleteModal.addEventListener('click', e => {
     deleteModal.style.display = 'none'
   }
 })
+
+const uploadBtn = document.getElementById('uploadBtn');
+const avatarInput = document.getElementById('avatarInput');
+const form = document.getElementById('avatarForm');
+
+uploadBtn.addEventListener('click', () => {
+    avatarInput.click();
+});
+
+// Quand un fichier est choisi → envoyer le formulaire
+avatarInput.addEventListener('change', () => {
+    if (avatarInput.files.length > 0) {
+        form.submit();
+    }
+});
+

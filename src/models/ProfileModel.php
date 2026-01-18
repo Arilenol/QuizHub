@@ -144,9 +144,8 @@ class ProfileModel
      */
     public function getFriends(int|string $id): array|false
     {
-
         $stmt = $this->db->prepare("
-        SELECT 
+        SELECT
             CASE 
                 WHEN a.user1_id = :id THEN u2.id
                 ELSE u1.id
@@ -158,17 +157,24 @@ class ProfileModel
             CASE 
                 WHEN a.user1_id = :id THEN u2.email
                 ELSE u1.email
-            END AS friend_email
+            END AS friend_email,
+            CASE 
+                WHEN a.user1_id = :id THEN u2.picture_path
+                ELSE u1.picture_path
+            END AS friend_picture
+
         FROM amis a
         JOIN users u1 ON u1.id = a.user1_id
         JOIN users u2 ON u2.id = a.user2_id
         WHERE a.user1_id = :id OR a.user2_id = :id
     ");
-        $stmt->execute([":id" => $id]);
+
+        $stmt->execute([':id' => $id]);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return !empty($results) ? $results : false;
     }
+
 
     /**
      * Met à jour le nom d'utilisateur d'un utilisateur.
@@ -212,6 +218,20 @@ class ProfileModel
         return $stmt->execute([password_hash(trim($password), PASSWORD_DEFAULT), $id]);
     }
 
+    public function savePicture(string $pathForDb, string|int $id): bool
+    {
+        $stmt = $this->db->prepare("
+                UPDATE users 
+                SET picture_path = :path 
+                WHERE id = :id
+            ");
+
+        return $stmt->execute([
+            'path' => $pathForDb,
+            'id'   => $id
+        ]);
+    }
+
     /**
      * Met à jour l'adresse email d'un utilisateur.
      *
@@ -234,12 +254,21 @@ class ProfileModel
      *
      * @return bool Retourne true si la suppresion a réussi, false sinon
      */
-    public function deleteFriend(string|int $idDeleteFriend, string|int $idCurrentSession): bool
+    public function deleteFriend(int|string $friendId, int|string $userId): bool
     {
-        $stmt = $this->db->prepare("DELETE FROM amis WHERE user1_id = ? and user2_id = ?");
+        $stmt = $this->db->prepare("
+        DELETE FROM amis
+        WHERE 
+            (user1_id = :user AND user2_id = :friend)
+            OR
+            (user1_id = :friend AND user2_id = :user)
+    ");
 
-        $stmt2 = $this->db->prepare("DELETE FROM amis WHERE user2_id = ? and user1_id = ?");
+        $stmt->execute([
+            ':user'   => $userId,
+            ':friend' => $friendId
+        ]);
 
-        return $stmt->execute([$idCurrentSession, $idDeleteFriend]) || $stmt2->execute([$idCurrentSession, $idDeleteFriend]);
+        return $stmt->rowCount() > 0;
     }
 }
