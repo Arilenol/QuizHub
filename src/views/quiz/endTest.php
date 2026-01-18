@@ -13,7 +13,7 @@ require_once '../src/views/partials/header.php';
     <div class="answers">
         <?php $_SESSION['rightAnswers'] = 0; ?>
         <?php foreach ($_SESSION['answers'] as $questionNumber => $a) : ?>
-            <article <?= $a[0] ? '' : 'class="falseAnswer' ?> onclick="window.location.href='?page=standard&id=<?= $quizId ?>&idQuestion=<?= $questionNumber ?>&reponse=visible&test=test'">
+            <article <?= $a[0] ? '' : 'class="falseAnswer"' ?> onclick="window.location.href='?page=standard&id=<?= $quizId ?>&idQuestion=<?= $questionNumber ?>&reponse=visible&test=test'">
                 <p><?= ($a[0]) ? 'Bonne réponse' : 'Mauvaise réponse' ?></p>
                 <?php if ($a[0]) {
                     $_SESSION['rightAnswers']++;
@@ -34,7 +34,7 @@ require_once '../src/views/partials/header.php';
         </span>
     </p>
 </div>
-<?php $this->saveScore($_SESSION['id'],$quizId, $_SESSION['rightAnswers'].'/'.count($_SESSION['answers'])) ?>
+<?php $this->saveScore($_SESSION['id'], $quizId, $_SESSION['rightAnswers'] . '/' . count($_SESSION['answers'])) ?>
 
 <div class="actions-fin">
     <button class="button" onclick="window.location.href='?page=test&id=<?= $quizId ?>'">

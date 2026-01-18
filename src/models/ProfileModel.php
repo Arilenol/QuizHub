@@ -103,6 +103,7 @@ class ProfileModel
                 q.genre, 
                 q.date, 
                 u.username AS user_name,
+                r.score as note,
                 r.dateRealisation AS dateRealisation,
                 (
                     SELECT GROUP_CONCAT(DISTINCT c.categorieName)

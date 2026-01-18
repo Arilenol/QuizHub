@@ -222,6 +222,30 @@ button {
   transition: all 0.3s ease;
 }
 
+.note {
+  position: absolute;
+  top: 35px;
+  left: 270px;
+  font-family: 'Comic Sans MS', 'Bradley Hand', 'Segoe Print', cursive;
+  color: #c1121f;
+  font-size: 1.6rem;
+  font-weight: bold;
+  transform: rotate(-3deg);
+  display: inline-block;
+  letter-spacing: 1px;
+}
+
+.note::after {
+  content: '';
+  position: absolute;
+  left: -5%;
+  bottom: -6px;
+  width: 110%;
+  height: 3px;
+  background: #c1121f;
+  transform: rotate(-2deg);
+}
+
 .newCreations .quiz:hover {
   transform: scale(1.04);
 }
@@ -233,6 +257,7 @@ button {
   margin-bottom: 10px;
   gap: 10px;
 }
+
 .category,
 p.quiz-genre {
   border-radius: 50px;
@@ -240,6 +265,7 @@ p.quiz-genre {
   font-size: small;
   padding: 8px 8px 8px 8px;
 }
+
 .newCreations .quiz p {
   display: inline-block;
   margin-top: 5px;
@@ -250,9 +276,11 @@ p.quiz-genre {
   font-weight: bold;
   font-size: 30px;
 }
+
 .newCreations .quiz p.quiz-description {
   font-size: 20px;
 }
+
 .newCreations .quiz p.quiz-date {
   font-size: small;
   color: grey;
@@ -273,10 +301,11 @@ p.quiz-genre {
   transform: translate(-50%, 0);
 }
 
-.newCreations .quiz .quiz-footer > *:nth-child(2) {
+.newCreations .quiz .quiz-footer>*:nth-child(2) {
   justify-self: center;
 }
-.newCreations .quiz .quiz-footer > *:nth-child(3) {
+
+.newCreations .quiz .quiz-footer>*:nth-child(3) {
   justify-self: right;
 }
 
@@ -286,12 +315,14 @@ p.quiz-genre {
   margin: 0;
   display: inline-block;
 }
+
 .newCreations .quiz .quiz-footer .quiz-reactions {
   display: flex;
   gap: 10px;
   align-items: center;
   margin: 0;
 }
+
 .newCreations .quiz .quiz-footer .quiz-reactions .reaction {
   display: inline-flex;
   align-items: center;
@@ -302,11 +333,13 @@ p.quiz-genre {
   color: #073238;
   background-color: rgba(0, 0, 0, 0.03);
 }
+
 .newCreations .quiz .quiz-footer .quiz-reactions .like {
   color: #ff3b3b;
   background-color: rgba(255, 59, 59, 0.08);
   box-shadow: 0 2px 0 rgba(0, 0, 0, 0.04);
 }
+
 .newCreations .quiz .quiz-footer .quiz-reactions .dislike {
   color: #666;
   background-color: rgba(0, 0, 0, 0.03);
