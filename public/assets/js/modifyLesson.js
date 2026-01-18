@@ -480,47 +480,90 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    function addExemple(ev,i){
-        if (!modif){
+    function addExemple(ev, i) {
+        if (modif) {
             ev.preventDefault();
-            const exs = document.querySelector("#LessonPart"+i);
-            const ex = exs.querySelectorAll(".example")[exs.querySelectorAll(".example").length-1];
-            const newEx = ex.cloneNode(true);
-
-
-            const modifB = newEx.querySelector(".modifierEx");
-            const k = parseInt(modifB.value,10) + 1;
-            modifB.value = String(k);
-            modifB.id = "modifier"+i+"-ex"+k;
-            modifB.addEventListener("click" , (ev) => modifierExFunction(ev,i));
-
-            newEx.querySelector(".section-title").textContent = "Exemple "+(k+1);
-            for (let delPart of newEx.querySelectorAll(".supprimerEx")){
-                delPart.remove();
-            }
-            const consigne = newEx.querySelector("#consigne"+i+"-ex"+(k-1));
-            consigne.name = "consigne"+i+"-ex"+k;
-            consigne.id = "consigne"+i+"-ex"+k;
-            consigne.value = "";
-
-            const reponse = newEx.querySelector("#reponse"+i+"-ex"+(k-1));
-            reponse.name = "reponse"+i+"-ex"+k;
-            reponse.id = "reponse"+i+"-ex"+k;
-            reponse.value = "";
-
-            const numEx = exs.querySelectorAll(".example").length + 1;
-            newEx.style.gridRowStart = numEx;
-            newEx.style.gridRowEnd = numEx + 1;
-            newEx.style.gridColumnStart = "2";
-            newEx.style.gridColumnEnd = "3";
-
-            ex.after(newEx);
-            modifB.click();
+            popupAvertissement("Veuillez terminer les modifications en cours avant d'ajouter un exemple");
         }
         else{
             ev.preventDefault();
-            popupAvertissement("Veuillez terminer les modifications en cours avant d'ajouter un exemple'");
+
+            const part = document.querySelector("#LessonPart" + i);
+            const exemples = part.querySelectorAll(".example");
+            const k = exemples.length;
+
+            const example = document.createElement("div");
+            example.classList.add("reponse", "example");
+            example.style.gridRowStart = k + 1;
+            example.style.gridRowEnd = k + 2;
+            example.style.gridColumnStart = "2";
+            example.style.gridColumnEnd = "3";
+
+            const title = document.createElement("p");
+            title.classList.add("section-title");
+            title.textContent = "Exemple " + (k + 1) + " :";
+            example.appendChild(title);
+
+            const consigneWrapper = document.createElement("div");
+            consigneWrapper.classList.add("textarea");
+            consigneWrapper.style.width = "calc(100% - 40px)";
+
+            const consigneSpan = document.createElement("span");
+            const consigne = document.createElement("textarea");
+            consigne.name = "consigne" + i + "-ex" + k;
+            consigne.id = "consigne" + i + "-ex" + k;
+            consigne.disabled = true;
+
+            consigneWrapper.appendChild(consigneSpan);
+            consigneWrapper.appendChild(consigne);
+            example.appendChild(consigneWrapper);
+
+            const reponseWrapper = document.createElement("div");
+            reponseWrapper.classList.add("textarea");
+            reponseWrapper.style.width = "calc(100% - 40px)";
+
+            const reponseSpan = document.createElement("span");
+            const reponse = document.createElement("textarea");
+            reponse.name = "reponse" + i + "-ex" + k;
+            reponse.id = "reponse" + i + "-ex" + k;
+            reponse.disabled = true;
+
+            reponseWrapper.appendChild(reponseSpan);
+            reponseWrapper.appendChild(reponse);
+            example.appendChild(reponseWrapper);
+
+            const btns = document.createElement("div");
+            btns.classList.add("exampleBtns");
+
+            const btnModif = document.createElement("button");
+            btnModif.classList.add("button", "modifierEx");
+            btnModif.type = "submit";
+            btnModif.id = "modifier" + i + "-ex" + k;
+            btnModif.name = "modifierEx";
+            btnModif.value = k;
+            btnModif.innerHTML = "<span></span><p>Modifier</p>";
+            btnModif.addEventListener("click", (ev) => modifierExFunction(ev, i));
+
+            const btnSuppr = document.createElement("button");
+            btnSuppr.classList.add("button", "supprimerEx");
+            btnSuppr.type = "submit";
+            btnSuppr.id = "supprimer" + i + "-ex" + k;
+            btnSuppr.name = "supprimerEx";
+            btnSuppr.value = k;
+            btnSuppr.innerHTML = "<span></span><p>Supprimer l'exemple</p>";
+            btnSuppr.addEventListener("click", (ev) => suppExFunction(ev, i));
+
+            btns.appendChild(btnModif);
+            btns.appendChild(btnSuppr);
+            example.appendChild(btns);
+
+            const btnAdd = part.querySelector(".addEx");
+            part.insertBefore(example, btnAdd);
+
+            btnModif.click();
         }
+
+        
     }
 
     const addExs = document.querySelectorAll(".addEx");
