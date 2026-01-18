@@ -46,8 +46,10 @@ class ProfileController
                 $messageSuccess = $optionSuccess;
                 $messageError = $optionError;
             }
-            if (isset($_GET['actionType'])){
-                $test = $this->model->deleteFriend($_SESSION['id'],$_POST['idToDelete']);
+            if (isset($_GET['actionType'])) {
+                $test = $this->model->deleteFriend($_SESSION['id'], $_POST['idToDelete']);
+                header("Location: ?page=profil&action=displayFriends");
+                exit;
             }
             $activeTab = $_GET['action'] ?? 'creations';
             $activeTab = $activeTab === 'displayFriends' ? 'friends' : ($activeTab === 'showHistory' ? 'history' : 'creations');
@@ -107,5 +109,41 @@ class ProfileController
             $messageError = "Erreur lors de la mise à jour de : " . implode(',', $error);
         }
         $this->showProfile("showProfile", $messageSuccess, $messageError);
+    }
+
+    public function saveNewPicture()
+    {
+        if (!isset($_FILES['avatar']) || $_FILES['avatar']['error'] !== UPLOAD_ERR_OK) {
+            throw new Exception("Erreur lors de l'upload");
+        }
+
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        $mime = $finfo->file($_FILES['avatar']['tmp_name']);
+
+        $allowed = [
+            'image/jpeg' => 'jpg',
+            'image/png'  => 'png',
+            'image/webp' => 'webp'
+        ];
+
+        if (!array_key_exists($mime, $allowed)) {
+            throw new Exception("Format d'image interdit");
+        }
+
+        $userId = $_SESSION['id'];
+        $extension = $allowed[$mime];
+
+        $filename = "user_{$userId}_" . time() . "." . $extension;
+        $destination = ROOT . "/public/assets/uploads/avatars/" . $filename;
+
+        if (!move_uploaded_file($_FILES['avatar']['tmp_name'], $destination)) {
+            throw new Exception("Impossible de sauvegarder l'image");
+        }
+
+        $pathForDb = "assets/uploads/avatars/" . $filename;
+
+        $this->model->savePicture($pathForDb, $userId);
+        header("Location: ?page=profil");
+        exit;
     }
 }

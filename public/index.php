@@ -149,7 +149,9 @@ switch ($page) {
         require_once ROOT . '/src/controllers/ProfileController.php';
         $controller = new ProfileController();
         if (isset($_GET['action'])) {
-            if ($_GET['action'] === 'displayFriends') {
+            if ($_GET['action'] === 'uploadPicture') {
+                $controller->saveNewPicture();
+            } else if ($_GET['action'] === 'displayFriends') {
                 $controller->showProfile("showFriends");
             } else if ($_GET['action'] === 'showHistory') {
                 $controller->showProfile("showHistory");
