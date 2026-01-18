@@ -6,6 +6,9 @@
         private $model;
 
         public function index() {
+            // Vérifier les droits d'accès admin
+            requireAdmin();
+            
             $db = getDbConnection();
             $this->model = new CategorieModel($db);
             

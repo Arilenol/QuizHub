@@ -8,6 +8,9 @@ class CRUDAuteurController
 
     public function index()
     {
+        // Vérifier les droits d'accès admin
+        requireAdmin();
+        
         $db = getDbConnection();
         $this->model = new CRUDModel($db);
 

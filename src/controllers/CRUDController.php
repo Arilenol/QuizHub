@@ -8,6 +8,9 @@
         private $model;
 
         public function index(){
+            // Vérifier les droits d'accès admin
+            requireAdmin();
+            
             $db = getDbConnection();
             //constructionBD($db);
             $this->model = new CRUDModel($db);
@@ -26,6 +29,9 @@
             $genre = isset($_GET['genre']) && !empty($_GET['genre']) && htmlspecialchars($_GET['genre']) != 'Tous les genres' ? htmlspecialchars($_GET['genre']) : '';
             $recherche = isset($_GET['search']) && !empty($_GET['search']) ? htmlspecialchars($_GET['search']) : '';
             $authors = [];
+            $quizzes = [];
+            $lessons = [];
+            
             if($recherche_cat != ''){
                 $quiz_correspondants = $this->model->searchQuizByAll($recherche_cat,$recherche_contenu,$recherche,$genre,$tri);
             }else{
@@ -38,6 +44,10 @@
                 } elseif ($filtre === 'quiz') {
                     // recherche par titre de quiz uniquement
                     $quiz_correspondants = $this->model->searchQuizByTitle($recherche,$genre,$tri);
+                } elseif ($filtre === 'lecon') {
+                    // recherche par titre et contenu de leçon
+                    $lessons = $this->model->searchLessonByTitle($recherche,$tri);
+                    $quiz_correspondants = [];
                 } else {
                     // recherche par contenu et auteur si fourni
                     $quiz_correspondants = $this->model->searchQuizByContentAndAuthor($recherche_contenu,$recherche,$genre,$tri);
@@ -51,6 +61,10 @@
                 
                 $quizzes[$index]['likes'] = isset($quiz['likes']) ? (int)$quiz['likes'] : 0;
                 $quizzes[$index]['dislikes'] = isset($quiz['dislikes']) ? (int)$quiz['dislikes'] : 0;
+            }
+            
+            foreach ($lessons as $index => $lesson){
+                $lessons[$index]['categories'] = $this->model->getCategoriesFromLesson($lesson['id']);
             }
             require ROOT . '/src/views/CRUD/CRUDrecherche.php';
         }

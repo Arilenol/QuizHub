@@ -13,7 +13,7 @@ class CRUDQuizModel {
     public function getQuizInfo($quiz_id): mixed {
         try {
             $sql = $this->db->prepare("SELECT quiz.id, quiz.title, quiz.description, quiz.difficulty, 
-                                              quiz.user_id, quiz.date, quiz.genre, COALESCE(l.nbjaime, 0) as nbjaime, COALESCE(d.nbjaimepas, 0) as nbjaimepas 
+                                              quiz.user_id, quiz.date, quiz.genre, quiz.disponibilite, COALESCE(l.nbjaime, 0) as nbjaime, COALESCE(d.nbjaimepas, 0) as nbjaimepas 
                                        FROM quiz 
                                        LEFT JOIN (SELECT quiz_id, COUNT(*) as nbjaime FROM likes GROUP BY quiz_id) l ON l.quiz_id = quiz.id
                                        LEFT JOIN (SELECT quiz_id, COUNT(*) as nbjaimepas FROM dislikes GROUP BY quiz_id) d ON d.quiz_id = quiz.id
@@ -287,6 +287,24 @@ class CRUDQuizModel {
             return $sql->rowCount() > 0;
         } catch(PDOException $e) {
             die("Deleting card failed: " . $e->getMessage());
+        } catch(Exception $e) {
+            die("Error: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Met à jour la disponibilité d'un quiz
+     */
+    public function updateDisponibilite($quiz_id, $disponibilite): bool {
+        try {
+            $sql = $this->db->prepare("UPDATE quiz SET disponibilite = ? WHERE id = ?");
+            $sql->bindParam(1, $disponibilite);
+            $sql->bindParam(2, $quiz_id, PDO::PARAM_INT);
+            $sql->execute();
+
+            return $sql->rowCount() > 0;
+        } catch(PDOException $e) {
+            die("Updating disponibilite failed: " . $e->getMessage());
         } catch(Exception $e) {
             die("Error: " . $e->getMessage());
         }
