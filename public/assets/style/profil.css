@@ -53,7 +53,8 @@ button {
 .deleteQuiz:hover,
 .cancel-btn:hover,
 .danger-btn:hover,
-#closeDeleteModal:hover {
+#closeDeleteModal:hover,
+.deleteFriend:hover {
   background-color: #fff;
   color: #087b86;
   box-shadow: 0px 8px 2px #cacacabf;
@@ -65,14 +66,16 @@ button {
   gap: 1%;
 }
 
-.deleteQuiz {
+.deleteQuiz,
+.deleteFriend {
   background-color: #8e2a2a;
   box-shadow: 0 12px 0 #5e1d1d;
 }
 
 #editQuiz,
 .deleteQuiz,
-#playQuiz {
+#playQuiz,
+.deleteFriend {
   align-content: end;
   margin-bottom: 10%;
   padding-right: 20px;
@@ -164,6 +167,7 @@ button {
   justify-content: center;
   gap: 5%;
   flex-wrap: wrap;
+  row-gap: 20px;
 }
 
 .quiz-card {
@@ -339,7 +343,7 @@ h3 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 3%;
+  padding: 2%;
   padding-right: 5%;
   gap: 5%;
 }
@@ -475,4 +479,8 @@ p.error {
   width: 150px;
   height: 150px;
   border-radius: 100%;
+}
+
+.friend-card button {
+  margin-top: 12%;
 }
