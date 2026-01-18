@@ -107,8 +107,10 @@
             echo '<p class="erreur">Chaque champ doit être rempli<br>Au moins une catégorie doit être sélectionnée</p>';
         } 
     ?>
-    <button class="button" type = "submit" name = "create" value = "yes"><span></span><p>Créer les flashcards</p></button>
+    <button class="button" type = "submit" id = "create" name = "create" value = "yes"><span></span><p>Créer les flashcards</p></button>
 </form>
+<script src="./assets/js/popups.js"></script>
+<script src = "./assets/js/createFlashcard.js"></script>
 <script src = "./assets/js/sauvegardeScroll.js"></script>
 <script src = "./assets/js/selectDispo.js"></script>
 <script src = "./assets/js/createContent.js"></script>
