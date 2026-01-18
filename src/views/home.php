@@ -16,7 +16,7 @@ include 'partials/header.php';
 <?php else: ?>
     <div class="newCreations">
         <?php for ($i = 0; $i < count($quizNextPart); $i++): ?>
-            <article onclick="window.location.href='./?page=<?= $quizNextPart[$i]['genre'] ?>&id=<?= $quizNextPart[$i]['id'] ?> <?= $quizNextPart[$i]['genre'] == 'lesson' ? '&categorie=view' : '' ?>'" <?= $quizNextPart[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?>'" class="quiz">
+            <article onclick="window.location.href='./?page=<?= $quizNextPart[$i]['genre'] ?>&id=<?= $quizNextPart[$i]['id'] ?> <?= $quizNextPart[$i]['genre'] == 'lesson' ? '&categorie=view' : '' ?> <?= $quizNextPart[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?>'" class="quiz">
                 <div class="quiz-cat">
                     <?php if (!empty($quizNextPart[$i]['categories'])): ?>
                         <?php foreach ($quizNextPart[$i]['categories'] as $cat): ?>

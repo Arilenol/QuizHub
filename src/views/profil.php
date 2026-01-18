@@ -120,7 +120,7 @@ require_once 'partials/header.php';
                                     </button>
 
                                     <button id="editQuiz" onclick="window.location.href='?page=<?= $quiz[$i]['genre'] ?>&categorie=modify&id=<?= $quiz[$i]['id'] ?>'"><?= $quiz[$i]['genre'] == 'lesson' ? 'Modifier la leçon' : ' Modifier le quiz' ?></button>
-                                    <button id="playQuiz" onclick="window.location.href='./?page=<?= $quiz[$i]['genre'] ?>&id=<?= $quiz[$i]['id'] ?> <?= $quiz[$i]['genre'] == 'lesson' ? '&categorie=view' : '' ?>'" <?= $quiz[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?>'">Jouer</button>
+                                    <button id="playQuiz" onclick="window.location.href='./?page=<?= $quiz[$i]['genre'] ?>&id=<?= $quiz[$i]['id'] ?> <?= $quiz[$i]['genre'] == 'lesson' ? '&categorie=view' : '' ?> <?= $quiz[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?>'">Jouer</button>
                                 </div>
                                 <div class="quiz-footer">
                                     <p class="quiz-auteur">Par : <span class="author">Vous</span></p>
@@ -148,6 +148,7 @@ require_once 'partials/header.php';
                                             <span class="category"><?= htmlspecialchars($cat) ?></span>
                                         <?php endforeach; ?>
                                     <?php endif; ?>
+                                    <p class="note"> <?= $hist[$i]['note'] !== null ? "Votre note : " . $hist[$i]['note'] : "" ?></p>
                                 </div>
                                 <p class="quiz-genre"><?= htmlspecialchars($hist[$i]['genre'] ?? '') ?></p>
                                 <br>

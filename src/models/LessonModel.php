@@ -456,7 +456,7 @@ class LessonModel
 
             q.id AS quiz_id,
             q.title AS quiz_title,
-            'lesson' as genre,
+            'leçon' as genre,
             q.difficulty,
             q.description AS quiz_description,
 

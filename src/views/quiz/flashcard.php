@@ -16,10 +16,10 @@ require_once '../src/views/partials/header.php';
 			<span></span>
 			<p>← Retour</p>
 		</div>
-		<?php if ($id <= count($_SESSION['remainingQuestions'])) : ?>
+		<?php if ($current <= $total) : ?>
 			<div class="progression">
-				<progress class="progress-container" value="<?= $id ?>" max="<?= count($_SESSION['remainingQuestions']) ?>"></progress>
-				<p><?= $id ?>/<?= count($_SESSION['remainingQuestions']) ?> question(s) réalisée(s)</p>
+				<progress class="progress-container" value="<?= $current ?>" max="<?= $total ?>"></progress>
+				<p><?= $current ?>/<?= $total ?> question(s) réalisée(s)</p>
 			</div>
 		<?php endif; ?>
 		<div class="button signalement" onclick="window.location.href = '?page=signalement'">
