@@ -18,7 +18,65 @@
 </head>
 
 <body>
+    <div id="menu">
+        <form action="index.php" method="GET">
+            <button type="button" class="button" id="closeMenu">
+            <span></span>
+            <img src="assets/images/cross.svg">
+        </button>
+            <div class="input">
+                <span></span>
+                <img src="./assets/images/loupe.svg" alt="Search Icon">
+                <input type="text" name="contenu" placeholder="Rechercher des créations..." value="<?php echo isset($_GET['contenu']) ? htmlspecialchars($_GET['contenu']) : ''; ?>" />
+                <input type="hidden" name="page" value="catalogue">
+                <input type="hidden" name="searchAuthor" value="<?php echo isset($_GET['searchAuthor']) ? $_GET['searchAuthor'] : '' ?>">
+                <input type="hidden" name="categorie" value="<?php echo isset($_GET['categorie']) ? $_GET['categorie'] : '' ?>">
+                <input type="hidden" name="tri" value="<?php echo isset($_GET['tri']) ? $_GET['tri'] : '' ?>">
+                <input type="hidden" name="genre" value="<?php echo isset($_GET['genre']) ? $_GET['genre'] : '' ?>">
+            </div>
+        </form>
+        <div>
+            <?php
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+            ?>
+            <?php if (!isset($_SESSION['id'])): ?>
+                <button class="button" data-action="register">
+                    <span></span>
+                    <p>S'inscrire</p>
+                </button>
+                <button class="button" data-action="login">
+                    <span></span>
+                    <p>Connexion</p>
+                </button>
+            <?php else: ?>
+                <form id="goNotif" action="?page=notification" method="post">
+                    <input type="hidden" name="account" value="<?= htmlspecialchars($_SESSION['id']) ?>">
+                </form>
+                <button class="button notif-btn" data-action="notification"
+                    onclick="document.getElementById('goNotif').submit()">
+                    <span></span>
+                    <p>Notification</p>
+                    <div class="notif-dot"></div>
+                </button>
+                <script src="./assets/js/bellScript.js"></script>
+                <button class="button" data-action="create" onclick="window.location.href='?page=createContent'">
+                    <span></span>
+                    <p>Création</p>
+                </button>
+                <button class="button" data-action="account">
+                    <span></span>
+                    <p>Mon compte</p>
+                </button>
+            <?php endif; ?>
+        </div>
+    </div>
     <header>
+        <button class="button" id="openMenu">
+            <span></span>
+            <img src="assets/images/burger-menu.svg">
+        </button>
         <picture onclick="window.location.href='?page=home'" alt="Logo">
             <source srcset="./assets/images/logo.svg" media="(width >= 1300px)">
             <img src="./assets/images/icon.png">

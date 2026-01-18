@@ -1,48 +1,5 @@
 .catalogue {
-  padding-left: 30px;
-  padding-right: 30px;
-}
-.catalogue button {
-  background-color: #0AB1BD;
-  border-radius: 50px;
-  color: white;
-  border: none;
-  padding: 14px 24px;
-  font-size: 1.05rem;
-  line-height: 1.2;
-  min-height: 46px;
-  cursor: text;
-  outline: none;
-  box-shadow: 0 8px 0 #087b86;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  display: inline-block;
-  vertical-align: middle;
-}
-
-button.retour{
-  cursor: pointer;
-  margin-top: 1%;
-}
-
-button.retour:hover{
-    background-color: #fff;
-  color: #087b86;
-  box-shadow: 0px 8px 2px #CACACABF;
-}
-
-.catalogue button::-moz-placeholder {
-  color: white;
-  opacity: 0.8;
-}
-.catalogue button::placeholder {
-  color: white;
-  opacity: 0.8;
-}
-.catalogue button:focus {
-  background-color: #0AB1BD;
-  color: white;
+  padding: 30px 30px 0 30px;
 }
 .catalogue .search-author {
   margin-top: 20px;

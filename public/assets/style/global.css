@@ -113,6 +113,14 @@ select{
 	transition: background ease-out 0.2s;
 }
 
+.button:disabled,
+.searchbar:has(input:disabled),
+.input:has(input:disabled),
+.flatinput:has(input:disabled),
+.textarea:has(textarea:disabled){
+	filter: grayscale(1);
+}
+
 .button.disabled>span {
 	background: #8b8b8b;
 	box-shadow: 0px 8px 2px #2e2e2ebf;
@@ -132,6 +140,10 @@ select{
 	transition: none;
 	filter: none;
 	transform: none;
+}
+
+.button > p{
+	text-align: center;
 }
 
 .button>p,
@@ -161,26 +173,26 @@ svg {
 	transition: fill ease-in-out 0.2s;
 }
 
-.button:has(span:hover) svg>path {
+.button:not(:disabled):has(span:hover) svg>path {
 	fill: #0AB1BD;
 }
 
-.button:has(span:hover) p {
+.button:not(:disabled):has(span:hover) p {
 	color: #0AB1BD;
 }
 
-.button>span:hover {
+.button:not(:disabled)>span:hover {
 	background-color: #fff;
 	box-shadow: 0px 8px 2px #CACACABF;
 }
 
-.button:has(span:active) {
+.button:not(:disabled):has(span:active) {
 	transition: none;
 	filter: none;
 	transform: translate(0px, 8px);
 }
 
-.button>span:active {
+.button:not(:disabled)>span:active {
 	box-shadow: none !important;
 }
 
@@ -188,8 +200,13 @@ svg {
 	transform: scale(0.8) translate(-11%, 10%);
 }
 
-.checkbox>svg {
+.checkbox > svg {
 	cursor: pointer;
+}
+
+.checkbox:has(input[type="checkbox"]:disabled) > svg {
+	cursor: not-allowed;
+	filter: grayscale(1);
 }
 
 .checkbox>svg rect,
@@ -275,17 +292,6 @@ svg {
 	border-radius: 50px;
 }
 
-.button>span {
-	position: absolute;
-	inset: 0;
-	background: #0AB1BD;
-	border-radius: 50px;
-	cursor: pointer;
-	z-index: 0;
-	box-shadow: 0px 8px 2px #007881BF;
-	transition: background ease-out 0.2s;
-}
-
 .button svg,
 .button .notif-dot {
 	position: relative;
@@ -311,14 +317,92 @@ svg {
 }
 
 /* Hover sur le bouton */
-.button > span:hover {
+.button:not(:disabled) > span:hover {
 	background-color: #fff;
 	box-shadow: 0px 8px 2px #CACACABF;
+}
+
+#menu{
+	display: flex;
+	position: fixed;
+	flex-direction: column;
+	height: 100dvh;
+	width: 100dvw;
+	background-color: #FFC067;
+	z-index: 5;
+	left: -100dvw;
+	transition: left 0.5s ease-in-out;
+}
+
+#menu > div{
+	display: flex;
+    flex-direction: column;
+    gap: 25px;
+    width: 100%;
+    align-items: center;
+}
+
+#menu > form {
+	width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+    align-items: center;
+}
+
+#menu p{
+	font-size: 5vw;
+}
+
+#menu .button{
+	padding: 5vw;
+}
+
+#menu .input{
+    height: 15vw;
+	width: 75vw;
+	max-width: none;
+}
+
+#menu .input > input{
+    font-size: 3.5vw;
+}
+
+#menu > div{
+	margin-top: 20px;
 }
 
 @media (max-width: 1300px){
 	header > picture > img{
 		width: auto;
 		height: 100%;
+	}
+}
+
+@media (max-width: 1060px) {
+	h1{
+		font-size: 7.5vw;
+		margin-bottom: 0px;
+	}
+	header{
+		display: flex;
+		padding: 0 65px 0 15px;
+		height: 75px;
+	}
+	header > form, header > div {
+		display: none;
+	}
+	header > .button{
+		padding: 10px;
+	}
+}
+@media (min-width: 1061px) {
+	header > .button{
+		display: none;
+	}
+	#menu{
+		display: none;
 	}
 }
