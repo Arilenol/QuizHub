@@ -288,7 +288,7 @@ function constructionBD(PDO $conn)
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER,
                 quiz_id INTEGER,
-                score INTEGER,
+                score TEXT,
                 tempsPris INTEGER,
                 dateRealisation DATETIME DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
