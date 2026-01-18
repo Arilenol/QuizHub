@@ -190,6 +190,7 @@ switch ($page) {
         break;
 
     case 'CRUD':
+        require_once ROOT . '/config/config.php';
         require_once ROOT . '/src/controllers/CRUDController.php';
         $controller = new CRUDController();
         $controller->index();
@@ -219,21 +220,25 @@ switch ($page) {
         $controller->index();
         break;
     case 'CRUDquiz':
+        require_once ROOT . '/config/config.php';
         require_once ROOT . '/src/controllers/CRUDQuizController.php';
         $controller = new CRUDQuizController();
         $controller->index();
         break;
     case 'CRUDlesson':
+        require_once ROOT . '/config/config.php';
         require_once ROOT . '/src/controllers/CRUDLessonController.php';
         $controller = new CRUDLessonController();
         $controller->index();
         break;
     case 'CRUDauteur':
+        require_once ROOT . '/config/config.php';
         require_once ROOT . '/src/controllers/CRUDAuteurController.php';
         $controller = new CRUDAuteurController();
         $controller->index();
         break;
     case 'Categorie':
+        require_once ROOT . '/config/config.php';
         require_once ROOT . '/src/controllers/CategorieController.php';
         $controller = new CategorieController();
         $controller->index();

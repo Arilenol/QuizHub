@@ -8,6 +8,9 @@ class CRUDLessonController {
     private $lessonModel;
 
     public function index() {
+        // Vérifier les droits d'accès admin
+        requireAdmin();
+        
         $db = getDbConnection();
         $this->crudModel = new CRUDModel($db);
         $this->lessonModel = new LessonModel($db);

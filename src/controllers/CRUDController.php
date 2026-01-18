@@ -8,6 +8,9 @@
         private $model;
 
         public function index(){
+            // Vérifier les droits d'accès admin
+            requireAdmin();
+            
             $db = getDbConnection();
             //constructionBD($db);
             $this->model = new CRUDModel($db);
