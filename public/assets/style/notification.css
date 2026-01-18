@@ -10,7 +10,8 @@ h1 {
     max-width: 700px;
     margin: auto;
     margin-bottom: 2%;
-    background: white;
+    background: #0AB1BD;
+    color: white;
     border-radius: 12px;
     padding: 25px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -18,7 +19,7 @@ h1 {
 
 .friend-requests .notif{
     display: flex;
-    color: rgb(132, 132, 132);
+    color: rgb(255, 255, 255);
     justify-content: center;
 }
 
@@ -83,7 +84,8 @@ h1 {
     margin: 40px auto;
     padding: 25px;
     border-radius: 12px;
-    background: white;
+    background: #0AB1BD;
+    color: white;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
@@ -105,14 +107,14 @@ form button {
     padding: 12px;
     border-radius: 8px;
     border: none;
-    background: #3f51b5;
+    background: #077780;
     color: white;
     font-size: 16px;
     cursor: pointer;
 }
 
 form button:hover {
-    background: #3548a5;
+    background: #055157;
 }
 
 .retour {

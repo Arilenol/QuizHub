@@ -7,8 +7,9 @@ require_once '../src/views/partials/header.php';
 <div class="quiz-réalisation">
     <div class="buttonAction">
         <?php if (isset($_GET['test'])): ?>
-            <button type="submit" class="retour" form="retourForm">
-                ← Retour
+            <button type="submit" class="button" form="retourForm">
+                <span></span>
+                <p>← Retour</p>
             </button>
 
             <form id="retourForm" method="post" action="?page=test&id=<?= $quizId ?>">
@@ -16,8 +17,9 @@ require_once '../src/views/partials/header.php';
             </form>
 
         <?php else: ?>
-            <button class="retour" onclick="window.location.href='?page=home'">
-                🏠 Accueil
+            <button class="button" onclick="window.location.href='?page=home'">
+                <span></span>
+                <p>🏠 Accueil</p>
             </button>
         <?php endif; ?>
         <?php if (!isset($_GET['test']) && ($idQuestion <= $max)): ?>
@@ -35,7 +37,10 @@ require_once '../src/views/partials/header.php';
         || (($_GET['page']) === 'standard' && (isset($_GET['reponse']) && ($_GET['reponse']) === 'visible'))
     ): ?>
         <?php if (!isset($_GET['test'])) : ?>
-            <button class="retourBis" style="align-self: start; " onclick="history.back()">← Revenir en arrière</button>
+            <button class="button" style="align-self: start; " onclick="history.back()">
+                <span></span>
+                <p>← Revenir en arrière</p>
+            </button>
         <?php endif; ?>
     <?php endif; ?>
     <?php if (empty($question)) : ?>
