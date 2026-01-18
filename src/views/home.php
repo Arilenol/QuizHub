@@ -9,13 +9,17 @@ include 'partials/header.php';
 <div class="newCreations">
     <?php for ($i = 0; $i < count($quiz); $i++): ?>
         <article onclick="window.location.href='./?page=<?= $quiz[$i]['genre'] ?>&id=<?= $quiz[$i]['id'] ?> <?= $quiz[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?>'" class="quiz">
-            <div class="quiz-cat">
-                <?php if (!empty($quiz[$i]['categories'])): ?>
-                    <?php foreach ($quiz[$i]['categories'] as $cat): ?>
-                        <span class="category"><?= htmlspecialchars($cat) ?></span>
-                    <?php endforeach; ?>
-                <?php endif; ?>
+            <div style="display: flex; flex-direction: row; justify-content:space-between">
+                <div class="quiz-cat">
+                    <?php if (!empty($quiz[$i]['categories'])): ?>
+                        <?php foreach ($quiz[$i]['categories'] as $cat): ?>
+                            <span class="category"><?= htmlspecialchars($cat) ?></span>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
+                <button type="button" class="download" value="<?= $quiz[$i]['id'] ?>">Download</button>
             </div>
+            
             <p class="quiz-genre"><?= htmlspecialchars($quiz[$i]['genre'] ?? '') ?></p>
             <br>
             <p class="quiz-title"><?= htmlspecialchars($quiz[$i]['title'] ?? '') ?></p>

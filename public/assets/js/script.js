@@ -6,6 +6,8 @@ window.addEventListener("load", () => {
 
 document.addEventListener("DOMContentLoaded", () => {
     initCheckboxSVG();
+    initHeaderMenu();
+    loadDownloadEvent();
 });
 
 function initCheckboxSVG(){
@@ -34,24 +36,48 @@ function initCheckboxSVG(){
                     circle.setAttribute("cx", 58);
                 }
                 checkbox_image.addEventListener("click", () => {
-                    const isActive = checkbox_image.getAttribute("activated") === "true";
-                    checkbox_image.setAttribute("activated", isActive ? "false" : "true");
-                    checkbox.checked = !isActive;
-                    if(!isActive){
-                        rect.setAttribute("fill", "#0AB1BD");
-                        rect.setAttribute("stroke", "#007881");
-                        circle.setAttribute("cx", 158);
-                    }
-                    else{
-                        rect.setAttribute("fill", "#FFB143");
-                        rect.setAttribute("stroke", "#FF9F17");
-                        circle.setAttribute("cx", 58);
+                    if(!checkbox.disabled){
+                        const isActive = checkbox_image.getAttribute("activated") === "true";
+                        checkbox_image.setAttribute("activated", isActive ? "false" : "true");
+                        checkbox.checked = !isActive;
+                        if(!isActive){
+                            rect.setAttribute("fill", "#0AB1BD");
+                            rect.setAttribute("stroke", "#007881");
+                            circle.setAttribute("cx", 158);
+                        }
+                        else{
+                            rect.setAttribute("fill", "#FFB143");
+                            rect.setAttribute("stroke", "#FF9F17");
+                            circle.setAttribute("cx", 58);
+                        }
                     }
                 });
                 checkboxDiv.appendChild(checkbox_image);
             });
         });
     }
+}
+
+function loadDownloadEvent(){
+    const downloadButton = document.querySelectorAll(".download");
+    downloadButton.forEach(element => {
+        element.addEventListener("click", (e) => {download(e, element.value)});
+    });
+}
+
+function initHeaderMenu(){
+    const openButton = document.querySelector("#openMenu");
+    const closeButton = document.querySelector("#closeMenu");
+    const menu = document.querySelector("#menu");
+
+    openButton.addEventListener("click", () => {
+        menu.style.left = "0px";
+    });
+
+    closeButton.addEventListener("click", () => {
+        menu.style.left = "-100dvw";
+    });
+    
 }
 
 function resetCheckboxSVG() {
@@ -66,7 +92,8 @@ function resetCheckboxSVG() {
     });
 }
 
-download = async function(id){
+async function download(e, id){
+    e.stopPropagation();
     if(id != null){
         const result = await (await fetch("/getFlashcardData.php?id=" + id)).text();
         localforage.setItem(JSON.parse(result)["id"], JSON.parse(result));
