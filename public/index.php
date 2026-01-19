@@ -245,6 +245,7 @@ switch ($page) {
         require_once ROOT . '/src/controllers/PageInterController.php';
         $controller = new PageInterController();
         $controller->index($id,$type);
+        break;
     case 'Categorie':
         require_once ROOT . '/config/config.php';
         require_once ROOT . '/src/controllers/CategorieController.php';
