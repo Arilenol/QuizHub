@@ -121,22 +121,6 @@
   margin-top: 8%;
 }
 
-.signalement {
-  padding: 21px 36px;
-  font-size: 1.575rem;
-  min-height: 69px;
-  margin-right: 1%;
-  margin-top: 1%;
-  background-color: rgb(167, 48, 48);
-  box-shadow: 0 12px 0 rgb(114, 34, 34);
-}
-
-.signalement:hover{
-  color: rgb(167, 48, 48);
-  background-color: white;
-  box-shadow: 0 12px 0 rgb(165, 165, 165);
-}
-
 .info a {
   display: flex;
   justify-self: end;

@@ -74,6 +74,18 @@
   transition: transform 0.08s ease, box-shadow 0.08s ease;
 }
 
+.quiz-réalisation button {
+  border-radius: 75px;
+  background-color: #0AB1BD;
+  color: white;
+  border: none;
+  padding: 21px 36px;
+  font-size: 1.575rem;
+  min-height: 69px;
+  cursor: pointer;
+  box-shadow: 0 12px 0 #087b86;
+}
+
 /* Effet click (checkbox cachée) */
 .réponse input[type='checkbox']:checked+label {
   transform: translateY(9px);
