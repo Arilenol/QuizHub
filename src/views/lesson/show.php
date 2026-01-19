@@ -65,7 +65,7 @@ require_once '../src/views/partials/header.php';
         <p>
             Cette leçon offre un quiz pour vérifier ses connaissances
         </p>
-        <a href="?page=<?= $lesson['genre'] ?>&id=<?= $lesson['quiz_id'] ?> <?= $lesson['genre'] === "flashcard" ? "&action=start" : "" ?>">Cliquez-ici pour commencer</a>
+        <a href="?page=<?= $lesson['genre'] == "test" ? "pageInterQuiz&type=test" : $lesson['genre'] ?>&id=<?= $lesson['quiz_id'] ?> <?= $lesson['genre'] === "flashcard" ? "&action=start" : "" ?>">Cliquez-ici pour commencer</a>
     </div>
 </main>
 
