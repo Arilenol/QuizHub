@@ -12,7 +12,7 @@ require_once '../src/views/partials/header.php';
                 <p>← Retour</p>
             </button>
 
-            <form id="retourForm" method="post" action="?page=test&id=<?= $quizId ?>">
+            <form id="retourForm" method="post" action="?page=pageInterQuiz&id=<?= $quizId ?>&type=test">
                 <input type="hidden" name="idQuestion" value="<?= $max +1 ?>">
             </form>
 
@@ -53,7 +53,7 @@ require_once '../src/views/partials/header.php';
 
             <?php if ($_GET['page'] === 'standard') : ?>
                 <div class="actions-fin">
-                    <button class="button" onclick="window.location.href='?page=standard&id=<?= $quizId ?>'"><span></span>
+                    <button class="button" onclick="window.location.href='?page=pageInterQuiz&id=<?= $quizId ?>&type=standard'"><span></span>
                         <p>Recommencer le quiz</p>
                     </button>
                     <button class="button" onclick="window.location.href='?page=catalogue'"><span></span>

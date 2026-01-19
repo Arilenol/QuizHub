@@ -126,7 +126,7 @@ include 'partials/header.php';
 
 <div class="newCreations">
     <?php for ($i = 0; $i < count($lessons); $i++): ?>
-        <article onclick="window.location.href='./?page=lesson&categorie=view&id=<?= $lessons[$i]['lecon_id'] ?>'" class="quiz">
+        <article onclick="window.location.href='./?page=<?= $quiz[$i]['genre'] == 'standard' || $quiz[$i]['genre'] == 'test' ? 'pageInterQuiz' : $quiz[$i]['genre'] ?>&id=<?= $quiz[$i]['id'] ?> <?= $quiz[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?> <?= $quiz[$i]['genre'] == 'standard' ? '&type=standard' : '' ?> <?= $quiz[$i]['genre'] == 'test' ? '&type=test' : '' ?>'" class="quiz">
             <div class="quiz-cat">
                 <?php if (!empty($lessons[$i]['categories'])): ?>
                     <?php foreach ($lessons[$i]['categories'] as $cat): ?>

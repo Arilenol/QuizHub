@@ -239,6 +239,12 @@ switch ($page) {
         $controller = new CRUDAuteurController();
         $controller->index();
         break;
+    case 'pageInterQuiz':
+        $id = $_GET['id'] ?? null;
+        $type = $_GET['type'] ?? "quiz"; //le type doit nécéssairement être entre "quiz" et "test"
+        require_once ROOT . '/src/controllers/PageInterController.php';
+        $controller = new PageInterController();
+        $controller->index($id,$type);
     case 'Categorie':
         require_once ROOT . '/config/config.php';
         require_once ROOT . '/src/controllers/CategorieController.php';
