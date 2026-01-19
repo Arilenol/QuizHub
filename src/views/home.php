@@ -159,7 +159,7 @@ if (isset($_SESSION['id'])) {
                     endif;
                 ?>
             </div>
-            
+
             <p class="quiz-genre"><?= htmlspecialchars($quiz[$i]['genre'] ?? '') ?></p>
             <br>
             <p class="quiz-title"><?= htmlspecialchars($quiz[$i]['title'] ?? '') ?></p>

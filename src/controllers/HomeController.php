@@ -30,12 +30,14 @@ class HomeController
             $streak = $this->myUpdateStreak($_SESSION['id']);
             $_SESSION['streak'] = $streak;
             $_SESSION['highestStreak'] = $this->model->getLongestStreak($_SESSION['id']);
-            
+
             $friendQuiz = $this->model->getAllCreationsByFriends($_SESSION['id']);
             $quizNextPart = $this->model->getAllCreationsByUser($_SESSION['id']);
             $lessonsByUser = $modelLesson->getAllInfoLessonsByUser($_SESSION['id']);
             if ($lessonsByUser !== false && !empty($lessonsByUser)) {
-                $quizNextPart[] = $lessonsByUser[0];
+                for ($i = 0; $i < count($lessonsByUser); $i++) {
+                    $quizNextPart[] = $lessonsByUser[$i];
+                }
             }
         } else {
             $quizNextPart = $this->model->getAllNewCreations();

@@ -145,7 +145,7 @@ require_once 'partials/header.php';
                                         data-title="<?= htmlspecialchars($quiz[$i]['title']) ?>"
                                         data-genre="<?= $quiz[$i]['genre'] ?>"
                                         data-action="deleteQuiz">
-                                        <?= $quiz[$i]['genre'] == 'lesson' ? 'Supprimer la leçon' : 'Supprimer le quiz' ?>
+                                        <?= $quiz[$i]['genre'] == 'leçon' ? 'Supprimer cette leçon' : 'Supprimer ce quiz' ?>
                                     </button>
 
                                     <button id="editQuiz" onclick="window.location.href='?page=<?= $quiz[$i]['genre'] ?>&categorie=modify&id=<?= $quiz[$i]['id'] ?>'"><?= $quiz[$i]['genre'] == 'lesson' ? 'Modifier la leçon' : ' Modifier le quiz' ?></button>

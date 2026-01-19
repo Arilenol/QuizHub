@@ -44,13 +44,25 @@ class ProfileController
                 $quiz = $modelHome->getAllCreationsByUser($_SESSION['id']);
                 $lessons = $modelLesson->getAllInfoLessonsByUser($_SESSION['id']);
                 if (!empty($lessons) && $lessons[0] !== null) {
-                    $quiz[] = $lessons[0];
+                    for ($i = 0; $i < count($lessons); $i++) {
+                        $quiz[] = $lessons[$i];
+                    }
                 }
             }
             if (isset($_GET['actionType'])) {
-                $test = $this->model->deleteFriend($_SESSION['id'], $_POST['idToDelete']);
-                header("Location: ?page=profil&action=displayFriends");
-                exit;
+                if (isset($_POST['genre'])) {
+                    if ($_POST['genre'] === 'lesson') {
+                        $this->model->deleteLesson($_POST['idToDelete']);
+                    } else {
+                        $this->model->deleteQuiz($_POST['idToDelete']);
+                    }
+                    header("Location: ?page=profil");
+                    exit;
+                } else {
+                    $test = $this->model->deleteFriend($_SESSION['id'], $_POST['idToDelete']);
+                    header("Location: ?page=profil&action=displayFriends");
+                    exit;
+                }
             }
             $activeTab = $_GET['action'] ?? 'creations';
             $activeTab = $activeTab === 'displayFriends' ? 'friends' : ($activeTab === 'showHistory' ? 'history' : 'creations');

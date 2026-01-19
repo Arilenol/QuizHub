@@ -63,8 +63,18 @@ document.querySelectorAll('.deleteQuiz').forEach(btn => {
   btn.addEventListener('click', e => {
     e.preventDefault()
 
-    quizIdToDelete = btn.dataset.id
-    quizGenreToDelete = btn.dataset.genre
+    const form = document.querySelector('#deleteModal form')
+    let input = document.createElement('input')
+    input.type = 'hidden'
+    input.name = 'idToDelete'
+    input.value = btn.dataset.id
+    form.appendChild(input)
+
+    let inputBis = document.createElement('input')
+    inputBis.type = 'hidden'
+    inputBis.name = 'genre'
+    inputBis.value = btn.dataset.genre
+    form.appendChild(inputBis)
 
     deleteText.innerHTML = `Voulez-vous vraiment supprimer : <strong>${btn.dataset.title}</strong> ?`
 
@@ -91,13 +101,13 @@ const avatarInput = document.getElementById('avatarInput');
 const form = document.getElementById('avatarForm');
 
 uploadBtn.addEventListener('click', () => {
-    avatarInput.click();
+  avatarInput.click();
 });
 
 // Quand un fichier est choisi → envoyer le formulaire
 avatarInput.addEventListener('change', () => {
-    if (avatarInput.files.length > 0) {
-        form.submit();
-    }
+  if (avatarInput.files.length > 0) {
+    form.submit();
+  }
 });
 
