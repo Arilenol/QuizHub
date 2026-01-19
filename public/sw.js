@@ -1,4 +1,4 @@
-const PREFIX = "V2";
+const PREFIX = "V1";
 const BASE = location.protocol + "//" + location.host;
 const CACHED_FILES = [
     `${BASE}/offline/index.html`,
@@ -7,6 +7,7 @@ const CACHED_FILES = [
     `${BASE}/offline/offline.css`,
     `${BASE}/offline/offline.js`,
     `${BASE}/offline/logo.svg`,
+    `${BASE}/offline/icon.png`,
     "https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.js"
 ]
 
