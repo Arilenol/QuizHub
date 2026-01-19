@@ -1,9 +1,11 @@
 <?php
 require_once ROOT . '/src/models/CRUDQuizModel.php';
+require_once ROOT . '/src/models/NotificationModel.php';
 require_once ROOT . '/config/config.php';
 
 class CRUDQuizController {
     private $model;
+    private $notificationModel;
 
     public function index() {
         // Vérifier les droits d'accès admin
@@ -11,6 +13,7 @@ class CRUDQuizController {
         
         $db = getDbConnection();
         $this->model = new CRUDQuizModel($db);
+        $this->notificationModel = new NotificationModel($db);
 
         // Récupérer l'ID du quiz depuis les paramètres GET
         $quiz_id = isset($_GET['id']) && !empty($_GET['id']) ? (int)$_GET['id'] : 0;
@@ -43,6 +46,16 @@ class CRUDQuizController {
                 } elseif ($_POST['action'] === 'update_disponibilite') {
                     $disponibilite = $_POST['disponibilite'];
                     $this->model->updateDisponibilite($quiz_id, $disponibilite);
+                    
+                    // Envoyer une notification à l'auteur
+                    $this->notificationModel->createNotification(
+                        $quiz['user_id'],
+                        'disponibilite_change',
+                        "La disponibilité du quiz '{$quiz['title']}' a été modifiée en: {$disponibilite}",
+                        $quiz_id,
+                        'quiz'
+                    );
+                    
                     header("Location: ?page=CRUDquiz&id=$quiz_id");
                     exit;
                 } elseif ($_POST['action'] === 'update_question') {

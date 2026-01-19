@@ -14,11 +14,13 @@ class NotificationController
         }
         $db = getDbConnection();
         $this->model = new NotificationModel($db);
+
     }
 
     public function index()
     {
         $allFriendRequests = $this->model->getFriendRequestsReceived($_SESSION['id']);
+        $notifications = $this->model->getNotifications($_SESSION['id']);
         require ROOT . '/src/views/notification.php';
     }
 
@@ -30,8 +32,7 @@ class NotificationController
             return;
         }
         $message = $this->model->createFriendRequest($email);
-        $allFriendRequests = $this->model->getFriendRequestsReceived($_SESSION['id']);
-        require ROOT . '/src/views/notification.php';
+        $allFriendRequests = $this->model->getFriendRequestsReceived($_SESSION['id']);        $notifications = $this->model->getNotifications($_SESSION['id']);        require ROOT . '/src/views/notification.php';
     }
 
     public function addFriendRequest(string|int $id): void
@@ -50,10 +51,16 @@ class NotificationController
         exit;
     }
 
+    public function deleteNotification(string|int $notif_id): void
+    {
+        $this->model->deleteNotification($notif_id, $_SESSION['id']);
+        $this->index();
+    }
+
     public function fetch()
     {
         $notifications = $this->model->getFriendRequestsReceived($_SESSION['id']);
         // pour que le JS puisse récupérer
-        echo json_encode($notifications); 
+        echo json_encode($notifications);
     }
 }

@@ -18,6 +18,9 @@ function constructionBD(PDO $conn)
         $sql = "DROP TABLE IF EXISTS demandeAmi;";
         $conn->exec($sql);
 
+        $sql = "DROP TABLE IF EXISTS notifications;";
+        $conn->exec($sql);
+
         $sql = "DROP TABLE IF EXISTS amiDisponibilite;";
         $conn->exec($sql);
 
@@ -120,6 +123,21 @@ function constructionBD(PDO $conn)
                 FOREIGN KEY (demandeur_id) REFERENCES users(id) ON DELETE CASCADE,
                 FOREIGN KEY (receveur_id) REFERENCES users(id) ON DELETE CASCADE,
                 UNIQUE(demandeur_id, receveur_id)
+            );";
+
+        $conn->exec($sql);
+
+        $sql = "CREATE TABLE IF NOT EXISTS notifications(
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                type TEXT NOT NULL,
+                message TEXT NOT NULL,
+                contenu_id INTEGER,
+                contenu_type TEXT,
+                date_creation DATETIME DEFAULT CURRENT_TIMESTAMP,
+                is_read BOOLEAN DEFAULT 0,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+                CHECK (contenu_type IN ('quiz','lesson'))
             );";
 
         $conn->exec($sql);

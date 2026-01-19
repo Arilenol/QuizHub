@@ -202,6 +202,10 @@ switch ($page) {
         $controller = new NotificationController();
         if (isset($_GET['email'])) {
             $controller->sendRequest($_GET['email']);
+        } elseif (isset($_POST['action'])) {
+            if ($_POST['action'] === 'deleteNotif') {
+                $controller->deleteNotification($_POST['id']);
+            }
         } elseif (isset($_GET['action'])) {
             if ($_GET['action'] === 'add') {
                 $controller->addFriendRequest($_GET['id']);
