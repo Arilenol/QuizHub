@@ -155,4 +155,67 @@ class NotificationModel
 
         return $stmt->execute([$id, $_SESSION['id']]);
     }
+
+    /**
+     * Crée une notification pour un utilisateur.
+     *
+     * @param int|string $user_id      ID de l'utilisateur qui reçoit la notification
+     * @param string $type             Type de notification (ex: 'disponibilite_change')
+     * @param string $message          Message de la notification
+     * @param int|string $contenu_id   ID du contenu (quiz ou leçon)
+     * @param string $contenu_type     Type du contenu ('quiz' ou 'lesson')
+     *
+     * @return bool  True si la notification a été créée, false sinon
+     */
+    public function createNotification(int|string $user_id, string $type, string $message, int|string $contenu_id = null, string $contenu_type = null): bool
+    {
+        $stmt = $this->db->prepare("
+        INSERT INTO notifications (user_id, type, message, contenu_id, contenu_type)
+        VALUES (:user_id, :type, :message, :contenu_id, :contenu_type)
+    ");
+
+        return $stmt->execute([
+            ':user_id'      => $user_id,
+            ':type'         => $type,
+            ':message'      => $message,
+            ':contenu_id'   => $contenu_id,
+            ':contenu_type' => $contenu_type
+        ]);
+    }
+
+    /**
+     * Récupère toutes les notifications d'un utilisateur.
+     *
+     * @param int|string $user_id  ID de l'utilisateur
+     *
+     * @return array  Tableau des notifications non lues
+     */
+    public function getNotifications(int|string $user_id): array
+    {
+        $stmt = $this->db->prepare("
+        SELECT * FROM notifications
+        WHERE user_id = ? AND is_read = 0
+        ORDER BY date_creation DESC
+    ");
+        $stmt->execute([$user_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Supprime une notification.
+     *
+     * @param int|string $notification_id  ID de la notification à supprimer
+     * @param int|string $user_id          ID de l'utilisateur (pour vérifier les droits)
+     *
+     * @return bool  True si la notification a été supprimée, false sinon
+     */
+    public function deleteNotification(int|string $notification_id, int|string $user_id): bool
+    {
+        $stmt = $this->db->prepare("
+        DELETE FROM notifications
+        WHERE id = ? AND user_id = ?
+    ");
+
+        return $stmt->execute([$notification_id, $user_id]);
+    }
 }
