@@ -24,6 +24,12 @@ class ProfileController
             $creation = $this->model->getQuizCreated($_SESSION['id']);
             $played = $this->model->getGamesNumber($_SESSION['id']);
             $lessonCreated = $this->model->getLessonsCreated($_SESSION['id']);
+            if ($option === 'showProfile') {
+                $showProfileModal = true;
+                $messageSuccess = $optionSuccess;
+                $messageError = $optionError;
+                $option = null;
+            }
             if ($option !== null && $option === "showFriends") {
                 $friends = $this->model->getFriends($_SESSION['id']);
             }
@@ -40,11 +46,6 @@ class ProfileController
                 if (!empty($lessons) && $lessons[0] !== null) {
                     $quiz[] = $lessons[0];
                 }
-            }
-            if ($option === 'showProfile') {
-                $showProfileModal = true;
-                $messageSuccess = $optionSuccess;
-                $messageError = $optionError;
             }
             if (isset($_GET['actionType'])) {
                 $test = $this->model->deleteFriend($_SESSION['id'], $_POST['idToDelete']);
@@ -92,11 +93,17 @@ class ProfileController
         }
         if (!empty($_POST['password'])) {
             if ($_POST['passwordVerif'] === $_POST['password']) {
-                $success = $this->model->savePassword($_POST['password'], $_SESSION['id']);
-                if ($success) {
-                    $saver[] = 'Mot de passe';
+                $pattern = '/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/';
+                $password = $_POST['password'] ?? '';
+                if (!preg_match($pattern, $password)) {
+                    $error[] = "Le mot de passe doit contenir au moins 8 caractères, une lettre et un chiffre";
                 } else {
-                    $error[] = "Mot de passe";
+                    $success = $this->model->savePassword($_POST['password'], $_SESSION['id']);
+                    if ($success) {
+                        $saver[] = 'Mot de passe';
+                    } else {
+                        $error[] = "Mot de passe";
+                    }
                 }
             } else {
                 $error[] = "Vous avez donné différents mot de passe";

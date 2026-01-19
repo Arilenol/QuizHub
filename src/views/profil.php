@@ -240,6 +240,8 @@ require_once 'partials/header.php';
                                     <label for="password">Nouveau mot de passe</label>
                                     <div class="input-wrapper">
                                         <input type="password" name="password" id="password" autocomplete="on"
+                                            pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
+                                            title="Le mot de passe doit contenir au moins 8 caractères, une lettre et un chiffre"
                                             placeholder="Laisser vide pour ne pas changer">
                                         <i id="eyeMdp" class="fa-solid fa-eye"></i>
                                     </div>
@@ -261,6 +263,9 @@ require_once 'partials/header.php';
                         </div>
                     </div>
                     <?php if (!empty($showProfileModal)) : ?>
+                        <script>
+                            document.getElementById('profileModal').style.display = 'flex';
+                        </script>
                     <?php endif; ?>
 
                     <div class="modal-overlay" id="deleteModal">

@@ -51,6 +51,16 @@
                             <button type="submit">Modifier Quiz</button>
                             <button type="button" onclick="if(confirm('Supprimer ce quiz ?')) { document.getElementById('delete-form').submit(); }">Supprimer Quiz</button>
                         </div>
+
+                        <div class="quiz-disponibilite" style="margin-top: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 5px; background-color: #f9f9f9;">
+                            <p style="font-weight: bold; margin-bottom: 10px;">Mode de publication :</p>
+                            <select name="disponibilite" required style="padding: 5px; font-size: inherit;">
+                                <option value="public" <?= ($quiz['disponibilite'] ?? '') === 'public' ? 'selected' : '' ?>>Publique</option>
+                                <option value="ami" <?= ($quiz['disponibilite'] ?? '') === 'ami' ? 'selected' : '' ?>>Seulement les amis</option>
+                                <option value="private" <?= ($quiz['disponibilite'] ?? '') === 'private' ? 'selected' : '' ?>>Privé</option>
+                            </select>
+                            <button type="submit" name="action" value="update_disponibilite" style="margin-top: 10px; margin-left: 10px;">Mettre à jour la disponibilité</button>
+                        </div>
                     </form>
                     <form id="delete-form" method="POST" action="" style="display: none;">
                         <input type="hidden" name="action" value="delete_quiz">
@@ -108,6 +118,38 @@
                 <?php endforeach; ?>
             <?php else: ?>
                 <p class="no-questions">Aucune question trouvée pour ce quiz</p>
+            <?php endif; ?>
+
+            <?php if (!empty($flashcardCards)): ?>
+                <!-- Liste des cartes flashcard -->
+                <h2>Cartes de la flashcard (<?= count($flashcardCards) ?>)</h2>
+                
+                <?php foreach ($flashcardCards as $card): ?>
+                    <div id="card-<?= htmlspecialchars($card['id']) ?>" class="question-card">
+                        <form method="POST" action="" style="display: inline;">
+                            <input type="hidden" name="action" value="update_card">
+                            <input type="hidden" name="card_id" value="<?= htmlspecialchars($card['id']) ?>">
+                            <h3>Carte <?= htmlspecialchars($card['numeroCarte']) ?></h3>
+                            
+                            <div style="margin: 10px 0;">
+                                <label style="display: block; margin-bottom: 5px;"><strong>Question :</strong></label>
+                                <textarea name="question" required style="width: 100%; border: 1px solid #ccc; padding: 5px; font-size: inherit; min-height: 60px;"><?= htmlspecialchars($card['question']) ?></textarea>
+                            </div>
+                            
+                            <div style="margin: 10px 0;">
+                                <label style="display: block; margin-bottom: 5px;"><strong>Réponse :</strong></label>
+                                <textarea name="reponse" required style="width: 100%; border: 1px solid #ccc; padding: 5px; font-size: inherit; min-height: 60px;"><?= htmlspecialchars($card['reponse']) ?></textarea>
+                            </div>
+                            
+                            <button type="submit" style="margin-top: 10px;">Modifier</button>
+                        </form>
+                        <button type="button" onclick="if(confirm('Supprimer cette carte ?')) { document.getElementById('delete-card-<?= $card['id'] ?>').submit(); }" style="margin-left: 10px;">Supprimer Carte</button>
+                        <form id="delete-card-<?= $card['id'] ?>" method="POST" action="" style="display: none;">
+                            <input type="hidden" name="action" value="delete_card">
+                            <input type="hidden" name="card_id" value="<?= htmlspecialchars($card['id']) ?>">
+                        </form>
+                    </div>
+                <?php endforeach; ?>
             <?php endif; ?>
         </div>
     </div>

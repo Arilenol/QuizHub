@@ -18,7 +18,65 @@
 </head>
 
 <body>
+    <div id="menu">
+        <form action="index.php" method="GET">
+            <button type="button" class="button" id="closeMenu">
+                <span></span>
+                <img src="assets/images/cross.svg">
+            </button>
+            <div class="input">
+                <span></span>
+                <img src="./assets/images/loupe.svg" alt="Search Icon">
+                <input type="text" name="contenu" placeholder="Rechercher des créations..." value="<?php echo isset($_GET['contenu']) ? htmlspecialchars($_GET['contenu']) : ''; ?>" />
+                <input type="hidden" name="page" value="catalogue">
+                <input type="hidden" name="searchAuthor" value="<?php echo isset($_GET['searchAuthor']) ? $_GET['searchAuthor'] : '' ?>">
+                <input type="hidden" name="categorie" value="<?php echo isset($_GET['categorie']) ? $_GET['categorie'] : '' ?>">
+                <input type="hidden" name="tri" value="<?php echo isset($_GET['tri']) ? $_GET['tri'] : '' ?>">
+                <input type="hidden" name="genre" value="<?php echo isset($_GET['genre']) ? $_GET['genre'] : '' ?>">
+            </div>
+        </form>
+        <div>
+            <?php
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+            ?>
+            <?php if (!isset($_SESSION['id'])): ?>
+                <button class="button" data-action="register">
+                    <span></span>
+                    <p>S'inscrire</p>
+                </button>
+                <button class="button" data-action="login">
+                    <span></span>
+                    <p>Connexion</p>
+                </button>
+            <?php else: ?>
+                <form id="goNotif" action="?page=notification" method="post">
+                    <input type="hidden" name="account" value="<?= htmlspecialchars($_SESSION['id']) ?>">
+                </form>
+                <button class="button notif-btn" data-action="notification"
+                    onclick="document.getElementById('goNotif').submit()">
+                    <span></span>
+                    <p>Notification</p>
+                    <div class="notif-dot"></div>
+                </button>
+                <script src="./assets/js/bellScript.js"></script>
+                <button class="button" data-action="create" onclick="window.location.href='?page=createContent'">
+                    <span></span>
+                    <p>Création</p>
+                </button>
+                <button class="button" data-action="account">
+                    <span></span>
+                    <p>Mon compte</p>
+                </button>
+            <?php endif; ?>
+        </div>
+    </div>
     <header>
+        <button class="button" id="openMenu">
+            <span></span>
+            <img src="assets/images/burger-menu.svg">
+        </button>
         <picture onclick="window.location.href='?page=home'" alt="Logo">
             <source srcset="./assets/images/logo.svg" media="(width >= 1300px)">
             <img src="./assets/images/icon.png">
@@ -153,72 +211,72 @@
 
                 <div class="title">
                     <h2 id="hStreak"><svg width="70" height="70" viewBox="0 0 60 60" id="Layer_1" version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                        <style type="text/css">
-                            .st0 {
-                                fill: #B4E6DD;
-                            }
+                            <style type="text/css">
+                                .st0 {
+                                    fill: #B4E6DD;
+                                }
 
-                            .st1 {
-                                fill: #80D4C4;
-                            }
+                                .st1 {
+                                    fill: #80D4C4;
+                                }
 
-                            .st2 {
-                                fill: #D2F0EA;
-                            }
+                                .st2 {
+                                    fill: #D2F0EA;
+                                }
 
-                            .st3 {
-                                fill: #FFFFFF;
-                            }
+                                .st3 {
+                                    fill: #FFFFFF;
+                                }
 
-                            .st4 {
-                                fill: #FBD872;
-                            }
+                                .st4 {
+                                    fill: #FBD872;
+                                }
 
-                            .st5 {
-                                fill: #DB7767;
-                            }
+                                .st5 {
+                                    fill: #DB7767;
+                                }
 
-                            .st6 {
-                                fill: #F38E7A;
-                            }
+                                .st6 {
+                                    fill: #F38E7A;
+                                }
 
-                            .st7 {
-                                fill: #F6AF62;
-                            }
+                                .st7 {
+                                    fill: #F6AF62;
+                                }
 
-                            .st8 {
-                                fill: #32A48E;
-                            }
+                                .st8 {
+                                    fill: #32A48E;
+                                }
 
-                            .st9 {
-                                fill: #A38FD8;
-                            }
+                                .st9 {
+                                    fill: #A38FD8;
+                                }
 
-                            .st10 {
-                                fill: #7C64BD;
-                            }
+                                .st10 {
+                                    fill: #7C64BD;
+                                }
 
-                            .st11 {
-                                fill: #EAA157;
-                            }
+                                .st11 {
+                                    fill: #EAA157;
+                                }
 
-                            .st12 {
-                                fill: #9681CF;
-                            }
+                                .st12 {
+                                    fill: #9681CF;
+                                }
 
-                            .st13 {
-                                fill: #F9C46A;
-                            }
+                                .st13 {
+                                    fill: #F9C46A;
+                                }
 
-                            .st14 {
-                                fill: #CE6B61;
-                            }
-                        </style>
-                        <g>
-                            <path class="st7" d="M21.04,20.63c0,0-1.79,8.99-0.96,11.47c0,0,1.1-13.6,11.67-24.1c0,0-0.34,8.79,5.15,13.25s6.73,11.4,6.73,11.4   s0.62-4.74-1.24-12.33c0,0,11.67,12.12,6.32,25.65c0,0-6.45,14.9-24.92,8.38S17.74,22.97,21.04,20.63z" />
-                            <path class="st4" d="M40.75,32.12c0.17,3.81-1.55,4.81-2.94,5.01c-0.89,0.13-1.79-0.1-2.57-0.53c-7.65-4.15-3.72-14.29-3.72-14.29   c-5.01,4.79-2.4,14.74-2.4,14.74s1.55,5.64-1.62,6.13c-1.59,0.25-2.33-0.39-2.67-1.08c-0.31-0.64-0.31-1.39-0.04-2.05   c2.15-5.34,0.31-8.36,0.31-8.36c-1.03,3.06-2.12,5.08-2.91,6.29c-1.12,1.72-1.83,3.68-1.93,5.73C19.9,51.35,26.3,54.4,26.3,54.4   c10.51,5.36,15.23-4.44,15.23-4.44C46.96,39.52,40.75,32.12,40.75,32.12z" />
-                        </g>
-                    </svg>Vos streak(s)</h2>
+                                .st14 {
+                                    fill: #CE6B61;
+                                }
+                            </style>
+                            <g>
+                                <path class="st7" d="M21.04,20.63c0,0-1.79,8.99-0.96,11.47c0,0,1.1-13.6,11.67-24.1c0,0-0.34,8.79,5.15,13.25s6.73,11.4,6.73,11.4   s0.62-4.74-1.24-12.33c0,0,11.67,12.12,6.32,25.65c0,0-6.45,14.9-24.92,8.38S17.74,22.97,21.04,20.63z" />
+                                <path class="st4" d="M40.75,32.12c0.17,3.81-1.55,4.81-2.94,5.01c-0.89,0.13-1.79-0.1-2.57-0.53c-7.65-4.15-3.72-14.29-3.72-14.29   c-5.01,4.79-2.4,14.74-2.4,14.74s1.55,5.64-1.62,6.13c-1.59,0.25-2.33-0.39-2.67-1.08c-0.31-0.64-0.31-1.39-0.04-2.05   c2.15-5.34,0.31-8.36,0.31-8.36c-1.03,3.06-2.12,5.08-2.91,6.29c-1.12,1.72-1.83,3.68-1.93,5.73C19.9,51.35,26.3,54.4,26.3,54.4   c10.51,5.36,15.23-4.44,15.23-4.44C46.96,39.52,40.75,32.12,40.75,32.12z" />
+                            </g>
+                        </svg>Vos streak(s)</h2>
                 </div>
 
                 <div class="streakContent">

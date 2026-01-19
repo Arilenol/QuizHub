@@ -24,7 +24,7 @@ switch ($page) {
 
 
     case 'catalogue':
-        require_once ROOT . '/src/controllers/catalogueController.php';
+        require_once ROOT . '/src/controllers/CatalogueController.php';
         $controller = new CatalogueController();
         // va charger views/catalogue.php
         $controller->index();
@@ -192,6 +192,7 @@ switch ($page) {
         break;
 
     case 'CRUD':
+        require_once ROOT . '/config/config.php';
         require_once ROOT . '/src/controllers/CRUDController.php';
         $controller = new CRUDController();
         $controller->index();
@@ -221,11 +222,19 @@ switch ($page) {
         $controller->index();
         break;
     case 'CRUDquiz':
+        require_once ROOT . '/config/config.php';
         require_once ROOT . '/src/controllers/CRUDQuizController.php';
         $controller = new CRUDQuizController();
         $controller->index();
         break;
+    case 'CRUDlesson':
+        require_once ROOT . '/config/config.php';
+        require_once ROOT . '/src/controllers/CRUDLessonController.php';
+        $controller = new CRUDLessonController();
+        $controller->index();
+        break;
     case 'CRUDauteur':
+        require_once ROOT . '/config/config.php';
         require_once ROOT . '/src/controllers/CRUDAuteurController.php';
         $controller = new CRUDAuteurController();
         $controller->index();
@@ -236,6 +245,11 @@ switch ($page) {
         require_once ROOT . '/src/controllers/PageInterController.php';
         $controller = new PageInterController();
         $controller->index($id,$type);
+    case 'Categorie':
+        require_once ROOT . '/config/config.php';
+        require_once ROOT . '/src/controllers/CategorieController.php';
+        $controller = new CategorieController();
+        $controller->index();
         break;
     default:
         echo "404 - Page non trouvée";
