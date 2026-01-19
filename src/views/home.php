@@ -4,6 +4,26 @@ $style = './assets/style/home.css';
 include 'partials/header.php';
 ?>
 
+<?php 
+// Vérifier si l'utilisateur est admin
+$isAdmin = false;
+if (isset($_SESSION['id'])) {
+    require_once ROOT . '/config/config.php';
+    $db = getDbConnection();
+    $stmt = $db->prepare("SELECT admin FROM users WHERE id = ?");
+    $stmt->execute([$_SESSION['id']]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    $isAdmin = $user && (int)$user['admin'] === 1;
+}
+?>
+
+<?php if ($isAdmin): ?>
+    <div style="margin-bottom: 30px;">
+        <a href="./?page=CRUD" class="admin-button" style="display: inline-block; padding: 12px 24px; background-color: #ff6b6b; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px; border: none; cursor: pointer; transition: background-color 0.3s;">
+            Accès au CRUD
+        </a>
+    </div>
+<?php endif; ?>
 
 <?php if (isset($_SESSION['id']) && !empty($_SESSION['id'])): ?>
     <h1>Vos créations</h1>
