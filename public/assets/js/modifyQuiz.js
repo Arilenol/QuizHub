@@ -432,7 +432,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    const modifParams = document.querySelector("#modifParam");
+    /*const modifParams = document.querySelector("#modifParam");
 
     modifParams.addEventListener("click", (ev) => {
         if (!modif){
@@ -496,9 +496,10 @@ document.addEventListener("DOMContentLoaded", () => {
             popupAvertissement("Veuillez terminer la modification en cours avant d'en effectuer une autre.");
         }
 
-    });
+    });*/
     const modifTest = document.querySelector("#modifTest");
     modifTest.addEventListener("click", (ev) => {
+        alert("serieux ?")
         if (!modif){
             modif = true;
             ev.preventDefault();
@@ -514,7 +515,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 modifTest.closest("h2").textContent = "Test ";
             }
 
-
+            alert("puatin 1 !")
             const formData = new FormData();
             formData.append("changerGenre", 1);
             if (genreTest.checked){
@@ -523,7 +524,7 @@ document.addEventListener("DOMContentLoaded", () => {
             else{
                 formData.append("genre", "standard");
             }
-            
+            alert("putain !");
             fetch(URL, {
                 method: "POST",
                 body: formData
