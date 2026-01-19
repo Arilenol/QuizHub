@@ -97,8 +97,8 @@
             <input type="checkbox" id = "<?=  'param'.$tabParametres[0]['name'] ?>" name=" <?=  'param'.$tabParametres[0]['name'] ?>" <?= $TAB_PARAM[0] ?> hidden/>
         </div>
     </div>
-    <h2>Paramètres</h2>
-    <div class = "parametres">
+    <h2 hidden>Paramètres</h2>
+    <div class = "parametres" hidden>
         <?php
             foreach (array_slice($tabParametres,1) as $indice => $param){
                 

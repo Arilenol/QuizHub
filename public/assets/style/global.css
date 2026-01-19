@@ -171,12 +171,13 @@ svg {
   fill: white;
 }
 
-.button>svg>path {
-  transition: fill ease-in-out 0.2s;
+.button > svg > path {
+  transition: fill ease-in-out 0.2s, stroke ease-in-out 0.2s;
 }
 
 .button:not(:disabled):has(span:hover) svg>path {
-  fill: #0AB1BD;
+	fill: #0AB1BD;
+  stroke: #0AB1BD;
 }
 
 .button:not(:disabled):has(span:hover) p {
@@ -454,34 +455,91 @@ svg {
   }
 }
 
-@media (max-width: 1060px) {
-  h1 {
-    font-size: 7.5vw;
-    margin-bottom: 0px;
-  }
-
-  header {
-    display: flex;
-    padding: 0 65px 0 15px;
-    height: 75px;
-  }
-
-  header>form,
-  header>div {
-    display: none;
-  }
-
-  header>.button {
-    padding: 10px;
-  }
+@media (max-width: 600px) {
+	h1{
+		font-size: 7.5vw;
+	}
 }
 
-@media (min-width: 1061px) {
-  header>.button {
-    display: none;
-  }
+@media (min-width: 601px) and (max-width: 1350px) {
+	h1{
+		font-size: 3.5vw;
+		margin-bottom: 0px;
+	}
+}
 
   #menu {
     display: none;
   }
+
+
+.categoriesList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: flex-start;
+  margin: 25px 0;
+}
+
+.categoriesList label {
+  position: relative;
+  padding: 14px 28px;
+  background-color: #0ab1bd;
+  color: white;
+  font-size: 18px;
+  border-radius: 50px;
+  box-shadow: 0px 8px 2px #007881bf;
+  cursor: default;
+  user-select: none;
+  transition:
+    transform 0.1s ease-in-out,
+    box-shadow 0.1s ease-in-out,
+    filter 0.1s ease-in-out;
+}
+
+.categoriesList input[type="checkbox"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.categoriesList label:has(input:checked) {
+  transform: translateY(8px);
+  box-shadow: none;
+  filter: brightness(0.85);
+}
+
+.categoriesList label:has(input:disabled) {
+  filter: grayscale(1);
+  cursor: not-allowed;
+}
+
+@media (max-width: 800px) {
+  .categoriesList label {
+    font-size: 4vw;
+    padding: 3vw 6vw;
+  }
+}
+
+@media (max-width: 1350px) {
+	header{
+		display: flex;
+		padding: 0 65px 0 15px;
+		height: 75px;
+	}
+	header > form, header > div {
+		display: none;
+	}
+	header > .button{
+		padding: 10px;
+	}
+}
+@media (min-width: 1349px) {
+	header > .button{
+		display: none;
+	}
+	#menu{
+		display: none;
+	}
 }

@@ -33,7 +33,7 @@ include 'partials/header.php';
 
 <div class="friend-requests">
     <h2>Notifications reçues</h2>
-    <?php if (!isset($notifications)): ?>
+    <?php if (!isset($notifications) || empty($notifications)): ?>
 
         <p class="notif">Aucune notification reçue</p>
 
@@ -41,15 +41,14 @@ include 'partials/header.php';
         <?php foreach ($notifications as $notif) : ?>
             <div class="request">
                 <div class="request-info">
-                    <div class="avatar"><?= $friend['username'][0] ?></div>
                     <div>
-                        <strong><?= $friend['username'] ?></strong><br>
-                        <small><?= $friend['email'] ?></small>
+                        <strong><?= htmlspecialchars($notif['type']) ?></strong><br>
+                        <small><?= htmlspecialchars($notif['message']) ?></small><br>
+                        <small style="color: #999;"><?= htmlspecialchars($notif['date_creation']) ?></small>
                     </div>
                 </div>
                 <div class="request-buttons">
-                    <button class="accept" onclick='window.location.href="?page=notification&action=add&id=<?= $friend["id"] ?>"'>Accepter</button>
-                    <button class="reject" onclick='window.location.href="?page=notification&action=delete&id=<?= $friend["id"] ?>"'>Refuser</button>
+                    <button class="reject" onclick='deleteNotification(<?= $notif["id"] ?>)' title="Supprimer">✕</button>
                 </div>
             </div>
         <?php endforeach; ?>
@@ -75,6 +74,29 @@ include 'partials/header.php';
     </form>
 
 </div>
+
+<script>
+function deleteNotification(notifId) {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '';
+    
+    const actionInput = document.createElement('input');
+    actionInput.type = 'hidden';
+    actionInput.name = 'action';
+    actionInput.value = 'deleteNotif';
+    
+    const idInput = document.createElement('input');
+    idInput.type = 'hidden';
+    idInput.name = 'id';
+    idInput.value = notifId;
+    
+    form.appendChild(actionInput);
+    form.appendChild(idInput);
+    document.body.appendChild(form);
+    form.submit();
+}
+</script>
 
 </body>
 
