@@ -283,7 +283,7 @@ class HomeModel
     }
 
 
-    public function getCurrentStreak(int|string $id)
+    public function getCurrentStreak(int|string $id): int
     {
         $stmt = $this->db->prepare("
         SELECT current_streak
@@ -294,7 +294,7 @@ class HomeModel
         $stmt->execute([$id]);
         $valueStreak = $stmt->fetchColumn();
 
-        return intval($valueStreak);
+        return intval($valueStreak ?? 0);
     }
 
     public function getLongestStreak(int|string $id): int
