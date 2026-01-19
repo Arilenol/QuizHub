@@ -17,12 +17,26 @@ include 'partials/header.php';
     <div class="newCreations">
         <?php for ($i = 0; $i < count($quizNextPart); $i++): ?>
             <article onclick="window.location.href='./?page=<?= $quizNextPart[$i]['genre'] ?>&id=<?= $quizNextPart[$i]['id'] ?> <?= $quizNextPart[$i]['genre'] == 'lesson' ? '&categorie=view' : '' ?> <?= $quizNextPart[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?>'" class="quiz">
-                <div class="quiz-cat">
-                    <?php if (!empty($quizNextPart[$i]['categories'])): ?>
-                        <?php foreach ($quizNextPart[$i]['categories'] as $cat): ?>
-                            <span class="category"><?= htmlspecialchars($cat) ?></span>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
+                <div style="display: flex; flex-direction: row; justify-content:space-between">
+                    <div class="quiz-cat">
+                        <?php if (!empty($quizNextPart[$i]['categories'])): ?>
+                            <?php foreach ($quizNextPart[$i]['categories'] as $cat): ?>
+                                <span class="category"><?= htmlspecialchars($cat) ?></span>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </div>
+                    <?php
+                        if($quizNextPart[$i]['genre'] == "flashcard"):
+                    ?>
+                        <button type="button" class="button download" style="padding: 10px" value="<?= $quiz[$i]['id'] ?>">
+                            <span></span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                                <path fill="white" d="M13 8V2H7v6H2l8 8l8-8h-5zM0 18h20v2H0v-2z"/>
+                            </svg>
+                        </button>
+                    <?php
+                        endif;
+                    ?>
                 </div>
                 <p class="quiz-genre"><?= htmlspecialchars($quizNextPart[$i]['genre'] ?? '') ?></p>
                 <br>
@@ -53,12 +67,26 @@ include 'partials/header.php';
         <div class="newCreations">
             <?php for ($i = 0; $i < count($friendQuiz); $i++): ?>
                 <article onclick="window.location.href='./?page=<?= $friendQuiz[$i]['genre'] ?>&id=<?= $friendQuiz[$i]['id'] ?> <?= $friendQuiz[$i]['genre'] == 'lesson' ? '&categorie=view' : '' ?>'" <?= $friendQuiz[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?>'" class="quiz">
-                    <div class="quiz-cat">
-                        <?php if (!empty($friendQuiz[$i]['categories'])): ?>
-                            <?php foreach ($friendQuiz[$i]['categories'] as $cat): ?>
-                                <span class="category"><?= htmlspecialchars($cat) ?></span>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
+                    <div style="display: flex; flex-direction: row; justify-content:space-between">
+                        <div class="quiz-cat">
+                            <?php if (!empty($friendQuiz[$i]['categories'])): ?>
+                                <?php foreach ($friendQuiz[$i]['categories'] as $cat): ?>
+                                    <span class="category"><?= htmlspecialchars($cat) ?></span>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </div>
+                        <?php
+                            if($friendQuiz[$i]['genre'] == "flashcard"):
+                        ?>
+                            <button type="button" class="button download" style="padding: 10px" value="<?= $quiz[$i]['id'] ?>">
+                                <span></span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                                    <path fill="white" d="M13 8V2H7v6H2l8 8l8-8h-5zM0 18h20v2H0v-2z"/>
+                                </svg>
+                            </button>
+                        <?php
+                            endif;
+                        ?>
                     </div>
                     <p class="quiz-genre"><?= htmlspecialchars($friendQuiz[$i]['genre'] ?? '') ?></p>
                     <br>
@@ -98,7 +126,18 @@ include 'partials/header.php';
                         <?php endforeach; ?>
                     <?php endif; ?>
                 </div>
-                <button type="button" class="download" value="<?= $quiz[$i]['id'] ?>">Download</button>
+                <?php
+                    if($quiz[$i]['genre'] == "flashcard"):
+                ?>
+                <button type="button" class="button download" style="padding: 10px" value="<?= $quiz[$i]['id'] ?>">
+                    <span></span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                        <path fill="white" d="M13 8V2H7v6H2l8 8l8-8h-5zM0 18h20v2H0v-2z"/>
+                    </svg>
+                </button>
+                <?php
+                    endif;
+                ?>
             </div>
             
             <p class="quiz-genre"><?= htmlspecialchars($quiz[$i]['genre'] ?? '') ?></p>
