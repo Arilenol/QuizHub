@@ -33,7 +33,7 @@ class NotificationModel
         // ");
         // 
         // $stmt2->execute([12, 13]);
-        
+
         // $stmt2 = $this->db->prepare("
         // INSERT INTO demandeAmi (demandeur_id,receveur_id)
         // VALUES (?,?)
@@ -63,38 +63,70 @@ class NotificationModel
      *
      * @return bool  Retourne true si la demande a été créée, false si elle existe déjà ou en cas d'erreur.
      */
-    public function createFriendRequest(string|int $receveurEmail): bool
+    public function createFriendRequest(int|string $receveurEmail): bool
     {
         $fetchId = new LogModel($this->db);
         $receveur = $fetchId->getUserByEmail($receveurEmail);
 
         if ($receveur === false) {
             return false;
-        } if ($_SESSION['id'] === $receveur['id']){
+        }
+
+        // Empêcher l'auto-demande
+        if ($_SESSION['id'] === $receveur['id']) {
             return false;
         }
-        // Vérifie si une demande existe déjà
+
+        // Vérifie si une demande existe déjà (dans les deux sens)
         $checkStmt = $this->db->prepare("
-        SELECT COUNT(*) FROM demandeAmi 
-        WHERE demandeur_id = ? AND receveur_id = ?
-        ");
-        $checkStmt->execute([$_SESSION['id'], $receveur['id']]);
-        $exists = $checkStmt->fetchColumn();
+        SELECT COUNT(*) 
+        FROM demandeAmi
+        WHERE 
+            (demandeur_id = :me AND receveur_id = :other)
+            OR
+            (demandeur_id = :other AND receveur_id = :me)
+    ");
 
-        if ($exists > 0) {
-            // Une demande existe déjà
+        $checkStmt->execute([
+            ':me'    => $_SESSION['id'],
+            ':other' => $receveur['id']
+        ]);
+
+        if ($checkStmt->fetchColumn() > 0) {
             return false;
         }
 
-        // Prépare la requête pour insérer la demande
-        $stmt = $this->db->prepare("
-        INSERT INTO demandeAmi (demandeur_id, receveur_id) 
-        VALUES (?, ?)
-        ");
+        // Vérifie s’ils sont déjà amis
+        $friendCheck = $this->db->prepare("
+        SELECT COUNT(*) 
+        FROM amis
+        WHERE 
+            (user1_id = :me AND user2_id = :other)
+            OR
+            (user1_id = :other AND user2_id = :me)
+    ");
 
-        // Exécute la requête
-        return $stmt->execute([$_SESSION['id'], $receveur['id']]);
+        $friendCheck->execute([
+            ':me'    => $_SESSION['id'],
+            ':other' => $receveur['id']
+        ]);
+
+        if ($friendCheck->fetchColumn() > 0) {
+            return false;
+        }
+
+        // Insérer la demande
+        $stmt = $this->db->prepare("
+        INSERT INTO demandeAmi (demandeur_id, receveur_id)
+        VALUES (:me, :other)
+    ");
+
+        return $stmt->execute([
+            ':me'    => $_SESSION['id'],
+            ':other' => $receveur['id']
+        ]);
     }
+
 
     public function addFriend(string|int $id): bool
     {
@@ -121,6 +153,6 @@ class NotificationModel
         WHERE demandeur_id = ? AND receveur_id = ?
     ");
 
-        return $stmt->execute([$id,$_SESSION['id']]);
+        return $stmt->execute([$id, $_SESSION['id']]);
     }
 }

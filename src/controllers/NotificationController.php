@@ -54,6 +54,6 @@ class NotificationController
     {
         $notifications = $this->model->getFriendRequestsReceived($_SESSION['id']);
         // pour que le JS puisse récupérer
-        echo json_encode($notifications); 
+        echo json_encode($notifications);
     }
 }
