@@ -16,7 +16,7 @@ include 'partials/header.php';
 <?php else: ?>
     <div class="newCreations">
         <?php for ($i = 0; $i < count($quizNextPart); $i++): ?>
-            <article onclick="window.location.href='./?page=<?= $quizNextPart[$i]['genre'] ?>&id=<?= $quizNextPart[$i]['id'] ?> <?= $quizNextPart[$i]['genre'] == 'lesson' ? '&categorie=view' : '' ?> <?= $quizNextPart[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?>'" class="quiz">
+            <article onclick="window.location.href='./?page=<?= $quizNextPart[$i]['genre'] == 'standard' || $quizNextPart[$i]['genre'] == 'test' ? 'pageInterQuiz' : $quizNextPart[$i]['genre'] ?>&id=<?= $quizNextPart[$i]['id'] ?> <?= $quizNextPart[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?> <?= $quizNextPart[$i]['genre'] == 'standard' ? '&type=standard' : '' ?> <?= $quizNextPart[$i]['genre'] == 'test' ? '&type=test' : '' ?>'" class="quiz">
                 <div class="quiz-cat">
                     <?php if (!empty($quizNextPart[$i]['categories'])): ?>
                         <?php foreach ($quizNextPart[$i]['categories'] as $cat): ?>
@@ -52,7 +52,7 @@ include 'partials/header.php';
     <?php if (isset($friendQuiz) && !empty($friendQuiz)): ?>
         <div class="newCreations">
             <?php for ($i = 0; $i < count($friendQuiz); $i++): ?>
-                <article onclick="window.location.href='./?page=<?= $friendQuiz[$i]['genre'] ?>&id=<?= $friendQuiz[$i]['id'] ?> <?= $friendQuiz[$i]['genre'] == 'lesson' ? '&categorie=view' : '' ?>'" <?= $friendQuiz[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?>'" class="quiz">
+                <article onclick="window.location.href='./?page=<?= $friendQuiz[$i]['genre'] == 'standard' || $friendQuiz[$i]['genre'] == 'test' ? 'pageInterQuiz' : $friendQuiz[$i]['genre'] ?>&id=<?= $friendQuiz[$i]['id'] ?> <?= $friendQuiz[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?> <?= $friendQuiz[$i]['genre'] == 'standard' ? '&type=standard' : '' ?> <?= $friendQuiz[$i]['genre'] == 'test' ? '&type=test' : '' ?>'" class="quiz">
                     <div class="quiz-cat">
                         <?php if (!empty($friendQuiz[$i]['categories'])): ?>
                             <?php foreach ($friendQuiz[$i]['categories'] as $cat): ?>
@@ -89,7 +89,7 @@ include 'partials/header.php';
 
 <div class="newCreations">
     <?php for ($i = 0; $i < count($quiz); $i++): ?>
-        <article onclick="window.location.href='./?page=<?= $quiz[$i]['genre'] ?>&id=<?= $quiz[$i]['id'] ?> <?= $quiz[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?>'" class="quiz">
+        <article onclick="window.location.href='./?page=<?= $quiz[$i]['genre'] == 'standard' || $quiz[$i]['genre'] == 'test' ? 'pageInterQuiz' : $quiz[$i]['genre'] ?>&id=<?= $quiz[$i]['id'] ?> <?= $quiz[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?> <?= $quiz[$i]['genre'] == 'standard' ? '&type=standard' : '' ?> <?= $quiz[$i]['genre'] == 'test' ? '&type=test' : '' ?>'" class="quiz">
             <div style="display: flex; flex-direction: row; justify-content:space-between">
                 <div class="quiz-cat">
                     <?php if (!empty($quiz[$i]['categories'])): ?>
@@ -126,7 +126,7 @@ include 'partials/header.php';
 
 <div class="newCreations">
     <?php for ($i = 0; $i < count($lessons); $i++): ?>
-        <article onclick="window.location.href='./?page=<?= $quiz[$i]['genre'] == 'standard' || $quiz[$i]['genre'] == 'test' ? 'pageInterQuiz' : $quiz[$i]['genre'] ?>&id=<?= $quiz[$i]['id'] ?> <?= $quiz[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?> <?= $quiz[$i]['genre'] == 'standard' ? '&type=standard' : '' ?> <?= $quiz[$i]['genre'] == 'test' ? '&type=test' : '' ?>'" class="quiz">
+        <article onclick="window.location.href='./?page=lesson&categorie=view&id=<?= $lessons[$i]['lecon_id'] ?>'" class="quiz">
             <div class="quiz-cat">
                 <?php if (!empty($lessons[$i]['categories'])): ?>
                     <?php foreach ($lessons[$i]['categories'] as $cat): ?>
