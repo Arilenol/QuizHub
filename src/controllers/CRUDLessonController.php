@@ -1,11 +1,13 @@
 <?php
 require_once ROOT . '/src/models/CRUDModel.php';
 require_once ROOT . '/src/models/LessonModel.php';
+require_once ROOT . '/src/models/NotificationModel.php';
 require_once ROOT . '/config/config.php';
 
 class CRUDLessonController {
     private $crudModel;
     private $lessonModel;
+    private $notificationModel;
 
     public function index() {
         // Vérifier les droits d'accès admin
@@ -14,6 +16,7 @@ class CRUDLessonController {
         $db = getDbConnection();
         $this->crudModel = new CRUDModel($db);
         $this->lessonModel = new LessonModel($db);
+        $this->notificationModel = new NotificationModel($db);
 
         // Récupérer l'ID de la leçon depuis les paramètres GET
         $lesson_id = isset($_GET['id']) && !empty($_GET['id']) ? (int)$_GET['id'] : 0;
@@ -35,6 +38,16 @@ class CRUDLessonController {
                 if ($_POST['action'] === 'update_disponibilite') {
                     $disponibilite = $_POST['disponibilite'];
                     $this->lessonModel->updateDisponibilite($lesson_id, $disponibilite);
+                    
+                    // Envoyer une notification à l'auteur
+                    $this->notificationModel->createNotification(
+                        $lesson['user_id'],
+                        'disponibilite_change',
+                        "La disponibilité de la leçon '{$lesson['title']}' a été modifiée en: {$disponibilite}",
+                        $lesson_id,
+                        'lesson'
+                    );
+                    
                     header("Location: ?page=CRUDlesson&id=$lesson_id");
                     exit;
                 }

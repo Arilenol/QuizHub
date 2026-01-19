@@ -4,6 +4,26 @@ $style = './assets/style/home.css';
 include 'partials/header.php';
 ?>
 
+<?php 
+// Vérifier si l'utilisateur est admin
+$isAdmin = false;
+if (isset($_SESSION['id'])) {
+    require_once ROOT . '/config/config.php';
+    $db = getDbConnection();
+    $stmt = $db->prepare("SELECT admin FROM users WHERE id = ?");
+    $stmt->execute([$_SESSION['id']]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    $isAdmin = $user && (int)$user['admin'] === 1;
+}
+?>
+
+<?php if ($isAdmin): ?>
+    <div style="margin-bottom: 30px;">
+        <a href="./?page=CRUD" class="admin-button" style="display: inline-block; padding: 12px 24px; background-color: #ff6b6b; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px; border: none; cursor: pointer; transition: background-color 0.3s;">
+            Accès au CRUD
+        </a>
+    </div>
+<?php endif; ?>
 
 <?php if (isset($_SESSION['id']) && !empty($_SESSION['id'])): ?>
     <h1>Vos créations</h1>
@@ -117,7 +137,7 @@ include 'partials/header.php';
 
 <div class="newCreations">
     <?php for ($i = 0; $i < count($quiz); $i++): ?>
-        <article onclick="window.location.href='./?page=<?= $quiz[$i]['genre'] ?>&id=<?= $quiz[$i]['id'] ?> <?= $quiz[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?>'" class="quiz">
+        <article onclick="window.location.href='./?page=<?= $quiz[$i]['genre'] == 'test' ? 'pageInterQuiz' : $quiz[$i]['genre'] ?>&id=<?= $quiz[$i]['id'] ?> <?= $quiz[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?> <?= $quiz[$i]['genre'] == 'standard' ? '&type=standard' : '' ?> <?= $quiz[$i]['genre'] == 'test' ? '&type=test' : '' ?>'" class="quiz">
             <div style="display: flex; flex-direction: row; justify-content:space-between">
                 <div class="quiz-cat">
                     <?php if (!empty($quiz[$i]['categories'])): ?>

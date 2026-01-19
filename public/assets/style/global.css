@@ -15,19 +15,20 @@ header {
   gap: 20px;
 }
 
-header > picture > img {
+header>picture>img {
   width: 100%;
   max-height: 150px;
   cursor: pointer;
   max-width: 400px;
 }
-header > picture {
+
+header>picture {
   display: flex;
   height: 100%;
   justify-content: center;
 }
 
-header > div {
+header>div {
   display: flex;
   flex-direction: row;
   gap: 25px;
@@ -35,17 +36,17 @@ header > div {
   justify-content: end;
 }
 
-header > form {
+header>form {
   width: 100%;
   display: flex;
   justify-content: center;
 }
 
-header > *:nth-child(2) {
+header>*:nth-child(2) {
   justify-self: center;
 }
 
-header > *:nth-child(3) {
+header>*:nth-child(3) {
   justify-self: end;
 }
 
@@ -62,15 +63,16 @@ select {
   font-size: 20px;
 }
 
-.signalement > span {
+.signalement>span {
   background-color: rgb(167, 48, 48) !important;
   box-shadow: 0 12px 0 rgb(114, 34, 34) !important;
 }
 
-.signalement > span:hover {
+.signalement>span:hover {
   background-color: #fff !important;
   box-shadow: 0px 8px 2px #cacacabf !important;
 }
+
 .signalement:has(span:hover) p {
   color: rgb(114, 34, 34) !important;
 }
@@ -98,11 +100,11 @@ select {
   gap: 20px;
 }
 
-.button > span,
-.searchbar > span,
-.input > span,
-.flatinput > span,
-.textarea > span {
+.button>span,
+.searchbar>span,
+.input>span,
+.flatinput>span,
+.textarea>span {
   position: absolute;
   inset: 0;
   background: #0ab1bd;
@@ -117,17 +119,17 @@ select {
 .searchbar:has(input:disabled),
 .input:has(input:disabled),
 .flatinput:has(input:disabled),
-.textarea:has(textarea:disabled){
-	filter: grayscale(1);
+.textarea:has(textarea:disabled) {
+  filter: grayscale(1);
 }
 
 .button.disabled>span {
-	background: #8b8b8b;
-	box-shadow: 0px 8px 2px #2e2e2ebf;
-	cursor: no-drop;
+  background: #8b8b8b;
+  box-shadow: 0px 8px 2px #2e2e2ebf;
+  cursor: no-drop;
 }
 
-.button.disabled > span:hover {
+.button.disabled>span:hover {
   background: #8b8b8b;
   box-shadow: 0px 8px 2px #2e2e2ebf;
 }
@@ -142,25 +144,25 @@ select {
   transform: none;
 }
 
-.button > p{
-	text-align: center;
+.button>p {
+  text-align: center;
 }
 
 .button>p,
 .searchbar>p {
-	font-size: min(1.7vw, 25px);
-	line-height: 39px;
-	color: #fff;
-	margin: 0;
-	z-index: 1;
-	user-select: none;
-	pointer-events: none;
-	transition: color ease-out 0.2s;
+  font-size: min(1.7vw, 25px);
+  line-height: 39px;
+  color: #fff;
+  margin: 0;
+  z-index: 1;
+  user-select: none;
+  pointer-events: none;
+  transition: color ease-out 0.2s;
 }
 
-.button > img,
-.button > svg,
-.searchbar > img {
+.button>img,
+.button>svg,
+.searchbar>img {
   z-index: 1;
   pointer-events: none;
 }
@@ -179,41 +181,41 @@ svg {
 }
 
 .button:not(:disabled):has(span:hover) p {
-	color: #0AB1BD;
+  color: #0AB1BD;
 }
 
 .button:not(:disabled)>span:hover {
-	background-color: #fff;
-	box-shadow: 0px 8px 2px #CACACABF;
+  background-color: #fff;
+  box-shadow: 0px 8px 2px #CACACABF;
 }
 
 .button:not(:disabled):has(span:active) {
-	transition: none;
-	filter: none;
-	transform: translate(0px, 8px);
+  transition: none;
+  filter: none;
+  transform: translate(0px, 8px);
 }
 
 .button:not(:disabled)>span:active {
-	box-shadow: none !important;
+  box-shadow: none !important;
 }
 
 .checkbox {
   transform: scale(0.8) translate(-11%, 10%);
 }
 
-.checkbox > svg {
-	cursor: pointer;
+.checkbox>svg {
+  cursor: pointer;
 }
 
-.checkbox:has(input[type="checkbox"]:disabled) > svg {
-	cursor: not-allowed;
-	filter: grayscale(1);
+.checkbox:has(input[type="checkbox"]:disabled)>svg {
+  cursor: not-allowed;
+  filter: grayscale(1);
 }
 
 .checkbox>svg rect,
 .checkbox>svg circle,
 .checkbox>svg filter {
-	transition: all ease-in-out 0.2s;
+  transition: all ease-in-out 0.2s;
 }
 
 .input {
@@ -223,7 +225,7 @@ svg {
   padding: 0 20px;
 }
 
-.input > input {
+.input>input {
   all: unset;
   width: 100%;
   z-index: 2;
@@ -231,12 +233,12 @@ svg {
   font-size: 20px;
 }
 
-.input > img {
+.input>img {
   z-index: 2;
   height: 50%;
 }
 
-.input > input::-webkit-input-placeholder {
+.input>input::-webkit-input-placeholder {
   color: white;
 }
 
@@ -246,12 +248,12 @@ svg {
   cursor: default;
 }
 
-.flatinput > span {
+.flatinput>span {
   box-shadow: none;
   cursor: default;
 }
 
-.flatinput > input {
+.flatinput>input {
   all: unset;
   z-index: 2;
   color: white;
@@ -259,22 +261,22 @@ svg {
   cursor: text;
 }
 
-.flatinput > img {
+.flatinput>img {
   z-index: 2;
   height: 50%;
 }
 
-.flatinput > input::-webkit-input-placeholder {
+.flatinput>input::-webkit-input-placeholder {
   color: white;
 }
 
-.input > span,
-.textarea > span,
-.flatinput > span {
+.input>span,
+.textarea>span,
+.flatinput>span {
   cursor: default;
 }
 
-.textarea > textarea {
+.textarea>textarea {
   all: unset;
   width: 100%;
   height: 100%;
@@ -285,11 +287,11 @@ svg {
   z-index: 2;
 }
 
-.textarea > textarea::-webkit-input-placeholder {
+.textarea>textarea::-webkit-input-placeholder {
   color: white;
 }
 
-.textarea > span {
+.textarea>span {
   border-radius: 50px;
 }
 
@@ -302,13 +304,16 @@ svg {
 
 .notif-dot {
   position: absolute;
-  top: 0; /* coin supérieur */
-  right: 0; /* coin droit */
+  top: 0;
+  /* coin supérieur */
+  right: 0;
+  /* coin droit */
   width: 12px;
   height: 12px;
   background-color: red;
   border-radius: 50%;
-  border: 2px solid white; /* optionnel pour un contour */
+  border: 2px solid white;
+  /* optionnel pour un contour */
   display: none;
   z-index: 2;
 }
@@ -318,68 +323,136 @@ svg {
 }
 
 /* Hover sur le bouton */
-.button:not(:disabled) > span:hover {
-	background-color: #fff;
-	box-shadow: 0px 8px 2px #CACACABF;
+.button:not(:disabled)>span:hover {
+  background-color: #fff;
+  box-shadow: 0px 8px 2px #CACACABF;
 }
 
-#menu{
-	display: flex;
-	position: fixed;
-	flex-direction: column;
-	height: 100dvh;
-	width: 100dvw;
-	background-color: #FFC067;
-	z-index: 5;
-	left: -100dvw;
-	transition: left 0.5s ease-in-out;
+#menu {
+  display: flex;
+  position: fixed;
+  flex-direction: column;
+  height: 100dvh;
+  width: 100dvw;
+  background-color: #FFC067;
+  z-index: 5;
+  left: -100dvw;
+  transition: left 0.5s ease-in-out;
 }
 
-#menu > div{
-	display: flex;
-    flex-direction: column;
-    gap: 25px;
-    width: 100%;
-    align-items: center;
+#menu>div {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  width: 100%;
+  align-items: center;
 }
 
-#menu > form {
-	width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 20px;
-    margin-top: 30px;
-    align-items: center;
+#menu>form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 30px;
+  align-items: center;
 }
 
-#menu p{
-	font-size: 5vw;
+#menu p {
+  font-size: 5vw;
 }
 
-#menu .button{
-	padding: 5vw;
+#menu .button {
+  padding: 5vw;
 }
 
-#menu .input{
-    height: 15vw;
-	width: 75vw;
-	max-width: none;
+#menu .input {
+  height: 15vw;
+  width: 75vw;
+  max-width: none;
 }
 
-#menu .input > input{
-    font-size: 3.5vw;
+#menu .input>input {
+  font-size: 3.5vw;
 }
 
-#menu > div{
-	margin-top: 20px;
+#menu>div {
+  margin-top: 20px;
 }
 
-@media (max-width: 1300px){
-	header > picture > img{
-		width: auto;
-		height: 100%;
-	}
+.closeModal:hover {
+  background-color: #fff;
+  color: #087b86;
+  box-shadow: 0px 8px 2px #cacacabf;
+}
+
+/* Overlay */
+.modal-streak {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Popup */
+.modal {
+  background: #ffc97d;
+  width: 100%;
+  max-width: 420px;
+  padding: 25px;
+  border-radius: 14px;
+  position: relative;
+}
+
+/* Close button */
+.closeModal {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  border: none;
+  font-size: 26px;
+  cursor: pointer;
+}
+
+.closeModal {
+  border-radius: 75px;
+  background-color: #0ab1bd;
+  color: white;
+  border: none;
+  padding: 21px 36px;
+  font-size: 1.3rem;
+  min-height: 50px;
+  cursor: pointer;
+  box-shadow: 0 12px 0 #087b86;
+}
+
+#hStreak {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 9%;
+  margin-top: 17%;
+}
+
+.streakContent {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.streakContent p {
+  text-align: center;
+}
+
+@media (max-width: 1300px) {
+  header>picture>img {
+    width: auto;
+    height: 100%;
+  }
 }
 
 @media (max-width: 600px) {
