@@ -170,11 +170,12 @@ svg {
 }
 
 .button > svg > path {
-  transition: fill ease-in-out 0.2s;
+  transition: fill ease-in-out 0.2s, stroke ease-in-out 0.2s;
 }
 
 .button:not(:disabled):has(span:hover) svg>path {
 	fill: #0AB1BD;
+  stroke: #0AB1BD;
 }
 
 .button:not(:disabled):has(span:hover) p {
@@ -381,11 +382,20 @@ svg {
 	}
 }
 
-@media (max-width: 1060px) {
+@media (max-width: 600px) {
 	h1{
 		font-size: 7.5vw;
+	}
+}
+
+@media (min-width: 601px) and (max-width: 1350px) {
+	h1{
+		font-size: 3.5vw;
 		margin-bottom: 0px;
 	}
+}
+
+@media (max-width: 1350px) {
 	header{
 		display: flex;
 		padding: 0 65px 0 15px;
@@ -398,7 +408,7 @@ svg {
 		padding: 10px;
 	}
 }
-@media (min-width: 1061px) {
+@media (min-width: 1349px) {
 	header > .button{
 		display: none;
 	}
