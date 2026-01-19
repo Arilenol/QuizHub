@@ -18,22 +18,25 @@ class LessonModel
     {
         $stmt = $this->db->prepare("
         SELECT 
-            l.id, 
-            l.title, 
-            l.description, 
-            l.date AS 'date', 
-            u.username AS username, 
+            l.id,
+            l.title,
+            l.description,
+            l.date AS date,
             l.quiz_id,
             l.disponibilite,
+            u.username AS username,
             q.genre AS genre
         FROM lecon l
         JOIN users u ON u.id = l.user_id
-        JOIN quiz q ON q.id = l.quiz_id
+        LEFT JOIN quiz q ON q.id = l.quiz_id
         WHERE l.id = ?
         LIMIT 1
     ");
+
         $stmt->execute([$id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $result ?: false;
     }
 
     /**
@@ -457,31 +460,43 @@ class LessonModel
 
             q.id AS quiz_id,
             q.title AS quiz_title,
-            'leçon' as genre,
+            'lesson' AS genre,
             q.difficulty,
             q.description AS quiz_description,
 
-            (
-                SELECT GROUP_CONCAT(DISTINCT c.categorieName)
-                FROM categorie_quiz cq
-                JOIN categories c ON c.id = cq.category_id
-                WHERE cq.quiz_id = q.id
+            COALESCE(
+                (
+                    SELECT GROUP_CONCAT(DISTINCT c.categorieName)
+                    FROM categorie_quiz cq
+                    JOIN categories c ON c.id = cq.category_id
+                    WHERE cq.quiz_id = q.id
+                ),
+                (
+                    SELECT GROUP_CONCAT(DISTINCT c.categorieName)
+                    FROM categorie_lecon cl
+                    JOIN categories c ON c.id = cl.category_id
+                    WHERE cl.lesson_id = l.id
+                )
             ) AS categories,
 
             (SELECT COUNT(*) FROM likes l2 WHERE l2.quiz_id = q.id) AS nbjaime,
             (SELECT COUNT(*) FROM dislikes d2 WHERE d2.quiz_id = q.id) AS nbjaimepas
 
-        FROM Lecon l
+        FROM lecon l
         JOIN users u ON u.id = l.user_id
         LEFT JOIN quiz q ON q.id = l.quiz_id
         WHERE l.user_id = ?
-        ORDER BY l.date DESC;
+        ORDER BY l.date DESC
     ");
 
         $stmt->execute([$id]);
-
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+        if (empty($results)) {
+            return false;
+        }
+
+        // transformation des catégories en tableau
         foreach ($results as &$row) {
             $row['categories'] = $row['categories']
                 ? explode(',', $row['categories'])
@@ -490,6 +505,7 @@ class LessonModel
 
         return $results;
     }
+
     /**
      * Récupère le nombre de parties dans une leçon.
      *
@@ -928,7 +944,8 @@ class LessonModel
     /**
      * Met à jour la disponibilité d'une leçon (version simplifiée)
      */
-    public function updateDisponibilite(int $lesson_id, string $disponibilite): bool {
+    public function updateDisponibilite(int $lesson_id, string $disponibilite): bool
+    {
         try {
             $update = $this->db->prepare("UPDATE Lecon SET disponibilite = ? WHERE id = ?");
             $update->bindParam(1, $disponibilite);

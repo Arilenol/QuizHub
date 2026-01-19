@@ -87,14 +87,15 @@ class ProfileModel
 
 
     /**
-     * Compte le nombre de parties jouées (quiz)
+     * Récupère la liste des quiz joués par un utilisateur avec leurs détails.
      *
-     * Cette méthode exécute une requête SQL afin de déterminer combien de
-     * quiz ont été jouées par un utilisateur spécifique en fonction de son ID.
+     * Cette méthode retourne un tableau associatif contenant les informations
+     * détaillées des quiz joués par l'utilisateur, incluant le score, la date,
+     * les catégories, etc.
      *
-     * @param int $id|string L'identifiant de l'utilisateur.
+     * @param int|string $id L'identifiant de l'utilisateur.
      *
-     * @return int Le nombre total de quiz jouées par l'utilisateur.
+     * @return array|false Un tableau de quiz joués avec leurs détails ou false si aucun.
      */
     public function getQuizPlayed(int|string $id): array|false
     {
@@ -218,6 +219,14 @@ class ProfileModel
         return $stmt->execute([password_hash(trim($password), PASSWORD_DEFAULT), $id]);
     }
 
+    /**
+     * Met à jour le chemin de l'image de profil d'un utilisateur.
+     *
+     * @param string     $pathForDb Chemin relatif de l'image à enregistrer en base
+     * @param int|string $id        Identifiant de l'utilisateur
+     *
+     * @return bool Retourne true si la mise à jour a réussi, false sinon
+     */
     public function savePicture(string $pathForDb, string|int $id): bool
     {
         $stmt = $this->db->prepare("
@@ -268,6 +277,60 @@ class ProfileModel
             ':user'   => $userId,
             ':friend' => $friendId
         ]);
+
+        return $stmt->rowCount() > 0;
+    }
+
+
+    /**
+     * Supprime une leçon appartenant à l'utilisateur.
+     *
+     * @param int|string $idToDelete Identifiant de la leçon à supprimer
+     *
+     * @return bool Retourne true si la suppression a réussi, false sinon
+     */
+    public function deleteLesson(int|string $idToDelete): bool
+    {
+        $stmt = $this->db->prepare("
+        DELETE FROM lecon
+        WHERE id = ?
+    ");
+
+        $stmt->execute([$idToDelete]);
+
+        $stmt = $this->db->prepare("
+            DELETE FROM categorie_lecon
+            WHERE lesson_id = ?
+    ");
+
+        $stmt->execute([$idToDelete]);
+
+        return $stmt->rowCount() > 0;
+    }
+
+    /**
+     * Supprime un quiz appartenant à l'utilisateur.
+     *
+     * @param int|string $idToDelete Identifiant du quiz à supprimer
+     *
+     * @return bool Retourne true si la suppression a réussi, false sinon
+     */
+    public function deleteQuiz(int|string $idToDelete): bool
+    {
+        $stmt = $this->db->prepare("
+            DELETE FROM categorie_quiz
+            WHERE quiz_id = ?
+        ");
+
+        $stmt->execute([$idToDelete]);
+
+        $stmt = $this->db->prepare("
+            DELETE FROM quiz
+            WHERE id = ?
+    ");
+
+        $stmt->execute([$idToDelete]);
+
 
         return $stmt->rowCount() > 0;
     }

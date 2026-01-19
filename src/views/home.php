@@ -100,7 +100,7 @@ include 'partials/header.php';
                 </div>
                 <button type="button" class="download" value="<?= $quiz[$i]['id'] ?>">Download</button>
             </div>
-            
+
             <p class="quiz-genre"><?= htmlspecialchars($quiz[$i]['genre'] ?? '') ?></p>
             <br>
             <p class="quiz-title"><?= htmlspecialchars($quiz[$i]['title'] ?? '') ?></p>
