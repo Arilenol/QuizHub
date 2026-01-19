@@ -103,10 +103,11 @@
             <input type="checkbox" id = "genreTest" name="genreTest" <?= $check ?> disabled hidden/>
         </div>
     </h2>
-    <h2>Paramètres
-        <button class="modifParam" id ="modifParam" >Modifier</button>
+    <?php /*<h2>Paramètres
+        <button class="modifParam" id ="modifParam">Modifier</button>
     </h2>
-    <div class = "parametres">
+    */?>
+    <div class = "parametres" hidden>
         <?php
             foreach ($tabParametres as $indice => $param){
                 
