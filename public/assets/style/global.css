@@ -490,11 +490,10 @@ svg {
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
-  justify-content: flex-start; /* alignement à gauche */
+  justify-content: flex-start;
   margin: 25px 0;
 }
 
-/* Badge catégorie */
 .categoriesList label {
   position: relative;
   padding: 14px 28px;
@@ -511,7 +510,6 @@ svg {
     filter 0.1s ease-in-out;
 }
 
-/* Checkbox invisible */
 .categoriesList input[type="checkbox"] {
   position: absolute;
   inset: 0;
@@ -519,20 +517,17 @@ svg {
   pointer-events: none;
 }
 
-/* Effet bouton enfoncé + assombri */
 .categoriesList label:has(input:checked) {
   transform: translateY(8px);
   box-shadow: none;
-  filter: brightness(0.85); /* assombrissement */
+  filter: brightness(0.85);
 }
 
-/* Désactivé */
 .categoriesList label:has(input:disabled) {
   filter: grayscale(1);
   cursor: not-allowed;
 }
 
-/* Mobile */
 @media (max-width: 800px) {
   .categoriesList label {
     font-size: 4vw;
