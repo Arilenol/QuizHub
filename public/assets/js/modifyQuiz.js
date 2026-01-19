@@ -321,9 +321,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 ev.preventDefault();
                 window.location.reload();
             });
-
-            DelBtn.replaceWith(applyModif);
-            applyModif.after(Annuler);
+            if (DelBtn) {
+                DelBtn.replaceWith(applyModif);
+                applyModif.after(Annuler);
+            } else {
+                // Pas de bouton supprimer → on ajoute quand même les boutons
+                const footer = document.querySelector("#questionFooter"+i);
+                footer.appendChild(applyModif);
+                applyModif.after(Annuler);
+            }
+            /*DelBtn.replaceWith(applyModif);
+            applyModif.after(Annuler);*/
             
             ev.currentTarget.remove();
 
@@ -379,8 +387,25 @@ document.addEventListener("DOMContentLoaded", () => {
             for (let check of newQuestion.querySelectorAll(".checkbox")){
                 check.querySelector("input").name = "checkbox"+(i+1)+"[]";
             }
-            newQuestion.querySelector(".delQuestionButton").value = (i+1);
-            newQuestion.querySelector(".delQuestionButton").id = "DelQuestion"+(i+1);
+            /*newQuestion.querySelector(".delQuestionButton").value = (i+1);
+            newQuestion.querySelector(".delQuestionButton").id = "DelQuestion"+(i+1);*/
+            let delBtn = newQuestion.querySelector(".delQuestionButton");
+
+            if (!delBtn) {
+                delBtn = document.createElement("button");
+                delBtn.classList.add("button", "delQuestionButton");
+                delBtn.name = "DelQuestion";
+                delBtn.appendChild(document.createElement("span"));
+                const p = document.createElement("p");
+                p.textContent = "Supprimer cette question";
+                delBtn.appendChild(p);
+
+                newQuestion.querySelector(".questionFooter").appendChild(delBtn);
+            }
+
+            delBtn.value = i + 1;
+            delBtn.id = "DelQuestion" + (i + 1);
+            delBtn.addEventListener("click", delQuestionFunction);
             newQuestion.querySelector(".questionFooter").id = "questionFooter"+(i+1);
             newQuestion.querySelector(".question").querySelector("textarea").id = "textarea"+(i+1);
             newQuestion.querySelector(".question").querySelector("textarea").name = "question"+(i+1);
