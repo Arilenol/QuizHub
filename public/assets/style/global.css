@@ -171,12 +171,13 @@ svg {
   fill: white;
 }
 
-.button>svg>path {
-  transition: fill ease-in-out 0.2s;
+.button > svg > path {
+  transition: fill ease-in-out 0.2s, stroke ease-in-out 0.2s;
 }
 
 .button:not(:disabled):has(span:hover) svg>path {
-  fill: #0AB1BD;
+	fill: #0AB1BD;
+  stroke: #0AB1BD;
 }
 
 .button:not(:disabled):has(span:hover) p {
@@ -454,34 +455,37 @@ svg {
   }
 }
 
-@media (max-width: 1060px) {
-  h1 {
-    font-size: 7.5vw;
-    margin-bottom: 0px;
-  }
-
-  header {
-    display: flex;
-    padding: 0 65px 0 15px;
-    height: 75px;
-  }
-
-  header>form,
-  header>div {
-    display: none;
-  }
-
-  header>.button {
-    padding: 10px;
-  }
+@media (max-width: 600px) {
+	h1{
+		font-size: 7.5vw;
+	}
 }
 
-@media (min-width: 1061px) {
-  header>.button {
-    display: none;
-  }
+@media (min-width: 601px) and (max-width: 1350px) {
+	h1{
+		font-size: 3.5vw;
+		margin-bottom: 0px;
+	}
+}
 
-  #menu {
-    display: none;
-  }
+@media (max-width: 1350px) {
+	header{
+		display: flex;
+		padding: 0 65px 0 15px;
+		height: 75px;
+	}
+	header > form, header > div {
+		display: none;
+	}
+	header > .button{
+		padding: 10px;
+	}
+}
+@media (min-width: 1349px) {
+	header > .button{
+		display: none;
+	}
+	#menu{
+		display: none;
+	}
 }

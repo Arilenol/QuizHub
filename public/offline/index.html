@@ -11,7 +11,10 @@
 
 <body cz-shortcut-listen="true">
     <header>
-        <img onclick="window.location.href='?page=home'" style="cursor: pointer;" src="/offline/logo.svg" alt="Logo">
+        <picture onclick="window.location.href='?page=home'" alt="Logo">
+            <source srcset="./offline/logo.svg" media="(width >= 1480px)">
+            <img src="./offline/icon.png">
+        </picture>
     </header>
     <!-- Création des listeners des boutons du header -->
     <h1>Vos téléchargements</h1>

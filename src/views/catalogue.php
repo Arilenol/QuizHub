@@ -121,6 +121,7 @@ require 'partials/header.php';
             }
             echo '<div class="quiz" onclick="window.location.href=\'index.php?page=' . $genre . '' . $suite . '&id=' . $quiz['id'] . '\'">
         <article >
+        <div style="display: flex; flex-direction: row; justify-content:space-between">
             <div class="quiz-cat">';
             if (!empty($quiz['categories']) && is_array($quiz['categories'])) {
                 foreach ($quiz['categories'] as $cat) {
@@ -129,8 +130,20 @@ require 'partials/header.php';
                     echo '<span class="category">' . htmlspecialchars($catName) . '</span>';
                 }
             }
-            echo '</div>
-        <p class="quiz-genre">' . htmlspecialchars($quiz['genre'] ?? '') . '</p>
+            echo '</div>';
+
+            if($quiz['genre'] == "flashcard"):
+            ?>
+                <button type="button" class="button download" style="padding: 10px" value="<?= $quiz['id'] ?>">
+                    <span></span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                        <path fill="white" d="M13 8V2H7v6H2l8 8l8-8h-5zM0 18h20v2H0v-2z"/>
+                    </svg>
+                </button>
+            <?php
+                endif;
+            
+        echo '</div><p class="quiz-genre">' . htmlspecialchars($quiz['genre'] ?? '') . '</p>
         <br><p class="quiz-title">' . htmlspecialchars($quiz['title'] ?? '') . '</p>
         <br><p class="quiz-description">' . htmlspecialchars($quiz['description'] ?? '') . '</p>
         <br><p class="quiz-auteur">Par : ' . htmlspecialchars($quiz['username'] ?? '') . '</p>
