@@ -283,7 +283,7 @@ class ProfileModel
 
 
     /**
-     * Supprime une leçon appartenant à l'utilisateur.
+     * Supprime une leçon par son id.
      *
      * @param int|string $idToDelete Identifiant de la leçon à supprimer
      *
