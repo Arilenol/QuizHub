@@ -1,8 +1,10 @@
 <?php
 
-class CatalogueModel {
+class CatalogueModel
+{
     private $db;
-    public function __construct($db) {
+    public function __construct($db)
+    {
         $this->db = $db;
     }
 
@@ -14,15 +16,16 @@ class CatalogueModel {
      *
      * @return array|false  Tableau associatif des catégories, ou false en cas d'erreur.
      */
-    public function getCategories(): mixed{
-        try{
+    public function getCategories(): mixed
+    {
+        try {
             $sql = $this->db->prepare("SELECT DISTINCT id,CategorieName FROM categories;");
             $sql->execute();
             $categories = $sql->fetchAll(PDO::FETCH_ASSOC);
             return $categories;
-        }catch(PDOException $e){
+        } catch (PDOException $e) {
             die("Fetching categories failed: " . $e->getMessage());
-        }catch(Exception $e){
+        } catch (Exception $e) {
             die("Error: " . $e->getMessage());
         }
     }
@@ -41,8 +44,9 @@ class CatalogueModel {
      *
      * @return array|false  Tableau associatif des quizzes correspondants, ou false en cas d'erreur.
      */
-    public function searchContentByAll(int|null $user_id, int|null $recherche_cat, string $recherche_contenu = "", string $recherche_auteur = "", string $genre = "", string|null $tris = null): mixed{
-        try{
+    public function searchContentByAll(int|null $user_id, int|null $recherche_cat, string $recherche_contenu = "", string $recherche_auteur = "", string $genre = "", string|null $tris = null): mixed
+    {
+        try {
             $baseSql = "SELECT * FROM 
             (SELECT DISTINCT quiz.id, title, quiz.description, difficulty, users.username, date, genre,
             (SELECT COUNT(like_id) FROM likes WHERE quiz_id = quiz.id) AS likes,
@@ -70,8 +74,8 @@ class CatalogueModel {
             OR lesson.user_id = ?)
             AND (categories.id = ? OR ? IS NULL) AND (lesson.title LIKE ? OR lesson.description LIKE ?) AND users.username LIKE ?) AS Requete
             WHERE Requete.genre LIKE ?";
-            
-            
+
+
             $allowedOrder = [
                 'date_desc' => 'Requete.date DESC',
                 'date_asc' => 'Requete.date ASC',
@@ -88,30 +92,30 @@ class CatalogueModel {
             if ($tris && isset($allowedOrder[$tris])) {
                 $baseSql .= ' ORDER BY ' . $allowedOrder[$tris];
             }
-            
+
             $sql = $this->db->prepare($baseSql . ' LIMIT 500;');
-            $sql->bindValue(1,$user_id);
-            $sql->bindValue(2,$user_id);
-            $sql->bindValue(3,$recherche_cat);
-            $sql->bindValue(4,$recherche_cat);
-            $sql->bindValue(5,'%'.$recherche_contenu.'%');
-            $sql->bindValue(6,'%'.$recherche_contenu.'%');
-            $sql->bindValue(7,'%'.$recherche_auteur.'%');
-            $sql->bindValue(8,$user_id);
-            $sql->bindValue(9,$user_id);
-            $sql->bindValue(10,$recherche_cat);
-            $sql->bindValue(11,$recherche_cat);
-            $sql->bindValue(12,'%'.$recherche_contenu.'%');
-            $sql->bindValue(13,'%'.$recherche_contenu.'%');
-            $sql->bindValue(14,'%'.$recherche_auteur.'%');
-            $sql->bindValue(15,'%'.$genre.'%');
+            $sql->bindValue(1, $user_id);
+            $sql->bindValue(2, $user_id);
+            $sql->bindValue(3, $recherche_cat);
+            $sql->bindValue(4, $recherche_cat);
+            $sql->bindValue(5, '%' . $recherche_contenu . '%');
+            $sql->bindValue(6, '%' . $recherche_contenu . '%');
+            $sql->bindValue(7, '%' . $recherche_auteur . '%');
+            $sql->bindValue(8, $user_id);
+            $sql->bindValue(9, $user_id);
+            $sql->bindValue(10, $recherche_cat);
+            $sql->bindValue(11, $recherche_cat);
+            $sql->bindValue(12, '%' . $recherche_contenu . '%');
+            $sql->bindValue(13, '%' . $recherche_contenu . '%');
+            $sql->bindValue(14, '%' . $recherche_auteur . '%');
+            $sql->bindValue(15, '%' . $genre . '%');
             $sql->execute();
 
             $quiz = $sql->fetchAll(PDO::FETCH_ASSOC);
             return $quiz;
-        }catch(PDOException $e){
+        } catch (PDOException $e) {
             die("Searching categories failed: " . $e->getMessage());
-        }catch(Exception $e){
+        } catch (Exception $e) {
             die("Error: " . $e->getMessage());
         }
     }
@@ -122,17 +126,18 @@ class CatalogueModel {
      *
      * @return string|null  Le nom d'utilisateur si trouvé, ou null si non trouvé.
      */
-    public function getNomAuteur($user_id): mixed{
-        try{
+    public function getNomAuteur($user_id): mixed
+    {
+        try {
             $sql = $this->db->prepare("SELECT username FROM users WHERE id = ?;");
-            $sql->bindParam(1,$user_id);
+            $sql->bindParam(1, $user_id);
             $sql->execute();
 
             $auteur = $sql->fetch(PDO::FETCH_ASSOC);
             return $auteur['username'];
-        }catch(PDOException $e){
+        } catch (PDOException $e) {
             die("Fetching author name failed: " . $e->getMessage());
-        }catch(Exception $e){
+        } catch (Exception $e) {
             die("Error: " . $e->getMessage());
         }
     }
@@ -144,38 +149,53 @@ class CatalogueModel {
      *
      * @return array|false  Tableau associatif des catégories (id, categorieName), ou false en cas d'erreur.
      */
-    public function getCategoriesFromQuiz( $quiz_id): mixed{
-        try{
+    public function getCategoriesFromQuiz($quiz_id): mixed
+    {
+        try {
             $sql = $this->db->prepare("SELECT DISTINCT categories.id, categories.categorieName FROM categories 
             INNER JOIN categorie_quiz ON categorie_quiz.category_id = categories.id 
             WHERE categorie_quiz.quiz_id = ?;");
-            $sql->bindParam(1,$quiz_id);
+            $sql->bindParam(1, $quiz_id);
             $sql->execute();
 
             $categories = $sql->fetchAll(PDO::FETCH_ASSOC);
             return $categories;
-        }catch(PDOException $e){
+        } catch (PDOException $e) {
             die("Fetching categories from quiz failed: " . $e->getMessage());
-        }catch(Exception $e){
+        } catch (Exception $e) {
             die("Error: " . $e->getMessage());
         }
     }
 
-    public function getCategoriesFromLesson( $lesson_id): mixed{
-        try{
+
+    /**
+     * Récupère toutes les catégories associées à une leçon donnée.
+     *
+     * @param int $lesson_id L'identifiant de la leçon pour laquelle on veut récupérer les catégories.
+     *
+     * @return array<mixed> Un tableau associatif contenant les catégories. Chaque élément du tableau
+     *                      a les clés suivantes :
+     *                      - 'id' : L'identifiant de la catégorie.
+     *                      - 'categorieName' : Le nom de la catégorie.
+     *
+     * @throws PDOException Si une erreur survient lors de l'exécution de la requête SQL.
+     * @throws Exception   Pour toute autre erreur.
+     */
+    public function getCategoriesFromLesson($lesson_id): mixed
+    {
+        try {
             $sql = $this->db->prepare("SELECT DISTINCT categories.id, categories.categorieName FROM categories 
             INNER JOIN categorie_lecon ON categorie_lecon.category_id = categories.id 
             WHERE categorie_lecon.lesson_id = ?;");
-            $sql->bindParam(1,$lesson_id);
+            $sql->bindParam(1, $lesson_id);
             $sql->execute();
 
             $categories = $sql->fetchAll(PDO::FETCH_ASSOC);
             return $categories;
-        }catch(PDOException $e){
+        } catch (PDOException $e) {
             die("Fetching categories from quiz failed: " . $e->getMessage());
-        }catch(Exception $e){
+        } catch (Exception $e) {
             die("Error: " . $e->getMessage());
         }
     }
 }
-?>

@@ -14,10 +14,6 @@ class NotificationModel
     /**
      * Récupère toutes les demandes d'ami reçues par un utilisateur.
      *
-     * Cette méthode interroge la table `demandeAmi` pour obtenir toutes les demandes
-     * d'ami dont l'utilisateur est le receveur. Elle retourne les informations
-     * du demandeur pour chaque demande.
-     *
      * @param int|string $receveurId  Identifiant de l'utilisateur recevant les demandes.
      *
      * @return array  Un tableau de tableaux associatifs contenant les informations des demandeurs.
@@ -26,20 +22,6 @@ class NotificationModel
      */
     public function getFriendRequestsReceived(int|string $receveurId): array
     {
-
-        // $stmt2 = $this->db->prepare("
-        // DELETE FROM amis
-        // WHERE user1_id = ? AND user2_id = ?
-        // ");
-        // 
-        // $stmt2->execute([12, 13]);
-
-        // $stmt2 = $this->db->prepare("
-        // INSERT INTO demandeAmi (demandeur_id,receveur_id)
-        // VALUES (?,?)
-        // ");
-
-        // $stmt2->execute([1, 13]);
 
         $stmt = $this->db->prepare("
         SELECT da.*, u.username, u.email, u.id
@@ -128,6 +110,12 @@ class NotificationModel
     }
 
 
+    /**
+     * Ajoute un utilisateur en ami.
+     *
+     * @param int|string $id Identifiant de l'utilisateur à ajouter en ami.
+     * @return bool True si l'amitié a été ajoutée et la demande supprimée, false sinon.
+     */
     public function addFriend(string|int $id): bool
     {
         // Normaliser l'ordre pour éviter doublons
@@ -146,6 +134,12 @@ class NotificationModel
         return false;
     }
 
+    /**
+     * Supprime une demande d'ami reçue.
+     *
+     * @param int|string $id Identifiant de l'utilisateur ayant fait la demande.
+     * @return bool True si la suppression a réussi, false sinon.
+     */
     public function deleteFriendRequest(string|int $id): bool
     {
         $stmt = $this->db->prepare("
