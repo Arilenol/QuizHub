@@ -28,8 +28,11 @@ class PageInterController
             exit;
         }
         $quizInfo = $this->model->getQuizInfo($quizId);
-        $friendsLeaderboard = $this->model->getFriendsLeaderboard($quizId, $userId);
-        $reactions = $this->model->getQuizReactions($quizId);
+        if ($user_id != null){
+            $friendsLeaderboard = $this->model->getFriendsLeaderboard($quizId, $userId);
+            $reactions = $this->model->getQuizReactions($quizId);
+        }
+        
         
         $hasLiked = false;
         $hasDisliked = false;
