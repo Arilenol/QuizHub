@@ -1,5 +1,77 @@
-# SAE3.01
+# QuizHub
 
+Accéder au site : [cliquez-ici](https://quizhub.kiliancd.fr) 
+
+## Overview
+
+**QuiHub** est une plateforme web complète de gestion de quiz et de flashcards permettant aux utilisateurs d'apprendre de façon interactive. 
+
+Le projet offre une expérience utilisateur riche et complète avec la possibilité de :
+- Créer et gérer vos propres quiz et leçons
+- Définir des catégories d'apprentissage
+- Tester vos connaissances via des quiz interactifs
+- Consulter votre progression et historique
+- Partager et découvrir du contenu créé par la communauté
+- Accéder à l'application en mode hors ligne grâce à la technologie PWA
+
+QuiHub est développé avec une architecture MVC robuste en PHP, offrant une interface utilisateur moderne et réactive.
+
+## Features
+
+- Créer, modifier et supprimer des quiz et des flashcards
+- Gérer des leçons interactives
+- Tester vos connaissances avec des quiz personnalisés
+- Profil utilisateur et historique de progression
+- Système de streak pour vous suivre au quotidien
+- Système de likes et d'évaluations
+- Système de battles entre les amis
+- Notifications en temps réel
+- Version hors ligne (PWA)
+- Système de catégories et de recherche
+- Conversion en PDF des leçons
+
+## Technologies
+
+### Backend
+- PHP 8.x
+- Composer (gestion des dépendances)
+- Architecture MVC
+
+### Frontend
+- HTML5
+- CSS3 & SCSS
+- JavaScript (Vanilla)
+- Service Workers (pour la fonctionnalité offline)
+
+### Base de données
+- SQLite
+
+### Outils supplémentaires
+- PWA (Progressive Web App)
+- Notifications
+
+## Quick Start
+
+1. **Prérequis**
+   - PHP 8.x
+   - MySQL
+   - Composer (pour lancer les tests)
+
+2. **Installation**
+   ```bash
+   cd sae3.01
+   composer install (si vous voulez executer les tests)
+   ```
+
+3. **Configuration**
+   - Copiez `config/config.php` et configurez vos paramètres de base de données
+   - Mise à jour de `config/construction.php` si nécessaire
+
+4. **Démarrage**
+   - Accédez à l'application via votre serveur web local (WAMP par exemple)
+   - L'application sera disponible à `http://localhost/PHP/SAE/sae3.01/public/`
+
+## Project structure (important folders)
 
 
 ## Getting started
