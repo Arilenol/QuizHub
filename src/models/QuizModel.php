@@ -955,6 +955,6 @@ class QuizModel
     {
         $stmt = $this->db->prepare("UPDATE resultat SET score = ? where quiz_id = ? and user_id = ?");
 
-        return $stmt->execute([$score,$idQuiz,$id]);
+        return $stmt->execute([$score, $idQuiz, $id]);
     }
 }

@@ -8,6 +8,14 @@ class LikeModel
         $this->db = $db;
     }
 
+    /**
+     * Vérifie si un utilisateur a déjà liké un quiz.
+     *
+     * @param int|string $quizId Identifiant du quiz.
+     * @param int|string $userId Identifiant de l’utilisateur.
+     *
+     * @return bool True si l’utilisateur a liké le quiz, false sinon.
+     */
     public function hasLiked(int|string $quizId, int|string $userId): bool
     {
         $stmt = $this->db->prepare("
@@ -25,7 +33,14 @@ class LikeModel
         return (bool) $stmt->fetchColumn();
     }
 
-
+    /**
+     * Vérifie si un utilisateur a déjà disliké un quiz.
+     *
+     * @param int|string $quizId Identifiant du quiz.
+     * @param int|string $userId Identifiant de l’utilisateur.
+     *
+     * @return bool True si l’utilisateur a disliké le quiz, false sinon.
+     */
     public function hasDisliked(int|string $quizId, int|string $userId): bool
     {
         $stmt = $this->db->prepare("
@@ -43,6 +58,15 @@ class LikeModel
         return (bool) $stmt->fetchColumn();
     }
 
+
+    /**
+     * Ajoute un "like" par l'utilisateur pour un quiz donné.
+     *
+     * @param int|string $quizId Identifiant du quiz.
+     * @param string $userId Identifiant de l’utilisateur.
+     *
+     * @return bool True si l’insertion a réussi, false sinon.
+     */
     public function sendLike(int|string $quizId, string $userId): bool
     {
 
@@ -52,6 +76,14 @@ class LikeModel
         return $stmt->execute([$quizId, $userId]);
     }
 
+    /**
+     * Supprime le "like" d’un utilisateur pour un quiz donné.
+     *
+     * @param int|string $quizId Identifiant du quiz.
+     * @param string $userId Identifiant de l’utilisateur.
+     *
+     * @return bool True si la suppression a réussi, false sinon.
+     */
     public function removeLike(int|string $quizId, string $userId): bool
     {
         $stmt = $this->db->prepare("
@@ -66,6 +98,14 @@ class LikeModel
         ]);
     }
 
+    /**
+     * Ajoute un "dislike" par l'utilisateur pour un quiz donné.
+     *
+     * @param int|string $quizId Identifiant du quiz.
+     * @param string $userId Identifiant de l’utilisateur.
+     *
+     * @return bool True si l’insertion a réussi, false sinon.
+     */
     public function sendDislike(int|string $quizId, string $userId): bool
     {
         $stmt = $this->db->prepare("
@@ -74,6 +114,14 @@ class LikeModel
         return $stmt->execute([$quizId, $userId]);
     }
 
+    /**
+     * Supprime le "dislike" d’un utilisateur pour un quiz donné.
+     *
+     * @param int|string $quizId Identifiant du quiz.
+     * @param string $userId Identifiant de l’utilisateur.
+     *
+     * @return bool True si la suppression a réussi, false sinon.
+     */
     public function removeDislike(int|string $quizId, string $userId): bool
     {
         $stmt = $this->db->prepare("
@@ -88,6 +136,15 @@ class LikeModel
         ]);
     }
 
+    /**
+     * Récupère le nombre total de réactions d’un quiz.
+     *
+     * @param int|string $quizId Identifiant du quiz.
+     *
+     * @return array Tableau associatif contenant :
+     *               - 'nbjaime'    : Nombre total de likes
+     *               - 'nbjaimepas' : Nombre total de dislikes
+     */
     public function getReactions(int|string $quizId): array
     {
         $stmt = $this->db->prepare("
