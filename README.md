@@ -54,7 +54,7 @@ QuiHub est développé avec une architecture MVC robuste en PHP, offrant une int
 
 1. **Prérequis**
    - PHP 8.x
-   - MySQL
+   - SQLite
    - Composer (pour lancer les tests)
 
 2. **Installation**
