@@ -21,6 +21,9 @@ function constructionBD(PDO $conn)
         $sql = "DROP TABLE IF EXISTS notifications;";
         $conn->exec($sql);
 
+        $sql = "DROP TABLE IF EXISTS signalements;";
+        $conn->exec($sql);
+
         $sql = "DROP TABLE IF EXISTS amiDisponibilite;";
         $conn->exec($sql);
 
@@ -127,17 +130,32 @@ function constructionBD(PDO $conn)
 
         $conn->exec($sql);
 
-        $sql = "CREATE TABLE IF NOT EXISTS notifications(
+        $sql = "CREATE TABLE IF NOT EXISTS signalements(
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                quiz_id INTEGER,
+                type TEXT NOT NULL,
+                description TEXT NOT NULL,
+                date_creation DATETIME DEFAULT CURRENT_TIMESTAMP,
+                status TEXT DEFAULT 'nouveau',
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+                FOREIGN KEY (quiz_id) REFERENCES quiz(id) ON DELETE SET NULL,
+                CHECK (type IN ('contenu_inapproprie','spam','harcelement','autre')),
+                CHECK (status IN ('nouveau','en_cours','resolu','rejete'))
+            );";
+
+        $conn->exec($sql);
+
+        $sql = "CREATE TABLE IF NOT EXISTS signalements(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER NOT NULL,
                 type TEXT NOT NULL,
-                message TEXT NOT NULL,
-                contenu_id INTEGER,
-                contenu_type TEXT,
+                description TEXT NOT NULL,
                 date_creation DATETIME DEFAULT CURRENT_TIMESTAMP,
-                is_read BOOLEAN DEFAULT 0,
+                status TEXT DEFAULT 'nouveau',
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-                CHECK (contenu_type IN ('quiz','lesson'))
+                CHECK (type IN ('contenu_inapproprie','spam','harcelement','autre')),
+                CHECK (status IN ('nouveau','en_cours','resolu','rejete'))
             );";
 
         $conn->exec($sql);

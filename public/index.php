@@ -225,6 +225,11 @@ switch ($page) {
         $controller = new SignalementController();
         $controller->index();
         break;
+    case 'submitReport':
+        require_once ROOT . '/src/controllers/SignalementController.php';
+        $controller = new SignalementController();
+        $controller->submitReport();
+        break;
     case 'CRUDquiz':
         require_once ROOT . '/config/config.php';
         require_once ROOT . '/src/controllers/CRUDQuizController.php';
