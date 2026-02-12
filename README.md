@@ -71,7 +71,15 @@ QuiHub est développé avec une architecture MVC robuste en PHP, offrant une int
    - Accédez à l'application via votre serveur web local (WAMP par exemple)
    - L'application sera disponible à `http://localhost/PHP/SAE/sae3.01/public/`
 
-## Project structure (important folders)
+## Project structure
+
+- `public` - Routeur principal de l’application, assets (CSS, JS, images) et éléments nécessaires au fonctionnement hors ligne du site.
+- `src/models` - Contient les modèles responsables des interactions avec la base de données (requêtes SQL, logique d’accès aux données).
+- `src/views` - Contient les différentes vues/pages du site (affichage).
+- `src/controller` - Contient la logique de contrôle des pages (gestion des requêtes, liaison entre modèles et vues).
+- `src/database` - Base de données principale.
+- `config/config.php` - Configuration de la base de données (paramètres de connexion, instanciation PDO).
+- `test/` - Contient les tests unitaires, principalement pour les modèles en créant une base de données virtuelle test en mémoire.
 
 
 ## Getting started
