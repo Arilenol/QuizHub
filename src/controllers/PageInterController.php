@@ -28,7 +28,7 @@ class PageInterController
             exit;
         }
         $quizInfo = $this->model->getQuizInfo($quizId);
-        if ($user_id != null){
+        if ($userId !== null){
             $friendsLeaderboard = $this->model->getFriendsLeaderboard($quizId, $userId);
             $reactions = $this->model->getQuizReactions($quizId);
         }
