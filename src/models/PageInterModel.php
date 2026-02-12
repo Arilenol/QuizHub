@@ -9,7 +9,15 @@ class PageInterModel
     }
 
     /**
-     * Retourne les infos du quiz (nom, description)
+     * Récupère les informations principales d’un quiz.
+     *
+     * @param int $quizId Identifiant du quiz à récupérer.
+     *
+     * @return array Tableau associatif contenant :
+     *               - 'id' : ID du quiz
+     *               - 'title' : Titre du quiz
+     *               - 'description' : Description du quiz
+     *               Retourne un tableau vide si aucun quiz ne correspond.
      */
     public function getQuizInfo(int $quizId): array
     {
@@ -22,10 +30,26 @@ class PageInterModel
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
     }
 
+
     /**
-     * Retourne le classement des amis + l'utilisateur sur un quiz
-     * Convertit le score "k/n" en pourcentage
-     * Seuls les amis qui ont participé et l'utilisateur s'il a participé
+     * Récupère le classement (leaderboard) des amis d’un utilisateur pour un quiz donné.
+     *
+     * Le classement est trié :
+     *  1. Par score décroissant (meilleur_score DESC)
+     *  2. En cas d’égalité, par temps croissant (tempsPris ASC)
+     *
+     * @param int $quizId Identifiant du quiz concerné.
+     * @param int $userId Identifiant de l’utilisateur dont on veut afficher le classement des amis.
+     *
+     * @return array Tableau de tableaux associatifs contenant pour chaque utilisateur :
+     *               - 'id'              : ID de l'utilisateur
+     *               - 'username'        : Nom d'utilisateur
+     *               - 'email'           : Email de l'utilisateur
+     *               - 'meilleur_score'  : Meilleur score en pourcentage
+     *               - 'tempsPris'       : Meilleur temps enregistré
+     *               - 'dateRealisation' : Date de la meilleure tentative
+     *
+     *               Retourne un tableau vide si aucun résultat n’est trouvé.
      */
     public function getFriendsLeaderboard(int $quizId, int $userId): array
     {
@@ -69,8 +93,16 @@ class PageInterModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+
+
     /**
-     * Retourne les réactions (likes/dislikes) pour un quiz
+     * Récupère les réactions d’un quiz donné.
+     *
+     * @param int $quizId Identifiant du quiz pour récupérer les réactions associées.
+     *
+     * @return array Tableau associatif contenant :
+     *               - 'nbjaime' : retourne le nbr de likes du quiz, 0 sinon
+     *               - 'nbjaimepas' : retourne le nbr de dislikes du quiz, 0 sinon
      */
     public function getQuizReactions(int $quizId): array
     {
@@ -96,8 +128,16 @@ class PageInterModel
         ];
     }
 
+
     /**
-     * Vérifie si l'utilisateur a déjà aimé ou non aimé le quiz
+     * Récupère la réaction d’un utilisateur pour un quiz donné.
+     *
+     * @param int $userId Identifiant de l’utilisateur.
+     * @param int $quizId Identifiant du quiz.
+     *
+     * @return array Tableau associatif contenant :
+     *               - 'hasLiked'    : retourne si l’utilisateur a liké le quiz
+     *               - 'hasDisliked' : retourne si l’utilisateur a disliké le quiz
      */
     public function getUserReaction(int $userId, int $quizId): array
     {
@@ -125,4 +165,3 @@ class PageInterModel
         ];
     }
 }
-?>

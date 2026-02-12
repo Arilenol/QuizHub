@@ -11,11 +11,6 @@ class ProfileModel
     /**
      * Récupère toutes les informations liées à un utilisateur via son id.
      *
-     * Cette méthode interroge la base de données afin de retrouver
-     * les informations d’un utilisateur à partir de son id.  
-     * Si un utilisateur correspond, ses données sont retournées sous forme de tableau
-     * associatif. Sinon, la méthode retourne false.
-     *
      * @param string $id L’id de l’utilisateur recherché.
      * 
      * @return array|false Un tableau associatif contenant les informations de l’utilisateur
@@ -33,9 +28,6 @@ class ProfileModel
     /**
      * Compte le nombre de créations (quiz) appartenant à un utilisateur.
      *
-     * Cette méthode exécute une requête SQL afin de déterminer combien de
-     * quiz ont été créés par un utilisateur spécifique en fonction de son ID.
-     *
      * @param int $id L'identifiant de l'utilisateur.
      *
      * @return int Le nombre total de quiz créés par l'utilisateur.
@@ -51,9 +43,6 @@ class ProfileModel
     /**
      * Compte le nombre de créations (leçons) appartenant à un utilisateur.
      *
-     * Cette méthode exécute une requête SQL afin de déterminer combien de
-     * leçons ont été créés par un utilisateur spécifique en fonction de son ID.
-     *
      * @param int $id L'identifiant de l'utilisateur.
      *
      * @return int Le nombre total de leçons créés par l'utilisateur.
@@ -68,9 +57,6 @@ class ProfileModel
 
     /**
      * Compte le nombre de parties jouées (quiz)
-     *
-     * Cette méthode exécute une requête SQL afin de déterminer combien de
-     * quiz ont été jouées par un utilisateur spécifique en fonction de son ID.
      *
      * @param int $id|string L'identifiant de l'utilisateur.
      *
@@ -88,10 +74,6 @@ class ProfileModel
 
     /**
      * Récupère la liste des quiz joués par un utilisateur avec leurs détails.
-     *
-     * Cette méthode retourne un tableau associatif contenant les informations
-     * détaillées des quiz joués par l'utilisateur, incluant le score, la date,
-     * les catégories, etc.
      *
      * @param int|string $id L'identifiant de l'utilisateur.
      *
@@ -135,9 +117,6 @@ class ProfileModel
 
     /**
      * Récupère tous les amis d’un utilisateur.
-     *
-     * Cette méthode retourne un tableau contenant tous les enregistrements de la table `amis`
-     * où l'utilisateur est soit `user1_id` soit `user2_id`.
      *
      * @param int|string $id L'identifiant de l'utilisateur.
      *
