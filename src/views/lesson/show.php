@@ -9,7 +9,7 @@ require_once '../src/views/partials/header.php';
     <button onclick="window.location.href='?page=home'" class="button"><span></span>
         <p>← Retour</p>
     </button>
-    <button class="button signalement" onclick="window.location.href='?page=signalement'"><span></span>
+    <button class="button signalement" onclick="window.location.href='?page=signalement&id=<?= $lesson['id'] ?>&type=lesson'"><span></span>
         <p>Signaler cette leçon</p>
     </button>
 </div>

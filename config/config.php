@@ -4,6 +4,10 @@ function getDbConnection() {
     try{
         $conn = new PDO("sqlite:" . ROOT . "/database/database.db");
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        // Augmenter le timeout SQLite pour éviter les blocages (5 secondes)
+        $conn->setAttribute(PDO::ATTR_TIMEOUT, 5000);
+        // Activer le mode WAL pour meilleure concurrence
+        $conn->exec("PRAGMA journal_mode = WAL");
     }catch(PDOException $e){
         die("Connection failed: " . $e->getMessage());
     }catch(Exception $e){

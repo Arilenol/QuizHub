@@ -2,6 +2,14 @@
 $title = "Signaler un contenu";
 $style = './assets/style/quiz/signalement.css';
 require_once '../src/views/partials/header.php';
+
+// Vérifier si l'utilisateur est connecté
+if (!isset($_SESSION['id'])) {
+    echo "<div style='text-align: center; padding: 40px;'>";
+    echo "<p style='font-size: 18px; color: red;'>Vous devez être connecté pour signaler un contenu.</p>";
+    echo "</div>";
+    exit;
+}
 ?>
 
 <button class="retour" onclick="history.back()">← Retour</button>
@@ -9,6 +17,10 @@ require_once '../src/views/partials/header.php';
     <h1>Signaler un contenu</h1>
 
     <form action="?page=submitReport" method="post" class="signalement-form">
+        <!-- IDs du contenu (caché) - on passe les deux, un seul sera rempli -->
+        <input type="hidden" name="quiz_id" value="<?= isset($_GET['id']) && (!isset($_GET['type']) || $_GET['type'] === 'quiz') ? htmlspecialchars($_GET['id']) : '' ?>">
+        <input type="hidden" name="lesson_id" value="<?= isset($_GET['id']) && isset($_GET['type']) && $_GET['type'] === 'lesson' ? htmlspecialchars($_GET['id']) : '' ?>">
+        
         <!-- Choix du type de signalement -->
         <label for="type">Type de signalement :</label>
         <select name="type" id="type" required>

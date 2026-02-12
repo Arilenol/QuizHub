@@ -28,7 +28,7 @@ require_once '../src/views/partials/header.php';
                 <p><?= $idQuestion ?>/<?= $max ?> question(s) réalisée(s)</p>
             </div>
         <?php endif; ?>
-        <button class="button signalement" onclick="window.location.href='?page=signalement'">
+        <button class="button signalement" onclick="window.location.href='?page=signalement&id=<?= $quizId ?>&type=quiz'">
             <span></span>
             <p>Signaler ce quiz</p>
         </button>
