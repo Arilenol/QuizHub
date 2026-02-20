@@ -45,7 +45,7 @@ class LogController
 
         $pattern = '/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/';
         if (!preg_match($pattern, $password)) {
-            $error = "Le mot de passe doit contenir au moins 8 caractères, une lettre et un chiffre";
+            $error = "Le mot de passe doit contenir au moins 8 caractères, une lettre et un chiffre et sans caractères spéciaux";
             require ROOT . '/src/views/log/register.php';
             return;
         }
