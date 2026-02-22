@@ -311,6 +311,13 @@ class ProfileModel
         $stmt->execute([$idToDelete]);
 
 
+        $stmt = $this->db->prepare("
+            UPDATE lecon SET quiz_id = null
+            WHERE quiz_id = ?
+    ");
+
+        $stmt->execute([$idToDelete]);
+
         return $stmt->rowCount() > 0;
     }
 }
