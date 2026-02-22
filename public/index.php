@@ -200,23 +200,10 @@ switch ($page) {
     case 'notification':
         require_once ROOT . '/src/controllers/NotificationController.php';
         $controller = new NotificationController();
-        if (isset($_GET['email'])) {
-            $controller->sendRequest($_GET['email']);
-        } elseif (isset($_POST['action'])) {
-            if ($_POST['action'] === 'deleteNotif') {
-                $controller->deleteNotification($_POST['id']);
-            }
-        } elseif (isset($_GET['action'])) {
-            if ($_GET['action'] === 'add') {
-                $controller->addFriendRequest($_GET['id']);
-            } elseif ($_GET['action'] === 'delete') {
-                $controller->deleteFriendRequest($_GET['id']);
-            }
-        } else {
-            $controller->index();
-        }
         if (isset($_GET['action']) && ($_GET['action']  === "fetch")) {
             $controller->fetch();
+        } else {
+            $controller->index();
         }
         break;
 
@@ -253,7 +240,7 @@ switch ($page) {
         $type = $_GET['type'] ?? "quiz"; //le type doit nécéssairement être entre "quiz" et "test"
         require_once ROOT . '/src/controllers/PageInterController.php';
         $controller = new PageInterController();
-        $controller->index($id,$type);
+        $controller->index($id, $type);
         break;
     case 'Categorie':
         require_once ROOT . '/config/config.php';

@@ -1,22 +1,18 @@
 <!DOCTYPE html>
 <html lang="fr">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php
-    echo "<link rel='stylesheet' href='./assets/style/CRUDrecherche.css'>";
-
-    echo "<link rel='stylesheet' href='./assets/style/global.css'>";
-
-    ?>
-    <title>CRUD recherche</title>
-</head>
+<?php
+$style = './assets/style/CRUDrecherche.css';
+$title = "CRUD Accueil";
+require_once '../src/views/partials/header.php';
+?>
 
 <body>
     <div class="catalogue">
-        <button onclick="window.location.href='?page=home'" class="retour">&lt; Retour</button>
-        <button onclick="window.location.href='?page=Categorie'" class="retour" style="background-color: #28a745; box-shadow: 0 8px 0 #1e7e34;">📚 Gérer les catégories</button>
+        <div class="button" style="margin : 25px" onclick="history.back()">
+            <span></span>
+            <p>← Retour</p>
+        </div>
+        <button onclick="window.location.href='?page=Categorie'" class="retour" style="background-color: #28a745; box-shadow: 0 8px 0 #1e7e34; cursor: pointer">📚 Gérer les catégories</button>
 
 
         <form method="GET" action=index.php>
@@ -115,7 +111,7 @@
             <div class="quiz-affichage" id="quiz-affichage">
                 <?php
                 foreach ($quizzes as $quiz) {
-                    echo '<div class="quiz" onclick="window.location.href=\'index.php?page=CRUDquiz&id=' . $quiz['id'] . '\'">
+                    echo '<div class="quiz" style="cursor:pointer;" onclick="window.location.href=\'index.php?page=CRUDquiz&id=' . $quiz['id'] . '\'">
                 <article >
                     <div class="quiz-cat">';
                     if (!empty($quiz['categories']) && is_array($quiz['categories'])) {

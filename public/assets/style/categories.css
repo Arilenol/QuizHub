@@ -130,7 +130,7 @@
     justify-content: space-between;
 }
 
-.btn-delete {
+.catalogue .btn-delete {
     background-color: #dc3545;
     color: white;
     border: none;
@@ -138,7 +138,7 @@
     border-radius: 5px;
     cursor: pointer;
     font-size: 0.9rem;
-    box-shadow: 0 2px 0 #a71d2a;
+    box-shadow: 0 8px 0 #a71d2a;
     flex: 1;
 }
 
