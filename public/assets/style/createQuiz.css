@@ -30,11 +30,9 @@
 }
 
 .newQuiz {
-    border: 1px solid #ddd;
     padding: 20px;
-    border-radius: 15px;
     display: grid;
-    grid-template-columns: 1fr 1fr 100px;
+    grid-template-columns: auto auto auto;
     gap: 20px;
     align-items: center;
 }
@@ -43,17 +41,17 @@
     grid-column: 1 / 2;
 }
 
-.newQuiz .reponse {
-    grid-column: 2 / 3;
+.newQuiz .questionInput {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
 }
 
 .newQuiz .checkbox {
-    grid-column: 3 / 4;
     justify-self: center;
 }
 
 .question-buttons {
-    grid-column: 2 / 3;
+    grid-column: 2 / 4;
     display: flex;
     gap: 10px;
 }

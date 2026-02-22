@@ -30,9 +30,7 @@
 }
 
 .LessonPart, .exemple {
-    border: 1px solid #ddd;
     padding: 20px;
-    border-radius: 15px;
     margin-bottom: 20px;
 }
 

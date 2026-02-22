@@ -65,7 +65,7 @@ select {
 
 .signalement>span {
   background-color: rgb(167, 48, 48) !important;
-  box-shadow: 0 12px 0 rgb(114, 34, 34) !important;
+  box-shadow: 0 8px 2px rgb(114, 34, 34) !important;
 }
 
 .signalement>span:hover {
@@ -150,8 +150,7 @@ select {
 
 .button>p,
 .searchbar>p {
-  font-size: min(1.7vw, 25px);
-  line-height: 39px;
+  font-size: min(2.5vw, 25px);
   color: #fff;
   margin: 0;
   z-index: 1;
@@ -532,7 +531,7 @@ svg {
   font-size: 18px;
   border-radius: 50px;
   box-shadow: 0px 8px 2px #007881bf;
-  cursor: default;
+  cursor: pointer;
   user-select: none;
   transition:
     transform 0.1s ease-in-out,
@@ -577,6 +576,9 @@ svg {
 	header > .button{
 		padding: 10px;
 	}
+  .button{
+    padding: 15px;
+  }
 }
 @media (min-width: 999px) {
 	header > .button{
