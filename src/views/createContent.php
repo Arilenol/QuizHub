@@ -8,7 +8,7 @@
 
 <div style="display: flex; flex-direction: column; padding: 25px">
     <button class="button" type = "submit" name = "Retour" onclick = "window.location.href='index.php?page=home'" value = "yes">
-        <span></span> <p>< Retour</p></button>
+        <span></span> <p>← Retour</p></button>
     <h1 style="text-align: center   ">Que souhaitez-vous créer aujourd'hui ?</h1>
     <div class = "createCategories">
         <div class="category" onclick = "window.location.href= 'index.php?page=standard&categorie=create'" >
