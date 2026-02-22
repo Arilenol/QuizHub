@@ -36,7 +36,7 @@ class ProfileController
             if ($option !== null && $option === "showHistory") {
                 $hist = $this->model->getQuizPlayed($_SESSION['id']);
             }
-            if ($option === null && $creation > 0) {
+            if ($option === null && ($creation > 0 || $lessonCreated > 0)) {
                 require_once ROOT . '/src/models/HomeModel.php';
                 require_once ROOT . '/src/models/LessonModel.php';
                 $modelHome = new HomeModel($this->db);
