@@ -1,7 +1,45 @@
 @import url("popup.css");
 @import url("createQuiz.css");
 
-/*code à remplir pour le style de la page*/
+.modify-quiz-page {
+    margin: 30px auto;
+    width: 100%;
+    max-width: 1200px;
+    padding: 40px;
+    border-radius: 40px;
+    background: #ffdba9;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    box-sizing: border-box;
+}
+
+.modify-quiz-page form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.param-group {
+    flex-direction: row;
+    align-items: center;
+}
+
+.erreur {
+    color: red;
+    font-weight: bold;
+}
+
+.ami-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
 
 /* Augmenter la taille des titres */
 p.name,
@@ -87,8 +125,49 @@ h2 button:active {
   transition: none;
 }
 
+.newQuiz {
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 15px;
+}
+
+.questionFooter {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+    justify-content: flex-start !important;
+    flex-direction: row !important;
+}
+
+.questionFooter .button,
+.delQuestionButton {
+  flex: 0 1 auto;
+  min-width: max-content;
+}
+
+
 /* Responsive */
+
+@media (max-width: 900px) {
+    .newQuiz {
+        grid-template-columns: 1fr;
+    }
+
+    .newQuiz .question,
+    .newQuiz .reponse,
+    .newQuiz .checkbox {
+        grid-column: 1 / -1;
+    }
+}
+
+
 @media (max-width: 768px) {
+  .modify-quiz-page {
+    padding: 20px;
+    margin: 0;
+    border-radius: 0;
+  }
+    
   h2, .section-title {
     gap: 10px;
   }
@@ -108,20 +187,4 @@ h2 button:active {
     padding: 8px 15px;
     font-size: 0.8rem;
   }
-}
-
-/* Conteneurs de boutons adaptatifs */
-.questionFooter {
-  display: flex !important;
-  flex-wrap: wrap !important;
-  gap: 10px !important;
-  justify-content: flex-start !important;
-  flex-direction: row !important;
-}
-
-/* Boutons dans les conteneurs adaptatifs */
-.questionFooter .button,
-.delQuestionButton {
-  flex: 0 1 auto;
-  min-width: max-content;
 }

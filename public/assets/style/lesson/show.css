@@ -125,3 +125,61 @@
   display: flex;
   justify-self: end;
 }
+
+@media (max-width: 768px) {
+    .lesson-page {
+        padding: 20px;
+        border-radius: 0;
+        margin: 0;
+    }
+
+    .buttonAction {
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+    }
+
+    .lesson-header h1 {
+        font-size: 2.2rem;
+    }
+
+    .lesson-header .meta-info {
+        font-size: 1rem;
+    }
+
+    .lesson-intro p,
+    .lesson-part p {
+        font-size: 1.1rem;
+    }
+
+    .lesson-part h2, .info {
+        font-size: 1.6rem;
+    }
+
+    .example-box {
+        max-width: 90%;
+        padding: 20px;
+    }
+
+    .divider {
+        width: 80%;
+    }
+}
+
+@media (max-width: 480px) {
+    .lesson-header h1 {
+        font-size: 1.8rem;
+    }
+
+    .lesson-part p {
+        max-width: 100%;
+    }
+
+    .example-box strong {
+        font-size: 1.1rem;
+    }
+
+    .example-box p {
+        font-size: 1rem;
+    }
+}

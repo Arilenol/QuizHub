@@ -30,51 +30,9 @@ require 'partials/header.php';
             <select name="categorie" onchange="this.form.submit()">
                 <option value="">Toutes les catégories</option>
                 <?php
-                foreach ($quizzes as $quiz) {
-                    if ($quiz['genre'] === 'flashcard') {
-                        $genre = 'flashcard';
-                        $suite = '&action=start';
-                    } elseif ($quiz['genre'] === 'standard') {
-                        $genre = 'pageInterQuiz';
-                        $suite = '&type=standard';
-                    } elseif ($quiz['genre'] === 'test') {
-                        $genre = 'pageInterQuiz';
-                        $suite = '&type=test';
-                    }elseif ($quiz['genre'] === 'leçon'){
-                        $genre = 'lesson';
-                        $suite = '&categorie=view';
-                    }
-                    echo '<div class="quiz" onclick="window.location.href=\'index.php?page=' . $genre . '' . $suite . '&id=' . $quiz['id'] . '\'">
-                <article >
-                    <div class="quiz-cat">';
-                    if (!empty($quiz['categories']) && is_array($quiz['categories'])) {
-                        foreach ($quiz['categories'] as $cat) {
-
-                            $catName = $cat['categorieName'] ?? $cat['CategorieName'] ?? $cat['name'] ?? '';
-                            echo '<span class="category">' . htmlspecialchars($catName) . '</span>';
-                        }
-                    }
-                    echo '</div>
-                <p class="quiz-genre">' . htmlspecialchars($quiz['genre'] ?? '') . '</p>
-                <br><p class="quiz-title">' . htmlspecialchars($quiz['title'] ?? '') . '</p>
-                <br><p class="quiz-description">' . htmlspecialchars($quiz['description'] ?? '') . '</p>
-                <br><p class="quiz-auteur">Par : ' . htmlspecialchars($quiz['username'] ?? '') . '</p>
-                
-                <div class="quiz-footer">
-                    <p class="quiz-date">publié le : ' . htmlspecialchars($quiz['date'] ?? '') . '</p>
-                        <div class="quiz-reactions">';
-                        if ($quiz['genre'] != 'leçon'){
-                            echo '
-                            <span class="reaction like">👍 ' . htmlspecialchars($quiz['likes'] ?? 0) . '</span>
-                            <span class="reaction dislike">👎 ' . htmlspecialchars($quiz['dislikes'] ?? 0) . '</span>';
-                        }
-                        echo '</div>
-                    </div>
-                </article>
-            </div>';
-                }
-                if (count($quizzes) == 0){
-                    echo '<p class="aucunResult">Aucun résultat ne correspond à votre recherche</p>';
+                foreach ($cats as $cat) {
+                    $selected = (isset($_GET['categorie']) && $_GET['categorie'] == $cat['id']) ? 'selected' : '';
+                    echo '<option value="' . htmlspecialchars($cat['id']) . '" ' . $selected . '>' . htmlspecialchars($cat['categorieName']) . '</option>';
                 }
                 ?>
             </select>
@@ -104,66 +62,60 @@ require 'partials/header.php';
     </form>
 
     <div class="quiz-affichage">
-        <?php
-        foreach ($quizzes as $quiz) {
-            if ($quiz['genre'] === 'flashcard') {
-                $genre = 'flashcard';
-                $suite = '&action=start';
-            } elseif ($quiz['genre'] === 'standard') {
-                $genre = 'standard';
-                $suite = '';
-            } elseif ($quiz['genre'] === 'test') {
-                $genre = 'test';
-                $suite = '';
-            }elseif ($quiz['genre'] === 'leçon'){
-                $genre = 'lesson';
-                $suite = '&categorie=view';
-            }
-            echo '<div class="quiz" onclick="window.location.href=\'index.php?page=' . $genre . '' . $suite . '&id=' . $quiz['id'] . '\'">
-        <article >
-        <div style="display: flex; flex-direction: row; justify-content:space-between">
-            <div class="quiz-cat">';
-            if (!empty($quiz['categories']) && is_array($quiz['categories'])) {
-                foreach ($quiz['categories'] as $cat) {
-
-                    $catName = $cat['categorieName'] ?? $cat['CategorieName'] ?? $cat['name'] ?? '';
-                    echo '<span class="category">' . htmlspecialchars($catName) . '</span>';
-                }
-            }
-            echo '</div>';
-
-            if($quiz['genre'] == "flashcard"):
-            ?>
-                <button type="button" class="button download" style="padding: 10px" value="<?= $quiz['id'] ?>">
-                    <span></span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
-                        <path fill="white" d="M13 8V2H7v6H2l8 8l8-8h-5zM0 18h20v2H0v-2z"/>
-                    </svg>
-                </button>
-            <?php
-                endif;
-            
-        echo '</div><p class="quiz-genre">' . htmlspecialchars($quiz['genre'] ?? '') . '</p>
-        <br><p class="quiz-title">' . htmlspecialchars($quiz['title'] ?? '') . '</p>
-        <br><p class="quiz-description">' . htmlspecialchars($quiz['description'] ?? '') . '</p>
-        <br><p class="quiz-auteur">Par : ' . htmlspecialchars($quiz['username'] ?? '') . '</p>
-        
-        <div class="quiz-footer">
-            <p class="quiz-date">publié le : ' . htmlspecialchars($quiz['date'] ?? '') . '</p>
-                <div class="quiz-reactions">';
-                if ($quiz['genre'] != 'leçon'){
-                    echo '
-                    <span class="reaction like">👍 ' . htmlspecialchars($quiz['likes'] ?? 0) . '</span>
-                    <span class="reaction dislike">👎 ' . htmlspecialchars($quiz['dislikes'] ?? 0) . '</span>';
-                }
-                echo '</div>
-            </div>
-        </article>
-    </div>';
-        }
-        if (count($quizzes) == 0){
-            echo '<p class="aucunResult">Aucun résultat ne correspond à votre recherche</p>';
-        }
-        ?>
+        <?php if (count($quizzes) == 0): ?>
+            <p class="aucunResult">Aucun résultat ne correspond à votre recherche</p>
+        <?php else: ?>
+            <?php foreach ($quizzes as $quiz): ?>
+                <?php
+                    $url = '';
+                    if ($quiz['genre'] === 'flashcard') {
+                        $url = "index.php?page=flashcard&action=start&id=" . $quiz['id'];
+                    } elseif ($quiz['genre'] === 'standard') {
+                        $url = "index.php?page=standard&id=" . $quiz['id'];
+                    } elseif ($quiz['genre'] === 'test') {
+                        $url = "index.php?page=pageInterQuiz&type=test&id=" . $quiz['id'];
+                    } elseif ($quiz['genre'] === 'leçon') {
+                        $url = "index.php?page=lesson&categorie=view&id=" . $quiz['id'];
+                    }
+                ?>
+                <div class="quiz" onclick="window.location.href='<?= $url ?>'">
+                    <article>
+                        <div class="quiz-header">
+                            <div class="quiz-cat">
+                                <?php if (!empty($quiz['categories']) && is_array($quiz['categories'])): ?>
+                                    <?php foreach ($quiz['categories'] as $cat): ?>
+                                        <?php $catName = $cat['categorieName'] ?? $cat['CategorieName'] ?? $cat['name'] ?? ''; ?>
+                                        <span class="category"><?= htmlspecialchars($catName) ?></span>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </div>
+                            <?php if($quiz['genre'] == "flashcard"): ?>
+                                <button type="button" class="button download-button" value="<?= $quiz['id'] ?>">
+                                    <span></span>
+                                    <svg class="download-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                        <path fill="white" d="M13 8V2H7v6H2l8 8l8-8h-5zM0 18h20v2H0v-2z"/>
+                                    </svg>
+                                </button>
+                            <?php endif; ?>
+                        </div>
+                        <div class="quiz-content">
+                            <p class="quiz-genre"><?= htmlspecialchars($quiz['genre'] ?? '') ?></p>
+                            <p class="quiz-title"><?= htmlspecialchars($quiz['title'] ?? '') ?></p>
+                            <p class="quiz-description"><?= htmlspecialchars($quiz['description'] ?? '') ?></p>
+                            <p class="quiz-auteur">Par : <?= htmlspecialchars($quiz['username'] ?? '') ?></p>
+                        </div>
+                        <div class="quiz-footer">
+                            <p class="quiz-date">publié le : <?= htmlspecialchars($quiz['date'] ?? '') ?></p>
+                            <div class="quiz-reactions">
+                                <?php if ($quiz['genre'] != 'leçon'): ?>
+                                    <span class="reaction like">👍 <?= htmlspecialchars($quiz['likes'] ?? 0) ?></span>
+                                    <span class="reaction dislike">👎 <?= htmlspecialchars($quiz['dislikes'] ?? 0) ?></span>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
     </div>
 </div>

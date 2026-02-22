@@ -1,1 +1,59 @@
 @import url("popup.css");
+
+.create-flashcard-page {
+    margin: 30px auto;
+    width: 100%;
+    max-width: 1200px;
+    padding: 40px;
+    border-radius: 40px;
+    background: #ffdba9;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    box-sizing: border-box;
+}
+
+.create-flashcard-page form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.newflashcard {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.Carte {
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.erreur {
+    color: red;
+    font-weight: bold;
+}
+
+.categoriesList,
+.ami-list {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+    .create-flashcard-page {
+        padding: 20px;
+        margin: 0;
+        border-radius: 0;
+    }
+}

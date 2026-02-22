@@ -18,7 +18,7 @@ if (isset($_SESSION['id'])) {
 ?>
 
 <?php if ($isAdmin): ?>
-    <div style="margin: 30px;">
+    <div class="admin-button-container">
         <a href="./?page=CRUD" class="admin-button">
             Accès au CRUD
         </a>
@@ -36,8 +36,8 @@ if (isset($_SESSION['id'])) {
 <?php else: ?>
     <div class="newCreations">
         <?php for ($i = 0; $i < count($quizNextPart); $i++): ?>
-            <article onclick="window.location.href='./?page=<?= $quizNextPart[$i]['genre'] == 'test' ? 'pageInterQuiz' : $quizNextPart[$i]['genre'] ?>&id=<?= $quizNextPart[$i]['id'] ?> <?= $quizNextPart[$i]['genre'] == 'lesson' ? '&categorie=view' : '' ?> <?= $quizNextPart[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?><?= $quizNextPart[$i]['genre'] == 'test' ? '&type=test' : '' ?>'" class="quiz">
-                <div style="display: flex; flex-direction: row; justify-content:space-between">
+            <article onclick="window.location.href='./?page=<?= $quizNextPart[$i]['genre'] ?>&id=<?= $quizNextPart[$i]['id'] ?> <?= $quizNextPart[$i]['genre'] == 'lesson' ? '&categorie=view' : '' ?> <?= $quizNextPart[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?>'" class="quiz">
+                <div class="quiz-header">
                     <div class="quiz-cat">
                         <?php if (!empty($quizNextPart[$i]['categories'])): ?>
                             <?php foreach ($quizNextPart[$i]['categories'] as $cat): ?>
@@ -48,24 +48,21 @@ if (isset($_SESSION['id'])) {
                     <?php
                     if ($quizNextPart[$i]['genre'] == "flashcard"):
                     ?>
-                        <button type="button" class="button download" style="padding: 10px" value="<?= $quiz[$i]['id'] ?>">
+                        <button type="button" class="button download-button" value="<?= $quizNextPart[$i]['id'] ?>">
                             <span></span>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
-                                <path fill="white" d="M13 8V2H7v6H2l8 8l8-8h-5zM0 18h20v2H0v-2z" />
+                            <svg class="download-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                <path fill="white" d="M13 8V2H7v6H2l8 8l8-8h-5zM0 18h20v2H0v-2z"/>
                             </svg>
                         </button>
                     <?php
                     endif;
                     ?>
                 </div>
-                <p class="quiz-genre"><?= htmlspecialchars($quizNextPart[$i]['genre'] ?? '') ?></p>
-                <br>
-                <p class="quiz-title"><?= htmlspecialchars($quizNextPart[$i]['title'] ?? '') ?></p>
-                <br>
-                <p class="quiz-description"><?= htmlspecialchars($quizNextPart[$i]['description'] ?? '') ?></p>
-                <br>
-
-                <br>
+                <div class="quiz-content">
+                    <p class="quiz-genre"><?= htmlspecialchars($quizNextPart[$i]['genre'] ?? '') ?></p>
+                    <p class="quiz-title"><?= htmlspecialchars($quizNextPart[$i]['title'] ?? '') ?></p>
+                    <p class="quiz-description"><?= htmlspecialchars($quizNextPart[$i]['description'] ?? '') ?></p>
+                </div>
                 <div class="quiz-footer">
                     <p class="quiz-auteur">Par : <span class="nom-auteur"> <?= htmlspecialchars($quizNextPart[$i]['user_name'] ?? '') ?></span></p>
                     <p class="quiz-date">Publié le : <?= htmlspecialchars($quizNextPart[$i]['date'] ?? '') ?></p>
@@ -86,8 +83,8 @@ if (isset($_SESSION['id'])) {
     <?php if (isset($friendQuiz) && !empty($friendQuiz)): ?>
         <div class="newCreations">
             <?php for ($i = 0; $i < count($friendQuiz); $i++): ?>
-                <article onclick="window.location.href='./?page=<?= $friendQuiz[$i]['genre'] == 'test' ? 'pageInterQuiz' : $friendQuiz[$i]['genre'] ?>&id=<?= $friendQuiz[$i]['id'] ?> <?= $friendQuiz[$i]['genre'] == 'lesson' ? '&categorie=view' : '' ?> <?= $friendQuiz[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?><?= $friendQuiz[$i]['genre'] == 'test' ? '&type=test' : '' ?>'" class="quiz">
-                    <div style="display: flex; flex-direction: row; justify-content:space-between">
+                <article onclick="window.location.href='./?page=<?= $friendQuiz[$i]['genre'] ?>&id=<?= $friendQuiz[$i]['id'] ?> <?= $friendQuiz[$i]['genre'] == 'lesson' ? '&categorie=view' : '' ?>'"<?php echo $friendQuiz[$i]['genre'] == 'flashcard' ? " data-action='start'" : '' ?> class="quiz">
+                    <div class="quiz-header">
                         <div class="quiz-cat">
                             <?php if (!empty($friendQuiz[$i]['categories'])): ?>
                                 <?php foreach ($friendQuiz[$i]['categories'] as $cat): ?>
@@ -98,24 +95,21 @@ if (isset($_SESSION['id'])) {
                         <?php
                         if ($friendQuiz[$i]['genre'] == "flashcard"):
                         ?>
-                            <button type="button" class="button download" style="padding: 10px" value="<?= $quiz[$i]['id'] ?>">
+                            <button type="button" class="button download-button" value="<?= $friendQuiz[$i]['id'] ?>">
                                 <span></span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
-                                    <path fill="white" d="M13 8V2H7v6H2l8 8l8-8h-5zM0 18h20v2H0v-2z" />
+                                <svg class="download-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                    <path fill="white" d="M13 8V2H7v6H2l8 8l8-8h-5zM0 18h20v2H0v-2z"/>
                                 </svg>
                             </button>
                         <?php
                         endif;
                         ?>
                     </div>
-                    <p class="quiz-genre"><?= htmlspecialchars($friendQuiz[$i]['genre'] ?? '') ?></p>
-                    <br>
-                    <p class="quiz-title"><?= htmlspecialchars($friendQuiz[$i]['title'] ?? '') ?></p>
-                    <br>
-                    <p class="quiz-description"><?= htmlspecialchars($friendQuiz[$i]['description'] ?? '') ?></p>
-                    <br>
-
-                    <br>
+                    <div class="quiz-content">
+                        <p class="quiz-genre"><?= htmlspecialchars($friendQuiz[$i]['genre'] ?? '') ?></p>
+                        <p class="quiz-title"><?= htmlspecialchars($friendQuiz[$i]['title'] ?? '') ?></p>
+                        <p class="quiz-description"><?= htmlspecialchars($friendQuiz[$i]['description'] ?? '') ?></p>
+                    </div>
                     <div class="quiz-footer">
                         <p class="quiz-auteur">Par : <span class="nom-auteur"> <?= htmlspecialchars($friendQuiz[$i]['user_name'] ?? '') ?></span></p>
                         <p class="quiz-date">Publié le : <?= htmlspecialchars($friendQuiz[$i]['date'] ?? '') ?></p>
@@ -138,7 +132,7 @@ if (isset($_SESSION['id'])) {
 <div class="newCreations">
     <?php for ($i = 0; $i < count($quiz); $i++): ?>
         <article onclick="window.location.href='./?page=<?= $quiz[$i]['genre'] == 'test' ? 'pageInterQuiz' : $quiz[$i]['genre'] ?>&id=<?= $quiz[$i]['id'] ?> <?= $quiz[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?> <?= $quiz[$i]['genre'] == 'standard' ? '&type=standard' : '' ?> <?= $quiz[$i]['genre'] == 'test' ? '&type=test' : '' ?>'" class="quiz">
-            <div style="display: flex; flex-direction: row; justify-content:space-between">
+            <div class="quiz-header">
                 <div class="quiz-cat">
                     <?php if (!empty($quiz[$i]['categories'])): ?>
                         <?php foreach ($quiz[$i]['categories'] as $cat): ?>
@@ -149,25 +143,21 @@ if (isset($_SESSION['id'])) {
                 <?php
                 if ($quiz[$i]['genre'] == "flashcard"):
                 ?>
-                    <button type="button" class="button download" style="padding: 10px" value="<?= $quiz[$i]['id'] ?>">
-                        <span></span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
-                            <path fill="white" d="M13 8V2H7v6H2l8 8l8-8h-5zM0 18h20v2H0v-2z" />
-                        </svg>
-                    </button>
+                <button type="button" class="button download-button" value="<?= $quiz[$i]['id'] ?>">
+                    <span></span>
+                    <svg class="download-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                        <path fill="white" d="M13 8V2H7v6H2l8 8l8-8h-5zM0 18h20v2H0v-2z"/>
+                    </svg>
+                </button>
                 <?php
                 endif;
                 ?>
             </div>
-
-            <p class="quiz-genre"><?= htmlspecialchars($quiz[$i]['genre'] ?? '') ?></p>
-            <br>
-            <p class="quiz-title"><?= htmlspecialchars($quiz[$i]['title'] ?? '') ?></p>
-            <br>
-            <p class="quiz-description"><?= htmlspecialchars($quiz[$i]['description'] ?? '') ?></p>
-            <br>
-
-            <br>
+            <div class="quiz-content">
+                <p class="quiz-genre"><?= htmlspecialchars($quiz[$i]['genre'] ?? '') ?></p>
+                <p class="quiz-title"><?= htmlspecialchars($quiz[$i]['title'] ?? '') ?></p>
+                <p class="quiz-description"><?= htmlspecialchars($quiz[$i]['description'] ?? '') ?></p>
+            </div>
             <div class="quiz-footer">
                 <p class="quiz-auteur">Par : <span class="nom-auteur"> <?= htmlspecialchars($quiz[$i]['user_name'] ?? '') ?> </span></p>
                 <p class="quiz-date">Publié le : <?= htmlspecialchars($quiz[$i]['date'] ?? '') ?></p>
@@ -186,21 +176,20 @@ if (isset($_SESSION['id'])) {
 <div class="newCreations">
     <?php for ($i = 0; $i < count($lessons); $i++): ?>
         <article onclick="window.location.href='./?page=lesson&categorie=view&id=<?= $lessons[$i]['lecon_id'] ?>'" class="quiz">
-            <div class="quiz-cat">
-                <?php if (!empty($lessons[$i]['categories'])): ?>
-                    <?php foreach ($lessons[$i]['categories'] as $cat): ?>
-                        <span class="category"><?= htmlspecialchars($cat) ?></span>
-                    <?php endforeach; ?>
-                <?php endif; ?>
+            <div class="quiz-header">
+                <div class="quiz-cat">
+                    <?php if (!empty($lessons[$i]['categories'])): ?>
+                        <?php foreach ($lessons[$i]['categories'] as $cat): ?>
+                            <span class="category"><?= htmlspecialchars($cat) ?></span>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
             </div>
-            <p class="quiz-genre"> leçon </p>
-            <br>
-            <p class="quiz-title"><?= htmlspecialchars($lessons[$i]['lecon_title'] ?? '') ?></p>
-            <br>
-            <p class="quiz-description"><?= htmlspecialchars($lessons[$i]['lecon_description'] ?? '') ?></p>
-            <br>
-
-            <br>
+            <div class="quiz-content">
+                <p class="quiz-genre"> leçon </p>
+                <p class="quiz-title"><?= htmlspecialchars($lessons[$i]['lecon_title'] ?? '') ?></p>
+                <p class="quiz-description"><?= htmlspecialchars($lessons[$i]['lecon_description'] ?? '') ?></p>
+            </div>
             <div class="quiz-footer">
                 <p class="quiz-auteur">Par : <span class="nom-auteur"> <?= htmlspecialchars($lessons[$i]['user_name'] ?? '') ?></span></p>
                 <p class="quiz-date">Publié le : <?= htmlspecialchars($lessons[$i]['lecon_date'] ?? '') ?></p>
