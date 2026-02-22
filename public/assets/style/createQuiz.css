@@ -1,7 +1,7 @@
 @import url("popup.css");
 
 .create-quiz-page {
-    margin: 30px auto;
+    margin: 30px 0 0 0;
     width: 100%;
     max-width: 1200px;
     padding: 40px;
@@ -9,6 +9,7 @@
     background: #ffdba9;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
     box-sizing: border-box;
+    justify-self: center;
 }
 
 .create-quiz-page form {
@@ -78,19 +79,6 @@
     grid-row-end: 2;
     grid-column-start: 3;
     grid-column-end: 4;
-}
-
-@media (max-width: 900px) {
-    .newQuiz {
-        grid-template-columns: 1fr;
-    }
-
-    .newQuiz .question,
-    .newQuiz .reponse,
-    .newQuiz .checkbox,
-    .question-buttons {
-        grid-column: 1 / -1;
-    }
 }
 
 @media (max-width: 768px) {

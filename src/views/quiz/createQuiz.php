@@ -108,7 +108,7 @@
         </div>
 
         <div class="form-group disponibilite">
-            <p>Mode de publication :</p>
+            <h2>Mode de publication :</h2>
             <select name="disponibilite" id="disponibilite">
                 <option value="public" <?= $_SESSION['POST']['disponibilite'] == 'public' ? 'selected' : '' ?>>publique</option>
                 <option value="ami" <?= $_SESSION['POST']['disponibilite'] == 'ami' ? 'selected' : '' ?>>Seulement les amis</option>

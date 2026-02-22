@@ -41,29 +41,25 @@
         <div class="questions-container">
             <?php for($i = 0; $i < $taille; $i++): ?>
                 <div class="newQuiz" id="quizQuestion<?= $i ?>">
-                    <p class="validite">réponse valide ?</p>
-                    <div class="question">
-                        <p class="section-title">Question <?= $i + 1 ?></p>
-                        <div class="textarea" id="question<?= $i + 1 ?>">
-                            <span></span>
-                            <textarea type="text" name="question<?= $i ?>" id="textarea<?= $i ?>" placeholder="nom de la question" disabled><?= htmlspecialchars($TAB_QUESTIONS[$i]['question']) ?></textarea>
-                        </div>
+                    <h2 class="validite">Réponse valide ?</h2>
+                    <h2 class="question">Question <?= $i + 1 ?></h2>
+                    <div class="textarea questionInput" id="question<?= $i + 1 ?>">
+                        <span></span>
+                        <textarea type="text" name="question<?= $i ?>" id="textarea<?= $i ?>" placeholder="nom de la question" disabled><?= htmlspecialchars($TAB_QUESTIONS[$i]['question']) ?></textarea>
                     </div>
                     
                     <?php for($k = 0; $k < $TAB_QUESTIONS[$i]['nbReponse']; $k++): ?>
-                        <div class="reponse">
-                            <p>Réponse <?= $k + 1 ?> :</p>
-                            <div class="input">
-                                <span></span>
-                                <input form="no" name="reponse<?= $i ?>[]" value="<?= htmlspecialchars($TAB_QUESTIONS[$i]['reponses'][$k]['reponse']) ?>" disabled>
-                            </div>
+                        <h2 class="reponse" style="grid-row: <?= ($k * 2) + 1 ?> / <?= ($k * 2) + 2 ?>; grid-column: 2 / 3">Réponse <?= $k + 1 ?> :</h2>
+                        <div class="input responseInput" style="grid-row: <?= ($k * 2) + 2 ?> / <?= ($k * 2) + 3 ?>; grid-column: 2 / 3">
+                            <span></span>
+                            <input form="no" name="reponse<?= $i ?>[]" value="<?= htmlspecialchars($TAB_QUESTIONS[$i]['reponses'][$k]['reponse']) ?>" disabled>
                         </div>
-                        <div class="checkbox">
+                        <div class="checkbox" style="grid-row: <?= ($k * 2) + 2 ?> / <?= ($k * 2) + 3 ?>; grid-column: 3 / 4">
                             <input type="checkbox" name="checkbox<?= $i ?>[]" <?= $TAB_QUESTIONS[$i]['reponses'][$k]['estCorrecte'] ? 'checked' : '' ?> disabled hidden>
                         </div>
                     <?php endfor; ?>
 
-                    <div id="questionFooter<?= $i ?>" class="questionFooter">
+                    <div id="questionFooter<?= $i ?>" class="questionFooter" style="grid-row: <?= $TAB_QUESTIONS[$i]['nbReponse'] * 2 + 1 ?> / <?= $TAB_QUESTIONS[$i]['nbReponse'] * 2 + 2 ?>; grid-column: -2 / -3;">
                         <button class="button modifierQuestion" type="submit" id="modifier<?= $i ?>" name="modifierQuestion" value="<?= $i ?>">
                             <span></span>
                             <p>Modifier</p>
@@ -71,7 +67,7 @@
                     </div>
 
                     <?php if ($i != 0 || $taille > 1): ?>
-                        <button class="button delQuestionButton" name="DelQuestion" id="DelQuestion<?= $i ?>" type="submit" value="<?= $i ?>"><span></span><p>Supprimer cette question</p></button>
+                        <button class="button delQuestionButton" style="grid-row: <?= $TAB_QUESTIONS[$i]['nbReponse'] * 2 + 1 ?> / <?= $TAB_QUESTIONS[$i]['nbReponse'] * 2 + 2 ?>; grid-column: -1 / -2;" name="DelQuestion" id="DelQuestion<?= $i ?>" type="submit" value="<?= $i ?>"><span></span><p>Supprimer cette question</p></button>
                     <?php endif; ?>
                 </div>
             <?php endfor; ?>
@@ -107,7 +103,7 @@
         </div>
 
         <div class="form-group disponibilite">
-            <p class="section-title">Mode de publication <button id="modifDispo">Modifier</button></p>
+            <h2 class="section-title">Mode de publication <button id="modifDispo">Modifier</button></h2>
             <select name="disponibilite" id="disponibilite" disabled>
                 <option value="public" <?= $quizInfos['disponibilite'] == 'public' ? 'selected' : '' ?>>publique</option>
                 <option value="ami" <?= $quizInfos['disponibilite'] == 'ami' ? 'selected' : '' ?>>Seulement les amis</option>
