@@ -4,7 +4,7 @@ $style = './assets/style/home.css';
 include 'partials/header.php';
 ?>
 
-<?php 
+<?php
 // Vérifier si l'utilisateur est admin
 $isAdmin = false;
 if (isset($_SESSION['id'])) {
@@ -46,7 +46,7 @@ if (isset($_SESSION['id'])) {
                         <?php endif; ?>
                     </div>
                     <?php
-                        if($quizNextPart[$i]['genre'] == "flashcard"):
+                    if ($quizNextPart[$i]['genre'] == "flashcard"):
                     ?>
                         <button type="button" class="button download-button" value="<?= $quizNextPart[$i]['id'] ?>">
                             <span></span>
@@ -55,7 +55,7 @@ if (isset($_SESSION['id'])) {
                             </svg>
                         </button>
                     <?php
-                        endif;
+                    endif;
                     ?>
                 </div>
                 <div class="quiz-content">
@@ -93,7 +93,7 @@ if (isset($_SESSION['id'])) {
                             <?php endif; ?>
                         </div>
                         <?php
-                            if($friendQuiz[$i]['genre'] == "flashcard"):
+                        if ($friendQuiz[$i]['genre'] == "flashcard"):
                         ?>
                             <button type="button" class="button download-button" value="<?= $friendQuiz[$i]['id'] ?>">
                                 <span></span>
@@ -102,7 +102,7 @@ if (isset($_SESSION['id'])) {
                                 </svg>
                             </button>
                         <?php
-                            endif;
+                        endif;
                         ?>
                     </div>
                     <div class="quiz-content">
@@ -141,7 +141,7 @@ if (isset($_SESSION['id'])) {
                     <?php endif; ?>
                 </div>
                 <?php
-                    if($quiz[$i]['genre'] == "flashcard"):
+                if ($quiz[$i]['genre'] == "flashcard"):
                 ?>
                 <button type="button" class="button download-button" value="<?= $quiz[$i]['id'] ?>">
                     <span></span>
@@ -150,7 +150,7 @@ if (isset($_SESSION['id'])) {
                     </svg>
                 </button>
                 <?php
-                    endif;
+                endif;
                 ?>
             </div>
             <div class="quiz-content">

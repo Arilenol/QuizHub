@@ -1,63 +1,83 @@
 .signalement-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 50px 20px;
-    font-family: "Inter", sans-serif;
-    min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 50px 20px;
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
 }
 
 .signalement-page h1 {
-    margin-bottom: 40px;
-    color: #222;
+  margin-bottom: 40px;
+  color: #222;
 }
 
 .signalement-form {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-width: 500px;
-    gap: 20px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 500px;
+  gap: 20px;
 }
 
 .signalement-form label {
-    font-weight: bold;
-    color: #222;
+  font-weight: bold;
+  color: #222;
 }
 
 .signalement-form select,
 .signalement-form textarea {
-    padding: 12px 15px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 16px;
-    width: 100%;
-    box-sizing: border-box;
+  padding: 12px 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .signalement-form textarea {
-    resize: vertical;
+  resize: vertical;
 }
 
 button {
-    border-radius: 75px;
-    background-color: #0AB1BD;
-    color: white;
-    border: none;
-    padding: 21px 36px;
-    font-size: 1.575rem;
-    min-height: 69px;
-    cursor: pointer;
-    box-shadow: 0 12px 0 #087b86;
+  border-radius: 75px;
+  background-color: #0ab1bd;
+  color: white;
+  border: none;
+  padding: 21px 36px;
+  font-size: 1.575rem;
+  min-height: 69px;
+  cursor: pointer;
+  box-shadow: 0 12px 0 #087b86;
 }
 
 button:hover {
-    background-color: #fff;
-    color: #087b86;
-    box-shadow: 0px 8px 2px #CACACABF;
+  background-color: #fff;
+  color: #087b86;
+  box-shadow: 0px 8px 2px #cacacabf;
 }
 
 .retour {
-    margin-left: 1%;
-    margin-top: 1%;
+  margin-left: 1%;
+  margin-top: 1%;
+}
+
+.alert-box {
+    text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #ffc067;
+  padding: 3rem;
+  border-radius: 1.2rem;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  width: 400px;
+  margin: 80px auto;
+}
+
+.alert-message {
+  font-size: 18px;
+  color: #e63946;
+  margin-bottom: 20px;
+  font-weight: 500;
 }

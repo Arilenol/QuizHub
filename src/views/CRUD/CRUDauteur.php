@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html lang="fr">
+<?php
+require_once '../src/views/partials/header.php';
+?>
 
 <head>
     <meta charset="UTF-8">
@@ -13,7 +16,10 @@
 
 <body>
     <div class="catalogue">
-        <button onclick="window.location.href='?page=CRUD'" class="retour">&lt; Retour à la recherche</button>
+        <div class="button" style="margin : 25px" onclick="window.location.href='?page=CRUD'">
+            <span></span>
+            <p>← Retour à la recherche</p>
+        </div>
 
         <!-- Fiche auteur -->
         <div style="margin: 30px 0; padding: 20px; background-color: #f0f8f9; border-radius: 10px; border-left: 4px solid #0AB1BD;">
@@ -49,19 +55,19 @@
 
         <!-- Affichage des quizzes de l'auteur -->
         <div class="quiz-affichage">
-            <?php 
-            if (!empty($quizzes)): 
+            <?php
+            if (!empty($quizzes)):
                 foreach ($quizzes as $quiz) {
                     echo '<div class="quiz" onclick="window.location.href=\'index.php?page=CRUDquiz&id=' . $quiz['id'] . '\'">
                         <article>
                             <div class="quiz-cat">';
-                                if (!empty($quiz['categories']) && is_array($quiz['categories'])) {
-                                    foreach ($quiz['categories'] as $cat) {
-                                        $catName = $cat['categorieName'] ?? $cat['CategorieName'] ?? $cat['name'] ?? '';
-                                        echo '<span class="category">' . htmlspecialchars($catName) . '</span>';
-                                    }
-                                }
-                            echo '</div>
+                    if (!empty($quiz['categories']) && is_array($quiz['categories'])) {
+                        foreach ($quiz['categories'] as $cat) {
+                            $catName = $cat['categorieName'] ?? $cat['CategorieName'] ?? $cat['name'] ?? '';
+                            echo '<span class="category">' . htmlspecialchars($catName) . '</span>';
+                        }
+                    }
+                    echo '</div>
                             <p class="quiz-genre">' . htmlspecialchars($quiz['genre'] ?? '') . '</p>
                             <br><p class="quiz-title">' . htmlspecialchars($quiz['title'] ?? '') . '</p>
                             <br><p class="quiz-description">' . htmlspecialchars($quiz['description'] ?? '') . '</p>

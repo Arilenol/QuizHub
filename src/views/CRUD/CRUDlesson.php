@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html lang="fr">
+<?php
+require_once '../src/views/partials/header.php';
+?>
 
 <head>
     <meta charset="UTF-8">
@@ -14,7 +17,10 @@
 
 <body>
     <div id="catalogue" class="catalogue">
-        <button onclick="window.location.href='?page=CRUD'" class="retour" id="retour">&lt; Retour</button>
+        <div class="button" style="margin : 25px" onclick="history.back()">
+            <span></span>
+            <p>← Retour</p>
+        </div>
 
         <main class="lesson-page">
 

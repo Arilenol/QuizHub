@@ -7,6 +7,10 @@ require_once '../src/views/partials/header.php';
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 </head>
+<div class="button" style="margin : 25px" onclick="history.back()">
+    <span></span>
+    <p>← Retour</p>
+</div>
 <div class="log-container">
     <h1>S'inscrire</h1>
     <?php if (isset($error) && !empty($error)) : ?>
@@ -23,8 +27,8 @@ require_once '../src/views/partials/header.php';
         </div>
         <div class="flatinput">
             <span></span>
-            <input type="password" id="password" name="password" placeholder="Mot de passe" pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$" 
-            title="Le mot de passe doit contenir au moins 8 caractères, une lettre et un chiffre" required>
+            <input type="password" id="password" name="password" placeholder="Mot de passe" pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
+                title="Le mot de passe doit contenir au moins 8 caractères, une lettre et un chiffre et sans caractères spéciaux" required>
             <i id="eyeMdp" class="fa-solid fa-eye fa-2xl"></i>
         </div>
         <div class="flatinput">
