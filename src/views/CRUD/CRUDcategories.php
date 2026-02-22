@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html lang="fr">
+<?php
+require_once '../src/views/partials/header.php';
+?>
 
 <head>
     <meta charset="UTF-8">
@@ -14,7 +17,10 @@
 
 <body>
     <div class="catalogue">
-        <button onclick="window.location.href='?page=CRUD'" class="retour">&lt; Retour</button>
+        <div class="button" style="margin : 25px" onclick="history.back()">
+            <span></span>
+            <p>← Retour</p>
+        </div>
 
         <h1 class="page-title">Gestion des Catégories</h1>
 
@@ -33,18 +39,21 @@
 
                 <div class="form-group">
                     <label for="categorieName">Nom de la catégorie *</label>
-                    <input type="text" id="categorieName" name="categorieName" required 
-                           placeholder="Ex: Mathématiques, Français, etc...">
+                    <input type="text" id="categorieName" name="categorieName" required
+                        placeholder="Ex: Mathématiques, Français, etc...">
                 </div>
 
                 <div class="form-group">
                     <label for="description">Description</label>
-                    <textarea id="description" name="description" 
-                              placeholder="Décrivez brièvement cette catégorie (optionnel)"></textarea>
+                    <textarea id="description" name="description"
+                        placeholder="Décrivez brièvement cette catégorie (optionnel)"></textarea>
                 </div>
 
                 <div class="form-buttons">
-                    <button type="submit" class="btn-submit">Créer la catégorie</button>
+                    <div class="button" type="submit">
+                        <span></span>
+                        <p>Créer la catégorie</p>
+                    </div>
                 </div>
             </form>
         </div>
@@ -61,7 +70,7 @@
                 <?php foreach ($categories as $category): ?>
                     <div class="category-card">
                         <div class="category-name"><?= htmlspecialchars($category['categorieName']) ?></div>
-                        
+
                         <?php if (!empty($category['description'])): ?>
                             <div class="category-description">
                                 <?= htmlspecialchars($category['description']) ?>
@@ -80,8 +89,8 @@
                             <form method="POST" action="?page=Categorie" style="flex: 1;">
                                 <input type="hidden" name="action" value="delete">
                                 <input type="hidden" name="categoryId" value="<?= $category['id'] ?>">
-                                <button type="submit" class="btn-delete" 
-                                        onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ? Les quiz associés conserveront les autres catégories.');">
+                                <button type="submit" class="btn-delete"
+                                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ? Les quiz associés conserveront les autres catégories.');">
                                     🗑️ Supprimer
                                 </button>
                             </form>

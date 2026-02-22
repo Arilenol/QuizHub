@@ -4,7 +4,10 @@ $style = './assets/style/notification.css';
 include 'partials/header.php';
 ?>
 
-<button class="retour" onclick="history.back()">← Retour</button>
+<div class="button" style="margin : 25px" onclick="history.back()">
+    <span></span>
+    <p>← Retour</p>
+</div>
 <div class="friend-requests">
     <h2>Demandes d'amis reçues</h2>
     <?php if (!isset($allFriendRequests) || empty($allFriendRequests)): ?>
@@ -23,8 +26,17 @@ include 'partials/header.php';
                     </div>
                 </div>
                 <div class="request-buttons">
-                    <button class="accept" onclick='window.location.href="?page=notification&action=add&id=<?= $friend["id"] ?>"'>Accepter</button>
-                    <button class="reject" onclick='window.location.href="?page=notification&action=delete&id=<?= $friend["id"] ?>"'>Refuser</button>
+                    <form method="POST" class="inline-form">
+                        <input type="hidden" name="action" value="add">
+                        <input type="hidden" name="id" value="<?= $friend["id"] ?>">
+                        <button type="submit" class="accept">Accepter</button>
+                    </form>
+
+                    <form method="POST" class="inline-form">
+                        <input type="hidden" name="action" value="delete">
+                        <input type="hidden" name="id" value="<?= $friend["id"] ?>">
+                        <button type="submit" class="reject">Refuser</button>
+                    </form>
                 </div>
             </div>
         <?php endforeach; ?>
@@ -38,17 +50,20 @@ include 'partials/header.php';
         <p class="notif">Aucune notification reçue</p>
 
     <?php else: ?>
-        <?php foreach ($notifications as $notif) : ?>
+        <?php foreach ($notifications as $signal) : ?>
             <div class="request">
                 <div class="request-info">
-                    <div>
-                        <strong><?= htmlspecialchars($notif['type']) ?></strong><br>
-                        <small><?= htmlspecialchars($notif['message']) ?></small><br>
-                        <small style="color: #999;"><?= htmlspecialchars($notif['date_creation']) ?></small>
+                    <div class="notif-content">
+                        <strong><?= htmlspecialchars($signal['type']) ?></strong><br>
+                        <p class="notif-message">
+                            <?= htmlspecialchars($signal['message']) ?>
+                        </p>
+                        <small class="notif-date"><?= htmlspecialchars($signal['date_creation']) ?></small>
                     </div>
                 </div>
                 <div class="request-buttons">
-                    <button class="reject" onclick='deleteNotification(<?= $notif["id"] ?>)' title="Supprimer">✕</button>
+                    <button class="toggle-message" data-date="<?= $signal['date_creation'] ?>" data-message="<?= $signal["message"] ?>" data-type="<?= $signal["type"] ?>">Voir plus</button>
+                    <button class="reject" onclick='deleteSignal(<?= $signal["id"] ?>)' title="Supprimer">✕</button>
                 </div>
             </div>
         <?php endforeach; ?>
@@ -58,44 +73,78 @@ include 'partials/header.php';
 <div class="invite-box">
     <h2>Envoyer une demande d’ami</h2>
 
-    <?php
-    if (isset($message)) {
-        if ($message) {
-            echo '<p style="color: green;">Demande envoyées avec succès</p>';
-        } else {
-            echo '<p style="color: red;">Echec de la demande (demande déjà envoyée ou email inexistant ou autre)</p>';
-        }
-    }
-    ?>
-    <form method="get" action="">
-        <input type="hidden" name="page" value="notification">
+    <?php if (!empty($_SESSION['flash'])): ?>
+        <p style="color: green;">
+            <?= $_SESSION['flash'];
+            unset($_SESSION['flash']); ?>
+        </p>
+    <?php endif; ?>
+    <form method="POST" action="?page=notification">
+        <input type="hidden" name="action" value="sendRequest">
         <input type="email" name="email" placeholder="Adresse email de votre ami" required>
         <button type="submit">Envoyer la demande</button>
     </form>
 
 </div>
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal">
+        <button type="button" class="close-modal" id="closeDeleteModal">
+            &times;
+        </button>
+
+        <h3 id="type"></h3>
+
+        <p id="message"></p>
+
+        <small id="date"></small>
+
+
+        <button class="admin-button" onclick="window.location.href='?page=CRUD'">Accéder au CRUD</button>
+
+    </div>
+</div>
 
 <script>
-function deleteNotification(notifId) {
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = '';
-    
-    const actionInput = document.createElement('input');
-    actionInput.type = 'hidden';
-    actionInput.name = 'action';
-    actionInput.value = 'deleteNotif';
-    
-    const idInput = document.createElement('input');
-    idInput.type = 'hidden';
-    idInput.name = 'id';
-    idInput.value = notifId;
-    
-    form.appendChild(actionInput);
-    form.appendChild(idInput);
-    document.body.appendChild(form);
-    form.submit();
-}
+    function deleteNotification(notifId) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '';
+
+        const actionInput = document.createElement('input');
+        actionInput.type = 'hidden';
+        actionInput.name = 'action';
+        actionInput.value = 'deleteNotif';
+
+        const idInput = document.createElement('input');
+        idInput.type = 'hidden';
+        idInput.name = 'id';
+        idInput.value = notifId;
+
+        form.appendChild(actionInput);
+        form.appendChild(idInput);
+        document.body.appendChild(form);
+        form.submit();
+    }
+    document.querySelectorAll('.toggle-message').forEach(button => {
+        button.addEventListener('click', () => {
+            const type = document.getElementById("type");
+            const message = document.getElementById("message")
+            const date = document.getElementById("date")
+            console.log(button.dataset.message)
+            message.textContent = button.dataset.message
+            date.textContent = button.dataset.date
+
+            type.innerHTML = `${button.dataset.type}`
+
+            deleteModal.style.display = 'flex'
+        });
+    });
+    const closeBtn = document.getElementById('closeDeleteModal');
+    const modal = document.getElementById("deleteModal")
+
+    closeBtn.addEventListener("click", () => {
+        modal.style.display = "none";
+    });
 </script>
 
 </body>

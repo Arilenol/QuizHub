@@ -1,6 +1,7 @@
 <?php
 
 require_once ROOT . '/src/models/LogModel.php';
+require_once ROOT . '/config/config.php';
 
 class NotificationModel
 {
@@ -32,6 +33,7 @@ class NotificationModel
         $stmt->execute([$receveurId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
 
 
     /**

@@ -1,16 +1,17 @@
 <?php
 
-function getDbConnection() {
-    try{
+function getDbConnection()
+{
+    try {
         $conn = new PDO("sqlite:" . ROOT . "/database/database.db");
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         // Augmenter le timeout SQLite pour éviter les blocages (5 secondes)
         $conn->setAttribute(PDO::ATTR_TIMEOUT, 5000);
         // Activer le mode WAL pour meilleure concurrence
         $conn->exec("PRAGMA journal_mode = WAL");
-    }catch(PDOException $e){
+    } catch (PDOException $e) {
         die("Connection failed: " . $e->getMessage());
-    }catch(Exception $e){
+    } catch (Exception $e) {
         die("Error: " . $e->getMessage());
     }
     return $conn;
@@ -21,21 +22,24 @@ function getDbConnection() {
  * 
  * @return bool True si l'utilisateur est connecté et admin, false sinon
  */
-function isAdminUser() {
-    session_start();
-    
+function isAdminUser()
+{
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
     // Vérifier si l'utilisateur est connecté
     if (!isset($_SESSION['id'])) {
         return false;
     }
-    
+
     // Récupérer les informations de l'utilisateur
     try {
         $db = getDbConnection();
         $stmt = $db->prepare("SELECT admin FROM users WHERE id = ?");
         $stmt->execute([$_SESSION['id']]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        
+
         return $user && (int)$user['admin'] === 1;
     } catch (Exception $e) {
         return false;
@@ -48,11 +52,10 @@ function isAdminUser() {
  * 
  * @return void
  */
-function requireAdmin() {
+function requireAdmin()
+{
     if (!isAdminUser()) {
         http_response_code(403);
         die("Accès refusé : Vous devez être connecté avec les droits administrateur pour accéder à cette page.");
     }
 }
-
-?>

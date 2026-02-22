@@ -7,6 +7,10 @@ require_once '../src/views/partials/header.php';
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 </head>
+<div class="button" style="margin : 25px" onclick="history.back()">
+    <span></span>
+    <p>← Retour</p>
+</div>
 <div class="log-container">
     <h1>Se connecter</h1>
     <?php if (isset($error) && !empty($error)) : ?>
