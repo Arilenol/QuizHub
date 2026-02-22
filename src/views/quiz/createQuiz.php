@@ -22,7 +22,7 @@
         </div>
 
         <div class="form-group">
-            <p class="description">Description</p>
+            <h2>Description</h2>
             <div class="input">
                 <span></span>
                 <input type="text" name="QuizDescription" value="<?php echo htmlspecialchars($desc) ?>">
@@ -44,24 +44,20 @@
         <div class="questions-container">
             <?php for($i = 0; $i < $_SESSION['nbQuestions']; $i++): ?>
                 <div class="newQuiz">
-                    <p class="validite">réponse valide ?</p>
-                    <div class="question">
-                        <p>Question <?= $i + 1 ?></p>
-                        <div class="textarea" id="question<?= $i + 1 ?>">
-                            <span></span>
-                            <textarea type="text" name="question<?= $i ?>" placeholder="nom de la question"><?= htmlspecialchars($TAB_CONTENU[$i]['name']) ?></textarea>
-                        </div>
+                    <h2 class="validite">Réponse valide ?</h2>
+                    <h2 class="question">Question <?= $i + 1 ?></h2>
+                    <div class="textarea questionInput" id="question<?= $i + 1 ?>">
+                        <span></span>
+                        <textarea type="text" name="question<?= $i ?>" placeholder="nom de la question"><?= htmlspecialchars($TAB_CONTENU[$i]['name']) ?></textarea>
                     </div>
 
                     <?php for ($k = 0; $k < $_SESSION['nbReponse'][$i]; $k++): ?>
-                        <div class="reponse">
-                            <p>Réponse <?= $k + 1 ?> :</p>
-                            <div class="input">
-                                <span></span>
-                                <input name="reponse<?= $k ?>-question<?= $i ?>" value="<?= htmlspecialchars($TAB_CONTENU[$i]['reponses'][$k]['texte']) ?>">
-                            </div>
+                        <h2 class="reponse" style="grid-row: <?= ($k * 2) + 1 ?> / <?= ($k * 2) + 2 ?>; grid-column: 2 / 3">Réponse <?= $k + 1 ?> :</h2>
+                        <div class="input responseInput" style="grid-row: <?= ($k * 2) + 2 ?> / <?= ($k * 2) + 3 ?>; grid-column: 2 / 3">
+                            <span></span>
+                            <input name="reponse<?= $k ?>-question<?= $i ?>" value="<?= htmlspecialchars($TAB_CONTENU[$i]['reponses'][$k]['texte']) ?>">
                         </div>
-                        <div class="checkbox">
+                        <div class="checkbox" style="grid-row: <?= ($k * 2) + 2 ?> / <?= ($k * 2) + 3 ?>; grid-column: 3 / 4">
                             <input type="checkbox" name="checkbox<?= $k ?>-question<?= $i ?>" <?= $TAB_CONTENU[$i]['reponses'][$k]['valide'] ? 'checked' : '' ?> hidden>
                         </div>
                     <?php endfor; ?>

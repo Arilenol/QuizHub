@@ -30,9 +30,7 @@
 }
 
 .Carte {
-    border: 1px solid #ddd;
     padding: 20px;
-    border-radius: 15px;
     display: flex;
     flex-direction: column;
     gap: 15px;

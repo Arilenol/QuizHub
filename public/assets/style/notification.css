@@ -122,8 +122,8 @@ form button:hover {
     background-color: #0AB1BD;
     color: white;
     border: none;
-    padding: 21px 36px;
-    font-size: 1.575rem;
+    padding: 20px;
+    font-size: min(4.5vw, 25px);
     min-height: 69px;
     cursor: pointer;
     box-shadow: 0 12px 0 #087b86;
@@ -136,6 +136,27 @@ form button:hover {
 }
 
 .retour {
-    margin-left: 1%;
-    margin-top: 1%;
+    margin: 1% 0 0 1%;
+}
+
+@media (max-width: 1000px) {
+    .retour{
+        margin: 5% 1%;
+    }
+    .friend-requests, .invite-box{
+        width: 80vw;
+    }
+    .friend-requests > h2, .invite-box > h2 {
+        font-size: 4vw;
+    }
+    .friend-requests > p {
+        font-size: 3vw;
+    }
+    form input{
+        width: 74vw;
+        font-size: 2.5vw;
+    }
+    form button{
+        font-size: 2.5vw;
+    }
 }

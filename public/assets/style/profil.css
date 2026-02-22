@@ -99,8 +99,8 @@ button {
   display: flex;
   align-items: center;
   gap: 3%;
-  border-bottom: 3px solid #10b3c6;
-  margin-top: 1%;
+  box-shadow: 0px 8px 2px #E38D15BF;
+  margin: 5% 0;
 }
 
 .info {
@@ -132,11 +132,12 @@ button {
 
 .stats .number {
   font-weight: bold;
-  font-size: 1.3rem;
+  font-size: min(2.5vw, 25px);
 }
 
 .stats .label {
   margin-left: 0.3rem;
+  font-size: min(2.5vw, 25px);
 }
 
 .tabs {
@@ -525,4 +526,16 @@ p.error {
   aspect-ratio: 1/1;
   -o-object-fit: cover;
   object-fit: cover;
+}
+
+@media (max-width: 1000px) {
+  .profile-card{
+    flex-direction: column;
+    padding: 5% 3%;
+  }
+  .info{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 }

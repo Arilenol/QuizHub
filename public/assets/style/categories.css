@@ -26,8 +26,6 @@
 .form-group textarea {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
     font-size: 1rem;
     box-sizing: border-box;
 }
