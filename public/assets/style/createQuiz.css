@@ -1,10 +1,78 @@
 @import url("popup.css");
 
-.newQuiz{
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: auto;
+.create-quiz-page {
+    margin: 30px auto;
+    width: 100%;
+    max-width: 1200px;
+    padding: 40px;
+    border-radius: 40px;
+    background: #ffdba9;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    box-sizing: border-box;
+}
+
+.create-quiz-page form {
+    display: flex;
+    flex-direction: column;
     gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.questions-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.newQuiz {
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 15px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 100px;
+    gap: 20px;
+    align-items: center;
+}
+
+.newQuiz .question {
+    grid-column: 1 / 2;
+}
+
+.newQuiz .reponse {
+    grid-column: 2 / 3;
+}
+
+.newQuiz .checkbox {
+    grid-column: 3 / 4;
+    justify-self: center;
+}
+
+.question-buttons {
+    grid-column: 2 / 3;
+    display: flex;
+    gap: 10px;
+}
+
+.erreur {
+    color: red;
+    font-weight: bold;
+}
+
+.ami-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.parametres .form-group {
+    flex-direction: row;
+    align-items: center;
 }
 
 .newQuiz > .validite{
@@ -12,4 +80,25 @@
     grid-row-end: 2;
     grid-column-start: 3;
     grid-column-end: 4;
+}
+
+@media (max-width: 900px) {
+    .newQuiz {
+        grid-template-columns: 1fr;
+    }
+
+    .newQuiz .question,
+    .newQuiz .reponse,
+    .newQuiz .checkbox,
+    .question-buttons {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 768px) {
+    .create-quiz-page {
+        padding: 20px;
+        margin: 0;
+        border-radius: 0;
+    }
 }

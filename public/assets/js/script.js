@@ -59,7 +59,7 @@ function initCheckboxSVG(){
 }
 
 function loadDownloadEvent(){
-    const downloadButton = document.querySelectorAll(".download");
+    const downloadButton = document.querySelectorAll(".download-button");
     downloadButton.forEach(element => {
         element.addEventListener("click", (e) => {download(e, element.value)});
     });

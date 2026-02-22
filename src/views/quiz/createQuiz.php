@@ -6,172 +6,139 @@
     require __DIR__ . '/../partials/header.php';
 ?>
 
+<main class="create-quiz-page">
+    <form method="post" action="index.php?page=standard&categorie=create">
+        <button class="button" type="submit" name="Retour" value="yes"><span></span><p>< Retour</p></button>
+        <h1>Créer un Quiz</h1>
+        <input name="page" value="standard" hidden>
+        <input name="categorie" value="create" hidden>
 
+        <div class="form-group">
+            <h2>Nom du quiz</h2>
+            <div class="input">
+                <span></span>
+                <input type="text" name="QuizTitle" value="<?php echo htmlspecialchars($quizTitle) ?>">
+            </div>
+        </div>
 
-<form style="display: flex; flex-direction: column; padding: 25px; gap: 20px" method = "post" action = "index.php?page=standard&categorie=create">
-    <button class="button" type = "submit" name = "Retour" value = "yes"><span></span><p> < Retour</p></button>
-    <h1>Créer un Quiz</h1>
-    <input name="page" value="standard" hidden>
-    <input name ="categorie" value = "create" hidden>
-    <h2>Nom du quiz</h2>
-    <div class="input">
-        <span></span>
-        <input type="text" name ="QuizTitle" value = "<?php echo htmlspecialchars($quizTitle) ?>">
-    </div>
-    <p class="description">Description</p>
-    <div class="input">
-        <span></span>
-        <input type="text" name ="QuizDescription" value = "<?php echo htmlspecialchars($desc) ?>">
-    </div>
+        <div class="form-group">
+            <p class="description">Description</p>
+            <div class="input">
+                <span></span>
+                <input type="text" name="QuizDescription" value="<?php echo htmlspecialchars($desc) ?>">
+            </div>
+        </div>
 
-    <h2 style="display : inline;">Catégories
-        <button id="hiddenCategories" type = "button ">▼</button>
-    </h2>
-    <div class="categoriesList">
-        <?php
-        foreach($TAB_CATEGORIE as $categorie){
-            if (in_array((string)$categorie['id'], $TAB_CATEGORIE_CHOISI)) {
-                $checked = 'checked';
-            } else {
-                $checked = '';
-            }
-            echo '<label><input name="categories[]" type="checkbox" value="'.htmlspecialchars($categorie['id']).'" '.$checked.'>'.htmlspecialchars($categorie['categorieName']).'</label>';
-        }
-        ?>
+        <div class="form-group">
+            <h2>Catégories</h2>
+            <div class="categoriesList">
+                <?php
+                foreach($TAB_CATEGORIE as $categorie){
+                    $checked = in_array((string)$categorie['id'], $TAB_CATEGORIE_CHOISI) ? 'checked' : '';
+                    echo '<label><input name="categories[]" type="checkbox" value="'.htmlspecialchars($categorie['id']).'" '.$checked.'>'.htmlspecialchars($categorie['categorieName']).'</label>';
+                }
+                ?>
+            </div>
+        </div>
 
-    </div>
+        <div class="questions-container">
+            <?php for($i = 0; $i < $_SESSION['nbQuestions']; $i++): ?>
+                <div class="newQuiz">
+                    <p class="validite">réponse valide ?</p>
+                    <div class="question">
+                        <p>Question <?= $i + 1 ?></p>
+                        <div class="textarea" id="question<?= $i + 1 ?>">
+                            <span></span>
+                            <textarea type="text" name="question<?= $i ?>" placeholder="nom de la question"><?= htmlspecialchars($TAB_CONTENU[$i]['name']) ?></textarea>
+                        </div>
+                    </div>
 
-    <div style="display: flex; flex-direction: column; gap: 20px">
-        <?php
-        for($i = 0; $i < $_SESSION['nbQuestions'] ; $i = $i +1){
-            echo '<div class="newQuiz">';
-            echo '<p class="validite">réponse valide ?</p>';
-            echo '<div class="question" style="grid-row-start: 1; grid-row-end: '. $_SESSION['nbReponse'][$i] + 1 .';">
-                <p>Question '. $i+1 .'</p>
-                <div class="textarea" id = "question'.($i+1).'" style="width: calc(100% - 40px); height: calc(100% - 90px)">
-                    <span></span>
-                    <textarea type = "text" name ="question'.$i.'" placeholder="nom de la question">'.htmlspecialchars($TAB_CONTENU[$i]['name']).'</textarea>
-                </div>
-                </div>';
-            
-            
-            for ($k = 0; $k < $_SESSION['nbReponse'][$i];$k = $k +1){
-                echo '<div class="reponse" style="grid-row-start: '. 1 + $k .'; grid-row-end: '. 2 + $k .'; grid-column-start: 2; grid-column-end: 3;">
-                <p>Réponse '.($k+1).' :</p>
-                <div class="input" style="width: calc(100% - 40px);">
-                    <span></span>
-                    <input name ="reponse'.$k.'-question'.$i.'" value = "'.htmlspecialchars($TAB_CONTENU[$i]['reponses'][$k]['texte']).'"></input>
-                </div>
-                </div>
-                <div class="checkbox" style="grid-row-start: '. 1 + $k .'; grid-row-end: '. 2 + $k .'; grid-column-start: 3; grid-column-end: 4;align-self: end;">
-                    <input type="checkbox" name="checkbox'.$k.'-question'.$i.'" '.($TAB_CONTENU[$i]['reponses'][$k]['valide'] ? 'checked':'').' hidden>
-                </div>
-                ';
-                
+                    <?php for ($k = 0; $k < $_SESSION['nbReponse'][$i]; $k++): ?>
+                        <div class="reponse">
+                            <p>Réponse <?= $k + 1 ?> :</p>
+                            <div class="input">
+                                <span></span>
+                                <input name="reponse<?= $k ?>-question<?= $i ?>" value="<?= htmlspecialchars($TAB_CONTENU[$i]['reponses'][$k]['texte']) ?>">
+                            </div>
+                        </div>
+                        <div class="checkbox">
+                            <input type="checkbox" name="checkbox<?= $k ?>-question<?= $i ?>" <?= $TAB_CONTENU[$i]['reponses'][$k]['valide'] ? 'checked' : '' ?> hidden>
+                        </div>
+                    <?php endfor; ?>
 
-            }
-            echo '<div style="display: flex; flex-direction: row;gap:10px; grid-column-start: 2; grid-column-end: 3;">
-                        <button class="button" type = "submit" name="addReponse" value='.$i.'>
+                    <div class="question-buttons">
+                        <button class="button" type="submit" name="addReponse" value="<?= $i ?>">
                             <span></span>
                             <p>Ajouter une réponse</p>
                         </button>
-                    <button class="button" name= "delReponse'.$i.'" value="yes" type="submit"><span></span> <p>Supprimer une réponse</p></button>
-                </div>';
-            if ($i != 0 || $_SESSION['nbQuestions'] > 1){
-                echo '<button class="button" name = "DelQuestion" type="submit" value='.$i.'><span></span><p>Supprimer cette question</p></button>';
-            }
-            echo '</div>';
-        }
-        ?>
+                        <button class="button" name="delReponse<?= $i ?>" value="yes" type="submit"><span></span> <p>Supprimer une réponse</p></button>
+                    </div>
+
+                    <?php if ($i != 0 || $_SESSION['nbQuestions'] > 1): ?>
+                        <button class="button" name="DelQuestion" type="submit" value="<?= $i ?>"><span></span><p>Supprimer cette question</p></button>
+                    <?php endif; ?>
+                </div>
+            <?php endfor; ?>
         </div>
-        <button class="button" type = "submit" name = "addQuestion" value = "yes">
+
+        <button class="button" type="submit" name="addQuestion" value="yes">
             <span></span>
             <p>Ajouter une question</p>
         </button>
-    </div>
-    
-    <h2>Test</h2>
-    <div style="display: flex; flex-direction: row; align-items: center; gap: 10px">
-        <p style="font-size: 20px"><?= $tabParametres[0]['desc'] ?> </p>
-        <div class="checkbox param"  id = "<?= $tabParametres[0]['name'] ?>">
-            <input type="checkbox" id = "<?=  'param'.$tabParametres[0]['name'] ?>" name=" <?=  'param'.$tabParametres[0]['name'] ?>" <?= $TAB_PARAM[0] ?> hidden/>
-        </div>
-    </div>
-    <h2 hidden>Paramètres</h2>
-    <div class = "parametres" hidden>
-        <?php
-            foreach (array_slice($tabParametres,1) as $indice => $param){
-                
-                echo 
-                '
-                <div style="display: flex; flex-direction: row; align-items: center; gap: 10px">
-                    <p style="font-size: 20px">'.$param['desc'].' : </p>
-                    <div class="checkbox param"  id = "'.$param['name'].'">
-                        <input type="checkbox" id = "param'.$param['name'].'" name="param'.$param['name'].'" '.$TAB_PARAM[$indice+1].' hidden/>
-                    </div>';
-                    if ($param['name'] == 'timer'){
-                        if (!empty($_SESSION['POST']['param'.$param['name']])){
-                            $hidden = '';
-                        }
-                        else{
-                            $hidden = 'hidden';
-                        }
-                        echo '<p class = "timerP"'.$hidden.'>Temps en minutes entre 0 et 120<br>(0 ne sera pas compté) :</p>';
-                        echo '<input type="number" name="timerValue" value="'.htmlspecialchars($timerValue).'" min="0" max="120" '.$hidden.'/>';
-                    }
-                echo '</div>';
-            }
 
-        ?>
-    </div>
-    <?php //-----------------------------------------------------ici---------------------------------------------------------?>
-    <div class = "disponibilite">
-        <p>Mode de publication :</p>
-        <select name="disponibilite" id="disponibilite">
-            <?php $dispo = '';
-            $dispo = $_SESSION['POST']['disponibilite'] == 'public' ? 'selected' : '';
-             ?>
-            <option value="public" <?= $dispo ?> >publique</option>
-            <?php $dispo = $_SESSION['POST']['disponibilite'] == 'ami' ? 'selected' : ''; ?>
-            <option value="ami" <?= $dispo ?> >Seulement les amis</option>
-            <?php $dispo = $_SESSION['POST']['disponibilite'] == 'private' ? 'selected' : ''; ?>
-            <option value="private" <?= $dispo ?> >seulement vous</option>
-        </select>
-        <?php
-        //-----------------------------------------------------ici---------------------------------------------------------
-        if ($_SESSION['POST']['disponibilite'] == "ami"){
-            $hidden2 = '';
-        } 
-        else{
-            $hidden2 = 'hidden';
-        }
-        if (in_array('tous', $TAB_AMI_CHOISI)) {
-            $checkedTous = 'checked';
-        } else {
-            $checkedTous = '';
-        }
-        echo '<label '.$hidden2.'><input name = "amiDispo[]" type = "checkbox" value="tous" '.$checkedTous.'>Tous les amis</label>';
-        foreach($TAB_AMI as $ami){
-            if (in_array($ami['ami_id'], $TAB_AMI_CHOISI)) {
-                $checked = 'checked';
-            } else {
-                $checked = '';
-            }
-            echo '<label '.$hidden2.'><input name = "amiDispo[]" type = "checkbox" value="'.$ami['ami_id'].'" '.$checked.'>'.$ami['username'].'</label>';
-        }
-        
-        ?>
-    </div>
-    <?php
-    //-----------------------------------------------------ici---------------------------------------------------------
-        if ($_SESSION['erreur']){
-            echo '<p class="erreur">Chaque champ doit être rempli<br>Chaque question doit avoir au moins une réponse juste et une réponse fausse<br>Au moins une catégorie doit être sélectionnée</p>';
-        } 
-    ?>
-    <button class="button" id = "create" type = "submit" name = "create" value = "yes"><span></span><p>Créer le quiz</p></button>
-</form>
+        <h2>Test</h2>
+        <div class="form-group test-param">
+            <p><?= $tabParametres[0]['desc'] ?></p>
+            <div class="checkbox param" id="<?= $tabParametres[0]['name'] ?>">
+                <input type="checkbox" id="param<?= $tabParametres[0]['name'] ?>" name="param<?= $tabParametres[0]['name'] ?>" <?= $TAB_PARAM[0] ?> hidden />
+            </div>
+        </div>
+
+        <h2 hidden>Paramètres</h2>
+        <div class="parametres" hidden>
+            <?php foreach (array_slice($tabParametres, 1) as $indice => $param): ?>
+                <div class="form-group">
+                    <p><?= $param['desc'] ?> :</p>
+                    <div class="checkbox param" id="<?= $param['name'] ?>">
+                        <input type="checkbox" id="param<?= $param['name'] ?>" name="param<?= $param['name'] ?>" <?= $TAB_PARAM[$indice + 1] ?> hidden />
+                    </div>
+                    <?php if ($param['name'] == 'timer'): ?>
+                        <?php $hidden = empty($_SESSION['POST']['param' . $param['name']]) ? 'hidden' : ''; ?>
+                        <p class="timerP <?= $hidden ?>">Temps en minutes entre 0 et 120<br>(0 ne sera pas compté) :</p>
+                        <input type="number" name="timerValue" value="<?= htmlspecialchars($timerValue) ?>" min="0" max="120" class="<?= $hidden ?>" />
+                    <?php endif; ?>
+                </div>
+            <?php endforeach; ?>
+        </div>
+
+        <div class="form-group disponibilite">
+            <p>Mode de publication :</p>
+            <select name="disponibilite" id="disponibilite">
+                <option value="public" <?= $_SESSION['POST']['disponibilite'] == 'public' ? 'selected' : '' ?>>publique</option>
+                <option value="ami" <?= $_SESSION['POST']['disponibilite'] == 'ami' ? 'selected' : '' ?>>Seulement les amis</option>
+                <option value="private" <?= $_SESSION['POST']['disponibilite'] == 'private' ? 'selected' : '' ?>>seulement vous</option>
+            </select>
+            <div class="ami-list">
+                <?php
+                $hidden2 = $_SESSION['POST']['disponibilite'] != "ami" ? 'hidden' : '';
+                $checkedTous = in_array('tous', $TAB_AMI_CHOISI) ? 'checked' : '';
+                echo '<label class="'.$hidden2.'"><input name="amiDispo[]" type="checkbox" value="tous" '.$checkedTous.'>Tous les amis</label>';
+                foreach($TAB_AMI as $ami){
+                    $checked = in_array($ami['ami_id'], $TAB_AMI_CHOISI) ? 'checked' : '';
+                    echo '<label class="'.$hidden2.'"><input name="amiDispo[]" type="checkbox" value="'.$ami['ami_id'].'" '.$checked.'>'.$ami['username'].'</label>';
+                }
+                ?>
+            </div>
+        </div>
+
+        <?php if ($_SESSION['erreur']): ?>
+            <p class="erreur">Chaque champ doit être rempli<br>Chaque question doit avoir au moins une réponse juste et une réponse fausse<br>Au moins une catégorie doit être sélectionnée</p>
+        <?php endif; ?>
+
+        <button class="button" id="create" type="submit" name="create" value="yes"><span></span><p>Créer le quiz</p></button>
+    </form>
+</main>
 <script src="./assets/js/popups.js"></script>
-<script src = "./assets/js/createQuiz.js"></script>
-<script src = "./assets/js/sauvegardeScroll.js"></script>
-<script src = "./assets/js/selectDispo.js"></script>
-<script src = "./assets/js/createContent.js"></script>
+<script src="./assets/js/createQuiz.js"></script>
+<script src="./assets/js/sauvegardeScroll.js"></script>
+<script src="./assets/js/selectDispo.js"></script>

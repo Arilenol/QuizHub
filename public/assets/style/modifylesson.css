@@ -1,6 +1,21 @@
 @import url("popup.css");
 
-/*code à remplir pour le style de la page*/
+.modify-lesson-page {
+    margin: 30px auto;
+    width: 100%;
+    max-width: 1200px;
+    padding: 40px;
+    border-radius: 40px;
+    background: #ffdba9;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    box-sizing: border-box;
+}
+
+.modify-lesson-page form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
 
 /* Layout 2 colonnes pour les parties */
 .newPart {
@@ -149,6 +164,12 @@ h2 button:active {
 
 /* Responsive */
 @media (max-width: 768px) {
+  .modify-lesson-page {
+    padding: 20px;
+    margin: 0;
+    border-radius: 0;
+  }
+
   h2, .section-title {
     gap: 10px;
   }

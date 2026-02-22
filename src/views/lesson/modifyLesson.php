@@ -8,7 +8,8 @@
 
 
 
-<form style="display: flex; flex-direction: column; padding: 25px; gap: 20px" method = "post" data-id="<?php echo htmlspecialchars($idLesson) ?>" action = "index.php?page=lesson&categorie=modify&id=<?php echo htmlspecialchars($idLesson) ?>">
+<main class="modify-lesson-page">
+    <form method="post" data-id="<?php echo htmlspecialchars($idLesson) ?>" action="index.php?page=lesson&categorie=modify&id=<?php echo htmlspecialchars($idLesson) ?>">
     <input type="hidden" name="idLesson" id="idLesson" value="<?php echo htmlspecialchars($idLesson) ?>">
     <button class="button" type = "submit" name = "Retour" value = "yes"><span></span><p> < Retour</p></button>
     <h2>Résumé de la leçon
@@ -165,6 +166,7 @@
         } 
     ?>
 </form>
+</main>
 <script src = "./assets/js/popups.js"></script>
 <script src = "./assets/js/modifyLesson.js"></script>
 <script src = "./assets/js/sauvegardeScroll.js"></script>

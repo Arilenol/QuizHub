@@ -37,7 +37,7 @@ require_once '../src/views/partials/header.php';
         || (($_GET['page']) === 'standard' && (isset($_GET['reponse']) && ($_GET['reponse']) === 'visible'))
     ): ?>
         <?php if (!isset($_GET['test'])) : ?>
-            <button class="button" style="align-self: start; " onclick="history.back()">
+            <button class="button back-button" onclick="history.back()">
                 <span></span>
                 <p>← Revenir en arrière</p>
             </button>
@@ -162,26 +162,15 @@ require_once '../src/views/partials/header.php';
                             value="<?= $rep['id'] ?>"
                             <?= $showAnswer ? 'disabled' : '' ?>>
 
-                        <?php if ($showAnswer && !$isTest): ?>
-                            <label
-                                for="<?= $inputId ?>"
-                                style="
-                                cursor: auto;
-                                box-shadow: none;
-                                transform: none;
-                                <?= $isCorrect
-                                    ? 'background-color:#5bb95b;border:2px solid #3cb43c;'
-                                    : 'background-color:#ffb3b3;border:2px solid #d62828;'
-                                ?>
-                            ">
-                                <?= htmlspecialchars($rep['reponse']) ?>
-                            </label>
-
-                        <?php else: ?>
-                            <label for="<?= $inputId ?>">
-                                <?= htmlspecialchars($rep['reponse']) ?>
-                            </label>
-                        <?php endif; ?>
+                        <?php
+                        $labelClass = '';
+                        if ($showAnswer && !$isTest) {
+                            $labelClass = $isCorrect ? ' correct' : ' incorrect';
+                        }
+                        ?>
+                        <label for="<?= $inputId ?>" class="<?= $labelClass ?>">
+                            <?= htmlspecialchars($rep['reponse']) ?>
+                        </label>
 
                     </div>
 
@@ -197,21 +186,21 @@ require_once '../src/views/partials/header.php';
 
                 <?php if (!$showAnswer && !$isTest): ?>
                     <!-- STANDARD → première étape → validateur -->
-                    <button class="button" type="submit" form="quizForm" style="margin-top: 20px;">
+                    <button class="button" type="submit" form="quizForm">
                         <span></span>
                         <p>Valider</p>
                     </button>
 
                 <?php elseif ($isTest): ?>
                     <!-- TEST → toujours POST -->
-                    <button class="button" type="submit" form="quizForm" style="margin-top: 20px;">
+                    <button class="button" type="submit" form="quizForm">
                         <span></span>
                         <p>Continuer</p>
                     </button>
 
                 <?php else: ?>
                     <!-- STANDARD → réponse affichée → suivant en GET -->
-                    <button class="button" onclick="window.location.href='?page=standard&id=<?= $question['quiz_id'] ?>&idQuestion=<?= $question['numeroQuiz'] + 1 ?>'" style="margin-top: 20px;">
+                    <button class="button" onclick="window.location.href='?page=standard&id=<?= $question['quiz_id'] ?>&idQuestion=<?= $question['numeroQuiz'] + 1 ?>'">
                         <span></span>
                         <p>Continuer</p>
                     </button>

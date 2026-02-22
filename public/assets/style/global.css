@@ -6,7 +6,7 @@ body {
 
 header {
   display: grid;
-  height: 150px;
+  height: 100px;
   background-color: #ffc067;
   box-shadow: 0px 4px 4px 0px #00000040;
   padding: 0px 65px;
@@ -17,7 +17,7 @@ header {
 
 header>picture>img {
   width: 100%;
-  max-height: 150px;
+  max-height: 100px;
   cursor: pointer;
   max-width: 400px;
 }
@@ -220,8 +220,8 @@ svg {
 
 .input {
   width: calc(100% - 40px);
-  max-width: 600px;
-  height: 100px;
+  max-width: 400px;
+  height: 70px;
   padding: 0 20px;
 }
 
@@ -257,7 +257,6 @@ svg {
   all: unset;
   z-index: 2;
   color: white;
-  font-size: min(1.7vw, 25px);
   cursor: text;
 }
 
@@ -448,6 +447,44 @@ svg {
   text-align: center;
 }
 
+/* Header button specifics */
+.btn-streak {
+    padding: 15px;
+    padding-right: 25px;
+}
+
+.btn-notif {
+    padding: 15px;
+}
+
+.btn-account {
+    padding: 15px;
+}
+
+.btn-create {
+    padding: 20px;
+}
+.download-button{
+  padding: 10px;
+}
+
+/* Icon sizes */
+.icon-streak,
+.icon-notif,
+.icon-account {
+    height: 40px;
+    width: 40px;
+}
+
+/* Text styles for buttons */
+.streak-text {
+    font-size: xx-large;
+}
+
+.create-text {
+    font-size: 40px;
+}
+
 @media (max-width: 1300px) {
   header>picture>img {
     width: auto;
@@ -467,11 +504,6 @@ svg {
 		margin-bottom: 0px;
 	}
 }
-
-  #menu {
-    display: none;
-  }
-
 
 .categoriesList {
   display: flex;
@@ -522,7 +554,7 @@ svg {
   }
 }
 
-@media (max-width: 1350px) {
+@media (max-width: 1000px) {
 	header{
 		display: flex;
 		padding: 0 65px 0 15px;
@@ -535,7 +567,7 @@ svg {
 		padding: 10px;
 	}
 }
-@media (min-width: 1349px) {
+@media (min-width: 999px) {
 	header > .button{
 		display: none;
 	}
