@@ -128,13 +128,11 @@ p.fin {
   font-size: 1.575rem;
   min-height: 69px;
   cursor: pointer;
-  box-shadow: 0 12px 0 #087b86;
 }
 
 .quiz-réalisation button:hover {
   background-color: #fff;
   color: #087b86;
-  box-shadow: 0px 8px 2px #CACACABF;
 }
 
 .quiz-reactions {
@@ -149,27 +147,29 @@ p.fin {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 10px 20px;     
+  padding: 10px 20px;
   border-radius: 20px;
   font-size: 1.7rem;
   cursor: pointer;
   border: none;
-  color: white;            
+  color: white;
 }
 
 
 .quiz-reactions .like {
-  background-color: #31c414bf;  
+  background-color: #31c414bf;
   box-shadow: 0px 10px 2px #22810ebf;
 }
 
 .quiz-reactions .dislike {
-  background-color: #c62828;  /* fond rouge foncé */
+  background-color: #c62828;
+  /* fond rouge foncé */
   box-shadow: 0px 10px 2px #8a1c1c;
 }
 
 .quiz-reactions .reaction:hover {
-  background-color: #ff1f1f; /* légèrement plus clair au survol */
+  background-color: #ff1f1f;
+  /* légèrement plus clair au survol */
   color: white;
 }
 
@@ -189,8 +189,10 @@ p.fin {
   background-color: rgb(173, 173, 173);
   box-shadow: 0px 8px 2px #747474bf;
   opacity: 0.65;
-  box-shadow: none; /* enlève l'effet relief */
-  transform: none; /* pas d'animation */
+  box-shadow: none;
+  /* enlève l'effet relief */
+  transform: none;
+  /* pas d'animation */
 }
 
 #disabled:hover {
@@ -213,14 +215,12 @@ p.fin {
 }
 
 .progress-container::-webkit-progress-value {
-  background: linear-gradient(
-    90deg,
-    #0ab1bd,
-    #5ad7df
-  );
+  background: linear-gradient(90deg,
+      #0ab1bd,
+      #5ad7df);
 }
 
-.progression{
+.progression {
   text-align: center;
   width: 20%;
   margin-top: 2%;
@@ -228,12 +228,12 @@ p.fin {
   font-weight: bold;
 }
 
-.progression > p {
+.progression>p {
   text-align: center;
 }
 
-@media (max-width: 1000px){
-  .container{
+@media (max-width: 1000px) {
+  .container {
     display: flex;
     flex-direction: column;
     align-items: center;

@@ -12,8 +12,8 @@ require_once '../src/views/partials/header.php';
                 <p>← Retour</p>
             </button>
 
-            <form id="retourForm" method="post" action="?page=pageInterQuiz&id=<?= $quizId ?>&type=test">
-                <input type="hidden" name="idQuestion" value="<?= $max +1 ?>">
+            <form id="retourForm" method="post" action="?page=test&id=<?= $quizId ?>&type=test">
+                <input type="hidden" name="idQuestion" value="<?= $max + 1 ?>">
             </form>
 
         <?php else: ?>
