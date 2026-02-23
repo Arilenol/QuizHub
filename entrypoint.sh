@@ -25,7 +25,5 @@ if [ -f "$DB_FILE" ]; then
 fi
 
 echo "Démarrage de l'application..."
-exec "$@"
-set -e
 cd public
 exec php -S 0.0.0.0:"$1"
