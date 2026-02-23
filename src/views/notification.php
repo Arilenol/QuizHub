@@ -4,11 +4,11 @@ $style = './assets/style/notification.css';
 include 'partials/header.php';
 ?>
 
-<div class="button" style="margin : 25px" onclick="history.back()">
+<div class="button" style="margin : 25px" onclick="window.location.href='?page=home'">
     <span></span>
     <p>← Retour</p>
 </div>
-<div class="friend-requests">
+<div class=" friend-requests">
     <h2>Demandes d'amis reçues</h2>
     <?php if (!isset($allFriendRequests) || empty($allFriendRequests)): ?>
 
@@ -74,7 +74,7 @@ include 'partials/header.php';
     <h2>Envoyer une demande d’ami</h2>
 
     <?php if (!empty($_SESSION['flash'])): ?>
-        <p style="color: green;">
+        <p style="<?= $_SESSION['flash'] === 'Échec de la demande.' ? 'color: red;' : 'color: green;' ?>">
             <?= $_SESSION['flash'];
             unset($_SESSION['flash']); ?>
         </p>
