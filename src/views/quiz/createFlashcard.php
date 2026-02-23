@@ -1,24 +1,27 @@
 <?php
-    $title = 'création de flashcards';
-    $style = './assets/style/createFlashcards.css';
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
-    require __DIR__ . '/../partials/header.php';
+$title = 'création de flashcards';
+$style = './assets/style/createFlashcards.css';
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+require __DIR__ . '/../partials/header.php';
 ?>
 
 <div class="create-flashcard-page">
 
     <form method="post" action="index.php?page=flashcard&categorie=create">
 
-        <button class="button" type = "submit" name = "Retour" value = "yes"><span></span><p> < Retour</p></button>
+        <button class="button" type="submit" name="Retour" value="yes"><span></span>
+            <p>
+                < Retour</p>
+        </button>
 
         <h1>Créer une Flashcard</h1>
 
 
 
-            <input type = "hidden" name="page" value="flashcard">
+        <input type="hidden" name="page" value="flashcard">
 
-        <input type="hidden" name ="categorie" value = "create">
+        <input type="hidden" name="categorie" value="create">
 
         <h2>Nom des flashcards</h2>
 
@@ -26,7 +29,7 @@
 
             <span></span>
 
-            <input type="text" name ="FlashcardTitle" value = "<?php echo htmlspecialchars($CardsTitle) ?>">
+            <input type="text" name="FlashcardTitle" value="<?php echo htmlspecialchars($CardsTitle) ?>">
 
         </div>
 
@@ -36,7 +39,7 @@
 
             <span></span>
 
-            <input type="text" name ="FlashcardDescription" value = "<?php echo htmlspecialchars($desc) ?>">
+            <input type="text" name="FlashcardDescription" value="<?php echo htmlspecialchars($desc) ?>">
 
         </div>
 
@@ -50,20 +53,17 @@
 
             <?php
 
-            foreach($TAB_CATEGORIE as $categorie){
+            foreach ($TAB_CATEGORIE as $categorie) {
 
                 if (in_array((string)$categorie['id'], $TAB_CATEGORIE_CHOISI)) {
 
                     $checked = 'checked';
-
                 } else {
 
                     $checked = '';
-
                 }
 
-                echo '<label><input name="categories[]" type="checkbox" value="'.htmlspecialchars($categorie['id']).'" '.$checked.'>'.htmlspecialchars($categorie['categorieName']).'</label>';
-
+                echo '<label><input name="categories[]" type="checkbox" value="' . htmlspecialchars($categorie['id']) . '" ' . $checked . '>' . htmlspecialchars($categorie['categorieName']) . '</label>';
             }
 
             ?>
@@ -74,17 +74,17 @@
 
 
 
-        <div class = "newflashcard">
+        <div class="newflashcard">
 
-        <p class = "cartes">Cartes</p>
+            <p class="cartes">Cartes</p>
 
-        <?php
+            <?php
 
-        for($i = 0; $i < $_SESSION['nbCartes'] ; $i = $i +1){
+            for ($i = 0; $i < $_SESSION['nbCartes']; $i = $i + 1) {
 
-            echo '<div class="Carte">
+                echo '<div class="Carte">
 
-            <p >Carte '.($i+1).'</p>
+            <p >Carte ' . ($i + 1) . '</p>
 
             <p>Question :</p>
 
@@ -92,7 +92,7 @@
 
                 <span></span>
 
-                <textarea name ="cardQuestion'.$i.'"> '.htmlspecialchars($TAB_CONTENU[$i]['question']).'</textarea>
+                <textarea name ="cardQuestion' . $i . '">' . htmlspecialchars($TAB_CONTENU[$i]['question']) . '</textarea>
 
             </div>
 
@@ -102,27 +102,27 @@
 
                 <span></span>
 
-                <textarea name = "cardReponse'.$i.'">'.htmlspecialchars($TAB_CONTENU[$i]['reponse']).'</textarea>
+                <textarea name = "cardReponse' . $i . '">' . htmlspecialchars($TAB_CONTENU[$i]['reponse']) . '</textarea>
 
             </div>
 
             
 
-            <button class="button" name = "DelCard" type="submit" value='.$i.'><span></span><p>Supprimer cette question</p></button>
+            <button class="button" name = "DelCard" type="submit" value=' . $i . '><span></span><p>Supprimer cette question</p></button>
 
             </div>';
+            }
 
-        }
+            echo '<button class="button" type = "submit" name = "addCard" value = "yes"><span></span><p>Ajouter une question</p></button>'
 
-        echo '<button class="button" type = "submit" name = "addCard" value = "yes"><span></span><p>Ajouter une question</p></button>'
-
-        ?>
+            ?>
 
         </div>
 
-        <?php //-----------------------------------------------------ici---------------------------------------------------------?>
+        <?php //-----------------------------------------------------ici---------------------------------------------------------
+        ?>
 
-        <div class = "disponibilite">
+        <div class="disponibilite">
 
             <p>Mode de publication :</p>
 
@@ -132,17 +132,17 @@
 
                 $dispo = $_SESSION['POST']['disponibilite'] == 'public' ? 'selected' : '';
 
-                 ?>
+                ?>
 
-                <option value="public" <?= $dispo ?> >publique</option>
+                <option value="public" <?= $dispo ?>>publique</option>
 
                 <?php $dispo = $_SESSION['POST']['disponibilite'] == 'ami' ? 'selected' : ''; ?>
 
-                <option value="ami" <?= $dispo ?> >Seulement les amis</option>
+                <option value="ami" <?= $dispo ?>>Seulement les amis</option>
 
                 <?php $dispo = $_SESSION['POST']['disponibilite'] == 'private' ? 'selected' : ''; ?>
 
-                <option value="private" <?= $dispo ?> >seulement vous</option>
+                <option value="private" <?= $dispo ?>>seulement vous</option>
 
             </select>
 
@@ -150,47 +150,38 @@
 
             //-----------------------------------------------------ici---------------------------------------------------------
 
-            if ($_SESSION['POST']['disponibilite'] == "ami"){
+            if ($_SESSION['POST']['disponibilite'] == "ami") {
 
                 $hidden2 = '';
-
-            } 
-
-            else{
+            } else {
 
                 $hidden2 = 'hidden';
-
             }
 
             if (in_array('tous', $TAB_AMI_CHOISI)) {
 
                 $checkedTous = 'checked';
-
             } else {
 
                 $checkedTous = '';
-
             }
 
-            echo '<label '.$hidden2.'><input name = "amiDispo[]" type = "checkbox" value="tous" '.$checkedTous.'>Tous les amis</label>';
+            echo '<label ' . $hidden2 . '><input name = "amiDispo[]" type = "checkbox" value="tous" ' . $checkedTous . '>Tous les amis</label>';
 
-            foreach($TAB_AMI as $ami){
+            foreach ($TAB_AMI as $ami) {
 
                 if (in_array($ami['ami_id'], $TAB_AMI_CHOISI)) {
 
                     $checked = 'checked';
-
                 } else {
 
                     $checked = '';
-
                 }
 
-                echo '<label '.$hidden2.'><input name = "amiDispo[]" type = "checkbox" value="'.htmlspecialchars($ami['ami_id']).'" '.$checked.'>'.htmlspecialchars($ami['username']).'</label>';
-
+                echo '<label ' . $hidden2 . '><input name = "amiDispo[]" type = "checkbox" value="' . htmlspecialchars($ami['ami_id']) . '" ' . $checked . '>' . htmlspecialchars($ami['username']) . '</label>';
             }
 
-            
+
 
             ?>
 
@@ -200,15 +191,16 @@
 
         //-----------------------------------------------------ici---------------------------------------------------------
 
-            if ($_SESSION['erreur']){
+        if ($_SESSION['erreur']) {
 
-                echo '<p class="erreur">Chaque champ doit être rempli<br>Au moins une catégorie doit être sélectionnée</p>';
-
-            } 
+            echo '<p class="erreur">Chaque champ doit être rempli<br>Au moins une catégorie doit être sélectionnée</p>';
+        }
 
         ?>
 
-        <button class="button" type = "submit" id = "create" name = "create" value = "yes"><span></span><p>Créer les flashcards</p></button>
+        <button class="button" type="submit" id="create" name="create" value="yes"><span></span>
+            <p>Créer les flashcards</p>
+        </button>
 
     </form>
 
@@ -216,8 +208,8 @@
 
 <script src="./assets/js/popups.js"></script>
 
-<script src = "./assets/js/createFlashcard.js"></script>
+<script src="./assets/js/createFlashcard.js"></script>
 
-<script src = "./assets/js/sauvegardeScroll.js"></script>
+<script src="./assets/js/sauvegardeScroll.js"></script>
 
-<script src = "./assets/js/selectDispo.js"></script>
+<script src="./assets/js/selectDispo.js"></script>
