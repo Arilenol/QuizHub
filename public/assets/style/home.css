@@ -22,7 +22,8 @@ body {
 
 h1 {
   font-size: clamp(2rem, 5vw, 3rem);
-  margin: 40px 0 20px;
+  margin: 40px 10px 20px;
+  padding-bottom: 30px;
   background: rgb(49, 49, 49);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -174,31 +175,47 @@ p.no-content {
   align-items: center;
 }
 
+.seeMore:hover {
+  opacity: 1;
+}
+
+.download-button {
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.download-icon {
+  width: 15px;
+  height: 15px;
+}
+
 /* =========================
    BOUTON BAS DE PAGE
 ========================= */
-
 .endDirection {
-  padding: 0 5% 50px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
-
 .endDirection button {
-  width: 100%;
-  border-radius: 40px;
-  background: linear-gradient(135deg, #ff7e5f, #feb47b);
-  color: #1f1c2c;
+  width: 95%;
+  height: 100%;
+  border-radius: 75px;
+  background-color: #0ab1bd;
+  color: white;
   border: none;
-  padding: 18px;
-  font-size: 1.1rem;
-  font-weight: 700;
+  padding: 21px 36px;
+  font-size: 1.3rem;
+  min-height: 50px;
   cursor: pointer;
-  transition: 0.25s ease;
-  box-shadow: 0 8px 0 #e07b61;
+  box-shadow: 0 12px 0 #087b86;
+  margin-top: 1%;
+  margin-bottom: 1%;
 }
-
 .endDirection button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 0 #e07b61;
+  background-color: #fff;
+  color: #087b86;
+  box-shadow: 0px 8px 2px #cacacabf;
 }
 
 /* =========================
@@ -246,6 +263,15 @@ p.no-content {
 ========================= */
 
 @media (max-width: 500px) {
+  .download-icon {
+    width: 10px;
+    height: 10px;
+  }
+  .download-button {
+    padding: 3px;
+    margin-bottom: 10px;
+  }
+
   h1 {
     font-size: 2rem;
   }

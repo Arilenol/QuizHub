@@ -138,7 +138,6 @@ require_once 'partials/header.php';
                                 <br>
                                 <br>
                                 <div class="editQuizPart">
-                                    <!-- a dev -->
                                     <button
                                         class="deleteQuiz"
                                         data-id="<?= $quiz[$i]['id'] ?>"
@@ -170,7 +169,7 @@ require_once 'partials/header.php';
                             echo '<p class ="no-content"> Vous avez aucun historique </p>';
                         } ?>
                         <?php for ($i = 0; $i < count($hist); $i++): ?>
-                            <article class="quiz">
+                            <article class="quiz"  onclick="window.location.href='./?page=<?= $hist[$i]['genre'] ?>&id=<?= $hist[$i]['id'] ?> <?= $hist[$i]['genre'] == 'lesson' ? '&categorie=view' : '' ?> <?= $hist[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?>'">
                                 <div class="quiz-cat">
                                     <?php if (!empty($hist[$i]['categories'])): ?>
                                         <?php foreach ($hist[$i]['categories'] as $cat): ?>

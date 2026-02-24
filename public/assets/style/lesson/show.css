@@ -9,11 +9,12 @@
   box-sizing: border-box;
 }
 
-.back-btn, .signalement {
+.back-btn,
+.signalement {
   margin-top: 1%;
   margin-left: 1%;
   border-radius: 75px;
-  background-color: #0AB1BD;
+  background-color: #0ab1bd;
   color: white;
   border: none;
   padding: 21px 36px;
@@ -35,7 +36,7 @@
 .back-btn:hover {
   background-color: #fff;
   color: #087b86;
-  box-shadow: 0px 8px 2px #CACACABF;
+  box-shadow: 0px 8px 2px #cacacabf;
 }
 
 .lesson-header {
@@ -57,7 +58,7 @@
 
 .lesson-intro {
   background: rgba(10, 177, 189, 0.05);
-  border-left: solid 6px #0AB1BD;
+  border-left: solid 6px #0ab1bd;
   padding: 20px 30px;
   border-radius: 15px;
   margin-bottom: 40px;
@@ -73,7 +74,8 @@
   margin-bottom: 50px;
 }
 
-.lesson-part h2, .info {
+.lesson-part h2,
+.info {
   font-size: 2rem;
   font-weight: 700;
   color: #073238;
@@ -88,7 +90,7 @@
 }
 
 .example-box {
-  background-color: #0AB1BD;
+  background-color: #0ab1bd;
   border-radius: 20px;
   padding: 25px;
   width: fit-content;
@@ -112,12 +114,12 @@
 .divider {
   width: 60%;
   height: 2px;
-  background: linear-gradient(to right, transparent, #0AB1BD, transparent);
+  background: linear-gradient(to right, transparent, #0ab1bd, transparent);
   margin: 40px auto;
   border-radius: 5px;
 }
 
-.info{
+.info {
   margin-top: 8%;
 }
 
@@ -126,60 +128,125 @@
   justify-self: end;
 }
 
+.quiz-reactions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 0;
+}
+
+.quiz-reactions .reaction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 1.7rem;
+  cursor: pointer;
+  border: none;
+  color: white;
+}
+
+.quiz-reactions .like {
+  background-color: #31c414bf;
+  box-shadow: 0px 10px 2px #22810ebf;
+}
+
+.quiz-reactions .dislike {
+  background-color: #c62828;
+  /* fond rouge foncé */
+  box-shadow: 0px 10px 2px #8a1c1c;
+}
+
+.quiz-reactions .reaction:hover {
+  background-color: #ff1f1f;
+  /* légèrement plus clair au survol */
+  color: white;
+}
+
+.quiz-reactions .like:hover {
+  background-color: #fff;
+  color: #087b86;
+  box-shadow: 0px 8px 2px #cacacabf;
+}
+
+.quiz-reactions .dislike:hover {
+  background-color: #fff;
+  color: #087b86;
+  box-shadow: 0px 8px 2px #cacacabf;
+}
+
+#disabled {
+  background-color: rgb(173, 173, 173);
+  box-shadow: 0px 8px 2px #747474bf;
+  opacity: 0.65;
+  box-shadow: none;
+  /* enlève l'effet relief */
+  transform: none;
+  /* pas d'animation */
+}
+
+#disabled:hover {
+  color: white;
+  cursor: not-allowed;
+}
+
 @media (max-width: 768px) {
-    .lesson-page {
-        padding: 20px;
-        border-radius: 0;
-        margin: 0;
-    }
+  .lesson-page {
+    padding: 20px;
+    border-radius: 0;
+    margin: 0;
+  }
 
-    .buttonAction {
-        flex-direction: column;
-        gap: 15px;
-        align-items: center;
-    }
+  .buttonAction {
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+  }
 
-    .lesson-header h1 {
-        font-size: 2.2rem;
-    }
+  .lesson-header h1 {
+    font-size: 2.2rem;
+  }
 
-    .lesson-header .meta-info {
-        font-size: 1rem;
-    }
+  .lesson-header .meta-info {
+    font-size: 1rem;
+  }
 
-    .lesson-intro p,
-    .lesson-part p {
-        font-size: 1.1rem;
-    }
+  .lesson-intro p,
+  .lesson-part p {
+    font-size: 1.1rem;
+  }
 
-    .lesson-part h2, .info {
-        font-size: 1.6rem;
-    }
+  .lesson-part h2,
+  .info {
+    font-size: 1.6rem;
+  }
 
-    .example-box {
-        max-width: 90%;
-        padding: 20px;
-    }
+  .example-box {
+    max-width: 90%;
+    padding: 20px;
+  }
 
-    .divider {
-        width: 80%;
-    }
+  .divider {
+    width: 80%;
+  }
 }
 
 @media (max-width: 480px) {
-    .lesson-header h1 {
-        font-size: 1.8rem;
-    }
+  .lesson-header h1 {
+    font-size: 1.8rem;
+  }
 
-    .lesson-part p {
-        max-width: 100%;
-    }
+  .lesson-part p {
+    max-width: 100%;
+  }
 
-    .example-box strong {
-        font-size: 1.1rem;
-    }
+  .example-box strong {
+    font-size: 1.1rem;
+  }
 
-    .example-box p {
-        font-size: 1rem;
-    }
+  .example-box p {
+    font-size: 1rem;
+  }
 }

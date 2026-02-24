@@ -35,7 +35,7 @@ if (isset($_SESSION['id'])) {
     <p class="no-content">Vous n'avez encore créé aucune ressource.</p>
 <?php else: ?>
     <div class="newCreations">
-        <?php for ($i = 0; $i < count($quizNextPart); $i++): ?>
+        <?php for ($i = 0; $i < count($quizNextPart) && $i < 5; $i++): ?>
             <article onclick="window.location.href='./?page=<?= $quizNextPart[$i]['genre'] ?>&id=<?= $quizNextPart[$i]['id'] ?> <?= $quizNextPart[$i]['genre'] == 'lesson' ? '&categorie=view' : '' ?> <?= $quizNextPart[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?>'" class="quiz">
                 <div class="quiz-header">
                     <div class="quiz-cat">
@@ -74,6 +74,12 @@ if (isset($_SESSION['id'])) {
             </article>
 
         <?php endfor; ?>
+        <?php if (count($quizNextPart) >= 5): ?>
+            <article onclick="" class="quiz seeMore">
+                Voir plus
+            </article>
+
+        <?php endif; ?>
 
     </div>
 <?php endif; ?>
@@ -82,7 +88,7 @@ if (isset($_SESSION['id'])) {
     <h1>Les créations de mes amis</h1>
     <?php if (isset($friendQuiz) && !empty($friendQuiz)): ?>
         <div class="newCreations">
-            <?php for ($i = 0; $i < count($friendQuiz); $i++): ?>
+            <?php for ($i = 0; $i < count($friendQuiz) && $i < 5; $i++): ?>
                 <article onclick="window.location.href='./?page=<?= $friendQuiz[$i]['genre'] ?>&id=<?= $friendQuiz[$i]['id'] ?> <?= $friendQuiz[$i]['genre'] == 'lesson' ? '&categorie=view' : '' ?>'" <?php echo $friendQuiz[$i]['genre'] == 'flashcard' ? " data-action='start'" : '' ?> class="quiz">
                     <div class="quiz-header">
                         <div class="quiz-cat">
@@ -120,6 +126,12 @@ if (isset($_SESSION['id'])) {
                     </div>
                 </article>
             <?php endfor; ?>
+            <?php if (count($friendQuiz) >= 5): ?>
+                <article onclick="" class="quiz seeMore">
+                    Voir plus
+                </article>
+
+            <?php endif; ?>
         </div>
     <?php else : ?>
         <p class="no-content">Vos amis n'ont créé aucune ressource.</p>
@@ -169,7 +181,7 @@ if (isset($_SESSION['id'])) {
         </article>
 
     <?php endfor; ?>
-    <?php if (count($quiz) > 5): ?>
+    <?php if (count($quiz) >= 5): ?>
         <article onclick="" class="quiz seeMore">
             Voir plus
         </article>
@@ -181,7 +193,7 @@ if (isset($_SESSION['id'])) {
 <h1>Leçons populaires</h1>
 
 <div class="newCreations">
-    <?php for ($i = 0; $i < count($lessons); $i++): ?>
+    <?php for ($i = 0; $i < count($lessons) && $i < 5; $i++): ?>
         <article onclick="window.location.href='./?page=lesson&categorie=view&id=<?= $lessons[$i]['lecon_id'] ?>'" class="quiz">
             <div class="quiz-header">
                 <div class="quiz-cat">
@@ -207,11 +219,17 @@ if (isset($_SESSION['id'])) {
             </div>
         </article>
     <?php endfor; ?>
+    <?php if (count($lessons) >= 5): ?>
+        <article onclick="" class="quiz seeMore">
+            Voir plus
+        </article>
+
+    <?php endif; ?>
 
 </div>
 
 <div class="endDirection">
-    <button onclick="window.location.href='?page=catalogue'">Voir plus</button>
+    <button onclick="window.location.href='?page=catalogue'">Voir tout</button>
 </div>
 </body>
 

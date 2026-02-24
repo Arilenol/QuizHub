@@ -45,14 +45,6 @@ require_once '../src/views/partials/header.php';
 				<p>Afficher la réponse</p>
 			</div>
 		<?php endif; ?>
-		<div class="button" style="grid-column-start: 3; grid-column-end: 4; grid-row-start: 4; grid-row-end: 5;" onclick="window.location.href = '<?php if ($nextId): ?>?page=flashcard&action=ongoing&id=<?= $quizId ?>&question=<?= $nextId ?><?php else: ?>?page=flashcard&action=end&id=<?= $quizId ?><?php endif; ?>'">
-			<span></span>
-			<p>Je sais</p>
-		</div>
-		<div class="button" style="grid-column-start: 5; grid-column-end: 6; grid-row-start: 4; grid-row-end: 5;" onclick="window.location.href = '<?php if ($nextId): ?>?page=flashcard&action=ongoing&id=<?= $quizId ?>&question=<?= $nextId ?><?php else: ?>?page=flashcard&action=end&id=<?= $quizId ?><?php endif; ?>'">
-			<span></span>
-			<p>Je ne sais pas</p>
-		</div>
 		<?php if (!$nextId): ?>
 			<div class="button" style="grid-column-start: 6; grid-column-end: 7; grid-row-start: 4; grid-row-end: 5;" onclick="window.location.href = '?page=flashcard&action=end&id=<?= $quizId ?>'">
 				<span></span>

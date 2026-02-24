@@ -236,7 +236,7 @@ form button:hover {
   cursor: pointer;
 }
 
-.modal button:not(.admin-button) {
+.modal button:not(.admin-button):not(.closeModal) {
   background-color: #0ab1bd;
   color: white;
   font-size: 1.3rem;
@@ -244,7 +244,7 @@ form button:hover {
   box-shadow: 0 12px 0 #087b86;
 }
 
-.modal button:not(.admin-button):hover {
+.modal button:not(.admin-button):not(.closeModal) :hover {
   background-color: white;
   color: #0ab1bd;
   box-shadow: 0px 8px 2px #cacacabf;

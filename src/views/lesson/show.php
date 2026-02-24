@@ -62,13 +62,70 @@ require_once '../src/views/partials/header.php';
     <?php endforeach; ?>
     <?php if (isset($lesson['quiz_id']) && $lesson['quiz_id'] !== null) :  ?>
 
-    <div class="info">
-        <p>
-            Cette leçon offre un quiz pour vérifier ses connaissances
-        </p>
-        <a href="?page=<?= $lesson['genre'] == "test" ? "pageInterQuiz&type=test" : $lesson['genre'] ?>&id=<?= $lesson['quiz_id'] ?> <?= $lesson['genre'] === "flashcard" ? "&action=start" : "" ?>">Cliquez-ici pour commencer</a>
+        <div class="info">
+            <p>
+                Cette leçon offre un quiz pour vérifier ses connaissances
+            </p>
+            <a href="?page=<?= $lesson['genre'] == "test" ? "pageInterQuiz&type=test" : $lesson['genre'] ?>&id=<?= $lesson['quiz_id'] ?> <?= $lesson['genre'] === "flashcard" ? "&action=start" : "" ?>">Cliquez-ici pour commencer</a>
+        </div>
+    <?php endif; ?>
+
+    <p class="fin">Vous avez aimé la leçon ? N'hésiter pas à la noter : </p>
+    <div class="quiz-reactions">
+        <?php if (isset($_SESSION['id'])) : ?>
+            <?php if ( !isset($hasDisliked) && (!$hasDisliked)) : ?>
+                <form method="POST" action="?page=standard&id=<?= $quizId ?>&idQuestion=<?= $idQuestion ?>">
+                    <button type="submit"
+                        name="reaction"
+                        value="like"
+                        class="like"
+                        id=<?= $hasDisliked ? 'disabled' : '' ?>>
+                        👍 <?= htmlspecialchars($reactions['nbjaime'] ?? 0) ?>
+                    </button>
+                    <input type="hidden" name="idQuestion" value=<?= $idQuestion ?>>
+                </form>
+            <?php endif; ?>
+            <?php if (isset ($hasDisliked) && $hasDisliked) : ?>
+                <button type=<?= $hasDisliked ? '' : 'submit' ?>
+                    name="reaction"
+                    value="like"
+                    class="like"
+                    id=<?= $hasDisliked ? 'disabled' : '' ?>>
+                    👍 <?= htmlspecialchars($reactions['nbjaime'] ?? 0) ?>
+                </button>
+            <?php endif; ?>
+            <?php if ( !isset($hasLiked) && !$hasLiked) : ?>
+                <form method="POST" action="?page=standard&id=<?= $quizId ?>&idQuestion=<?= $idQuestion ?>">
+                    <button type='submit'
+                        name="reaction"
+                        value="dislike"
+                        class="dislike"
+                        id=<?= $hasLiked ? 'disabled' : '' ?>>
+                        👎 <?= htmlspecialchars($reactions['nbjaimepas'] ?? 0) ?>
+                    </button>
+                    <input type="hidden" name="idQuestion" value=<?= $idQuestion ?>>
+                <?php endif; ?>
+                <?php if (isset ($hasLiked) && $hasLiked) : ?>
+                    <button type='submit'
+                        name="reaction"
+                        value="dislike"
+                        class="dislike"
+                        id=<?= $hasLiked ? 'disabled' : '' ?>>
+                        👎 <?= htmlspecialchars($reactions['nbjaimepas'] ?? 0) ?>
+                    </button>
+                <?php endif; ?>
+                </form>
+
+            <?php else : ?>
+
+                <p>
+                    Pour débloquer cette fonctionnalité
+                    <a href="?page=log&typelog=connection">Connectez-vous</a> d'abord
+                </p>
+
+            <?php endif; ?>
     </div>
-    <?php endif; ?> 
+
 
 </main>
 
