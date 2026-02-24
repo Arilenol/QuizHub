@@ -316,7 +316,7 @@ class LessonController {
         }
         if (isset($_POST['Retour']) && $_POST['Retour'] === "yes") {
             unset($_POST);
-            header('Location: index.php?page=createContent');
+            header('Location: index.php?page=profil');
             exit;
         }
         if(isset($_POST['categories']) && !empty($_POST['categories'])){
@@ -349,9 +349,9 @@ class LessonController {
             
             if ($this->modifPartValidite($partTitle, $partContent)){
                 if ($taille < $iPart + 1){
-                    $this->model->addPartToLesson($idLesson, $iPart+1, $partTitle, $partContent);
+                    $this->model->addPartToLesson($idLesson, $iPart, $partTitle, $partContent);
                 }
-                $this->model->updatePartLesson($idLesson, $iPart+1, $partTitle, $partContent);
+                $this->model->updatePartLesson($idLesson, $iPart, $partTitle, $partContent);
             }
             else{
                 die('erreur de validation du contenu d\'une partie');
@@ -370,12 +370,12 @@ class LessonController {
                 $reponse = isset($_POST['textReponse']) && !empty($_POST['textReponse']) ? $_POST['textReponse'] : '';
                 
                 if ($this->modifierExValidite($consigne, $reponse)){
-                    $taillek = $this->model->getNumberExFromPart($idLesson, $iPart+1);
-                    if ($taillek < $kEx+1){
-                        $this->model->addExToPart($idLesson, $iPart+1, $kEx+1, $consigne, $reponse);
+                    $taillek = $this->model->getNumberExFromPart($idLesson, $iPart);
+                    if ($taillek < $kEx + 1){
+                        $this->model->addExToPart($idLesson, $iPart, $kEx, $consigne, $reponse);
                     }
                     else{
-                        $this->model->updateExFromPart($idLesson, $iPart+1, $kEx+1, $consigne, $reponse);
+                        $this->model->updateExFromPart($idLesson, $iPart, $kEx, $consigne, $reponse);
                     }
                 }
                 else{
@@ -393,7 +393,7 @@ class LessonController {
             if(isset($_POST['delNumEx'])){
                 $iPart = (int)$_POST['delEx'];
                 $kEx = (int)$_POST['delNumEx'];
-               $this->model->deleteExFromPart($idLesson, $iPart+1, $kEx+1);
+               $this->model->deleteExFromPart($idLesson, $iPart, $kEx);
             }
             unset($_POST['delEx']);
             unset($_POST['delNumEx']);
@@ -417,7 +417,7 @@ class LessonController {
         }
         if(isset($_POST['DelPart'])){
             $iPart = (int)$_POST['DelPart'];
-            $this->model->deletePartFromLesson($idLesson, $iPart+1);
+            $this->model->deletePartFromLesson($idLesson, $iPart);
             unset($_POST['DelPart']);
             header('Location: ' . $_SERVER['REQUEST_URI']);
             exit;

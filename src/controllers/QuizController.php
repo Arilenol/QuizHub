@@ -367,7 +367,7 @@ class QuizController
         );
         if (isset($_POST['Retour']) && $_POST['Retour'] === "yes") {
             unset($_POST);
-            header('Location: index.php?page=createContent');
+            header('Location: index.php?page=profil');
             exit;
         }
         if (isset($_POST['categories']) && !empty($_POST['categories'])) {
