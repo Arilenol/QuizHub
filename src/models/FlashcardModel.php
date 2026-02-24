@@ -83,7 +83,7 @@ class FlashcardModel
     {
         try {
             $this->db->beginTransaction();
-            $newFlashcard = $this->insertFlashcard($user_id, $title, $desc);
+            $newFlashcard = $this->insertFlashcard($user_id, $title, $desc, $disponibilite);
             if (!$newFlashcard) {
                 throw new PDOException("erreur dans l\'insertion de la flashcard dans FlashcardModel.php/createFlashcard");
             }
@@ -94,7 +94,8 @@ class FlashcardModel
                 }
             }
             if ($disponibilite == 'ami') {
-                foreach ($TAB_AMI_CHOISI as $ami) {
+                $amisSelectionnes = $this->normalizeSelectedFriends($user_id, $TAB_AMI_CHOISI);
+                foreach ($amisSelectionnes as $ami) {
                     $newAmiDispo = $this->insertAmiDispo($newFlashcard, (int)$ami);
                     if (!$newAmiDispo) {
                         throw new PDOException("erreur dans l\'insertion des amis dans QuizModel.php/createQuiz");
@@ -129,7 +130,7 @@ class FlashcardModel
      *
      * @return int|false  Retourne l'ID de la flashcard insérée, ou false en cas d'erreur.
      */
-    public function insertFlashcard(int $user_id, string $title, string $desc)
+    public function insertFlashcard(int $user_id, string $title, string $desc, string $disponibilite)
     {
         try {
             $newFlashcard = $this->db->prepare("INSERT INTO Quiz (user_id, title, description, difficulty, disponibilite, date, genre)
@@ -138,7 +139,7 @@ class FlashcardModel
             $newFlashcard->bindValue(2, $title);
             $newFlashcard->bindValue(3, $desc);
             $newFlashcard->bindValue(4, 1);
-            $newFlashcard->bindValue(5, 'public');
+            $newFlashcard->bindValue(5, $disponibilite);
             $newFlashcard->bindValue(6, date('Y-m-d'));
             $newFlashcard->bindValue(7, 'flashcard');
 
@@ -441,7 +442,9 @@ class FlashcardModel
             $update->bindValue(2, $idFlashcard);
             $update->execute();
             if ($disponibilite == 'ami') {
-                foreach ($amis as $ami) {
+                $ownerId = $this->getUserIdFromFlashcard($idFlashcard);
+                $amisSelectionnes = $this->normalizeSelectedFriends((int)$ownerId, $amis);
+                foreach ($amisSelectionnes as $ami) {
                     $this->insertAmiDispo($idFlashcard, (int)$ami);
                 }
             }
@@ -449,6 +452,18 @@ class FlashcardModel
         } catch (PDOException $e) {
             die("Updating disponibilite for quiz failed: " . $e->getMessage());
         }
+    }
+
+    private function normalizeSelectedFriends(int $userId, array $amis): array
+    {
+        if (in_array('tous', $amis, true)) {
+            $allFriends = $this->getAmis($userId);
+            $ids = array_map(static fn($ami) => (int)$ami['ami_id'], $allFriends);
+            return array_values(array_unique(array_filter($ids, static fn($id) => $id > 0)));
+        }
+
+        $ids = array_map('intval', $amis);
+        return array_values(array_unique(array_filter($ids, static fn($id) => $id > 0)));
     }
 
     /**

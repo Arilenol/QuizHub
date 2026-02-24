@@ -182,6 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const checkQuestion = document.querySelectorAll("[name='checkbox"+i+"[]']");
 
             const footerQuestion = document.querySelector("#questionFooter"+i);
+            footerQuestion.classList.add("is-editing");
 
             textareaContent.disabled = false;
             for (let rep of repQuestion){
@@ -198,37 +199,51 @@ document.addEventListener("DOMContentLoaded", () => {
             const pAddRep = document.createElement("p");
             pAddRep.textContent = "Ajouter une réponse";
             addRep.appendChild(pAddRep);
-            addRep.addEventListener("click", (evt) =>{
+                        addRep.addEventListener("click", (evt) =>{
                 evt.preventDefault();
                 const quizQuestion = document.querySelector("#quizQuestion"+i);
 
-                
-                const repList = quizQuestion.querySelectorAll(".reponse");
-                const nextRow = repList.length + 1; 
+                const repList = quizQuestion.querySelectorAll(".responseInput");
+                const nextRowStart = (repList.length * 2) + 1;
 
-                const divRep = quizQuestion.querySelector(".reponse");
+                const repTitle = quizQuestion.querySelector(".reponse");
+                const repInput = quizQuestion.querySelector(".responseInput");
                 const checkRep = quizQuestion.querySelector(".checkbox");
 
-                const newRep = divRep.cloneNode(true);
+                const newRepTitle = repTitle.cloneNode(true);
+                const newRepInput = repInput.cloneNode(true);
                 const newCheck = checkRep.cloneNode(true);
-                
-                newRep.querySelector("p").textContent = "nouvelle réponse :";
-                
-                newRep.querySelector("div").querySelector("input").value = "";
+
+                newRepTitle.textContent = "Reponse " + (repList.length + 1) + " :";
+                newRepInput.querySelector("input").value = "";
+                newRepInput.querySelector("input").disabled = false;
                 newCheck.querySelector("input").checked = false;
                 newCheck.querySelector("input").disabled = false;
 
-                newRep.style.gridRowStart = nextRow;
-                newRep.style.gridRowEnd = nextRow + 1;
-                newCheck.style.gridRowStart = nextRow;
-                newCheck.style.gridRowEnd = nextRow + 1;
+                newRepTitle.style.gridRowStart = nextRowStart;
+                newRepTitle.style.gridRowEnd = nextRowStart + 1;
+                newRepInput.style.gridRowStart = nextRowStart + 1;
+                newRepInput.style.gridRowEnd = nextRowStart + 2;
+                newCheck.style.gridRowStart = nextRowStart + 1;
+                newCheck.style.gridRowEnd = nextRowStart + 2;
 
-                
-                const questionDiv = quizQuestion.querySelector(".question");
-                questionDiv.style.gridRowEnd = nextRow + 1;
+                const questionDiv = quizQuestion.querySelector(".questionInput");
+                questionDiv.style.gridRowEnd = nextRowStart + 2;
 
-                quizQuestion.appendChild(newRep);
+                quizQuestion.appendChild(newRepTitle);
+                quizQuestion.appendChild(newRepInput);
                 quizQuestion.appendChild(newCheck);
+
+                const footer = quizQuestion.querySelector(".questionFooter");
+                const delBtn = quizQuestion.querySelector(".delQuestionButton");
+                if (footer) {
+                    footer.style.gridRowStart = nextRowStart + 2;
+                    footer.style.gridRowEnd = nextRowStart + 3;
+                }
+                if (delBtn) {
+                    delBtn.style.gridRowStart = nextRowStart + 2;
+                    delBtn.style.gridRowEnd = nextRowStart + 3;
+                }
 
                 resetCheckboxSVG();
                 initCheckboxSVG();
@@ -243,21 +258,37 @@ document.addEventListener("DOMContentLoaded", () => {
             const pSupprRep = document.createElement("p");
             pSupprRep.textContent = "Supprimer une réponse";
             supprRep.appendChild(pSupprRep);
-            supprRep.addEventListener("click", (evt) =>{
+                        supprRep.addEventListener("click", (evt) =>{
                 evt.preventDefault();
                 const quizQuestion = document.querySelector("#quizQuestion"+i);
-                const repList = quizQuestion.querySelectorAll(".reponse");
-                const lastRep = repList[repList.length -1];
+                const repTitles = quizQuestion.querySelectorAll(".reponse");
+                const repInputs = quizQuestion.querySelectorAll(".responseInput");
                 const checkList = quizQuestion.querySelectorAll(".checkbox");
-                const lastCheck = checkList[checkList.length -1];
 
-                if (repList.length > 2){
-                    quizQuestion.removeChild(lastRep);
+                if (repInputs.length > 2){
+                    const lastRepTitle = repTitles[repTitles.length - 1];
+                    const lastRepInput = repInputs[repInputs.length - 1];
+                    const lastCheck = checkList[checkList.length - 1];
+
+                    quizQuestion.removeChild(lastRepTitle);
+                    quizQuestion.removeChild(lastRepInput);
                     quizQuestion.removeChild(lastCheck);
 
-                    const questionDiv = quizQuestion.querySelector(".question");
-                    const newEndRow = repList.length;
+                    const questionDiv = quizQuestion.querySelector(".questionInput");
+                    const remainingRepInputs = repInputs.length - 1;
+                    const newEndRow = (remainingRepInputs * 2) + 2;
                     questionDiv.style.gridRowEnd = newEndRow;
+
+                    const footer = quizQuestion.querySelector(".questionFooter");
+                    const delBtn = quizQuestion.querySelector(".delQuestionButton");
+                    if (footer) {
+                        footer.style.gridRowStart = newEndRow;
+                        footer.style.gridRowEnd = newEndRow + 1;
+                    }
+                    if (delBtn) {
+                        delBtn.style.gridRowStart = newEndRow;
+                        delBtn.style.gridRowEnd = newEndRow + 1;
+                    }
                 }
             });
             footerQuestion.appendChild(supprRep);
@@ -322,14 +353,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 window.location.reload();
             });
             if (DelBtn) {
-                DelBtn.replaceWith(applyModif);
-                applyModif.after(Annuler);
-            } else {
-                // Pas de bouton supprimer → on ajoute quand même les boutons
-                const footer = document.querySelector("#questionFooter"+i);
-                footer.appendChild(applyModif);
-                applyModif.after(Annuler);
+                DelBtn.remove();
             }
+            footerQuestion.appendChild(applyModif);
+            footerQuestion.appendChild(Annuler);
             /*DelBtn.replaceWith(applyModif);
             applyModif.after(Annuler);*/
             
@@ -350,45 +377,62 @@ document.addEventListener("DOMContentLoaded", () => {
     addQuestionBtn.addEventListener("click", (ev) => {
         if (!modif){
             ev.preventDefault();
-            
-            const newQuestion = document.querySelectorAll(".newQuiz")[document.querySelectorAll(".newQuiz").length-1].cloneNode(true);
-            newQuestion.querySelector(".question").disabled = false;
-            newQuestion.querySelector(".question").querySelector("textarea").value = "";
-            
-            newQuestion.querySelector(".question").style.gridRowEnd = 3;
-            const repList = newQuestion.querySelectorAll(".reponse");
+
+            const lastQuestion = document.querySelectorAll(".newQuiz")[document.querySelectorAll(".newQuiz").length-1];
+            const newQuestion = lastQuestion.cloneNode(true);
+
+            const questionInput = newQuestion.querySelector(".questionInput");
+            const questionTextarea = questionInput.querySelector("textarea");
+            questionTextarea.disabled = false;
+            questionTextarea.value = "";
+            questionInput.style.gridRowEnd = 6;
+
+            const repTitles = newQuestion.querySelectorAll(".reponse");
+            const repInputs = newQuestion.querySelectorAll(".responseInput");
             const checkList = newQuestion.querySelectorAll(".checkbox");
-            console.log(repList, typeof repList);
-            for( let i = 0; i < repList.length; i++){
-                if (i < 2){
-                    repList[i].querySelector("div").querySelector("input").value = "";
-                    repList[i].querySelector("div").querySelector("input").disabled = false;
+
+            for (let j = 0; j < repTitles.length; j++){
+                if (j < 2){
+                    repTitles[j].textContent = "Reponse " + (j + 1) + " :";
                 }
                 else{
-                    repList[i].remove();
+                    repTitles[j].remove();
                 }
             }
-            for (let i = 0 ; i < checkList.length; i++){
-                if (i < 2){
-                    checkList[i].querySelector("input").checked = false;
-                    checkList[i].querySelector("input").disabled = false;
+
+            for (let j = 0; j < repInputs.length; j++){
+                if (j < 2){
+                    const input = repInputs[j].querySelector("input");
+                    input.value = "";
+                    input.disabled = false;
                 }
                 else{
-                    checkList[i].remove();
+                    repInputs[j].remove();
                 }
             }
-            let i = parseInt(newQuestion.querySelector(".modifierQuestion").value);
+
+            for (let j = 0 ; j < checkList.length; j++){
+                if (j < 2){
+                    checkList[j].querySelector("input").checked = false;
+                    checkList[j].querySelector("input").disabled = false;
+                }
+                else{
+                    checkList[j].remove();
+                }
+            }
+
+            let i = parseInt(newQuestion.querySelector(".modifierQuestion").value, 10);
             newQuestion.querySelector("#questionFooter"+i).id = "questionFooter"+(i+1);
-            newQuestion.querySelector(".question").querySelector("p").textContent = "Question "+(i+2);
-            newQuestion.querySelector(".question").querySelector(".textarea").id = "question"+(i+1);
-            for (let rep of newQuestion.querySelectorAll(".reponse")){
-                rep.querySelector("div").querySelector("input").name = "reponse"+(i+1)+"[]";
+            newQuestion.querySelector(".question").textContent = "Question "+(i+2);
+            questionInput.id = "question"+(i+1);
+
+            for (let repInput of newQuestion.querySelectorAll(".responseInput")){
+                repInput.querySelector("input").name = "reponse"+(i+1)+"[]";
             }
             for (let check of newQuestion.querySelectorAll(".checkbox")){
                 check.querySelector("input").name = "checkbox"+(i+1)+"[]";
             }
-            /*newQuestion.querySelector(".delQuestionButton").value = (i+1);
-            newQuestion.querySelector(".delQuestionButton").id = "DelQuestion"+(i+1);*/
+
             let delBtn = newQuestion.querySelector(".delQuestionButton");
 
             if (!delBtn) {
@@ -405,19 +449,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
             delBtn.value = i + 1;
             delBtn.id = "DelQuestion" + (i + 1);
+            delBtn.style.gridRowStart = 5;
+            delBtn.style.gridRowEnd = 6;
             delBtn.addEventListener("click", delQuestionFunction);
-            newQuestion.querySelector(".questionFooter").id = "questionFooter"+(i+1);
-            newQuestion.querySelector(".question").querySelector("textarea").id = "textarea"+(i+1);
-            newQuestion.querySelector(".question").querySelector("textarea").name = "question"+(i+1);
+
+            const questionFooter = newQuestion.querySelector(".questionFooter");
+            questionFooter.id = "questionFooter"+(i+1);
+            questionFooter.style.gridRowStart = 5;
+            questionFooter.style.gridRowEnd = 6;
+
+            questionTextarea.id = "textarea"+(i+1);
+            questionTextarea.name = "question"+(i+1);
 
             newQuestion.id = "quizQuestion"+(i+1);
-            const footer = newQuestion.querySelector(".questionFooter").querySelector(".modifierQuestion");
+            const footer = questionFooter.querySelector(".modifierQuestion");
             footer.value = i+1;
             footer.id = "modifier"+(i+1);
-            
             footer.addEventListener("click", modifQuestionClick);
 
-            document.querySelectorAll(".newQuiz")[document.querySelectorAll(".newQuiz").length-1].after(newQuestion);
+            lastQuestion.after(newQuestion);
 
             ev.currentTarget.remove();
 
@@ -618,3 +668,5 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 });
+
+

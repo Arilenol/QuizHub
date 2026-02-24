@@ -137,10 +137,30 @@ h2 button:active {
     flex-direction: row !important;
 }
 
-.questionFooter .button,
-.delQuestionButton {
-  flex: 0 1 auto;
-  min-width: max-content;
+.questionFooter.is-editing {
+  grid-column: 2 / 4 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.questionFooter.is-editing .button {
+  flex: 1 1 calc(50% - 10px);
+  min-width: 0;
+  max-width: 100%;
+  width: auto !important;
+  box-sizing: border-box;
+  justify-content: center;
+}
+
+.questionFooter.is-editing .button > p {
+  white-space: normal;
+  font-size: clamp(14px, 1.6vw, 20px);
+}
+
+@media (max-width: 768px) {
+  .questionFooter.is-editing .button {
+    flex-basis: 100%;
+  }
 }
 
 

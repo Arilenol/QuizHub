@@ -136,6 +136,7 @@
             <?php $dispo = $lessonInfos['disponibilite'] == 'private' ? 'selected' : ''; ?>
             <option value="private" <?= $dispo ?> >seulement vous</option>
         </select>
+        <div class="ami-list" <?= $lessonInfos['disponibilite'] != "ami" ? 'hidden' : '' ?>>
         <?php
         if ($lessonInfos['disponibilite'] == "ami"){
             $hidden2 = '';
@@ -159,6 +160,7 @@
         }
         
         ?>
+        </div>
     </div>
     <?php
         if ($erreur){

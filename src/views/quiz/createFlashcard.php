@@ -145,6 +145,7 @@ require __DIR__ . '/../partials/header.php';
                 <option value="private" <?= $dispo ?>>seulement vous</option>
 
             </select>
+            <div class="ami-list" <?= $_SESSION['POST']['disponibilite'] != "ami" ? 'hidden' : '' ?>>
 
             <?php
 
@@ -166,7 +167,7 @@ require __DIR__ . '/../partials/header.php';
                 $checkedTous = '';
             }
 
-            echo '<label ' . $hidden2 . '><input name = "amiDispo[]" type = "checkbox" value="tous" ' . $checkedTous . '>Tous les amis</label>';
+            echo '<label class="friends" ' . $hidden2 . '><input name = "amiDispo[]" type = "checkbox" value="tous" ' . $checkedTous . '>Tous les amis</label>';
 
             foreach ($TAB_AMI as $ami) {
 
@@ -178,12 +179,13 @@ require __DIR__ . '/../partials/header.php';
                     $checked = '';
                 }
 
-                echo '<label ' . $hidden2 . '><input name = "amiDispo[]" type = "checkbox" value="' . htmlspecialchars($ami['ami_id']) . '" ' . $checked . '>' . htmlspecialchars($ami['username']) . '</label>';
+                echo '<label class="friends" ' . $hidden2 . '><input name = "amiDispo[]" type = "checkbox" value="' . htmlspecialchars($ami['ami_id']) . '" ' . $checked . '>' . htmlspecialchars($ami['username']) . '</label>';
             }
 
 
 
             ?>
+            </div>
 
         </div>
 
