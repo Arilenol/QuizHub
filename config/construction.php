@@ -30,6 +30,12 @@ function constructionBD(PDO $conn)
         $sql = "DROP TABLE IF EXISTS users;";
         $conn->exec($sql);
 
+        $sql = "DROP TABLE IF EXISTS dislikesLecon;";
+        $conn->exec($sql);
+
+        $sql = "DROP TABLE IF EXISTS likesLecon;";
+        $conn->exec($sql);
+
         $sql = "DROP TABLE IF EXISTS dislikes;";
         $conn->exec($sql);
 
@@ -236,6 +242,30 @@ function constructionBD(PDO $conn)
                     user_id INTEGER NOT NULL,
                     UNIQUE (quiz_id, user_id),
                     FOREIGN KEY (quiz_id) REFERENCES quiz(id) ON DELETE CASCADE,
+                    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+                );
+                ";
+
+        $conn->exec($sql);
+
+        $sql = "CREATE TABLE likesLecon (
+                like_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                lecon_id INTEGER NOT NULL,
+                user_id INTEGER NOT NULL,
+                UNIQUE (lecon_id, user_id),
+                FOREIGN KEY (lecon_id) REFERENCES Lecon(id) ON DELETE CASCADE,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+            );
+            ";
+
+        $conn->exec($sql);
+
+        $sql = "CREATE TABLE dislikesLecon (
+                    dislike_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    lecon_id INTEGER NOT NULL,
+                    user_id INTEGER NOT NULL,
+                    UNIQUE (lecon_id, user_id),
+                    FOREIGN KEY (lecon_id) REFERENCES Lecon(id) ON DELETE CASCADE,
                     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
                 );
                 ";
@@ -495,7 +525,7 @@ function constructionBD(PDO $conn)
 
         $conn->exec($sql);
 
-        $sql="CREATE TRIGGER trg_after_delete_part
+        $sql = "CREATE TRIGGER trg_after_delete_part
             AFTER DELETE ON Partie
             BEGIN
                 UPDATE Partie 
@@ -505,7 +535,7 @@ function constructionBD(PDO $conn)
 
         $conn->exec($sql);
 
-        $sql="CREATE TRIGGER trg_after_delete_example
+        $sql = "CREATE TRIGGER trg_after_delete_example
             AFTER DELETE ON Exemple
             BEGIN
                 UPDATE Exemple 
@@ -515,7 +545,7 @@ function constructionBD(PDO $conn)
 
         $conn->exec($sql);
 
-        $sql="CREATE TRIGGER trg_after_delete_card
+        $sql = "CREATE TRIGGER trg_after_delete_card
             AFTER DELETE ON Carte
             BEGIN
                 UPDATE Carte 

@@ -81,12 +81,12 @@ class HomeController
             return 0;
         }
 
-        $lastActivity = $this->model->getLastActivity($id);        
+        $lastActivity = $this->model->getLastActivity($id);
         // Vérifier que $lastActivity n'est pas null avant d'appeler diff()
         if ($lastActivity === null) {
             return 0;
         }
-                $diffDays = $lastActivity->diff($today)->days;
+        $diffDays = $lastActivity->diff($today)->days;
 
         // déjà joué aujourd’hui → rien
         if ($diffDays === 0 || $diffDays === 1) {

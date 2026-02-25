@@ -128,10 +128,36 @@
   justify-self: end;
 }
 
+
+p.fin {
+  margin-top: 100px;
+  justify-self: center;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+
+.quiz-reactions button {
+  border-radius: 75px;
+  background-color: #0AB1BD;
+  color: white;
+  border: none;
+  padding: 21px 36px;
+  font-size: 1.575rem;
+  min-height: 69px;
+  cursor: pointer;
+}
+
+.quiz-reactions button:hover {
+  background-color: #fff;
+  color: #087b86;
+}
+
 .quiz-reactions {
   display: flex;
   gap: 10px;
   align-items: center;
+  justify-content: center;
   margin: 0;
 }
 
@@ -147,6 +173,7 @@
   border: none;
   color: white;
 }
+
 
 .quiz-reactions .like {
   background-color: #31c414bf;
