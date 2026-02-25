@@ -35,7 +35,7 @@ if (isset($_SESSION['id'])) {
     <p class="no-content">Vous n'avez encore créé aucune ressource.</p>
 <?php else: ?>
     <div class="newCreations">
-        <?php for ($i = 0; $i < count($quizNextPart); $i++): ?>
+        <?php for ($i = 0; $i < count($quizNextPart) && $i < 5; $i++): ?>
             <article onclick="window.location.href='./?page=<?= $quizNextPart[$i]['genre'] == 'test' ? 'pageInterQuiz' : $quizNextPart[$i]['genre'] ?>&id=<?= $quizNextPart[$i]['id'] ?> <?= $quizNextPart[$i]['genre'] == 'lesson' ? '&categorie=view' : '' ?> <?= $quizNextPart[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?><?= $quizNextPart[$i]['genre'] == 'test' ? '&type=test' : '' ?>'" class="quiz">
                 <div class="quiz-header">
                     <div class="quiz-cat">
@@ -51,7 +51,7 @@ if (isset($_SESSION['id'])) {
                         <button type="button" class="button download-button" value="<?= $quizNextPart[$i]['id'] ?>">
                             <span></span>
                             <svg class="download-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                <path fill="white" d="M13 8V2H7v6H2l8 8l8-8h-5zM0 18h20v2H0v-2z"/>
+                                <path fill="white" d="M13 8V2H7v6H2l8 8l8-8h-5zM0 18h20v2H0v-2z" />
                             </svg>
                         </button>
                     <?php
@@ -74,6 +74,12 @@ if (isset($_SESSION['id'])) {
             </article>
 
         <?php endfor; ?>
+        <?php if (count($quizNextPart) >= 5): ?>
+            <article onclick="" class="quiz seeMore">
+                Voir plus
+            </article>
+
+        <?php endif; ?>
 
     </div>
 <?php endif; ?>
@@ -82,8 +88,8 @@ if (isset($_SESSION['id'])) {
     <h1>Les créations de mes amis</h1>
     <?php if (isset($friendQuiz) && !empty($friendQuiz)): ?>
         <div class="newCreations">
-            <?php for ($i = 0; $i < count($friendQuiz); $i++): ?>
-                <article onclick="window.location.href='./?page=<?= $friendQuiz[$i]['genre'] == 'test' ? 'pageInterQuiz' : $friendQuiz[$i]['genre'] ?>&id=<?= $friendQuiz[$i]['id'] ?> <?= $friendQuiz[$i]['genre'] == 'lesson' ? '&categorie=view' : '' ?><?= $friendQuiz[$i]['genre'] == 'test' ? '&type=test' : '' ?>'"<?php echo $friendQuiz[$i]['genre'] == 'flashcard' ? " data-action='start'" : '' ?> class="quiz">
+            <?php for ($i = 0; $i < count($friendQuiz) && $i < 5; $i++): ?>
+                <article onclick="window.location.href='./?page=<?= $friendQuiz[$i]['genre'] == 'test' ? 'pageInterQuiz' : $friendQuiz[$i]['genre'] ?>&id=<?= $friendQuiz[$i]['id'] ?> <?= $friendQuiz[$i]['genre'] == 'lesson' ? '&categorie=view' : '' ?><?= $friendQuiz[$i]['genre'] == 'test' ? '&type=test' : '' ?>'"<?php echo $friendQuiz[$i]['genre'] == 'flashcard' ? " data-action='start'" : ''  ?> class="quiz">
                     <div class="quiz-header">
                         <div class="quiz-cat">
                             <?php if (!empty($friendQuiz[$i]['categories'])): ?>
@@ -98,7 +104,7 @@ if (isset($_SESSION['id'])) {
                             <button type="button" class="button download-button" value="<?= $friendQuiz[$i]['id'] ?>">
                                 <span></span>
                                 <svg class="download-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill="white" d="M13 8V2H7v6H2l8 8l8-8h-5zM0 18h20v2H0v-2z"/>
+                                    <path fill="white" d="M13 8V2H7v6H2l8 8l8-8h-5zM0 18h20v2H0v-2z" />
                                 </svg>
                             </button>
                         <?php
@@ -120,6 +126,12 @@ if (isset($_SESSION['id'])) {
                     </div>
                 </article>
             <?php endfor; ?>
+            <?php if (count($friendQuiz) >= 5): ?>
+                <article onclick="" class="quiz seeMore">
+                    Voir plus
+                </article>
+
+            <?php endif; ?>
         </div>
     <?php else : ?>
         <p class="no-content">Vos amis n'ont créé aucune ressource.</p>
@@ -130,7 +142,7 @@ if (isset($_SESSION['id'])) {
 <h1>Créations populaires</h1>
 
 <div class="newCreations">
-    <?php for ($i = 0; $i < count($quiz); $i++): ?>
+    <?php for ($i = 0; $i < count($quiz) && $i < 5; $i++): ?>
         <article onclick="window.location.href='./?page=<?= $quiz[$i]['genre'] == 'test' ? 'pageInterQuiz' : $quiz[$i]['genre'] ?>&id=<?= $quiz[$i]['id'] ?> <?= $quiz[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?> <?= $quiz[$i]['genre'] == 'standard' ? '&type=standard' : '' ?> <?= $quiz[$i]['genre'] == 'test' ? '&type=test' : '' ?>'" class="quiz">
             <div class="quiz-header">
                 <div class="quiz-cat">
@@ -143,12 +155,12 @@ if (isset($_SESSION['id'])) {
                 <?php
                 if ($quiz[$i]['genre'] == "flashcard"):
                 ?>
-                <button type="button" class="button download-button" value="<?= $quiz[$i]['id'] ?>">
-                    <span></span>
-                    <svg class="download-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                        <path fill="white" d="M13 8V2H7v6H2l8 8l8-8h-5zM0 18h20v2H0v-2z"/>
-                    </svg>
-                </button>
+                    <button type="button" class="button download-button" value="<?= $quiz[$i]['id'] ?>">
+                        <span></span>
+                        <svg class="download-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                            <path fill="white" d="M13 8V2H7v6H2l8 8l8-8h-5zM0 18h20v2H0v-2z" />
+                        </svg>
+                    </button>
                 <?php
                 endif;
                 ?>
@@ -167,14 +179,21 @@ if (isset($_SESSION['id'])) {
                 </div>
             </div>
         </article>
+
     <?php endfor; ?>
+    <?php if (count($quiz) >= 5): ?>
+        <article onclick="" class="quiz seeMore">
+            Voir plus
+        </article>
+
+    <?php endif; ?>
 
 </div>
 
 <h1>Leçons populaires</h1>
 
 <div class="newCreations">
-    <?php for ($i = 0; $i < count($lessons); $i++): ?>
+    <?php for ($i = 0; $i < count($lessons) && $i < 5; $i++): ?>
         <article onclick="window.location.href='./?page=lesson&categorie=view&id=<?= $lessons[$i]['lecon_id'] ?>'" class="quiz">
             <div class="quiz-header">
                 <div class="quiz-cat">
@@ -200,11 +219,17 @@ if (isset($_SESSION['id'])) {
             </div>
         </article>
     <?php endfor; ?>
+    <?php if (count($lessons) >= 5): ?>
+        <article onclick="" class="quiz seeMore">
+            Voir plus
+        </article>
+
+    <?php endif; ?>
 
 </div>
 
 <div class="endDirection">
-    <button onclick="window.location.href='?page=catalogue'">Voir plus</button>
+    <button onclick="window.location.href='?page=catalogue'">Voir tout</button>
 </div>
 </body>
 

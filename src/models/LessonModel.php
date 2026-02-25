@@ -79,25 +79,18 @@ class LessonModel
             u.id AS user_id,
             u.username AS user_name,
 
-            q.id AS quiz_id,
-            q.title AS quiz_title,
-            q.genre,
-            q.difficulty,
-            q.description AS quiz_description,
-
             (
                 SELECT GROUP_CONCAT(DISTINCT c.categorieName)
-                FROM categorie_quiz cq
+                FROM categorie_lecon cq
                 JOIN categories c ON c.id = cq.category_id
-                WHERE cq.quiz_id = q.id
+                WHERE cq.lesson_id = l.id
             ) AS categories,
 
-            (SELECT COUNT(*) FROM likes l2 WHERE l2.quiz_id = q.id) AS nbjaime,
-            (SELECT COUNT(*) FROM dislikes d2 WHERE d2.quiz_id = q.id) AS nbjaimepas
+            (SELECT COUNT(*) FROM likesLecon ll WHERE ll.lecon_id = l.id) AS nbjaime,
+            (SELECT COUNT(*) FROM dislikesLecon dl WHERE dl.lecon_id = l.id) AS nbjaimepas
 
         FROM Lecon l
         JOIN users u ON u.id = l.user_id
-        LEFT JOIN quiz q ON q.id = l.quiz_id
 
         ORDER BY l.date DESC, (nbjaime - nbjaimepas) DESC
 
@@ -455,22 +448,17 @@ class LessonModel
             l.title AS title,
             l.description AS description,
             l.date AS date,
+            'leçon' AS genre,
 
             u.id AS user_id,
             u.username AS user_name,
 
-            q.id AS quiz_id,
-            q.title AS quiz_title,
-            'lesson' AS genre,
-            q.difficulty,
-            q.description AS quiz_description,
-
             COALESCE(
                 (
                     SELECT GROUP_CONCAT(DISTINCT c.categorieName)
-                    FROM categorie_quiz cq
+                    FROM categorie_lecon cq
                     JOIN categories c ON c.id = cq.category_id
-                    WHERE cq.quiz_id = q.id
+                    WHERE cq.lesson_id = l.id
                 ),
                 (
                     SELECT GROUP_CONCAT(DISTINCT c.categorieName)
@@ -480,12 +468,11 @@ class LessonModel
                 )
             ) AS categories,
 
-            (SELECT COUNT(*) FROM likes l2 WHERE l2.quiz_id = q.id) AS nbjaime,
-            (SELECT COUNT(*) FROM dislikes d2 WHERE d2.quiz_id = q.id) AS nbjaimepas
+            (SELECT COUNT(*) FROM likesLecon l2 WHERE l2.lecon_id = l.id) AS nbjaime,
+            (SELECT COUNT(*) FROM dislikesLecon d2 WHERE d2.lecon_id = l.id) AS nbjaimepas
 
         FROM lecon l
         JOIN users u ON u.id = l.user_id
-        LEFT JOIN quiz q ON q.id = l.quiz_id
         WHERE l.user_id = ?
         ORDER BY l.date DESC
     ");

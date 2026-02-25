@@ -15,20 +15,20 @@ header {
   gap: 20px;
 }
 
-header>picture>img {
+header > picture > img {
   width: 100%;
   max-height: 100px;
   cursor: pointer;
   max-width: 400px;
 }
 
-header>picture {
+header > picture {
   display: flex;
   height: 100%;
   justify-content: center;
 }
 
-header>div {
+header > div {
   display: flex;
   flex-direction: row;
   gap: 25px;
@@ -36,17 +36,17 @@ header>div {
   justify-content: end;
 }
 
-header>form {
+header > form {
   width: 100%;
   display: flex;
   justify-content: center;
 }
 
-header>*:nth-child(2) {
+header > *:nth-child(2) {
   justify-self: center;
 }
 
-header>*:nth-child(3) {
+header > *:nth-child(3) {
   justify-self: end;
 }
 
@@ -63,12 +63,12 @@ select {
   font-size: 20px;
 }
 
-.signalement>span {
+.signalement > span {
   background-color: rgb(167, 48, 48) !important;
   box-shadow: 0 8px 2px rgb(114, 34, 34) !important;
 }
 
-.signalement>span:hover {
+.signalement > span:hover {
   background-color: #fff !important;
   box-shadow: 0px 8px 2px #cacacabf !important;
 }
@@ -100,11 +100,11 @@ select {
   gap: 20px;
 }
 
-.button>span,
-.searchbar>span,
-.input>span,
-.flatinput>span,
-.textarea>span {
+.button > span,
+.searchbar > span,
+.input > span,
+.flatinput > span,
+.textarea > span {
   position: absolute;
   inset: 0;
   background: #0ab1bd;
@@ -123,13 +123,13 @@ select {
   filter: grayscale(1);
 }
 
-.button.disabled>span {
+.button.disabled > span {
   background: #8b8b8b;
   box-shadow: 0px 8px 2px #2e2e2ebf;
   cursor: no-drop;
 }
 
-.button.disabled>span:hover {
+.button.disabled > span:hover {
   background: #8b8b8b;
   box-shadow: 0px 8px 2px #2e2e2ebf;
 }
@@ -144,12 +144,12 @@ select {
   transform: none;
 }
 
-.button>p {
+.button > p {
   text-align: center;
 }
 
-.button>p,
-.searchbar>p {
+.button > p,
+.searchbar > p {
   font-size: min(2.5vw, 25px);
   color: #fff;
   margin: 0;
@@ -159,9 +159,9 @@ select {
   transition: color ease-out 0.2s;
 }
 
-.button>img,
-.button>svg,
-.searchbar>img {
+.button > img,
+.button > svg,
+.searchbar > img {
   z-index: 1;
   pointer-events: none;
 }
@@ -174,18 +174,18 @@ svg {
   transition: fill ease-in-out 0.2s, stroke ease-in-out 0.2s;
 }
 
-.button:not(:disabled):has(span:hover) svg>path {
-	fill: #0AB1BD;
-  stroke: #0AB1BD;
+.button:not(:disabled):has(span:hover) svg > path {
+  fill: #0ab1bd;
+  stroke: #0ab1bd;
 }
 
 .button:not(:disabled):has(span:hover) p {
-  color: #0AB1BD;
+  color: #0ab1bd;
 }
 
-.button:not(:disabled)>span:hover {
+.button:not(:disabled) > span:hover {
   background-color: #fff;
-  box-shadow: 0px 8px 2px #CACACABF;
+  box-shadow: 0px 8px 2px #cacacabf;
 }
 
 .button:not(:disabled):has(span:active) {
@@ -194,7 +194,7 @@ svg {
   transform: translate(0px, 8px);
 }
 
-.button:not(:disabled)>span:active {
+.button:not(:disabled) > span:active {
   box-shadow: none !important;
 }
 
@@ -202,18 +202,18 @@ svg {
   transform: scale(0.8) translate(-11%, 10%);
 }
 
-.checkbox>svg {
+.checkbox > svg {
   cursor: pointer;
 }
 
-.checkbox:has(input[type="checkbox"]:disabled)>svg {
+.checkbox:has(input[type='checkbox']:disabled) > svg {
   cursor: not-allowed;
   filter: grayscale(1);
 }
 
-.checkbox>svg rect,
-.checkbox>svg circle,
-.checkbox>svg filter {
+.checkbox > svg rect,
+.checkbox > svg circle,
+.checkbox > svg filter {
   transition: all ease-in-out 0.2s;
 }
 
@@ -224,7 +224,7 @@ svg {
   padding: 0 20px;
 }
 
-.input>input {
+.input > input {
   all: unset;
   width: 100%;
   z-index: 2;
@@ -232,12 +232,12 @@ svg {
   font-size: 20px;
 }
 
-.input>img {
+.input > img {
   z-index: 2;
   height: 50%;
 }
 
-.input>input::-webkit-input-placeholder {
+.input > input::-webkit-input-placeholder {
   color: white;
 }
 
@@ -247,34 +247,34 @@ svg {
   cursor: default;
 }
 
-.flatinput>span {
+.flatinput > span {
   box-shadow: none;
   cursor: default;
 }
 
-.flatinput>input {
+.flatinput > input {
   all: unset;
   z-index: 2;
   color: white;
   cursor: text;
 }
 
-.flatinput>img {
+.flatinput > img {
   z-index: 2;
   height: 50%;
 }
 
-.flatinput>input::-webkit-input-placeholder {
+.flatinput > input::-webkit-input-placeholder {
   color: white;
 }
 
-.input>span,
-.textarea>span,
-.flatinput>span {
+.input > span,
+.textarea > span,
+.flatinput > span {
   cursor: default;
 }
 
-.textarea>textarea {
+.textarea > textarea {
   all: unset;
   width: 100%;
   height: 100%;
@@ -285,11 +285,11 @@ svg {
   z-index: 2;
 }
 
-.textarea>textarea::-webkit-input-placeholder {
+.textarea > textarea::-webkit-input-placeholder {
   color: white;
 }
 
-.textarea>span {
+.textarea > span {
   border-radius: 50px;
 }
 
@@ -321,9 +321,9 @@ svg {
 }
 
 /* Hover sur le bouton */
-.button:not(:disabled)>span:hover {
+.button:not(:disabled) > span:hover {
   background-color: #fff;
-  box-shadow: 0px 8px 2px #CACACABF;
+  box-shadow: 0px 8px 2px #cacacabf;
 }
 
 #menu {
@@ -332,13 +332,13 @@ svg {
   flex-direction: column;
   height: 100dvh;
   width: 100dvw;
-  background-color: #FFC067;
+  background-color: #ffc067;
   z-index: 5;
   left: -100dvw;
   transition: left 0.5s ease-in-out;
 }
 
-#menu>div {
+#menu > div {
   display: flex;
   flex-direction: column;
   gap: 25px;
@@ -346,7 +346,7 @@ svg {
   align-items: center;
 }
 
-#menu>form {
+#menu > form {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -370,149 +370,150 @@ svg {
   max-width: none;
 }
 
-#menu .input>input {
+#menu .input > input {
   font-size: 3.5vw;
 }
 
-#menu>div {
+#menu > div {
   margin-top: 20px;
 }
 
 .modal-streak {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.65);
-    backdrop-filter: blur(4px);
-    display: none; 
-    justify-content: center;
-    align-items: center;
-    z-index: 3000;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 3000;
 }
 
 .modal-streak.active {
-    display: flex;
+  display: flex;
 }
 
 .modal-streak .modal {
-    position: relative;
-    background: linear-gradient(145deg, #ffffff, #f3f4f6);
-    width: 90%;
-    max-width: 420px;
-    padding: 40px 30px;
-    border-radius: 22px;
-    text-align: center;
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
-    animation: streakPop 0.3s ease;
+  position: relative;
+  background: linear-gradient(145deg, #ffffff, #f3f4f6);
+  width: 90%;
+  max-width: 420px;
+  padding: 40px 30px;
+  border-radius: 22px;
+  text-align: center;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
+  animation: streakPop 0.3s ease;
 }
 
 .modal-streak .closeModal {
-    position: absolute;
-    top: 15px;
-    right: 18px;
-    font-size: 28px;
-    background: none;
-    border: none;
-    color: #6b7280;
-    cursor: pointer;
-    transition: 0.2s ease;
+  position: absolute;
+  top: 15px;
+  right: 18px;
+  font-size: 28px;
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  transition: 0.2s ease;
 }
 
 .modal-streak .closeModal:hover {
-    color: #ef4444;
+  color: #ef4444;
 }
 
 .modal-streak .title h2 {
-    font-size: 22px;
-    margin-bottom: 25px;
-    color: #111827;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
+  font-size: 22px;
+  margin-bottom: 25px;
+  color: #111827;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
 }
 
 .modal-streak .title svg {
-    filter: drop-shadow(0 6px 12px rgba(255, 153, 0, 0.4));
+  filter: drop-shadow(0 6px 12px rgba(255, 153, 0, 0.4));
 }
 
 /* Header button specifics */
 .btn-streak {
-    padding: 15px;
-    padding-right: 25px;
+  padding: 15px;
+  padding-right: 25px;
 }
 
 .btn-notif {
-    padding: 15px;
+  padding: 15px;
 }
 
 .btn-account {
-    padding: 15px;
+  padding: 15px;
 }
 
 .btn-create {
-    padding: 20px;
+  padding: 20px;
 }
-.download-button{
+.download-button {
   padding: 10px;
+  margin-bottom: 10px;
 }
 
 /* Icon sizes */
 .icon-streak,
 .icon-notif,
 .icon-account {
-    height: 40px;
-    width: 40px;
+  height: 40px;
+  width: 40px;
 }
 
 /* Text styles for buttons */
 .streak-text {
-    font-size: xx-large;
+  font-size: xx-large;
 }
 
 .create-text {
-    font-size: 40px;
+  font-size: 40px;
 }
 
 .modal-streak .streakContent p {
-    margin: 12px 0;
-    font-size: 17px;
-    color: #374151;
+  margin: 12px 0;
+  font-size: 17px;
+  color: #374151;
 }
 
 .modal-streak .streakContent strong {
-    font-size: 22px;
-    color: #f59e0b;
+  font-size: 22px;
+  color: #f59e0b;
 }
 
 /* Responsive */
 @media (max-width: 480px) {
-    .modal-streak .modal {
-        padding: 30px 20px;
-    }
+  .modal-streak .modal {
+    padding: 30px 20px;
+  }
 
-    .modal-streak .streakContent p {
-        font-size: 15px;
-    }
+  .modal-streak .streakContent p {
+    font-size: 15px;
+  }
 }
 
 @media (max-width: 1300px) {
-  header>picture>img {
+  header > picture > img {
     width: auto;
     height: 100%;
   }
 }
 
 @media (max-width: 600px) {
-	h1{
-		font-size: 7.5vw;
-	}
+  h1 {
+    font-size: 7.5vw;
+  }
 }
 
 @media (min-width: 601px) and (max-width: 1350px) {
-	h1{
-		font-size: 3.5vw;
-		margin-bottom: 0px;
-	}
+  h1 {
+    font-size: 3.5vw;
+    margin-bottom: 0px;
+  }
 }
 
 .categoriesList {
@@ -533,13 +534,11 @@ svg {
   box-shadow: 0px 8px 2px #007881bf;
   cursor: pointer;
   user-select: none;
-  transition:
-    transform 0.1s ease-in-out,
-    box-shadow 0.1s ease-in-out,
+  transition: transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out,
     filter 0.1s ease-in-out;
 }
 
-.categoriesList input[type="checkbox"] {
+.categoriesList input[type='checkbox'] {
   position: absolute;
   inset: 0;
   opacity: 0;
@@ -565,26 +564,27 @@ svg {
 }
 
 @media (max-width: 1000px) {
-	header{
-		display: flex;
-		padding: 0 65px 0 15px;
-		height: 75px;
-	}
-	header > form, header > div {
-		display: none;
-	}
-	header > .button{
-		padding: 10px;
-	}
-  .button{
+  header {
+    display: flex;
+    padding: 0 65px 0 15px;
+    height: 75px;
+  }
+  header > form,
+  header > div {
+    display: none;
+  }
+  header > .button {
+    padding: 10px;
+  }
+  .button:not(.download-button) {
     padding: 15px;
   }
 }
 @media (min-width: 999px) {
-	header > .button{
-		display: none;
-	}
-	#menu{
-		display: none;
-	}
+  header > .button {
+    display: none;
+  }
+  #menu {
+    display: none;
+  }
 }

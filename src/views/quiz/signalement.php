@@ -51,7 +51,7 @@ if (!isset($_SESSION['id'])) {
             <textarea name="description" id="description" rows="5" placeholder="Expliquez brièvement le problème..." required></textarea>
 
             <!-- Bouton de soumission -->
-            <button type="submit">Envoyer le signalement</button>
+            <button type="submit" class="button end"><span></span><p>Envoyer le signalement</p></button>
         </form>
     </div>
 <?php endif; ?>

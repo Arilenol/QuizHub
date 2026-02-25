@@ -3,7 +3,8 @@ require_once ROOT . '/src/models/LessonModel.php';
 require_once ROOT . '/config/config.php';
 
 
-class LessonController {
+class LessonController
+{
 
     private LessonModel $model;
     private $db;
@@ -14,7 +15,11 @@ class LessonController {
         $this->model = new LessonModel($this->db);
     }
 
-    public function index($id) {
+    public function index($id)
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
         // récupère les données de la leçon
         $lesson = $this->model->getLesson($id);
         if (!$lesson) {
@@ -22,7 +27,7 @@ class LessonController {
             return;
         }
         // récupère les parties
-        $parties = $this->model->getPart($id) ?: []; 
+        $parties = $this->model->getPart($id) ?: [];
         // récupère les exemples pour chaque partie
         $resultats = [];
         foreach ($parties as $part) {
@@ -30,13 +35,40 @@ class LessonController {
             $resultats[] = $exemples;
         }
 
-        
+        require_once ROOT . '/src/models/LikeModel.php';
+
+        $modelLike = new LikeModel($this->db);
+        $reactions = $modelLike->getReactionsLecon($id);
+
+        // Like/Dislike en POST
+        if (isset($_POST['reaction'])) {
+            if ($_POST['reaction'] === "like") {
+                if ($modelLike->hasLikedLecon($id, $_SESSION['id'])) {
+                    $modelLike->removeLikeLecon($id, $_SESSION['id']);
+                } else {
+                    $modelLike->sendLikeLecon($id, $_SESSION['id']);
+                }
+            } elseif ($_POST['reaction'] === "dislike") {
+                if ($modelLike->hasDislikedLecon($id, $_SESSION['id'])) {
+                    $modelLike->removeDislikeLecon($id, $_SESSION['id']);
+                } else {
+                    $modelLike->sendDislikeLecon($id, $_SESSION['id']);
+                }
+            }
+            header("Location: ?page=lesson&categorie=view&id=" . "$id");
+            exit;
+        }
+
+        $hasLiked = isset($_SESSION['id']) && $modelLike->hasLikedLecon($id, $_SESSION['id']);
+        $hasDisliked = isset($_SESSION['id']) && $modelLike->hasDislikedLecon($id, $_SESSION['id']);
+
         // afficher la vue
         require ROOT . '/src/views/lesson/show.php';
     }
 
     //A DEVELOPPER
-    public function createLesson(){
+    public function createLesson()
+    {
         error_reporting(E_ALL);
         ini_set('display_errors', 1);
         ini_set('display_startup_errors', 1);
@@ -44,40 +76,39 @@ class LessonController {
 
         session_start();
 
-        if (isset($_SESSION['id'])){
+        if (isset($_SESSION['id'])) {
             $id = $_SESSION['id'];
-        }
-        else{
+        } else {
             header('Location: index.php?page=home');
             exit;
         }
-        if (!isset($_SESSION['POST'])){
+        if (!isset($_SESSION['POST'])) {
             $_SESSION['POST'] = [];
         }
-        if(!isset($_SESSION['POST']['disponibilite'])){
+        if (!isset($_SESSION['POST']['disponibilite'])) {
             $_SESSION['POST']['disponibilite'] = 'public';
         }
-        if (!isset($_SESSION['bouton'])){
+        if (!isset($_SESSION['bouton'])) {
             $_SESSION['bouton'] = false;
         }
-        if (!isset($_SESSION['erreur'])){
+        if (!isset($_SESSION['erreur'])) {
             $_SESSION['erreur'] = false;
         }
         //var_dump($_SESSION);
         //var_dump($_POST);
-        
+
         // afficher la vue
 
-        if (!isset($_SESSION['nbParts']) || empty($_SESSION['nbParts'])){
+        if (!isset($_SESSION['nbParts']) || empty($_SESSION['nbParts'])) {
             $_SESSION['nbParts'] = 1;
         }
         //$nbParts = isset($_POST['nbPart'])&& !empty($_POST['nbPart']) ? $_POST['nbPart'] : 1;
-        
-        if (!isset($_SESSION['nbExemple']) || empty($_SESSION['nbExemple'])){
+
+        if (!isset($_SESSION['nbExemple']) || empty($_SESSION['nbExemple'])) {
             $_SESSION['nbExemple'] =  array(0 => 0);
         }
-        
-        if (isset($_POST['Retour']) && $_POST['Retour'] === "yes"){
+
+        if (isset($_POST['Retour']) && $_POST['Retour'] === "yes") {
             unset($_SESSION['nbExemple']);
             unset($_SESSION['nbParts']);
             unset($_SESSION['POST']);
@@ -87,16 +118,16 @@ class LessonController {
             header('Location: index.php?page=createContent');
             exit;
         }
-        if (isset($_POST['addPart']) && !empty($_POST['addPart'])){
+        if (isset($_POST['addPart']) && !empty($_POST['addPart'])) {
             $_SESSION['nbParts']++;
-            $_SESSION['nbExemple'][$_SESSION['nbParts']-1] = 0;
+            $_SESSION['nbExemple'][$_SESSION['nbParts'] - 1] = 0;
             $this->contentFusionSessionPost();
             $_SESSION['bouton'] = true;
             header('Location: ' . $_SERVER['REQUEST_URI']);
             exit;
         }
-        if (isset($_POST['addExemple']) && $_POST['addExemple'] != ''){
-            
+        if (isset($_POST['addExemple']) && $_POST['addExemple'] != '') {
+
             $_SESSION['nbExemple'][(int)$_POST['addExemple']]++;
             $this->contentFusionSessionPost();
             $_SESSION['bouton'] = true;
@@ -106,30 +137,30 @@ class LessonController {
 
         if (isset($_POST['DelPart']) && $_POST['DelPart'] !== '') {
             $idx = (int)$_POST['DelPart'];
-            $oldNbParts = $_SESSION['nbParts']; 
+            $oldNbParts = $_SESSION['nbParts'];
 
-            
+
             for ($i = $idx; $i < $oldNbParts - 1; $i++) {
                 $_SESSION['nbExemple'][$i] = $_SESSION['nbExemple'][$i + 1];
-                $_POST['namePart'.$i] = $_POST['namePart'.($i + 1)];
-                $_POST['contentPart'.$i] = $_POST['contentPart'.($i + 1)];
-                
+                $_POST['namePart' . $i] = $_POST['namePart' . ($i + 1)];
+                $_POST['contentPart' . $i] = $_POST['contentPart' . ($i + 1)];
+
                 for ($k = 0; $k < $_SESSION['nbExemple'][$i]; $k++) {
-                    $_POST['exemple'.$k.'-part'.$i] = $_POST['exemple'.$k.'-part'.($i + 1)];
-                    $_POST['reponse'.$k.'-part'.$i] = $_POST['reponse'.$k.'-part'.($i + 1)];
+                    $_POST['exemple' . $k . '-part' . $i] = $_POST['exemple' . $k . '-part' . ($i + 1)];
+                    $_POST['reponse' . $k . '-part' . $i] = $_POST['reponse' . $k . '-part' . ($i + 1)];
                 }
             }
-            
+
             $last = $oldNbParts - 1;
             unset($_SESSION['nbExemple'][$last]);
-            unset($_POST['namePart'.$last]);
-            unset($_POST['contentPart'.$last]);
-            for ($k = 0; $k < 10; $k++) { 
-                unset($_POST['exemple'.$k.'-part'.$last]);
-                unset($_POST['reponse'.$k.'-part'.$last]);
+            unset($_POST['namePart' . $last]);
+            unset($_POST['contentPart' . $last]);
+            for ($k = 0; $k < 10; $k++) {
+                unset($_POST['exemple' . $k . '-part' . $last]);
+                unset($_POST['reponse' . $k . '-part' . $last]);
             }
 
-            
+
             $_SESSION['nbParts']--;
             $this->contentFusionSessionPost();
             $_SESSION['bouton'] = true;
@@ -138,16 +169,16 @@ class LessonController {
         }
 
 
-        for ($i = 0; $i < $_SESSION['nbParts'] ; $i++){
-            for ($k = 0; $k < $_SESSION['nbExemple'][$i] ; $k++){
-                if (isset($_POST['delExemple'.$k.'-part'.$i]) && $_POST['delExemple'.$k.'-part'.$i] == "yes"){
+        for ($i = 0; $i < $_SESSION['nbParts']; $i++) {
+            for ($k = 0; $k < $_SESSION['nbExemple'][$i]; $k++) {
+                if (isset($_POST['delExemple' . $k . '-part' . $i]) && $_POST['delExemple' . $k . '-part' . $i] == "yes") {
                     $_SESSION['nbExemple'][$i]--;
-                    for ($e = $k ; $e < $_SESSION['nbExemple'][$i] ; $e++){
-                        $_POST['exemple'.$e.'-part'.$i] = $_POST['exemple'.($e+1).'-part'.$i];
-                        $_POST['reponse'.$e.'-part'.$i] = $_POST['reponse'.($e+1).'-part'.$i];
+                    for ($e = $k; $e < $_SESSION['nbExemple'][$i]; $e++) {
+                        $_POST['exemple' . $e . '-part' . $i] = $_POST['exemple' . ($e + 1) . '-part' . $i];
+                        $_POST['reponse' . $e . '-part' . $i] = $_POST['reponse' . ($e + 1) . '-part' . $i];
                     }
-                    unset($_POST['exemple'.$_SESSION['nbExemple'][$i].'-part'.$i]);
-                    unset($_POST['reponse'.$_SESSION['nbExemple'][$i].'-part'.$i]);
+                    unset($_POST['exemple' . $_SESSION['nbExemple'][$i] . '-part' . $i]);
+                    unset($_POST['reponse' . $_SESSION['nbExemple'][$i] . '-part' . $i]);
                     $this->contentFusionSessionPost();
                     $_SESSION['bouton'] = true;
                     header('Location: ' . $_SERVER['REQUEST_URI']);
@@ -157,8 +188,8 @@ class LessonController {
         }
 
         $quizSelected = (isset($_POST['linkedQuiz']) && !empty($_POST['linkedQuiz']) && $_POST['linkedQuiz'] != 'Aucun') ? (int)$_POST['linkedQuiz'] : null;
-        
-        if ($_SESSION['bouton'] === false){
+
+        if ($_SESSION['bouton'] === false) {
             $this->contentFusionSessionPost();
         }
 
@@ -167,22 +198,22 @@ class LessonController {
 
         $TAB_CATEGORIE = $this->model->getAllCategories();
         $TAB_CATEGORIE_CHOISI = array();
-        if (isset($_SESSION['POST']['categories'])){
+        if (isset($_SESSION['POST']['categories'])) {
             $TAB_CATEGORIE_CHOISI = $_SESSION['POST']['categories'];
         }
 
         //var_dump($quizSelected);
         $TAB_CONTENU = array();
-        for ($i = 0; $i < $_SESSION['nbParts'] ; $i++){
+        for ($i = 0; $i < $_SESSION['nbParts']; $i++) {
             $partContent = array(
-                'name' => isset($_SESSION['POST']['namePart'.$i]) ? $_SESSION['POST']['namePart'.$i] : '',
-                'content' => isset($_SESSION['POST']['contentPart'.$i]) ? $_SESSION['POST']['contentPart'.$i] : '',
+                'name' => isset($_SESSION['POST']['namePart' . $i]) ? $_SESSION['POST']['namePart' . $i] : '',
+                'content' => isset($_SESSION['POST']['contentPart' . $i]) ? $_SESSION['POST']['contentPart' . $i] : '',
                 'exemples' => array()
             );
-            for ($k = 0; $k < $_SESSION['nbExemple'][$i] ; $k++){
+            for ($k = 0; $k < $_SESSION['nbExemple'][$i]; $k++) {
                 $exampleContent = array(
-                    'consigne' => isset($_SESSION['POST']['exemple'.$k.'-part'.$i]) ? $_SESSION['POST']['exemple'.$k.'-part'.$i] : '',
-                    'reponse' => isset($_SESSION['POST']['reponse'.$k.'-part'.$i]) ? $_SESSION['POST']['reponse'.$k.'-part'.$i] : ''
+                    'consigne' => isset($_SESSION['POST']['exemple' . $k . '-part' . $i]) ? $_SESSION['POST']['exemple' . $k . '-part' . $i] : '',
+                    'reponse' => isset($_SESSION['POST']['reponse' . $k . '-part' . $i]) ? $_SESSION['POST']['reponse' . $k . '-part' . $i] : ''
                 );
                 $partContent['exemples'][] = $exampleContent;
             }
@@ -191,18 +222,18 @@ class LessonController {
         $TAB_AMI = $this->model->getAmis($_SESSION['id']);
 
         $TAB_AMI_CHOISI = array();
-        if (isset($_SESSION['POST']['amiDispo'])){
+        if (isset($_SESSION['POST']['amiDispo'])) {
             $TAB_AMI_CHOISI = $_SESSION['POST']['amiDispo'];
         }
 
-        if (isset($_POST['create']) && $_POST['create'] == "yes"){
+        if (isset($_POST['create']) && $_POST['create'] == "yes") {
             $LessonTitle = $_POST['LessonTitle'];
             $desc = $_POST['LessonDescription'];
             $this->contentFusionSessionPost();
-            if ($this->verifValidite()){
-                $reussi = $this->model->createLesson($id, $LessonTitle, $desc, $_SESSION['nbParts'],$_SESSION['nbExemple'],$TAB_CONTENU,$TAB_AMI_CHOISI, $TAB_CATEGORIE_CHOISI, $_SESSION['POST']['disponibilite'],$quizSelected);
+            if ($this->verifValidite()) {
+                $reussi = $this->model->createLesson($id, $LessonTitle, $desc, $_SESSION['nbParts'], $_SESSION['nbExemple'], $TAB_CONTENU, $TAB_AMI_CHOISI, $TAB_CATEGORIE_CHOISI, $_SESSION['POST']['disponibilite'], $quizSelected);
                 //je mets une redirecion pour être sûr qu'on ne l'oublie pas après
-                if($reussi){
+                if ($reussi) {
                     unset($_SESSION['nbExemple']);
                     unset($_SESSION['nbParts']);
                     unset($_SESSION['POST']);
@@ -211,16 +242,13 @@ class LessonController {
                     unset($_POST);
                     header('Location: index.php?page=home');
                     exit;
-                }
-                else{
+                } else {
                     unset($_POST['create']);
                     $_SESSION['bouton'] = true;
                     header('Location: ' . $_SERVER['REQUEST_URI']);
                     exit;
                 }
-                
-            }
-            else{
+            } else {
                 $_SESSION['erreur'] = true;
                 unset($_POST['create']);
                 $_SESSION['bouton'] = true;
@@ -237,65 +265,67 @@ class LessonController {
         require ROOT . '/src/views/lesson/createLesson.php';
     }
 
-    public function verifValidite(){
-        if (!isset($_SESSION['POST']['LessonTitle']) || empty($_SESSION['POST']['LessonDescription'])){
+    public function verifValidite()
+    {
+        if (!isset($_SESSION['POST']['LessonTitle']) || empty($_SESSION['POST']['LessonDescription'])) {
             return false;
         }
-        if (!isset($_SESSION['POST']['LessonDescription']) || empty($_SESSION['POST']['LessonDescription'])){
+        if (!isset($_SESSION['POST']['LessonDescription']) || empty($_SESSION['POST']['LessonDescription'])) {
             return false;
         }
-        for ($i = 0; $i < $_SESSION['nbParts'] ; $i++){
-            if (!isset($_SESSION['POST']['namePart'.$i]) || empty($_SESSION['POST']['namePart'.$i])){
+        for ($i = 0; $i < $_SESSION['nbParts']; $i++) {
+            if (!isset($_SESSION['POST']['namePart' . $i]) || empty($_SESSION['POST']['namePart' . $i])) {
                 return false;
             }
-            if (!isset($_SESSION['POST']['contentPart'.$i]) || empty($_SESSION['POST']['contentPart'.$i])){
+            if (!isset($_SESSION['POST']['contentPart' . $i]) || empty($_SESSION['POST']['contentPart' . $i])) {
                 return false;
             }
-            for ($k = 0; $k < $_SESSION['nbExemple'][$i] ; $k++){
-                if (!isset($_SESSION['POST']['exemple'.$k.'-part'.$i]) || empty($_SESSION['POST']['exemple'.$k.'-part'.$i])){
+            for ($k = 0; $k < $_SESSION['nbExemple'][$i]; $k++) {
+                if (!isset($_SESSION['POST']['exemple' . $k . '-part' . $i]) || empty($_SESSION['POST']['exemple' . $k . '-part' . $i])) {
                     return false;
                 }
-                if (!isset($_SESSION['POST']['reponse'.$k.'-part'.$i]) || empty($_SESSION['POST']['reponse'.$k.'-part'.$i])){
+                if (!isset($_SESSION['POST']['reponse' . $k . '-part' . $i]) || empty($_SESSION['POST']['reponse' . $k . '-part' . $i])) {
                     return false;
                 }
             }
         }
-        if(!isset($_SESSION['POST']['categories']) || count($_SESSION['POST']['categories']) === 0){
+        if (!isset($_SESSION['POST']['categories']) || count($_SESSION['POST']['categories']) === 0) {
             return false;
         }
         return true;
     }
 
-    public function contentFusionSessionPost(){
-        if (isset($_POST['LessonTitle'])){
+    public function contentFusionSessionPost()
+    {
+        if (isset($_POST['LessonTitle'])) {
             $_SESSION['POST']['LessonTitle'] = $_POST['LessonTitle'];
         }
-        if (isset($_POST['LessonDescription'])){
+        if (isset($_POST['LessonDescription'])) {
             $_SESSION['POST']['LessonDescription'] = $_POST['LessonDescription'];
         }
-        for ($i = 0; $i < $_SESSION['nbParts'] ; $i ++){
-            if (isset($_POST['namePart'.$i])){
-                $_SESSION['POST']['namePart'.$i] = $_POST['namePart'.$i];
+        for ($i = 0; $i < $_SESSION['nbParts']; $i++) {
+            if (isset($_POST['namePart' . $i])) {
+                $_SESSION['POST']['namePart' . $i] = $_POST['namePart' . $i];
             }
-            if (isset($_POST['contentPart'.$i])){
-                $_SESSION['POST']['contentPart'.$i] = $_POST['contentPart'.$i];
+            if (isset($_POST['contentPart' . $i])) {
+                $_SESSION['POST']['contentPart' . $i] = $_POST['contentPart' . $i];
             }
-            for ($k = 0; $k < $_SESSION['nbExemple'][$i] ; $k++){
-                if (isset($_POST['exemple'.$k.'-part'.$i])){
-                    $_SESSION['POST']['exemple'.$k.'-part'.$i] = $_POST['exemple'.$k.'-part'.$i];
+            for ($k = 0; $k < $_SESSION['nbExemple'][$i]; $k++) {
+                if (isset($_POST['exemple' . $k . '-part' . $i])) {
+                    $_SESSION['POST']['exemple' . $k . '-part' . $i] = $_POST['exemple' . $k . '-part' . $i];
                 }
-                if (isset($_POST['reponse'.$k.'-part'.$i])){
-                    $_SESSION['POST']['reponse'.$k.'-part'.$i] = $_POST['reponse'.$k.'-part'.$i];
+                if (isset($_POST['reponse' . $k . '-part' . $i])) {
+                    $_SESSION['POST']['reponse' . $k . '-part' . $i] = $_POST['reponse' . $k . '-part' . $i];
                 }
             }
         }
-        if(isset($_POST['disponibilite'])){
+        if (isset($_POST['disponibilite'])) {
             $_SESSION['POST']['disponibilite'] = $_POST['disponibilite'];
         }
-        if(isset($_POST['amiDispo'])){
+        if (isset($_POST['amiDispo'])) {
             $_SESSION['POST']['amiDispo'] = $_POST['amiDispo'];
         }
-        if(isset($_POST['categories'])){
+        if (isset($_POST['categories'])) {
             $_SESSION['POST']['categories'] = $_POST['categories'];
         }
     }
@@ -449,33 +479,36 @@ class LessonController {
         require ROOT . '/src/views/lesson/modifyLesson.php';
     }
 
-    public function modifResumValidite(string $title, string $description): bool{
-        if (empty($title) || empty($description)){
+
+    public function modifResumValidite(string $title, string $description): bool
+    {
+        if (empty($title) || empty($description)) {
             return false;
         }
         return true;
     }
 
-    public function modifPartValidite(string $title, string $content): bool{
-        if( empty($content)){
+    public function modifPartValidite(string $title, string $content): bool
+    {
+        if (empty($content)) {
             return false;
         }
-        if (empty($title)){
-            return false;
-        }
-        return true;
-    }
-
-    public function modifierExValidite(string $consigne, string $content){
-        if( empty($content)){
-            return false;
-        }
-        if (empty($consigne)){
+        if (empty($title)) {
             return false;
         }
         return true;
     }
 
+    public function modifierExValidite(string $consigne, string $content)
+    {
+        if (empty($content)) {
+            return false;
+        }
+        if (empty($consigne)) {
+            return false;
+        }
+        return true;
+    }
 }
-
 ?>
+

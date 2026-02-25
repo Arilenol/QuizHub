@@ -51,9 +51,10 @@ class ProfileController
             }
             if (isset($_GET['actionType'])) {
                 if (isset($_POST['genre'])) {
-                    if ($_POST['genre'] === 'lesson') {
+                    if ($_POST['genre'] === 'leçon') {
                         $this->model->deleteLesson($_POST['idToDelete']);
                     } else {
+                        var_dump($_POST['idToDelete']);
                         $this->model->deleteQuiz($_POST['idToDelete']);
                     }
                     header("Location: ?page=profil");
