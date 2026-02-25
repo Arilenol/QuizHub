@@ -106,10 +106,10 @@ class ProfileController
         }
         if (!empty($_POST['password'])) {
             if ($_POST['passwordVerif'] === $_POST['password']) {
-                $pattern = '/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/';
+                $pattern = '/^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/';
                 $password = $_POST['password'] ?? '';
                 if (!preg_match($pattern, $password)) {
-                    $error[] = "Le mot de passe doit contenir au moins 8 caractères, une lettre et un chiffre";
+                    $error[] = "Le mot de passe doit contenir au moins 8 caractères, un caractère spécial, une lettre et un chiffre";
                 } else {
                     $success = $this->model->savePassword($_POST['password'], $_SESSION['id']);
                     if ($success) {

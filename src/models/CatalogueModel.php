@@ -30,6 +30,75 @@ class CatalogueModel
         }
     }
 
+
+    /**
+     * Récupère tous les quiz créés par les amis d'un utilisateur.
+     *
+     * Cette méthode sélectionne uniquement les quiz dont la disponibilité est définie à "ami"
+     * et qui appartiennent aux amis de l'utilisateur donné. Les quiz de l'utilisateur lui-même
+     * sont exclus. Les catégories associées à chaque quiz sont récupérées et transformées en tableau.
+     *
+     * @param int $userId Identifiant de l'utilisateur pour lequel récupérer les créations de ses amis.
+     *
+     * @return array<mixed> Tableau de quiz
+     *
+     */
+    public function getAllCreationsByFriends(int $userId): array
+    {
+        $sql = "
+            SELECT 
+                q.id,
+                q.genre,
+                q.date,
+                u.username AS user_name,
+                q.disponibilite,
+                (
+                    SELECT GROUP_CONCAT(DISTINCT c.categorieName)
+                    FROM categorie_quiz cq
+                    JOIN categories c ON c.id = cq.category_id
+                    WHERE cq.quiz_id = q.id
+                ) AS categories,
+                q.title,
+                q.difficulty,
+                q.description,
+                (SELECT COUNT(*) FROM likes l WHERE l.quiz_id = q.id) AS nbjaime,
+                (SELECT COUNT(*) FROM dislikes d WHERE d.quiz_id = q.id) AS nbjaimepas
+            FROM quiz q
+            JOIN users u ON u.id = q.user_id
+            JOIN amiDisponibilite ad ON ad.quiz_id = q.id
+            WHERE q.disponibilite = 'ami'
+            AND q.user_id != :me
+            AND (
+                ad.ami_id = :me
+                OR (
+                    ad.ami_id = 0
+                    AND EXISTS (
+                        SELECT 1
+                        FROM amis a
+                        WHERE 
+                            (a.user1_id = :me AND a.user2_id = q.user_id)
+                            OR
+                            (a.user2_id = :me AND a.user1_id = q.user_id)
+                    )
+                )
+            )
+            ORDER BY nbjaime DESC
+        ";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['me' => $userId]);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // transformer les catégories en tableau
+        foreach ($results as &$row) {
+            $row['categories'] = $row['categories']
+                ? explode(',', $row['categories'])
+                : [];
+        }
+
+        return $results;
+    }
+
     /**
      * Recherche des quizzes par catégorie, contenu et auteur.
      *
@@ -46,6 +115,11 @@ class CatalogueModel
      */
     public function searchContentByAll(int|null $user_id, int|null $recherche_cat, string $recherche_contenu = "", string $recherche_auteur = "", string $genre = "", string|null $tris = null): mixed
     {
+
+        if (!(session_status() === PHP_SESSION_NONE || !isset($_SESSION['id']) || $_SESSION['id'] === null) &&  $tris === "friends") {
+            return $this->getAllCreationsByFriends($_SESSION['id']);
+        }
+
         try {
             $baseSql = "SELECT * FROM 
             (SELECT DISTINCT quiz.id, title, quiz.description, difficulty, users.username, date, genre,

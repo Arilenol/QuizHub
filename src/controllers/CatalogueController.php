@@ -17,20 +17,42 @@ class CatalogueController
 
         $cats = $this->model->getCategories();
 
-        $options = [
-            'date_desc' => 'Date (nouveau → ancien)',
-            'date_asc' => 'Date (ancien → nouveau)',
-            'title_asc' => 'Titre (A → Z)',
-            'title_desc' => 'Titre (Z → A)',
-            'difficulty_asc' => 'Difficulté (faible → élevé)',
-            'difficulty_desc' => 'Difficulté (élevé → faible)',
-            'author_asc' => "Auteur (A → Z)",
-            'author_desc' => "Auteur (Z → A)",
-            'genre_asc' => 'Genre (A → Z)',
-            'genre_desc' => 'Genre (Z → A)',
-            'popup_asc' => 'Popularité (faible → élevé)',
-            'popup_desc' => 'Popularité (élevé → faible)'
-        ];
+        if (session_status() === PHP_SESSION_NONE || !isset($_SESSION['id']) || $_SESSION['id']===null) {
+            $options = [
+                'date_desc' => 'Date (nouveau → ancien)',
+                'date_asc' => 'Date (ancien → nouveau)',
+                'title_asc' => 'Titre (A → Z)',
+                'title_desc' => 'Titre (Z → A)',
+                'difficulty_asc' => 'Difficulté (faible → élevé)',
+                'difficulty_desc' => 'Difficulté (élevé → faible)',
+                'author_asc' => "Auteur (A → Z)",
+                'author_desc' => "Auteur (Z → A)",
+                'genre_asc' => 'Genre (A → Z)',
+                'genre_desc' => 'Genre (Z → A)',
+                'popup_asc' => 'Popularité (faible → élevé)',
+                'popup_desc' => 'Popularité (élevé → faible)',
+            ];
+        } else {
+            $options = [
+                'date_desc' => 'Date (nouveau → ancien)',
+                'date_asc' => 'Date (ancien → nouveau)',
+                'title_asc' => 'Titre (A → Z)',
+                'title_desc' => 'Titre (Z → A)',
+                'difficulty_asc' => 'Difficulté (faible → élevé)',
+                'difficulty_desc' => 'Difficulté (élevé → faible)',
+                'author_asc' => "Auteur (A → Z)",
+                'author_desc' => "Auteur (Z → A)",
+                'genre_asc' => 'Genre (A → Z)',
+                'genre_desc' => 'Genre (Z → A)',
+                'popup_asc' => 'Popularité (faible → élevé)',
+                'popup_desc' => 'Popularité (élevé → faible)',
+                'friends' => 'Les créations de mes amis'
+            ];
+        }
+
+
+
+
 
         $genres = [
             'standard' => 'Quiz standard',
@@ -50,15 +72,13 @@ class CatalogueController
 
         $quizzes = $quiz_correspondants;
         foreach ($quizzes as $index => $quiz) {
-            if ($quizzes[$index]['genre'] == 'leçon'){
+            if ($quizzes[$index]['genre'] == 'leçon') {
                 $quizzes[$index]['categories'] = $this->model->getCategoriesFromLesson($quiz['id']);
-            }
-            else{
+            } else {
                 $quizzes[$index]['categories'] = $this->model->getCategoriesFromQuiz($quiz['id']);
             }
-            
         }
-        $nbPages = ceil(count($quizzes)/30);
+        $nbPages = ceil(count($quizzes) / 30);
 
         require ROOT . '/src/views/catalogue.php';
     }

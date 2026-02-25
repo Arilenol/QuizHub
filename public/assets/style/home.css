@@ -16,6 +16,23 @@ body {
   min-height: 100vh;
 }
 
+
+/* =========================
+   Navigation
+========================= */
+
+
+.nav{
+  margin-top: 20px;
+  margin-left: 20px;
+
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+
+
 /* =========================
    TITRE
 ========================= */
