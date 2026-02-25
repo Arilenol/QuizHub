@@ -35,6 +35,9 @@ class FlashcardController
     // Affiche une question spécifique
     public function questionById(int $id)
     {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
         $remaining = $_SESSION['remainingQuestions'] ?? [];
         if (!in_array($id, $remaining)) {
             echo "Question invalide";
