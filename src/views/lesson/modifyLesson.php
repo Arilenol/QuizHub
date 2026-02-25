@@ -124,8 +124,8 @@
             ?>
         </select>
     </div>
-    <div class = "disponibilite">
-        <p class="section-title">Mode de publication <button id="modifDispo">Modifier</button></p>
+    <div class="form-group disponibilite">
+        <h2 class="section-title">Mode de publication <button id="modifDispo">Modifier</button></h2>
         <select name="disponibilite" id="disponibilite" disabled>
             <?php $dispo = '';
             $dispo = $lessonInfos['disponibilite'] == 'public' ? 'selected' : '';

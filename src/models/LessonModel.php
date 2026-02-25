@@ -153,7 +153,7 @@ class LessonModel
         try {
             $this->db->beginTransaction();
 
-            $newLesson = $this->insertLesson($id, $quizSelected, $title, $description);
+            $newLesson = $this->insertLesson($id, $quizSelected, $title, $description, $disponibilite);
             if (!$newLesson) {
                 throw new PDOException("erreur dans l\'insertion de la leçon dans LessonModel.php/createLesson");
             }
@@ -260,14 +260,15 @@ class LessonModel
      *
      * @return int|false  Retourne l'ID de la leçon insérée, ou false en cas d'erreur.
      */
-    public function insertLesson(int $user_id, ?int $quizSelected, String $title, String $description)
+    public function insertLesson(int $user_id, ?int $quizSelected, String $title, String $description, string $disponibilite)
     {
         try {
-            $newLesson = $this->db->prepare("INSERT INTO Lecon (user_id, quiz_id, title, description) VALUES (?, ?, ?, ?);");
+            $newLesson = $this->db->prepare("INSERT INTO Lecon (user_id, quiz_id, title, description, disponibilite) VALUES (?, ?, ?, ?, ?);");
             $newLesson->bindValue(1, $user_id);
             $newLesson->bindValue(2, $quizSelected);
             $newLesson->bindValue(3, $title);
             $newLesson->bindValue(4, $description);
+            $newLesson->bindValue(5, $disponibilite);
             $reussite = $newLesson->execute();
             if (!$reussite) {
                 return false;
@@ -962,3 +963,5 @@ class LessonModel
         }
     }
 }
+
+

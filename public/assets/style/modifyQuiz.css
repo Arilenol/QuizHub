@@ -41,6 +41,60 @@
     margin-top: 10px;
 }
 
+.disponibilite .ami-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 10px;
+}
+
+.disponibilite .ami-list[hidden] {
+    display: none !important;
+}
+
+.disponibilite .friends {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid #7fc9d4;
+    background: linear-gradient(180deg, #eefaff 0%, #d9f2f8 100%);
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.disponibilite .friends:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(120, 88, 38, 0.16);
+}
+
+.disponibilite .friends input {
+    width: 18px;
+    height: 18px;
+    accent-color: rgba(10, 177, 189, 0.72);
+    cursor: pointer;
+}
+
+.disponibilite .friends input:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.disponibilite .friends:has(input:disabled) {
+    cursor: not-allowed;
+    border-color: #c6ccd0;
+    background: linear-gradient(180deg, #eceff1 0%, #dfe4e7 100%);
+    box-shadow: none;
+    color: #7a8489;
+    opacity: 1;
+    filter: grayscale(100%);
+}
+
+.disponibilite .friends:has(input:disabled):hover {
+    transform: none;
+    box-shadow: none;
+}
+
 /* Augmenter la taille des titres */
 p.name,
 p.description,

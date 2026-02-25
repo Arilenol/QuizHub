@@ -1,4 +1,5 @@
 const selectDispo = document.querySelector("#disponibilite");
+const amiList = document.querySelector(".ami-list");
 const tabAmi = document.querySelectorAll('input[name="amiDispo[]"]');
 const tous = document.querySelector('input[name="amiDispo[]"][value="tous"]');
 
@@ -7,6 +8,9 @@ function syncFriendsVisibility(){
         return;
     }
     const shouldShowFriends = selectDispo.value === "ami";
+    if (amiList){
+        amiList.hidden = !shouldShowFriends;
+    }
     for (let ami of tabAmi){
         ami.closest("label").hidden = !shouldShowFriends;
     }
@@ -14,11 +18,17 @@ function syncFriendsVisibility(){
 
 function dispoChange(ev){
     if (ev.target.options[ev.target.selectedIndex].value === "ami"){
+        if (amiList){
+            amiList.hidden = false;
+        }
         for (let ami of tabAmi){
             ami.closest("label").hidden = false;
         }
     }
     else{
+        if (amiList){
+            amiList.hidden = true;
+        }
         for (let ami of tabAmi){
             ami.closest("label").hidden = true;
         }
@@ -62,3 +72,4 @@ for (let ami of tabAmi){
     ami.addEventListener("click",checkBoxClick);
 }
 syncFriendsVisibility();
+
