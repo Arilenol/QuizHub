@@ -49,7 +49,7 @@ require_once '../src/views/partials/header.php';
 			<div class="button" style="grid-column-start: 6; grid-column-end: 7; grid-row-start: 4; grid-row-end: 5;" onclick="window.location.href = '?page=flashcard&action=end&id=<?= $quizId ?>'">
 				<span></span>
 				<p>Fin du quiz</p>
-			</div>
+			</div>	
 		<?php endif; ?>
 
 		<div class="button <?php if (!$prevId): ?>disabled <?php endif; ?>" style="grid-column-start: 2; grid-column-end: 3; grid-row-start: 4; grid-row-end: 5;" <?php if ($prevId): ?>onclick="window.location.href = '?page=flashcard&action=ongoing&id=<?= $quizId ?>&question=<?= $prevId ?>'" <?php endif; ?>>

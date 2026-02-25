@@ -16,7 +16,7 @@ class FlashcardModel
      */
     public function getFlashcardById(int $quizId): array
     {
-        $stmt = $this->db->prepare("SELECT id FROM carte WHERE quiz_id = ? ORDER BY numeroCarte ASC");
+        $stmt = $this->db->prepare("SELECT id FROM Carte WHERE quiz_id = ? ORDER BY numeroCarte ASC");
         $stmt->execute([$quizId]);
         return $stmt->fetchAll(PDO::FETCH_COLUMN, 0); // retourne un tableau d'IDs
     }
