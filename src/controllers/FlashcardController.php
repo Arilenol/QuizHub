@@ -344,7 +344,7 @@ class FlashcardController
         //var_dump($_SESSION);
         $erreur = false;
 
-        require ROOT . '/src/views/Quiz/modifyFlashcard.php';
+        require ROOT . '/src/views/quiz/modifyFlashcard.php';
     }
 
     public function modifCardValidite(string $cardQuestion, string $cardResponse)
