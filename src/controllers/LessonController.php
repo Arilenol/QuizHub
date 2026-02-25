@@ -230,6 +230,8 @@ class LessonController
             $LessonTitle = $_POST['LessonTitle'];
             $desc = $_POST['LessonDescription'];
             $this->contentFusionSessionPost();
+            $TAB_AMI_CHOISI = isset($_SESSION['POST']['amiDispo']) && is_array($_SESSION['POST']['amiDispo']) ? $_SESSION['POST']['amiDispo'] : [];
+            $TAB_CATEGORIE_CHOISI = isset($_SESSION['POST']['categories']) && is_array($_SESSION['POST']['categories']) ? $_SESSION['POST']['categories'] : [];
             if ($this->verifValidite()) {
                 $reussi = $this->model->createLesson($id, $LessonTitle, $desc, $_SESSION['nbParts'], $_SESSION['nbExemple'], $TAB_CONTENU, $TAB_AMI_CHOISI, $TAB_CATEGORIE_CHOISI, $_SESSION['POST']['disponibilite'], $quizSelected);
                 //je mets une redirecion pour être sûr qu'on ne l'oublie pas après

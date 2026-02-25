@@ -124,8 +124,8 @@
             ?>
         </select>
     </div>
-    <div class = "disponibilite">
-        <p class="section-title">Mode de publication <button id="modifDispo">Modifier</button></p>
+    <div class="form-group disponibilite">
+        <h2 class="section-title">Mode de publication <button id="modifDispo">Modifier</button></h2>
         <select name="disponibilite" id="disponibilite" disabled>
             <?php $dispo = '';
             $dispo = $lessonInfos['disponibilite'] == 'public' ? 'selected' : '';
@@ -144,19 +144,23 @@
         else{
             $hidden2 = 'hidden';
         }
-        if (in_array('tous', $TAB_AMIS)) {
-            $checkedTous = 'checked';
+        if (empty($ALL_AMIS)) {
+            echo '<p class="no-content" '.$hidden2.'>Vous n\'avez aucun ami.</p>';
         } else {
-            $checkedTous = '';
-        }
-        echo '<label class="friends" '.$hidden2.'><input name = "amiDispo[]" type = "checkbox" value="tous" '.$checkedTous.' disabled>Tous les amis</label>';
-        foreach($ALL_AMIS as $ami){
-            if (in_array($ami['ami_id'], $TAB_AMIS)) {
-                $checked = 'checked';
+            if (in_array('tous', $TAB_AMIS)) {
+                $checkedTous = 'checked';
             } else {
-                $checked = '';
+                $checkedTous = '';
             }
-            echo '<label class="friends" '.$hidden2.'><input name = "amiDispo[]" type = "checkbox" value="'.htmlspecialchars($ami['ami_id']).'" '.$checked.' disabled>'.htmlspecialchars($ami['username']).'</label>';
+            echo '<label class="friends" '.$hidden2.'><input name = "amiDispo[]" type = "checkbox" value="tous" '.$checkedTous.' disabled>Tous les amis</label>';
+            foreach($ALL_AMIS as $ami){
+                if (in_array($ami['ami_id'], $TAB_AMIS)) {
+                    $checked = 'checked';
+                } else {
+                    $checked = '';
+                }
+                echo '<label class="friends" '.$hidden2.'><input name = "amiDispo[]" type = "checkbox" value="'.htmlspecialchars($ami['ami_id']).'" '.$checked.' disabled>'.htmlspecialchars($ami['username']).'</label>';
+            }
         }
         
         ?>
