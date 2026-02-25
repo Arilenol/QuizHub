@@ -63,7 +63,9 @@ class CatalogueModel
             AND (categories.id = ? OR ? IS NULL) AND (quiz.title LIKE ? OR quiz.description LIKE ?) AND users.username LIKE ?
             UNION
             SELECT DISTINCT lesson.id, title, lesson.description, NULL AS difficulty, users.username, date, 'leçon' AS genre,
-            NULL AS likes,NULL AS dislikes FROM Lecon AS lesson
+            (SELECT COUNT(like_id) FROM likesLecon WHERE lecon_id = lesson.id) AS likes,
+            (SELECT COUNT(dislike_id) FROM dislikesLecon WHERE lecon_id = lesson.id) AS dislikes
+            FROM Lecon AS lesson
             LEFT JOIN categorie_lecon ON categorie_lecon.lesson_id = lesson.id
             LEFT JOIN categories ON categories.id = categorie_lecon.category_id
             INNER JOIN users ON users.id = lesson.user_id
