@@ -41,6 +41,29 @@
   max-width: 320px;
 }
 
+.disponibilite .dispo-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.disponibilite .friend-search {
+  background: #0ab1bd;
+  padding: 20px;
+  border-radius: 50px;
+  color: white;
+  border: none;
+  font-size: 20px;
+  width: 100%;
+  max-width: 320px;
+  box-sizing: border-box;
+}
+
+.disponibilite .friend-search::placeholder {
+  color: rgba(255, 255, 255, 0.9);
+}
+
 .disponibilite .ami-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -48,6 +71,10 @@
 }
 
 .disponibilite .ami-list[hidden] {
+  display: none !important;
+}
+
+.disponibilite .friends[hidden] {
   display: none !important;
 }
 
@@ -281,5 +308,19 @@ h2 button:active {
     grid-template-columns: 1fr;
     gap: 15px;
   }
+}
+
+
+
+
+
+
+.disponibilite .no-content {
+    text-align: center;
+    padding: 30px;
+    color: #777;
+    font-size: 1.1em;
+    opacity: 0.8;
+    font-style: italic;
 }
 

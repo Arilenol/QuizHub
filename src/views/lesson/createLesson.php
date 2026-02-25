@@ -122,19 +122,23 @@
                 else{
                     $hidden2 = 'hidden';
                 }
-                if (in_array('tous', $TAB_AMI_CHOISI)) {
-                    $checkedTous = 'checked';
+                if (empty($TAB_AMI)) {
+                    echo '<p class="no-content" '.$hidden2.'>Vous n\'avez aucun ami.</p>';
                 } else {
-                    $checkedTous = '';
-                }
-                echo '<label class="friends" '.$hidden2.'><input name="amiDispo[]" type="checkbox" value="tous" '.$checkedTous.'>Tous les amis</label>';
-                foreach($TAB_AMI as $ami){
-                    if (in_array($ami['ami_id'], $TAB_AMI_CHOISI)) {
-                        $checked = 'checked';
+                    if (in_array('tous', $TAB_AMI_CHOISI)) {
+                        $checkedTous = 'checked';
                     } else {
-                        $checked = '';
+                        $checkedTous = '';
                     }
-                    echo '<label class="friends" '.$hidden2.'><input name="amiDispo[]" type="checkbox" value="'.$ami['ami_id'].'" '.$checked.'>'.$ami['username'].'</label>';
+                    echo '<label class="friends" '.$hidden2.'><input name="amiDispo[]" type="checkbox" value="tous" '.$checkedTous.'>Tous les amis</label>';
+                    foreach($TAB_AMI as $ami){
+                        if (in_array($ami['ami_id'], $TAB_AMI_CHOISI)) {
+                            $checked = 'checked';
+                        } else {
+                            $checked = '';
+                        }
+                        echo '<label class="friends" '.$hidden2.'><input name="amiDispo[]" type="checkbox" value="'.$ami['ami_id'].'" '.$checked.'>'.$ami['username'].'</label>';
+                    }
                 }
                 ?>
             </div>
