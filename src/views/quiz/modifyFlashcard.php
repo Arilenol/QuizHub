@@ -77,14 +77,15 @@
             <p class="section-title">Mode de publication <button id="modifDispo">Modifier</button></p>
             <select name="disponibilite" id="disponibilite" disabled>
                 <?php $dispo = '';
-                $dispo = $lessonInfos['disponibilite'] == 'public' ? 'selected' : '';
+                $dispo = $flashcardInfos['disponibilite'] == 'public' ? 'selected' : '';
                  ?>
                 <option value="public" <?= $dispo ?> >publique</option>
-                <?php $dispo = $lessonInfos['disponibilite'] == 'ami' ? 'selected' : ''; ?>
+                <?php $dispo = $flashcardInfos['disponibilite'] == 'ami' ? 'selected' : ''; ?>
                 <option value="ami" <?= $dispo ?> >Seulement les amis</option>
-                <?php $dispo = $lessonInfos['disponibilite'] == 'private' ? 'selected' : ''; ?>
+                <?php $dispo = $flashcardInfos['disponibilite'] == 'private' ? 'selected' : ''; ?>
                 <option value="private" <?= $dispo ?> >seulement vous</option>
             </select>
+            <div class="ami-list" <?= $flashcardInfos['disponibilite'] != "ami" ? 'hidden' : '' ?>>
             <?php
             if ($flashcardInfos['disponibilite'] == "ami"){
                 $hidden2 = '';
@@ -108,6 +109,7 @@
             }
             
             ?>
+            </div>
         </div>
         <?php
             if ($erreur){

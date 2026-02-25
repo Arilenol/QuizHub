@@ -86,7 +86,9 @@ class CatalogueModel
                 'author_asc' => 'Requete.username ASC',
                 'author_desc' => 'Requete.username DESC',
                 'genre_asc' => 'Requete.genre ASC',
-                'genre_desc' => 'Requete.genre DESC'
+                'genre_desc' => 'Requete.genre DESC',
+                'popup_asc' => '(Requete.likes - Requete.dislikes) ASC',
+                'popup_desc' => '(Requete.likes - Requete.dislikes) DESC'
             ];
 
             if ($tris && isset($allowedOrder[$tris])) {

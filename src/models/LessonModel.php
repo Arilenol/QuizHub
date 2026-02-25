@@ -177,7 +177,8 @@ class LessonModel
                 }
             }
             if ($disponibilite == 'ami') {
-                foreach ($TAB_AMI_CHOISI as $ami) {
+                $amisSelectionnes = $this->normalizeSelectedFriends($id, $TAB_AMI_CHOISI);
+                foreach ($amisSelectionnes as $ami) {
                     $newAmiDispo = $this->insertAmiDispo($newLesson, (int)$ami);
                     if (!$newAmiDispo) {
                         throw new PDOException("erreur dans l\'insertion des amis dans QuizModel.php/createQuiz");
@@ -586,7 +587,9 @@ class LessonModel
             $update->bindValue(2, $lesson_id);
             $update->execute();
             if ($disponibilite == 'ami') {
-                foreach ($amis as $ami) {
+                $ownerId = $this->getUserIdFromLesson($lesson_id);
+                $amisSelectionnes = $this->normalizeSelectedFriends((int)$ownerId, $amis);
+                foreach ($amisSelectionnes as $ami) {
                     $this->insertAmiDispo($lesson_id, (int)$ami);
                 }
             }
@@ -594,6 +597,18 @@ class LessonModel
         } catch (PDOException $e) {
             die("Updating disponibilite for quiz failed: " . $e->getMessage());
         }
+    }
+
+    private function normalizeSelectedFriends(int $userId, array $amis): array
+    {
+        if (in_array('tous', $amis, true)) {
+            $allFriends = $this->getAmis($userId);
+            $ids = array_map(static fn($ami) => (int)$ami['ami_id'], $allFriends);
+            return array_values(array_unique(array_filter($ids, static fn($id) => $id > 0)));
+        }
+
+        $ids = array_map('intval', $amis);
+        return array_values(array_unique(array_filter($ids, static fn($id) => $id > 0)));
     }
 
 

@@ -334,6 +334,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const addPart = document.querySelector("#addPart");
     addPart.addEventListener("click", (ev) =>{
         if (!modif){
+            modif = true;
             ev.preventDefault();
             const newPart = document.querySelectorAll(".newPart")[document.querySelectorAll(".newPart").length-1].cloneNode(true);
             newPart.querySelectorAll(".reponse").forEach(element => {

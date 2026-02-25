@@ -109,14 +109,14 @@
                 <option value="ami" <?= $quizInfos['disponibilite'] == 'ami' ? 'selected' : '' ?>>Seulement les amis</option>
                 <option value="private" <?= $quizInfos['disponibilite'] == 'private' ? 'selected' : '' ?>>seulement vous</option>
             </select>
-            <div class="ami-list">
+            <div class="ami-list" <?= $quizInfos['disponibilite'] != "ami" ? 'hidden' : '' ?>>
                 <?php
                 $hidden2 = $quizInfos['disponibilite'] != "ami" ? 'hidden' : '';
                 $checkedTous = in_array('tous', $TAB_AMIS) ? 'checked' : '';
-                echo '<label class="friends '.$hidden2.'"><input name="amiDispo[]" type="checkbox" value="tous" '.$checkedTous.' disabled>Tous les amis</label>';
+                echo '<label class="friends" '.$hidden2.'><input name="amiDispo[]" type="checkbox" value="tous" '.$checkedTous.' disabled>Tous les amis</label>';
                 foreach($ALL_AMIS as $ami){
                     $checked = in_array($ami['ami_id'], $TAB_AMIS) ? 'checked' : '';
-                    echo '<label class="friends '.$hidden2.'"><input name="amiDispo[]" type="checkbox" value="'.htmlspecialchars($ami['ami_id']).'" '.$checked.' disabled>'.htmlspecialchars($ami['username']).'</label>';
+                    echo '<label class="friends" '.$hidden2.'><input name="amiDispo[]" type="checkbox" value="'.htmlspecialchars($ami['ami_id']).'" '.$checked.' disabled>'.htmlspecialchars($ami['username']).'</label>';
                 }
                 ?>
             </div>

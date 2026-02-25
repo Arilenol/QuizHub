@@ -217,7 +217,8 @@ class QuizModel
                 }
             }
             if ($disponibilite == 'ami') {
-                foreach ($TAB_AMI_CHOISI as $ami) {
+                $amisSelectionnes = $this->normalizeSelectedFriends($user_id, $TAB_AMI_CHOISI);
+                foreach ($amisSelectionnes as $ami) {
                     $newAmiDispo = $this->insertAmiDispo($newQuiz, (int)$ami);
                     if (!$newAmiDispo) {
                         throw new PDOException("erreur dans l\'insertion des amis dans QuizModel.php/createQuiz");
@@ -716,7 +717,9 @@ class QuizModel
             $update->bindValue(2, $quiz_id);
             $update->execute();
             if ($disponibilite == 'ami') {
-                foreach ($amis as $ami) {
+                $ownerId = $this->getUserIdFromQuiz($quiz_id);
+                $amisSelectionnes = $this->normalizeSelectedFriends((int)$ownerId, $amis);
+                foreach ($amisSelectionnes as $ami) {
                     $this->insertAmiDispo($quiz_id, (int)$ami);
                 }
             }
@@ -724,6 +727,18 @@ class QuizModel
         } catch (PDOException $e) {
             die("Updating disponibilite for quiz failed: " . $e->getMessage());
         }
+    }
+
+    private function normalizeSelectedFriends(int $userId, array $amis): array
+    {
+        if (in_array('tous', $amis, true)) {
+            $allFriends = $this->getAmis($userId);
+            $ids = array_map(static fn($ami) => (int)$ami['ami_id'], $allFriends);
+            return array_values(array_unique(array_filter($ids, static fn($id) => $id > 0)));
+        }
+
+        $ids = array_map('intval', $amis);
+        return array_values(array_unique(array_filter($ids, static fn($id) => $id > 0)));
     }
 
     /**
@@ -743,13 +758,20 @@ class QuizModel
     public function updateQuestionQuiz(int $quizId, int $numeroQuiz, string $questionContent, array $reponsesContent, array $checksContent)
     {
         try {
-            $updateQuestion = $this->db->prepare("UPDATE question SET question = ? WHERE quiz_id = ? AND numeroQuiz = ? RETURNING id;");
-            $updateQuestion->bindValue(1, $questionContent);
-            $updateQuestion->bindValue(2, $quizId);
-            $updateQuestion->bindValue(3, $numeroQuiz);
-            $updateQuestion->execute();
+            // `RETURNING` is not portable across MySQL/MariaDB versions, so fetch id first.
+            $getQuestion = $this->db->prepare("SELECT id FROM question WHERE quiz_id = ? AND numeroQuiz = ?;");
+            $getQuestion->bindValue(1, $quizId);
+            $getQuestion->bindValue(2, $numeroQuiz);
+            $getQuestion->execute();
+            $idQuestion = $getQuestion->fetchColumn();
+            if (!$idQuestion) {
+                return false;
+            }
 
-            $idQuestion = $updateQuestion->fetchColumn();
+            $updateQuestion = $this->db->prepare("UPDATE question SET question = ? WHERE id = ?;");
+            $updateQuestion->bindValue(1, $questionContent);
+            $updateQuestion->bindValue(2, (int)$idQuestion);
+            $updateQuestion->execute();
 
             $this->updateReponses($idQuestion, $reponsesContent, $checksContent);
             return true;

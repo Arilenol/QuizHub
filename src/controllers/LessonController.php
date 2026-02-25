@@ -330,33 +330,32 @@ class LessonController
         }
     }
 
-    public function modifyLesson($id)
-    {
+    public function modifyLesson($id){
         session_start();
         $idLesson = (int)$id;
         //die("erreur :".$idQuiz);
         $taille = $this->model->getLessonSize($idLesson);
         $user_id = $this->model->getUserIdFromLesson($idLesson);
-        if (!isset($_SESSION['id']) || $user_id != $_SESSION['id']) {
+        if (!isset($_SESSION['id']) || $user_id != $_SESSION['id']){
             header('Location: index.php?page=home');
             exit;
         }
-        if ($taille === 0) {
+        if ($taille === 0){
             header('Location: index.php?page=home');
             exit;
         }
         if (isset($_POST['Retour']) && $_POST['Retour'] === "yes") {
             unset($_POST);
-            header('Location: index.php?page=createContent');
+            header('Location: index.php?page=profil');
             exit;
         }
-        if (isset($_POST['categories']) && !empty($_POST['categories'])) {
+        if(isset($_POST['categories']) && !empty($_POST['categories'])){
             $this->model->updateCategoriesLesson($idLesson, $_POST['categories']);
             unset($_POST['categories']);
             header('Location: ' . $_SERVER['REQUEST_URI']);
             exit;
         }
-        if (isset($_POST['appliquerDispo'])) {
+        if(isset($_POST['appliquerDispo'])){
             $disponibilite = isset($_POST['disponibilite']) ? $_POST['disponibilite'] : 'public';
             $amiDispo = isset($_POST['amiDispo']) && is_array($_POST['amiDispo']) ? $_POST['amiDispo'] : [];
             $this->model->updateDisponibiliteLesson($idLesson, $disponibilite, $amiDispo);
@@ -366,24 +365,25 @@ class LessonController
             header('Location: ' . $_SERVER['REQUEST_URI']);
             exit;
         }
-        if (isset($_POST['appliquerAssoc'])) {
+        if(isset($_POST['appliquerAssoc'])){
             $quizAssoc = $_POST['appliquerAssoc'];
             $this->model->updateQuizAssociated($idLesson, $quizAssoc);
             unset($_POST['appliquerAssoc']);
             header('Location: ' . $_SERVER['REQUEST_URI']);
             exit;
         }
-        if (isset($_POST['appliquerPart'])) {
+        if(isset($_POST['appliquerPart'])){
             $iPart = (int)$_POST['appliquerPart'];
-            $partTitle = (isset($_POST['title']) && !empty($_POST['title'])) ? $_POST['title'] : '';
-            $partContent = (isset($_POST['content']) && !empty($_POST['content'])) ? $_POST['content'] : '';
-
-            if ($this->modifPartValidite($partTitle, $partContent)) {
-                if ($taille < $iPart + 1) {
-                    $this->model->addPartToLesson($idLesson, $iPart + 1, $partTitle, $partContent);
+            $partTitle = ( isset($_POST['title']) && !empty($_POST['title']) ) ? $_POST['title'] : '';
+            $partContent = ( isset($_POST['content']) && !empty($_POST['content']) ) ? $_POST['content'] : '';
+            
+            if ($this->modifPartValidite($partTitle, $partContent)){
+                if ($taille < $iPart + 1){
+                    $this->model->addPartToLesson($idLesson, $iPart, $partTitle, $partContent);
                 }
-                $this->model->updatePartLesson($idLesson, $iPart + 1, $partTitle, $partContent);
-            } else {
+                $this->model->updatePartLesson($idLesson, $iPart, $partTitle, $partContent);
+            }
+            else{
                 die('erreur de validation du contenu d\'une partie');
             }
             unset($_POST['appliquerPart']);
@@ -392,21 +392,23 @@ class LessonController
             header('Location: ' . $_SERVER['REQUEST_URI']);
             exit;
         }
-        if (isset($_POST['appliquerEx'])) {
-            if (isset($_POST['appliquerEx']) && isset($_POST['numExemple'])) {
+        if (isset($_POST['appliquerEx'])){
+            if(isset($_POST['appliquerEx']) && isset($_POST['numExemple'])){
                 $iPart = (int)$_POST['appliquerEx'];
                 $kEx = (int)$_POST['numExemple'];
                 $consigne = isset($_POST['textConsigne']) && !empty($_POST['textConsigne']) ? $_POST['textConsigne'] : '';
                 $reponse = isset($_POST['textReponse']) && !empty($_POST['textReponse']) ? $_POST['textReponse'] : '';
-
-                if ($this->modifierExValidite($consigne, $reponse)) {
-                    $taillek = $this->model->getNumberExFromPart($idLesson, $iPart + 1);
-                    if ($taillek < $kEx + 1) {
-                        $this->model->addExToPart($idLesson, $iPart + 1, $kEx + 1, $consigne, $reponse);
-                    } else {
-                        $this->model->updateExFromPart($idLesson, $iPart + 1, $kEx + 1, $consigne, $reponse);
+                
+                if ($this->modifierExValidite($consigne, $reponse)){
+                    $taillek = $this->model->getNumberExFromPart($idLesson, $iPart);
+                    if ($taillek < $kEx + 1){
+                        $this->model->addExToPart($idLesson, $iPart, $kEx, $consigne, $reponse);
                     }
-                } else {
+                    else{
+                        $this->model->updateExFromPart($idLesson, $iPart, $kEx, $consigne, $reponse);
+                    }
+                }
+                else{
                     die('erreur de validation du contenu d\'un exemple');
                 }
                 unset($_POST['appliquerEx']);
@@ -417,23 +419,24 @@ class LessonController
                 exit;
             }
         }
-        if (isset($_POST['delEx'])) {
-            if (isset($_POST['delNumEx'])) {
+        if(isset($_POST['delEx'])){
+            if(isset($_POST['delNumEx'])){
                 $iPart = (int)$_POST['delEx'];
                 $kEx = (int)$_POST['delNumEx'];
-                $this->model->deleteExFromPart($idLesson, $iPart + 1, $kEx + 1);
+               $this->model->deleteExFromPart($idLesson, $iPart, $kEx);
             }
             unset($_POST['delEx']);
             unset($_POST['delNumEx']);
             header('Location: ' . $_SERVER['REQUEST_URI']);
             exit;
         }
-        if (isset($_POST['appliquerResum'])) {
+        if (isset($_POST['appliquerResum'])){
             $title = isset($_POST['LessonTitle']) ? $_POST['LessonTitle'] : '';
             $description = isset($_POST['LessonDescription']) ? $_POST['LessonDescription'] : '';
-            if ($this->modifResumValidite($title, $description)) {
+            if ($this->modifResumValidite($title, $description)){
                 $this->model->updateResumLesson($idLesson, $title, $description);
-            } else {
+            }
+            else{
                 die("Erreur de validation du résumé");
             }
             unset($_POST['appliquerResum']);
@@ -442,14 +445,14 @@ class LessonController
             header('Location: ' . $_SERVER['REQUEST_URI']);
             exit;
         }
-        if (isset($_POST['DelPart'])) {
+        if(isset($_POST['DelPart'])){
             $iPart = (int)$_POST['DelPart'];
-            $this->model->deletePartFromLesson($idLesson, $iPart + 1);
+            $this->model->deletePartFromLesson($idLesson, $iPart);
             unset($_POST['DelPart']);
             header('Location: ' . $_SERVER['REQUEST_URI']);
             exit;
         }
-        if (isset($_POST['Annuler'])) {
+        if(isset($_POST['Annuler'])){
             unset($_POST);
             header('Location: ' . $_SERVER['REQUEST_URI']);
             exit;
@@ -457,7 +460,7 @@ class LessonController
 
 
 
-
+        
         $lessonInfos = $this->model->getLessonInfos($idLesson);
         $quizzes = $this->model->getQuizByAuthor($user_id);
         $TAB_PART = $this->model->getPartsExFromLesson($idLesson);
@@ -467,7 +470,7 @@ class LessonController
         $TAB_AMIS = $this->model->getAmisSelection($idLesson);
 
 
-
+        
 
         //var_dump($_POST);
         //var_dump($_SESSION);
@@ -475,6 +478,7 @@ class LessonController
 
         require ROOT . '/src/views/lesson/modifyLesson.php';
     }
+
 
     public function modifResumValidite(string $title, string $description): bool
     {
@@ -506,3 +510,5 @@ class LessonController
         return true;
     }
 }
+?>
+

@@ -1,28 +1,49 @@
 stages:
+  - build
   - deploy
 
+variables:
+  # Utilise l'adresse officielle de ton registre GitLab
+  IMAGE_TAG: $CI_REGISTRY_IMAGE:latest
+
+# --- ÉTAPE 1 : CRÉATION ET ENVOI DE L'IMAGE SUR GITLAB ---
+build_image:
+  stage: build
+  tags:
+    - prod
+  script:
+    - echo "Connexion au registre GitLab..."
+    # Les variables $CI_REGISTRY... sont automatiquement fournies par GitLab
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    
+    - echo "Construction de l'image Docker..."
+    - docker build -t $IMAGE_TAG .
+    
+    - echo "Envoi de l'image sur le registre GitLab..."
+    - docker push $IMAGE_TAG
+  only:
+    - main
+
+# --- ÉTAPE 2 : DÉPLOIEMENT DU CONTENEUR ---
 deploy_production:
   stage: deploy
   tags:
-    - prod  # Le tag que tu as défini à l'étape 1 (important !)
+    - prod
   script:
-    - echo "Déploiement commencé..."
+    - echo "Connexion au registre GitLab pour le déploiement..."
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     
-    # 1. Copier les fichiers du runner vers le dossier web
-    # Le runner télécharge déjà le code dans son dossier de travail, on le copie juste.
-    - sudo rsync -av --delete --exclude '.git' --exclude 'sessions' . /var/www/sae3.01/
+    - echo "Téléchargement de la dernière image..."
+    - docker pull $IMAGE_TAG
     
-    # 2. Remettre les permissions propres
-    - sudo chown -R www-data:www-data /var/www/sae3.01
+    - echo "Nettoyage de l'ancien conteneur..."
+    - docker stop quizhub_app || true
+    - docker rm quizhub_app || true
     
-    # 3. Gérer le dossier sessions (pour éviter ton bug précédent)
-    - sudo mkdir -p /var/www/sae3.01/sessions
-    - sudo chown -R www-data:www-data /var/www/sae3.01/sessions
-    - sudo chmod 777 /var/www/sae3.01/sessions
+    - echo "Lancement du nouveau conteneur..."
+    - docker run -d --name quizhub_app -p 4212:8080 -v quizhub_database:/usr/src/quizhub/database -v quizhub_sessions:/usr/src/quizhub/sessions $IMAGE_TAG
     
-    # 4. Redémarrer le service
-    - sudo systemctl restart quizhub
-    
+    - docker image prune -f
     - echo "Déploiement terminé avec succès !"
   only:
-    - main  # Ne le fait que sur la branche main
+    - main
