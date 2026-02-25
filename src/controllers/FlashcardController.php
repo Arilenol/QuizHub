@@ -38,6 +38,8 @@ class FlashcardController
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
+        $quizId = (int) $_GET['id'] ?? null;
+        $_SESSION['remainingQuestions'] = $this->model->getFlashcardById($quizId) ?: [];
         $remaining = $_SESSION['remainingQuestions'] ?? [];
         if (!in_array($id, $remaining)) {
             echo "Question invalide";
