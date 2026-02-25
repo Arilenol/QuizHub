@@ -147,7 +147,7 @@ require_once 'partials/header.php';
                                         <?= $quiz[$i]['genre'] == 'leçon' ? 'Supprimer cette leçon' : 'Supprimer ce quiz' ?>
                                     </button>
 
-                                    <button id="editQuiz" onclick="window.location.href='?page=<?= $quiz[$i]['genre'] ?>&categorie=modify&id=<?= $quiz[$i]['id'] ?>'"><?= $quiz[$i]['genre'] == 'lesson' ? 'Modifier la leçon' : ' Modifier le quiz' ?></button>
+                                    <button id="editQuiz" onclick="window.location.href='?page=<?= $quiz[$i]['genre'] === 'leçon' ? 'lesson' : $quiz[$i]['genre'] ?>&categorie=modify&id=<?= $quiz[$i]['id'] ?>'"><?= $quiz[$i]['genre'] === 'lesson' ? 'Modifier la leçon' : ' Modifier le quiz' ?></button>
                                     <button id="playQuiz" onclick="window.location.href='./?page=<?= $quiz[$i]['genre'] == 'test' ? 'pageInterQuiz' : $quiz[$i]['genre'] ?>&id=<?= $quiz[$i]['id'] ?> <?= $quiz[$i]['genre'] == 'lesson' ? '&categorie=view' : '' ?> <?= $quiz[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?> <?= $quiz[$i]['genre'] == 'test' ? '&type=test' : '' ?>'">Jouer</button>
                                 </div>
                                 <div class="quiz-footer">
@@ -239,8 +239,8 @@ require_once 'partials/header.php';
                                     <label for="password">Nouveau mot de passe</label>
                                     <div class="input-wrapper">
                                         <input type="password" name="password" id="password" autocomplete="on"
-                                            pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
-                                            title="Le mot de passe doit contenir au moins 8 caractères, une lettre et un chiffre"
+                                            pattern=^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$
+                                            title="Le mot de passe doit contenir au moins 8 caractères, un caractère spécial, une lettre et un chiffre"
                                             placeholder="Laisser vide pour ne pas changer">
                                         <i id="eyeMdp" class="fa-solid fa-eye"></i>
                                     </div>
