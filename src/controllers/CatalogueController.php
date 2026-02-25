@@ -27,7 +27,9 @@ class CatalogueController
             'author_asc' => "Auteur (A → Z)",
             'author_desc' => "Auteur (Z → A)",
             'genre_asc' => 'Genre (A → Z)',
-            'genre_desc' => 'Genre (Z → A)'
+            'genre_desc' => 'Genre (Z → A)',
+            'popup_asc' => 'Popularité (faible → élevé)',
+            'popup_desc' => 'Popularité (élevé → faible)'
         ];
 
         $genres = [
