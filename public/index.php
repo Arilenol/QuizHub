@@ -133,7 +133,7 @@ switch ($page) {
                 break;
 
             case 'ongoing':
-                $questionId = $_GET['question'] ?? null;
+                $questionId = (int) $_GET['question'] ?? null;
                 $controller->questionById($questionId);
                 break;
 
