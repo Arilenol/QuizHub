@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <?php
+$title="Auteur - ". htmlspecialchars($author_name) ;
 require_once '../src/views/partials/header.php';
 ?>
 
@@ -11,7 +12,6 @@ require_once '../src/views/partials/header.php';
     echo "<link rel='stylesheet' href='./assets/style/CRUDrecherche.css'>";
     echo "<link rel='stylesheet' href='./assets/style/global.css'>";
     ?>
-    <title>Auteur - <?= htmlspecialchars($author_name) ?></title>
 </head>
 
 <body>

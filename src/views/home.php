@@ -142,7 +142,7 @@ if (isset($_SESSION['id'])) {
 <?php endif; ?>
 
 
-<h1 id="2" >Créations populaires</h1>
+<h1 id="2">Créations populaires</h1>
 
 <div class="newCreations">
     <?php for ($i = 0; $i < count($quiz) && $i < 5; $i++): ?>
@@ -174,7 +174,10 @@ if (isset($_SESSION['id'])) {
                 <p class="quiz-description"><?= htmlspecialchars($quiz[$i]['description'] ?? '') ?></p>
             </div>
             <div class="quiz-footer">
-                <p class="quiz-auteur">Par : <span class="nom-auteur"> <?= htmlspecialchars($quiz[$i]['user_name'] ?? '') ?> </span></p>
+                <form action="?page=profil&action=creatorProfil" method="POST">
+                    <input type="hidden" name="creatorId" value="<?= $quiz[$i]['creatorId'] ?>">
+                    <p class="quiz-auteur">Par : <button type="submit" style="background:none;border:none;color:blue;text-decoration:underline;cursor:pointer;font-size:large;"> <?= htmlspecialchars($quiz[$i]['user_name'] ?? '') ?> </button></p>
+                </form>
                 <p class="quiz-date">Publié le : <?= htmlspecialchars($quiz[$i]['date'] ?? '') ?></p>
                 <div class="quiz-reactions">
                     <span class="reaction like">👍 <?= htmlspecialchars($quiz[$i]['nbjaime'] ?? 0) ?></span>

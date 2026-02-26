@@ -157,6 +157,8 @@ switch ($page) {
                 $controller->showProfile("showHistory");
             } else if ($_GET['action'] === 'updateProfile') {
                 $controller->saveNewInfo();
+            } else if ($_GET['action'] === 'creatorProfil'){
+                $controller->showProfile("creatorProfil");
             }
         } else {
             $controller->showProfile();

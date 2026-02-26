@@ -111,6 +111,28 @@ class NotificationModel
         ]);
     }
 
+    // Vérifie s’ils sont déjà amis
+    public function hasFriend(int|string $receveur): bool
+    {
+        $friendCheck = $this->db->prepare("
+            SELECT COUNT(*) 
+            FROM amis
+            WHERE 
+                (user1_id = :me AND user2_id = :other)
+                OR
+                (user1_id = :other AND user2_id = :me)
+        ");
+
+        $friendCheck->execute([
+            ':me'    => $_SESSION['id'],
+            ':other' => $receveur
+        ]);
+
+        if ($friendCheck->fetchColumn() > 0) {
+            return true;
+        }
+        return false;
+    }
 
     /**
      * Ajoute un utilisateur en ami.

@@ -10,7 +10,7 @@ require_once 'partials/header.php';
 <body>
 
     <button onclick="window.location.href='?page=home'" class="button" style="margin: 20px 0 0 20px"><span></span>
-        <p>&lt; Retour</p>
+        <p>← Retour</p>
     </button>
 
     <div class="container">
@@ -45,46 +45,64 @@ require_once 'partials/header.php';
                     </div>
                 </div>
                 <div class="action">
-                    <button id="editProfil" class="button"><span></span>
-                        <p>Modifier le profil</p>
-                    </button>
-                    <form method="POST" action="?page=profil&action=uploadPicture" enctype="multipart/form-data" id="avatarForm">
-
-                        <input
-                            type="file"
-                            name="avatar"
-                            id="avatarInput"
-                            accept="image/*"
-                            hidden
-                            required>
-
-                        <button type="button" class="button" id="uploadBtn"><span></span>
-                            <p>Changer d'avatar</p>
+                    <?php if (!$guest) : ?>
+                        <button id="editProfil" class="button"><span></span>
+                            <p>Modifier le profil</p>
                         </button>
-                    </form>
+                        <form method="POST" action="?page=profil&action=uploadPicture" enctype="multipart/form-data" id="avatarForm">
 
-                    <button class="button signalement" onclick="window.location.href='?page=log&typelog=logout'"><span></span>
-                        <p>Déconnexion</p>
-                    </button>
+                            <input
+                                type="file"
+                                name="avatar"
+                                id="avatarInput"
+                                accept="image/*"
+                                hidden
+                                required>
+
+                            <button type="button" class="button" id="uploadBtn"><span></span>
+                                <p>Changer d'avatar</p>
+                            </button>
+                        </form>
+
+                        <button class="button signalement" onclick="window.location.href='?page=log&typelog=logout'"><span></span>
+                            <p>Déconnexion</p>
+                        </button>
+                    <?php else: ?>
+                        <form method="POST" action="?page=notification">
+                            <input type="hidden" name="action" value="sendRequest">
+                            <input type="hidden" name="email" value="<?= $infosUser['email'] ?>">
+                            <button type="submit"
+                                <?= $alreadyFriend ? 'disabled style="background-color:grey;cursor:no-drop;box-shadow: none;"' : '' ?>>
+                                <span></span>
+                                <p>Demander en ami</p>
+                            </button>
+                        </form>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
 
         <div class="tabs">
-            <span class="<?= $activeTab === 'creations' ? 'active' : '' ?>"
-                onclick="window.location.href='?page=profil'">
-                Mes créations
-            </span>
+            <?php if (!$guest): ?>
+                <span class="<?= $activeTab === 'creations' ? 'active' : '' ?>"
+                    onclick="window.location.href='?page=profil'">
+                    Mes créations
+                </span>
 
-            <span class="<?= $activeTab === 'history' ? 'active' : '' ?>"
-                onclick="window.location.href='?page=profil&action=showHistory'">
-                Historique
-            </span>
+                <span class="<?= $activeTab === 'history' ? 'active' : '' ?>"
+                    onclick="window.location.href='?page=profil&action=showHistory'">
+                    Historique
+                </span>
 
-            <span class="<?= $activeTab === 'friends' ? 'active' : '' ?>"
-                onclick="window.location.href='?page=profil&action=displayFriends'">
-                Mes amis
-            </span>
+                <span class="<?= $activeTab === 'friends' ? 'active' : '' ?>"
+                    onclick="window.location.href='?page=profil&action=displayFriends'">
+                    Mes amis
+                </span>
+            <?php else: ?>
+                <span style="font-weight: bold;">
+                    Ses créations
+                </span>
+            <?php endif; ?>
         </div>
 
         <div class="quiz-container">
@@ -151,7 +169,12 @@ require_once 'partials/header.php';
                                     <button id="playQuiz" onclick="window.location.href='./?page=<?= $quiz[$i]['genre'] == 'test' ? 'pageInterQuiz' : $quiz[$i]['genre'] ?>&id=<?= $quiz[$i]['id'] ?> <?= $quiz[$i]['genre'] == 'lesson' ? '&categorie=view' : '' ?> <?= $quiz[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?> <?= $quiz[$i]['genre'] == 'test' ? '&type=test' : '' ?>'">Jouer</button>
                                 </div>
                                 <div class="quiz-footer">
-                                    <p class="quiz-auteur">Par : <span class="author">Vous</span></p>
+                                    <p class="quiz-auteur">
+                                        Par :
+                                        <span class="author">
+                                            <?= !$guest ? "Vous" : htmlspecialchars($infosUser['username']) ?>
+                                        </span>
+                                    </p>
                                     <p class="quiz-date">Publié le : <?= htmlspecialchars($quiz[$i]['date'] ?? '') ?></p>
                                     <div class="quiz-reactions">
                                         <span class="reaction like">👍 <?= htmlspecialchars($quiz[$i]['nbjaime'] ?? 0) ?></span>
@@ -169,7 +192,7 @@ require_once 'partials/header.php';
                             echo '<p class ="no-content"> Vous avez aucun historique </p>';
                         } ?>
                         <?php for ($i = 0; $i < count($hist); $i++): ?>
-                            <article class="quiz"  onclick="window.location.href='./?page=<?= $hist[$i]['genre'] ?>&id=<?= $hist[$i]['id'] ?> <?= $hist[$i]['genre'] == 'lesson' ? '&categorie=view' : '' ?> <?= $hist[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?>'">
+                            <article class="quiz" onclick="window.location.href='./?page=<?= $hist[$i]['genre'] ?>&id=<?= $hist[$i]['id'] ?> <?= $hist[$i]['genre'] == 'lesson' ? '&categorie=view' : '' ?> <?= $hist[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?>'">
                                 <div class="quiz-cat">
                                     <?php if (!empty($hist[$i]['categories'])): ?>
                                         <?php foreach ($hist[$i]['categories'] as $cat): ?>
