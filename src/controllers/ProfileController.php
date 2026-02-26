@@ -19,7 +19,13 @@ class ProfileController
 
     public function showProfile(?string $option = null, ?string $optionSuccess = null, ?string $optionError = null)
     {
-        if (isset($_SESSION['id'])) {
+        $guest = false;
+        if (isset($_SESSION['id']) && $option==="creatorProfil" && $_SESSION['id'] == $_POST['creatorId']){
+            header("Location: ?page=profil");
+            exit;
+        }
+        
+        if (isset($_SESSION['id']) && $option!=="creatorProfil") {
             $infosUser = $this->model->getCredentials($_SESSION['id']);
             $creation = $this->model->getQuizCreated($_SESSION['id']);
             $played = $this->model->getGamesNumber($_SESSION['id']);
@@ -54,7 +60,6 @@ class ProfileController
                     if ($_POST['genre'] === 'leçon') {
                         $this->model->deleteLesson($_POST['idToDelete']);
                     } else {
-                        var_dump($_POST['idToDelete']);
                         $this->model->deleteQuiz($_POST['idToDelete']);
                     }
                     header("Location: ?page=profil");
@@ -69,7 +74,41 @@ class ProfileController
             $activeTab = $activeTab === 'displayFriends' ? 'friends' : ($activeTab === 'showHistory' ? 'history' : 'creations');
             require ROOT . '/src/views/profil.php';
         } else {
-            echo "Problème de chargement";
+
+            if ($option !== null && $option === "creatorProfil") {
+                if (!isset($_POST['creatorId'])) {
+                    header("Location: ?page=home");
+                    exit;
+                }
+                $creatorId = $_POST['creatorId'];
+                $guest = true;
+                $infosUser = $this->model->getCredentials($creatorId);
+                $creation = $this->model->getQuizCreated($creatorId);
+                $played = $this->model->getGamesNumber($creatorId);
+                $lessonCreated = $this->model->getLessonsCreated($creatorId);
+                require_once ROOT . '/src/models/NotificationModel.php';
+                $modelNotification = new NotificationModel($this->db);
+                $alreadyFriend = $modelNotification->hasFriend($creatorId);
+
+                if ($creation > 0 || $lessonCreated > 0) {
+                    require_once ROOT . '/src/models/HomeModel.php';
+                    require_once ROOT . '/src/models/LessonModel.php';
+                    $modelHome = new HomeModel($this->db);
+                    $modelLesson = new LessonModel($this->db);
+                    $quiz = $modelHome->getAllCreationsByUser($creatorId);
+                    $lessons = $modelLesson->getAllInfoLessonsByUser($creatorId);
+                    if (!empty($lessons) && $lessons[0] !== null) {
+                        for ($i = 0; $i < count($lessons); $i++) {
+                            $quiz[] = $lessons[$i];
+                        }
+                    }
+                }
+
+
+                require ROOT . '/src/views/profil.php';
+            } else {
+                echo "Problème de chargement";
+            }
         }
     }
 

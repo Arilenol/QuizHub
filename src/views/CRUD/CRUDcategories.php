@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <?php
+$title="Gestion des catégories";
 require_once '../src/views/partials/header.php';
 ?>
 
@@ -12,7 +13,6 @@ require_once '../src/views/partials/header.php';
     echo "<link rel='stylesheet' href='./assets/style/global.css'>";
     echo "<link rel='stylesheet' href='./assets/style/categories.css'>";
     ?>
-    <title>Gestion des Catégories</title>
 </head>
 
 <body>
@@ -50,10 +50,7 @@ require_once '../src/views/partials/header.php';
                 </div>
 
                 <div class="form-buttons">
-                    <div class="button" type="submit">
-                        <span></span>
-                        <p>Créer la catégorie</p>
-                    </div>
+                    <button type="submit" class="btn-submit">Créer la catégorie</button>
                 </div>
             </form>
         </div>

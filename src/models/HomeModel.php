@@ -36,6 +36,7 @@ class HomeModel
                 q.genre, 
                 q.date, 
                 u.username AS user_name,
+                u.id AS creatorId,
                 q.disponibilite,
                 (
                     SELECT GROUP_CONCAT(DISTINCT c.categorieName)
@@ -193,6 +194,7 @@ class HomeModel
                 q.genre, 
                 q.date, 
                 u.username AS user_name,
+                u.id AS creatorId,
                 (
                     SELECT GROUP_CONCAT(DISTINCT c.categorieName)
                     FROM categorie_quiz cq

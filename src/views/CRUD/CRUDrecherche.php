@@ -8,9 +8,9 @@ require_once '../src/views/partials/header.php';
 
 <body>
     <div class="catalogue">
-        <div class="button" style="margin : 25px" onclick="history.back()">
+        <div class="button" style="margin : 25px" onclick="window.location.href='?page=home'">
             <span></span>
-            <p>← Retour</p>
+            <p>Accueil</p>
         </div>
         <button onclick="window.location.href='?page=Categorie'" class="retour" style="background-color: #28a745; box-shadow: 0 8px 0 #1e7e34; cursor: pointer">📚 Gérer les catégories</button>
 
