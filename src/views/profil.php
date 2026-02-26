@@ -71,9 +71,9 @@ require_once 'partials/header.php';
                         <form method="POST" action="?page=notification">
                             <input type="hidden" name="action" value="sendRequest">
                             <input type="hidden" name="email" value="<?= $infosUser['email'] ?>">
-                            <button type="submit"
-                                <?= $alreadyFriend ? 'disabled style="background-color:grey;cursor:no-drop;box-shadow: none;"' : '' ?>>
-                                <span></span>
+                            <button type="submit" class="button"
+                                <?= $alreadyFriend ? 'disabled style="box-shadow: none;"' : '' ?>>
+                                <span <?= $alreadyFriend ? 'disabled style="cursor:no-drop"' : '' ?>></span>
                                 <p>Demander en ami</p>
                             </button>
                         </form>

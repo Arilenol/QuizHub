@@ -80,7 +80,10 @@ if (isset($_SESSION['id'])) {
                     <p class="quiz-description"><?= htmlspecialchars($quizNextPart[$i]['description'] ?? '') ?></p>
                 </div>
                 <div class="quiz-footer">
-                    <p class="quiz-auteur">Par : <span class="nom-auteur"> <?= htmlspecialchars($quizNextPart[$i]['user_name'] ?? '') ?></span></p>
+                    <form action="?page=profil&action=creatorProfil" method="POST">
+                        <input type="hidden" name="creatorId" value="<?= $quiz[$i]['creatorId'] ?>">
+                        <p class="quiz-auteur">Par : <button type="submit" style="background:none;border:none;color:blue;text-decoration:underline;cursor:pointer;font-size:large;"> <?= htmlspecialchars($quiz[$i]['user_name'] ?? '') ?> </button></p>
+                    </form>
                     <p class="quiz-date">Publié le : <?= htmlspecialchars($quizNextPart[$i]['date'] ?? '') ?></p>
                     <div class="quiz-reactions">
                         <span class="reaction like">👍 <?= htmlspecialchars($quizNextPart[$i]['nbjaime'] ?? 0) ?></span>
@@ -126,7 +129,10 @@ if (isset($_SESSION['id'])) {
                         <p class="quiz-description"><?= htmlspecialchars($friendQuiz[$i]['description'] ?? '') ?></p>
                     </div>
                     <div class="quiz-footer">
-                        <p class="quiz-auteur">Par : <span class="nom-auteur"> <?= htmlspecialchars($friendQuiz[$i]['user_name'] ?? '') ?></span></p>
+                        <form action="?page=profil&action=creatorProfil" method="POST">
+                            <input type="hidden" name="creatorId" value="<?= $quiz[$i]['creatorId'] ?>">
+                            <p class="quiz-auteur">Par : <button type="submit" style="background:none;border:none;color:blue;text-decoration:underline;cursor:pointer;font-size:large;"> <?= htmlspecialchars($quiz[$i]['user_name'] ?? '') ?> </button></p>
+                        </form>
                         <p class="quiz-date">Publié le : <?= htmlspecialchars($friendQuiz[$i]['date'] ?? '') ?></p>
                         <div class="quiz-reactions">
                             <span class="reaction like">👍 <?= htmlspecialchars($friendQuiz[$i]['nbjaime'] ?? 0) ?></span>
@@ -216,7 +222,10 @@ if (isset($_SESSION['id'])) {
                 <p class="quiz-description"><?= htmlspecialchars($lessons[$i]['lecon_description'] ?? '') ?></p>
             </div>
             <div class="quiz-footer">
-                <p class="quiz-auteur">Par : <span class="nom-auteur"> <?= htmlspecialchars($lessons[$i]['user_name'] ?? '') ?></span></p>
+                <form action="?page=profil&action=creatorProfil" method="POST">
+                    <input type="hidden" name="creatorId" value="<?= $quiz[$i]['creatorId'] ?>">
+                    <p class="quiz-auteur">Par : <button type="submit" style="background:none;border:none;color:blue;text-decoration:underline;cursor:pointer;font-size:large;"> <?= htmlspecialchars($quiz[$i]['user_name'] ?? '') ?> </button></p>
+                </form>
                 <p class="quiz-date">Publié le : <?= htmlspecialchars($lessons[$i]['lecon_date'] ?? '') ?></p>
                 <div class="quiz-reactions">
                     <span class="reaction like">👍 <?= htmlspecialchars($lessons[$i]['nbjaime'] ?? 0) ?></span>

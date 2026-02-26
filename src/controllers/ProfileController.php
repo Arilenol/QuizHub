@@ -20,7 +20,12 @@ class ProfileController
     public function showProfile(?string $option = null, ?string $optionSuccess = null, ?string $optionError = null)
     {
         $guest = false;
-        if (isset($_SESSION['id']) && $option!=="creatorProfil" || isset($_SESSION['id']) && $option==="creatorProfil" && $_SESSION['id'] == $_POST['creatorId']) {
+        if (isset($_SESSION['id']) && $option==="creatorProfil" && $_SESSION['id'] == $_POST['creatorId']){
+            header("Location: ?page=profil");
+            exit;
+        }
+        
+        if (isset($_SESSION['id']) && $option!=="creatorProfil") {
             $infosUser = $this->model->getCredentials($_SESSION['id']);
             $creation = $this->model->getQuizCreated($_SESSION['id']);
             $played = $this->model->getGamesNumber($_SESSION['id']);
@@ -55,7 +60,6 @@ class ProfileController
                     if ($_POST['genre'] === 'leçon') {
                         $this->model->deleteLesson($_POST['idToDelete']);
                     } else {
-                        var_dump($_POST['idToDelete']);
                         $this->model->deleteQuiz($_POST['idToDelete']);
                     }
                     header("Location: ?page=profil");
