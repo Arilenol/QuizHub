@@ -68,15 +68,17 @@ require_once 'partials/header.php';
                             <p>Déconnexion</p>
                         </button>
                     <?php else: ?>
-                        <form method="POST" action="?page=notification">
-                            <input type="hidden" name="action" value="sendRequest">
-                            <input type="hidden" name="email" value="<?= $infosUser['email'] ?>">
-                            <button type="submit" class="button"
-                                <?= $alreadyFriend ? 'disabled style="box-shadow: none;"' : '' ?>>
-                                <span <?= $alreadyFriend ? 'disabled style="cursor:no-drop"' : '' ?>></span>
-                                <p>Demander en ami</p>
-                            </button>
-                        </form>
+                        <?php if (isset($_SESSION['id'])): ?>
+                            <form method="POST" action="?page=notification">
+                                <input type="hidden" name="action" value="sendRequest">
+                                <input type="hidden" name="email" value="<?= $infosUser['email'] ?>">
+                                <button type="submit" class="button"
+                                    <?= $alreadyFriend ? 'disabled style="box-shadow: none;"' : '' ?>>
+                                    <span <?= $alreadyFriend ? 'disabled style="cursor:no-drop"' : '' ?>></span>
+                                    <p>Demander en ami</p>
+                                </button>
+                            </form>
+                        <?php endif; ?>
                     <?php endif; ?>
                 </div>
             </div>
@@ -156,16 +158,18 @@ require_once 'partials/header.php';
                                 <br>
                                 <br>
                                 <div class="editQuizPart">
-                                    <button
-                                        class="deleteQuiz"
-                                        data-id="<?= $quiz[$i]['id'] ?>"
-                                        data-title="<?= htmlspecialchars($quiz[$i]['title']) ?>"
-                                        data-genre="<?= $quiz[$i]['genre'] ?>"
-                                        data-action="deleteQuiz">
-                                        <?= $quiz[$i]['genre'] == 'leçon' ? 'Supprimer cette leçon' : 'Supprimer ce quiz' ?>
-                                    </button>
+                                    <?php if (isset($_SESSION['id']) && $_SESSION['id'] == $infosUser['id']): ?>
+                                        <button
+                                            class="deleteQuiz"
+                                            data-id="<?= $quiz[$i]['id'] ?>"
+                                            data-title="<?= htmlspecialchars($quiz[$i]['title']) ?>"
+                                            data-genre="<?= $quiz[$i]['genre'] ?>"
+                                            data-action="deleteQuiz">
+                                            <?= $quiz[$i]['genre'] == 'leçon' ? 'Supprimer cette leçon' : 'Supprimer ce quiz' ?>
+                                        </button>
 
-                                    <button id="editQuiz" onclick="window.location.href='?page=<?= $quiz[$i]['genre'] === 'leçon' ? 'lesson' : $quiz[$i]['genre'] ?>&categorie=modify&id=<?= $quiz[$i]['id'] ?>'"><?= $quiz[$i]['genre'] === 'lesson' ? 'Modifier la leçon' : ' Modifier le quiz' ?></button>
+                                        <button id="editQuiz" onclick="window.location.href='?page=<?= $quiz[$i]['genre'] === 'leçon' ? 'lesson' : $quiz[$i]['genre'] ?>&categorie=modify&id=<?= $quiz[$i]['id'] ?>'"><?= $quiz[$i]['genre'] === 'lesson' ? 'Modifier la leçon' : ' Modifier le quiz' ?></button>
+                                    <?php endif; ?>
                                     <button id="playQuiz" onclick="window.location.href='./?page=<?= $quiz[$i]['genre'] == 'test' ? 'pageInterQuiz' : $quiz[$i]['genre'] ?>&id=<?= $quiz[$i]['id'] ?> <?= $quiz[$i]['genre'] == 'lesson' ? '&categorie=view' : '' ?> <?= $quiz[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?> <?= $quiz[$i]['genre'] == 'test' ? '&type=test' : '' ?>'">Jouer</button>
                                 </div>
                                 <div class="quiz-footer">
