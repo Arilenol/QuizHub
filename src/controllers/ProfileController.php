@@ -86,9 +86,11 @@ class ProfileController
                 $creation = $this->model->getQuizCreated($creatorId);
                 $played = $this->model->getGamesNumber($creatorId);
                 $lessonCreated = $this->model->getLessonsCreated($creatorId);
-                require_once ROOT . '/src/models/NotificationModel.php';
-                $modelNotification = new NotificationModel($this->db);
-                $alreadyFriend = $modelNotification->hasFriend($creatorId);
+                if (isset($_SESSION['id'])){
+                    require_once ROOT . '/src/models/NotificationModel.php';
+                    $modelNotification = new NotificationModel($this->db);
+                    $alreadyFriend = $modelNotification->hasFriend($creatorId);
+                }
 
                 if ($creation > 0 || $lessonCreated > 0) {
                     require_once ROOT . '/src/models/HomeModel.php';
