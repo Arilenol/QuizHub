@@ -507,6 +507,9 @@ svg {
   h1 {
     font-size: 7.5vw;
   }
+  .textarea {
+    padding: 0;
+  }
 }
 
 @media (min-width: 601px) and (max-width: 1350px) {
@@ -558,8 +561,8 @@ svg {
 
 @media (max-width: 800px) {
   .categoriesList label {
-    font-size: 4vw;
-    padding: 3vw 6vw;
+    font-size: 10px;
+    padding: 15px;
   }
 }
 
@@ -576,9 +579,13 @@ svg {
   header > .button {
     padding: 10px;
   }
-  .button:not(.download-button) {
-    padding: 15px;
+  .button#openMenu {
+    padding: 9px;
+  } 
+  .button:not(#openMenu) {
+    margin-top: 15px;
   }
+
 }
 @media (min-width: 999px) {
   header > .button {

@@ -39,7 +39,6 @@ class NotificationController
                     break;
 
                 case 'sendRequest':
-                    var_dump("here");
                     header("Location: ?page=home");
                     if (!empty($_POST['email'])) {
                         $this->sendRequest($_POST['email']);

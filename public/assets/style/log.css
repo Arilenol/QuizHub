@@ -85,3 +85,10 @@ i {
     position: absolute;
     right: 1rem;
 }
+
+@media (max-width: 515px) {
+    .log-container{
+        margin: auto;
+        width: auto;
+    }
+}
