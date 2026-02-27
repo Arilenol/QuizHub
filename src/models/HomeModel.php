@@ -81,6 +81,7 @@ class HomeModel
                 q.genre AS genre, 
                 q.date, 
                 u.username AS user_name,
+                u.id AS creatorId, 
                 (
                     SELECT GROUP_CONCAT(DISTINCT c.categorieName)
                     FROM categorie_quiz cq
@@ -189,34 +190,72 @@ class HomeModel
     public function getAllNewCreations(): array
     {
         $stmt = $this->db->query("
-            SELECT 
-                q.id,
-                q.genre, 
-                q.date, 
-                u.username AS user_name,
-                u.id AS creatorId,
-                (
-                    SELECT GROUP_CONCAT(DISTINCT c.categorieName)
-                    FROM categorie_quiz cq
-                    JOIN categories c ON c.id = cq.category_id
-                    WHERE cq.quiz_id = q.id
-                ) AS categories,
-                q.title, 
-                q.difficulty, 
-                q.description,
-                (SELECT COUNT(*) FROM likes l WHERE l.quiz_id = q.id) AS nbjaime,
-                (SELECT COUNT(*) FROM dislikes d WHERE d.quiz_id = q.id) AS nbjaimepas
-            FROM quiz q
-            JOIN users u ON u.id = q.user_id
-            WHERE q.disponibilite = 'public'
-            ORDER BY q.date DESC, (nbjaime - nbjaimepas) DESC;
-        ");
+                SELECT * FROM (
 
+                    SELECT 
+                        q.id,
+                        q.genre,
+                        q.date,
+                        u.username AS user_name,
+                        u.id AS creatorId,
+                        (
+                            SELECT GROUP_CONCAT(DISTINCT c.categorieName)
+                            FROM categorie_quiz cq
+                            JOIN categories c ON c.id = cq.category_id
+                            WHERE cq.quiz_id = q.id
+                        ) AS categories,
+                        q.title,
+                        q.difficulty,
+                        q.description,
+                        (SELECT COUNT(*) FROM likes l WHERE l.quiz_id = q.id) AS nbjaime,
+                        (SELECT COUNT(*) FROM dislikes d WHERE d.quiz_id = q.id) AS nbjaimepas,
+                        (
+                            (SELECT COUNT(*) FROM likes l WHERE l.quiz_id = q.id) -
+                            (SELECT COUNT(*) FROM dislikes d WHERE d.quiz_id = q.id)
+                        ) AS score
+
+                    FROM quiz q
+                    JOIN users u ON u.id = q.user_id
+                    WHERE q.disponibilite = 'public'
+
+                    UNION ALL
+
+                    SELECT 
+                        l.id,
+                        'leçon' AS genre,
+                        l.date,
+                        u.username AS user_name,
+                        u.id AS creatorId,
+                        (
+                            SELECT GROUP_CONCAT(DISTINCT c.categorieName)
+                            FROM categorie_lecon cl
+                            JOIN categories c ON c.id = cl.category_id
+                            WHERE cl.lesson_id = l.id
+                        ) AS categories,
+                        l.title,
+                        NULL AS difficulty,
+                        l.description,
+                        (SELECT COUNT(*) FROM likesLecon ll WHERE ll.like_id = l.id) AS nbjaime,
+                        (SELECT COUNT(*) FROM dislikesLecon dl WHERE dl.dislike_id = l.id) AS nbjaimepas,
+                        (
+                            (SELECT COUNT(*) FROM likesLecon ll WHERE ll.like_id = l.id) -
+                            (SELECT COUNT(*) FROM dislikesLecon dl WHERE dl.dislike_id = l.id)
+                        ) AS score
+
+                    FROM lecon l
+                    JOIN users u ON u.id = l.user_id
+
+                )
+
+                ORDER BY date DESC, score DESC;
+            ");
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // transformation des catégories en tableau
         foreach ($results as &$row) {
-            $row['categories'] = explode(',', $row['categories']);
+            $row['categories'] = $row['categories']
+                ? explode(',', $row['categories'])
+                : [];
         }
 
         return $results;

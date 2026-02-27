@@ -461,7 +461,6 @@ class LessonController
         }
 
 
-
         
         $lessonInfos = $this->model->getLessonInfos($idLesson);
         $quizzes = $this->model->getQuizByAuthor($user_id);

@@ -168,6 +168,9 @@
         margin: 0;
         border-radius: 0;
     }
+    .textarea{
+        padding: 0;
+    }
 }
 
 

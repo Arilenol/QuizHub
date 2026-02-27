@@ -27,7 +27,7 @@ if (isset($_SESSION['id'])) {
 <div class="nav">
     <button class="button" onclick="document.getElementById('2').scrollIntoView({ behavior: 'smooth' })">
         <span></span>
-        <p>Création Populaire</p>
+        <p>Entraînements Populaires</p>
     </button>
     <?php if (isset($_SESSION['id'])): ?>
         <button class="button" onclick="document.getElementById('1').scrollIntoView({ behavior: 'smooth' })">
@@ -51,8 +51,45 @@ if (isset($_SESSION['id'])) {
     <p class="no-content">Vous n'avez encore créé aucune ressource.</p>
 <?php else: ?>
     <div class="newCreations">
-        <?php for ($i = 0; $i < count($quizNextPart); $i++): ?>
-            <article onclick="window.location.href='./?page=<?= $quizNextPart[$i]['genre'] == 'test' ? 'pageInterQuiz' : $quizNextPart[$i]['genre'] ?>&id=<?= $quizNextPart[$i]['id'] ?> <?= $quizNextPart[$i]['genre'] == 'lesson' ? '&categorie=view' : '' ?> <?= $quizNextPart[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?><?= $quizNextPart[$i]['genre'] == 'test' ? '&type=test' : '' ?>'" class="quiz">
+        <?php
+        $limit = isset($_SESSION['id'])
+            ? count($quizNextPart)
+            : min(5, count($quizNextPart));
+        ?>
+
+        <?php for ($i = 0; $i < $limit; $i++): ?>
+            <?php
+            $genre = $quizNextPart[$i]['genre'];
+            $id = $quizNextPart[$i]['id'];
+
+            /* Détermination de la page */
+            if ($genre === 'test') {
+                $page = 'pageInterQuiz';
+            } elseif ($genre === 'leçon') {
+                $page = 'lesson';
+            } else {
+                $page = $genre;
+            }
+
+            /* Construction des paramètres */
+            $params = "id=" . $id;
+
+            if ($genre === 'leçon') {
+                $params .= "&categorie=view";
+            }
+
+            if ($genre === 'flashcard') {
+                $params .= "&action=start";
+            }
+
+            if ($genre === 'test') {
+                $params .= "&type=test";
+            }
+
+            /* URL finale */
+            $url = "./?page={$page}&{$params}";
+            ?>
+            <article onclick="window.location.href='<?= $url ?>'" class="quiz">
                 <div class="quiz-header">
                     <div class="quiz-cat">
                         <?php if (!empty($quizNextPart[$i]['categories'])): ?>
@@ -81,8 +118,8 @@ if (isset($_SESSION['id'])) {
                 </div>
                 <div class="quiz-footer">
                     <form action="?page=profil&action=creatorProfil" method="POST">
-                        <input type="hidden" name="creatorId" value="<?= $quiz[$i]['creatorId'] ?>">
-                        <p class="quiz-auteur">Par : <button type="submit" style="background:none;border:none;color:blue;text-decoration:underline;cursor:pointer;font-size:large;"> <?= htmlspecialchars($quiz[$i]['user_name'] ?? '') ?> </button></p>
+                        <input type="hidden" name="creatorId" value="<?= $quizNextPart[$i]['creatorId'] ?>">
+                        <p class="quiz-auteur">Par : <button type="submit" style="background:none;border:none;color:blue;text-decoration:underline;cursor:pointer;font-size:large;"> <?= htmlspecialchars($quizNextPart[$i]['user_name'] ?? '') ?> </button></p>
                     </form>
                     <p class="quiz-date">Publié le : <?= htmlspecialchars($quizNextPart[$i]['date'] ?? '') ?></p>
                     <div class="quiz-reactions">
@@ -93,6 +130,20 @@ if (isset($_SESSION['id'])) {
             </article>
 
         <?php endfor; ?>
+        <?php if (isset($_SESSION['id'])): ?>
+            <article onclick="window.location.href='?page=catalogue&numPage=&searchAuthor=<?= urlencode($quizNextPart[0]['user_name']) ?>&categorie=&tri=date_desc&genre='"
+                class="quiz seeMore">
+                Voir plus
+            </article>
+        <?php else: ?>
+            <?php if (count($quizNextPart) >= 5): ?>
+                <article onclick="window.location.href='?page=catalogue&numPage=&searchAuthor=&categorie=&tri=date_desc&genre='" class="quiz seeMore">
+                    Voir plus
+                </article>
+
+            <?php endif; ?>
+        <?php endif; ?>
+
     </div>
 <?php endif; ?>
 
@@ -101,7 +152,38 @@ if (isset($_SESSION['id'])) {
     <?php if (isset($friendQuiz) && !empty($friendQuiz)): ?>
         <div class="newCreations">
             <?php for ($i = 0; $i < count($friendQuiz); $i++): ?>
-                <article onclick="window.location.href='./?page=<?= $friendQuiz[$i]['genre'] == 'test' ? 'pageInterQuiz' : $friendQuiz[$i]['genre'] ?>&id=<?= $friendQuiz[$i]['id'] ?> <?= $friendQuiz[$i]['genre'] == 'lesson' ? '&categorie=view' : '' ?><?= $friendQuiz[$i]['genre'] == 'test' ? '&type=test' : '' ?>'" <?php echo $friendQuiz[$i]['genre'] == 'flashcard' ? " data-action='start'" : ''  ?> class="quiz">
+                <?php
+                $genre = $friendQuiz[$i]['genre'];
+                $id = $friendQuiz[$i]['id'];
+
+                /* Détermination de la page */
+                if ($genre === 'test') {
+                    $page = 'pageInterQuiz';
+                } elseif ($genre === 'leçon') {
+                    $page = 'lesson';
+                } else {
+                    $page = $genre;
+                }
+
+                /* Construction des paramètres */
+                $params = "id=" . $id;
+
+                if ($genre === 'leçon') {
+                    $params .= "&categorie=view";
+                }
+
+                if ($genre === 'flashcard') {
+                    $params .= "&action=start";
+                }
+
+                if ($genre === 'test') {
+                    $params .= "&type=test";
+                }
+
+                /* URL finale */
+                $url = "./?page={$page}&{$params}";
+                ?>
+                <article onclick="window.location.href='<?= $url ?>'" class="quiz">
                     <div class="quiz-header">
                         <div class="quiz-cat">
                             <?php if (!empty($friendQuiz[$i]['categories'])): ?>
@@ -148,7 +230,7 @@ if (isset($_SESSION['id'])) {
 <?php endif; ?>
 
 
-<h1 id="2">Créations populaires</h1>
+<h1 id="2">Entraînements populaires</h1>
 
 <div class="newCreations">
     <?php for ($i = 0; $i < count($quiz) && $i < 5; $i++): ?>
@@ -223,8 +305,8 @@ if (isset($_SESSION['id'])) {
             </div>
             <div class="quiz-footer">
                 <form action="?page=profil&action=creatorProfil" method="POST">
-                    <input type="hidden" name="creatorId" value="<?= $quiz[$i]['creatorId'] ?>">
-                    <p class="quiz-auteur">Par : <button type="submit" style="background:none;border:none;color:blue;text-decoration:underline;cursor:pointer;font-size:large;"> <?= htmlspecialchars($quiz[$i]['user_name'] ?? '') ?> </button></p>
+                    <input type="hidden" name="creatorId" value="<?= $lessons[$i]['creatorId'] ?>">
+                    <p class="quiz-auteur">Par : <button type="submit" style="background:none;border:none;color:blue;text-decoration:underline;cursor:pointer;font-size:large;"> <?= htmlspecialchars($lessons[$i]['user_name'] ?? '') ?> </button></p>
                 </form>
                 <p class="quiz-date">Publié le : <?= htmlspecialchars($lessons[$i]['lecon_date'] ?? '') ?></p>
                 <div class="quiz-reactions">

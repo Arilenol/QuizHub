@@ -36,7 +36,6 @@ switch ($page) {
         $controller = new LikeController();
         $input = file_get_contents('php://input');
         $reactions = json_decode($input, true); // récupère le tableau JS
-        var_dump($reactions);
         // $controller->sendReaction($reactions);
         break;
 

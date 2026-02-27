@@ -1,72 +1,28 @@
-@import url("popup.css");
+@import url('popup.css');
 
+/* ======= Page ======= */
 .create-quiz-page {
-    margin: 30px 0 0 0;
-    width: 100%;
-    max-width: 1200px;
-    padding: 40px;
-    border-radius: 40px;
-    background: #ffdba9;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-    box-sizing: border-box;
-    justify-self: center;
+  margin: 30px auto 0 auto;
+  width: 100%;
+  max-width: 1200px;
+  padding: 40px;
+  border-radius: 40px;
+  background: #ffdba9;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
 }
 
+/* ======= Form ======= */
 .create-quiz-page form {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.questions-container {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.newQuiz {
-    padding: 20px;
-    display: grid;
-    grid-template-columns: auto auto auto;
-    gap: 20px;
-    align-items: center;
-}
-
-.newQuiz .question {
-    grid-column: 1 / 2;
-}
-
-.newQuiz .questionInput {
-    grid-column: 1 / 2;
-    grid-row: 2 / 3;
-}
-
-.newQuiz .checkbox {
-    justify-self: center;
-}
-
-.question-buttons {
-    grid-column: 2 / 4;
-    display: flex;
-    gap: 10px;
-}
-
-.erreur {
-    color: red;
-    font-weight: bold;
-}
-
-.ami-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .disponibilite {
@@ -184,23 +140,140 @@
 }
 
 .parametres .form-group {
-    flex-direction: row;
-    align-items: center;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
 }
 
-.newQuiz > .validite{
-    grid-row-start: 1;
-    grid-row-end: 2;
-    grid-column-start: 3;
-    grid-column-end: 4;
+/* ======= Questions ======= */
+.questions-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-@media (max-width: 768px) {
-    .create-quiz-page {
-        padding: 20px;
-        margin: 0;
-        border-radius: 0;
-    }
+/* ======= Nouvelle grille Quiz ======= */
+.newQuiz {
+  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  align-items: center;
+}
+
+/* Placement des éléments */
+.newQuiz .question {
+  grid-column: 1 / 2;
+}
+
+.newQuiz .questionInput {
+  grid-column: 1 / 2;
+  grid-row: 2 / 3;
+}
+
+.newQuiz .checkbox {
+  justify-self: center;
+}
+
+.question-buttons {
+  grid-column: 2 / 4;
+  display: flex;
+  gap: 10px;
+}
+
+.newQuiz > .validite {
+  grid-row: 1 / 2;
+  grid-column: 3 / 4;
+}
+
+/* ======= Ami List & erreurs ======= */
+.ami-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.erreur {
+  color: red;
+  font-weight: bold;
+}
+
+/* ======= Responsive ======= */
+@media (max-width: 1024px) {
+  .newQuiz {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+  .question-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 850px) {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  .create-quiz-page {
+    padding: 0;
+    margin: 0;
+    border-radius: 0;
+  }
+  .newQuiz {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+  }
+  .question-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .newQuiz > .validite {
+    grid-column: 1 / 2;
+    grid-row: auto;
+    justify-self: start;
+  }
+  select#disponibilite {
+    width: 400px;
+  }
+  h2.validite{
+    display: none;
+  }
+  .responseInput::after{
+    position: absolute;
+    top: 100px;
+    left: 120px;
+    font-size: large;
+    content: "Réponse valide ?";
+    font-weight: bold;
+    z-index: 1000;
+  }
+  .newQuiz svg{
+    margin-top: 40px;
+    width: 125px;
+  }
+}
+
+@media (max-width: 480px) {
+  .create-quiz-page {
+    padding: 15px;
+  }
+  .question-buttons button {
+    font-size: 0.9rem;
+    padding: 10px 15px;
+  }
+  .newQuiz {
+    gap: 10px;
+  }
+  .responseInput::after{
+    left:50px
+  }
+  select#disponibilite{
+    width: 200px;
+  }
 }
 
 

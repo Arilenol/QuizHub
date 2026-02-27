@@ -23,7 +23,6 @@ class HomeController
 
         // récupère les données
         $quiz = $this->model->getAllInfo();
-
         $lessons = $modelLesson->getAllInfoLessons();
         if (isset($_SESSION['id']) && !empty($_SESSION['id'])) {
             // récupère la streak actuelle

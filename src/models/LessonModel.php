@@ -58,6 +58,54 @@ class LessonModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Récupère toutes les leçons avec informations complètes en triant par date décroissante.
+     *
+     * Cette méthode retourne l'ensemble des leçons avec tous les détails associés :
+     * titre, description, auteur, quiz associé, catégories, et comptage des likes/dislikes.
+     *
+     * @return array  Tableau de tableaux associatifs contenant les infos de chaque leçon.
+     */
+    public function getAllInfoLessonsOrderByDate(): array
+    {
+        $stmt = $this->db->query("
+        SELECT
+            l.id AS id,
+            l.title AS lecon_title,
+            l.description AS lecon_description,
+            l.date AS lecon_date,
+            'lecon' AS genre,
+            u.id AS creatorId,
+            u.username AS user_name,
+
+            (
+                SELECT GROUP_CONCAT(DISTINCT c.categorieName)
+                FROM categorie_lecon cq
+                JOIN categories c ON c.id = cq.category_id
+                WHERE cq.lesson_id = l.id
+            ) AS categories,
+
+            (SELECT COUNT(*) FROM likesLecon ll WHERE ll.lecon_id = l.id) AS nbjaime,
+            (SELECT COUNT(*) FROM dislikesLecon dl WHERE dl.lecon_id = l.id) AS nbjaimepas
+
+        FROM Lecon l
+        JOIN users u ON u.id = l.user_id
+
+        ORDER BY l.date DESC ,(nbjaime - nbjaimepas) DESC
+
+    ");
+
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($results as &$row) {
+            $row['categories'] = $row['categories']
+                ? explode(',', $row['categories'])
+                : [];
+        }
+
+        return $results;
+    }
+
 
     /**
      * Récupère toutes les leçons avec informations complètes.
@@ -76,7 +124,7 @@ class LessonModel
             l.description AS lecon_description,
             l.date AS lecon_date,
 
-            u.id AS user_id,
+            u.id AS creatorId,
             u.username AS user_name,
 
             (
@@ -92,7 +140,7 @@ class LessonModel
         FROM Lecon l
         JOIN users u ON u.id = l.user_id
 
-        ORDER BY l.date DESC, (nbjaime - nbjaimepas) DESC
+        ORDER BY (nbjaime - nbjaimepas) DESC , l.date DESC
 
     ");
 
@@ -451,7 +499,7 @@ class LessonModel
             l.date AS date,
             'leçon' AS genre,
 
-            u.id AS user_id,
+            u.id AS creatorId,
             u.username AS user_name,
 
             COALESCE(

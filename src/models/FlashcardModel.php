@@ -56,8 +56,8 @@ class FlashcardModel
     ");
         $stmt->execute([$id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        var_dump($id);
-        var_dump($row['maxi']);
+        // var_dump($id);
+        // var_dump($row['maxi']);
         return intval($row['maxi']);
     }
 
