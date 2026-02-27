@@ -48,6 +48,120 @@
     margin-top: 10px;
 }
 
+.disponibilite {
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    border: none;
+}
+
+.disponibilite select {
+    max-width: 320px;
+}
+
+.disponibilite .dispo-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.disponibilite .friend-search {
+    background: #0ab1bd;
+    padding: 20px;
+    border-radius: 50px;
+    color: white;
+    border: none;
+    font-size: 20px;
+    width: 100%;
+    max-width: 320px;
+    box-sizing: border-box;
+}
+
+.disponibilite .friend-search::placeholder {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.disponibilite .ami-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 10px;
+}
+
+.disponibilite .ami-list[hidden] {
+    display: none !important;
+}
+
+.disponibilite .friends[hidden] {
+    display: none !important;
+}
+
+.disponibilite .friends {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid #7fc9d4;
+    background: linear-gradient(180deg, #eefaff 0%, #d9f2f8 100%);
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.disponibilite .friends:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(120, 88, 38, 0.16);
+}
+
+.disponibilite .friends input {
+    width: 18px;
+    height: 18px;
+    appearance: none;
+    -webkit-appearance: none;
+    border: 1px solid rgba(10, 177, 189, 0.65);
+    border-radius: 5px;
+    background: rgba(10, 177, 189, 0.15);
+    position: relative;
+    cursor: pointer;
+}
+
+.disponibilite .friends input:checked {
+    background: rgba(10, 177, 189, 0.72);
+    border-color: rgba(10, 177, 189, 0.9);
+}
+
+.disponibilite .friends input:checked::after {
+    content: "";
+    position: absolute;
+    left: 5px;
+    top: 2px;
+    width: 4px;
+    height: 8px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.disponibilite .friends input:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.disponibilite .friends:has(input:disabled) {
+    cursor: not-allowed;
+    border-color: #c6ccd0;
+    background: linear-gradient(180deg, #eceff1 0%, #dfe4e7 100%);
+    box-shadow: none;
+    color: #7a8489;
+    opacity: 1;
+    filter: grayscale(100%);
+}
+
+.disponibilite .friends:has(input:disabled):hover {
+    transform: none;
+    box-shadow: none;
+}
+
 @media (max-width: 768px) {
     .create-flashcard-page {
         padding: 20px;
@@ -58,3 +172,18 @@
         padding: 0;
     }
 }
+
+
+
+
+
+
+.disponibilite .no-content {
+    text-align: center;
+    padding: 30px;
+    color: #777;
+    font-size: 1.1em;
+    opacity: 0.8;
+    font-style: italic;
+}
+

@@ -117,11 +117,15 @@
             <div class="ami-list" <?= $_SESSION['POST']['disponibilite'] != "ami" ? 'hidden' : '' ?>>
                 <?php
                 $hidden2 = $_SESSION['POST']['disponibilite'] != "ami" ? 'hidden' : '';
-                $checkedTous = in_array('tous', $TAB_AMI_CHOISI) ? 'checked' : '';
-                echo '<label class="friends" '.$hidden2.'><input name="amiDispo[]" type="checkbox" value="tous" '.$checkedTous.'>Tous les amis</label>';
-                foreach($TAB_AMI as $ami){
-                    $checked = in_array($ami['ami_id'], $TAB_AMI_CHOISI) ? 'checked' : '';
-                    echo '<label class="friends" '.$hidden2.'><input name="amiDispo[]" type="checkbox" value="'.$ami['ami_id'].'" '.$checked.'>'.$ami['username'].'</label>';
+                if (empty($TAB_AMI)) {
+                    echo '<p class="no-content" '.$hidden2.'>Vous n\'avez aucun ami.</p>';
+                } else {
+                    $checkedTous = in_array('tous', $TAB_AMI_CHOISI) ? 'checked' : '';
+                    echo '<label class="friends" '.$hidden2.'><input name="amiDispo[]" type="checkbox" value="tous" '.$checkedTous.'>Tous les amis</label>';
+                    foreach($TAB_AMI as $ami){
+                        $checked = in_array($ami['ami_id'], $TAB_AMI_CHOISI) ? 'checked' : '';
+                        echo '<label class="friends" '.$hidden2.'><input name="amiDispo[]" type="checkbox" value="'.$ami['ami_id'].'" '.$checked.'>'.$ami['username'].'</label>';
+                    }
                 }
                 ?>
             </div>
