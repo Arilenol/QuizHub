@@ -139,6 +139,7 @@ class LessonModel
 
         FROM Lecon l
         JOIN users u ON u.id = l.user_id
+        WHERE l.disponibilite = 'public' OR l.disponibilite IS NULL
 
         ORDER BY (nbjaime - nbjaimepas) DESC , l.date DESC
 
@@ -1011,5 +1012,3 @@ class LessonModel
         }
     }
 }
-
-
