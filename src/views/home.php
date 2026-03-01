@@ -51,13 +51,7 @@ if (isset($_SESSION['id'])) {
     <p class="no-content">Vous n'avez encore créé aucune ressource.</p>
 <?php else: ?>
     <div class="newCreations">
-        <?php
-        $limit = isset($_SESSION['id'])
-            ? count($quizNextPart)
-            : min(5, count($quizNextPart));
-        ?>
-
-        <?php for ($i = 0; $i < $limit; $i++): ?>
+        <?php for ($i = 0; $i < count($quizNextPart) && $i < 5; $i++): ?>
             <?php
             $genre = $quizNextPart[$i]['genre'];
             $id = $quizNextPart[$i]['id'];
@@ -131,10 +125,12 @@ if (isset($_SESSION['id'])) {
 
         <?php endfor; ?>
         <?php if (isset($_SESSION['id'])): ?>
-            <article onclick="window.location.href='?page=catalogue&numPage=&searchAuthor=<?= urlencode($quizNextPart[0]['user_name']) ?>&categorie=&tri=date_desc&genre='"
-                class="quiz seeMore">
-                Voir plus
-            </article>
+            <?php if (count($quizNextPart) >= 5): ?>
+                <article onclick="window.location.href='?page=catalogue&numPage=&searchAuthor=<?= urlencode($quizNextPart[0]['user_name']) ?>&categorie=&tri=date_desc&genre='"
+                    class="quiz seeMore">
+                    Voir plus
+                </article>
+            <?php endif; ?>
         <?php else: ?>
             <?php if (count($quizNextPart) >= 5): ?>
                 <article onclick="window.location.href='?page=catalogue&numPage=&searchAuthor=&categorie=&tri=date_desc&genre='" class="quiz seeMore">
