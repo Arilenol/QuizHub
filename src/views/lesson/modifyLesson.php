@@ -166,44 +166,7 @@ require __DIR__ . '/../partials/header.php';
         
         ?>
         </div>
-        <div class="disponibilite">
-           
-            <p class="section-title">Mode de publication <button id="modifDispo">Modifier</button></p>
-            <select name="disponibilite" id="disponibilite" disabled>
-                <?php $dispo = '';
-                $dispo = $lessonInfos['disponibilite'] == 'public' ? 'selected' : '';
-                ?>
-                <option value="public" <?= $dispo ?>>publique</option>
-                <?php $dispo = $lessonInfos['disponibilite'] == 'ami' ? 'selected' : ''; ?>
-                <option value="ami" <?= $dispo ?>>Seulement les amis</option>
-                <?php $dispo = $lessonInfos['disponibilite'] == 'private' ? 'selected' : ''; ?>
-                <option value="private" <?= $dispo ?>>seulement vous</option>
-            </select>
-            <div class="ami-list" <?= $lessonInfos['disponibilite'] != "ami" ? 'hidden' : '' ?>>
-                <?php
-                if ($lessonInfos['disponibilite'] == "ami") {
-                    $hidden2 = '';
-                } else {
-                    $hidden2 = 'hidden';
-                }
-                if (in_array('tous', $TAB_AMIS)) {
-                    $checkedTous = 'checked';
-                } else {
-                    $checkedTous = '';
-                }
-                echo '<label class="friends" ' . $hidden2 . '><input name = "amiDispo[]" type = "checkbox" value="tous" ' . $checkedTous . ' disabled>Tous les amis</label>';
-                foreach ($ALL_AMIS as $ami) {
-                    if (in_array($ami['ami_id'], $TAB_AMIS)) {
-                        $checked = 'checked';
-                    } else {
-                        $checked = '';
-                    }
-                    echo '<label class="friends" ' . $hidden2 . '><input name = "amiDispo[]" type = "checkbox" value="' . htmlspecialchars($ami['ami_id']) . '" ' . $checked . ' disabled>' . htmlspecialchars($ami['username']) . '</label>';
-                }
-
-                ?>
-            </div>
-        </div>
+        
         <?php
         if ($erreur) {
             echo '<p class="erreur">Chaque champ doit être rempli<br>Au moins une catégorie doit être sélectionnée</p>';
