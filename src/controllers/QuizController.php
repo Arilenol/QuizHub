@@ -94,6 +94,7 @@ class QuizController
             $this->contentFusionSessionPost();
 
             $_SESSION['bouton'] = true;
+            session_write_close();
             header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
             exit;
         }
@@ -105,6 +106,7 @@ class QuizController
             $this->contentFusionSessionPost();
 
             $_SESSION['bouton'] = true;
+            session_write_close();
             header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
             exit;
         }
@@ -139,6 +141,7 @@ class QuizController
             $this->contentFusionSessionPost();
 
             $_SESSION['bouton'] = true;
+            session_write_close();
             header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
             exit;
         }
@@ -154,6 +157,7 @@ class QuizController
                 $this->contentFusionSessionPost();
 
                 $_SESSION['bouton'] = true;
+                session_write_close();
                 header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
                 exit;
             }
@@ -228,6 +232,7 @@ class QuizController
                 } else {
                     unset($_POST['create']);
                     $_SESSION['bouton'] = true;
+                    session_write_close();
                     header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
                     exit;
                 }
@@ -235,6 +240,7 @@ class QuizController
                 $_SESSION['erreur'] = true;
                 unset($_POST['create']);
                 $_SESSION['bouton'] = true;
+                session_write_close();
                 header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
                 exit;
             }
