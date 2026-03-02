@@ -111,7 +111,7 @@ class FlashcardController
             $_SESSION['nbCartes']++;
             $this->contentFusionSessionPost();
             $_SESSION['bouton'] = true;
-            header('Location: ' . $_SERVER['REQUEST_URI']);
+            header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
             exit;
         }
 
@@ -135,7 +135,7 @@ class FlashcardController
             $_SESSION['nbCartes']--;
             $this->contentFusionSessionPost();
             $_SESSION['bouton'] = true;
-            header('Location: ' . $_SERVER['REQUEST_URI']);
+            header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
             exit;
         }
 
@@ -185,14 +185,14 @@ class FlashcardController
                 } else {
                     unset($_POST['create']);
                     $_SESSION['bouton'] = true;
-                    header('Location: ' . $_SERVER['REQUEST_URI']);
+                    header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
                     exit;
                 }
             } else {
                 $_SESSION['erreur'] = true;
                 unset($_POST['create']);
                 $_SESSION['bouton'] = true;
-                header('Location: ' . $_SERVER['REQUEST_URI']);
+                header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
                 exit;
             }
         }
@@ -273,7 +273,7 @@ class FlashcardController
         if (isset($_POST['categories']) && !empty($_POST['categories'])) {
             $this->model->updateCategoriesFlashcard($idFlashcard, $_POST['categories']);
             unset($_POST['categories']);
-            header('Location: ' . $_SERVER['REQUEST_URI']);
+            header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
             exit;
         }
         if (isset($_POST['appliquerDispo'])) {
@@ -283,7 +283,7 @@ class FlashcardController
             unset($_POST['appliquerDispo']);
             unset($_POST['disponibilite']);
             unset($_POST['amiDispo']);
-            header('Location: ' . $_SERVER['REQUEST_URI']);
+            header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
             exit;
         }
         if (isset($_POST['appliquerCard'])) {
@@ -302,7 +302,7 @@ class FlashcardController
             unset($_POST['appliquerCard']);
             unset($_POST['cardQuestion']);
             unset($_POST['cardResponse']);
-            header('Location: ' . $_SERVER['REQUEST_URI']);
+            header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
             exit;
         }
         if (isset($_POST['appliquerResum'])) {
@@ -316,19 +316,19 @@ class FlashcardController
             unset($_POST['appliquerResum']);
             unset($_POST['FlashcardTitle']);
             unset($_POST['FlashcardDescription']);
-            header('Location: ' . $_SERVER['REQUEST_URI']);
+            header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
             exit;
         }
         if (isset($_POST['DelCard'])) {
             $iCard = (int)$_POST['DelCard'];
             $this->model->deleteCardFromFlashcard($idFlashcard, $iCard + 1);
             unset($_POST['DelCard']);
-            header('Location: ' . $_SERVER['REQUEST_URI']);
+            header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
             exit;
         }
         if (isset($_POST['Annuler'])) {
             unset($_POST);
-            header('Location: ' . $_SERVER['REQUEST_URI']);
+            header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
             exit;
         }
 
