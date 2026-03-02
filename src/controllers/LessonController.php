@@ -123,7 +123,7 @@ class LessonController
             $_SESSION['nbExemple'][$_SESSION['nbParts'] - 1] = 0;
             $this->contentFusionSessionPost();
             $_SESSION['bouton'] = true;
-            header('Location: ' . $_SERVER['REQUEST_URI']);
+            header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
             exit;
         }
         if (isset($_POST['addExemple']) && $_POST['addExemple'] != '') {
@@ -131,7 +131,7 @@ class LessonController
             $_SESSION['nbExemple'][(int)$_POST['addExemple']]++;
             $this->contentFusionSessionPost();
             $_SESSION['bouton'] = true;
-            header('Location: ' . $_SERVER['REQUEST_URI']);
+            header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
             exit;
         }
 
@@ -164,7 +164,7 @@ class LessonController
             $_SESSION['nbParts']--;
             $this->contentFusionSessionPost();
             $_SESSION['bouton'] = true;
-            header('Location: ' . $_SERVER['REQUEST_URI']);
+            header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
             exit;
         }
 
@@ -181,7 +181,7 @@ class LessonController
                     unset($_POST['reponse' . $_SESSION['nbExemple'][$i] . '-part' . $i]);
                     $this->contentFusionSessionPost();
                     $_SESSION['bouton'] = true;
-                    header('Location: ' . $_SERVER['REQUEST_URI']);
+                    header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
                     exit;
                 }
             }
@@ -247,14 +247,14 @@ class LessonController
                 } else {
                     unset($_POST['create']);
                     $_SESSION['bouton'] = true;
-                    header('Location: ' . $_SERVER['REQUEST_URI']);
+                    header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
                     exit;
                 }
             } else {
                 $_SESSION['erreur'] = true;
                 unset($_POST['create']);
                 $_SESSION['bouton'] = true;
-                header('Location: ' . $_SERVER['REQUEST_URI']);
+                header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
                 exit;
             }
         }
@@ -354,7 +354,7 @@ class LessonController
         if(isset($_POST['categories']) && !empty($_POST['categories'])){
             $this->model->updateCategoriesLesson($idLesson, $_POST['categories']);
             unset($_POST['categories']);
-            header('Location: ' . $_SERVER['REQUEST_URI']);
+            header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
             exit;
         }
         if(isset($_POST['appliquerDispo'])){
@@ -364,14 +364,14 @@ class LessonController
             unset($_POST['appliquerDispo']);
             unset($_POST['disponibilite']);
             unset($_POST['amiDispo']);
-            header('Location: ' . $_SERVER['REQUEST_URI']);
+            header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
             exit;
         }
         if(isset($_POST['appliquerAssoc'])){
             $quizAssoc = $_POST['appliquerAssoc'];
             $this->model->updateQuizAssociated($idLesson, $quizAssoc);
             unset($_POST['appliquerAssoc']);
-            header('Location: ' . $_SERVER['REQUEST_URI']);
+            header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
             exit;
         }
         if(isset($_POST['appliquerPart'])){
@@ -391,7 +391,7 @@ class LessonController
             unset($_POST['appliquerPart']);
             unset($_POST['title']);
             unset($_POST['content']);
-            header('Location: ' . $_SERVER['REQUEST_URI']);
+            header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
             exit;
         }
         if (isset($_POST['appliquerEx'])){
@@ -417,7 +417,7 @@ class LessonController
                 unset($_POST['numExemple']);
                 unset($_POST['textConsigne']);
                 unset($_POST['textReponse']);
-                header('Location: ' . $_SERVER['REQUEST_URI']);
+                header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
                 exit;
             }
         }
@@ -429,7 +429,7 @@ class LessonController
             }
             unset($_POST['delEx']);
             unset($_POST['delNumEx']);
-            header('Location: ' . $_SERVER['REQUEST_URI']);
+            header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
             exit;
         }
         if (isset($_POST['appliquerResum'])){
@@ -444,19 +444,19 @@ class LessonController
             unset($_POST['appliquerResum']);
             unset($_POST['LessonTitle']);
             unset($_POST['LessonDescription']);
-            header('Location: ' . $_SERVER['REQUEST_URI']);
+            header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
             exit;
         }
         if(isset($_POST['DelPart'])){
             $iPart = (int)$_POST['DelPart'];
             $this->model->deletePartFromLesson($idLesson, $iPart);
             unset($_POST['DelPart']);
-            header('Location: ' . $_SERVER['REQUEST_URI']);
+            header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
             exit;
         }
         if(isset($_POST['Annuler'])){
             unset($_POST);
-            header('Location: ' . $_SERVER['REQUEST_URI']);
+            header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
             exit;
         }
 

@@ -94,7 +94,7 @@ class QuizController
             $this->contentFusionSessionPost();
 
             $_SESSION['bouton'] = true;
-            header('Location: ' . $_SERVER['REQUEST_URI']);
+            header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
             exit;
         }
 
@@ -105,7 +105,7 @@ class QuizController
             $this->contentFusionSessionPost();
 
             $_SESSION['bouton'] = true;
-            header('Location: ' . $_SERVER['REQUEST_URI']);
+            header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
             exit;
         }
 
@@ -139,7 +139,7 @@ class QuizController
             $this->contentFusionSessionPost();
 
             $_SESSION['bouton'] = true;
-            header('Location: ' . $_SERVER['REQUEST_URI']);
+            header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
             exit;
         }
 
@@ -154,7 +154,7 @@ class QuizController
                 $this->contentFusionSessionPost();
 
                 $_SESSION['bouton'] = true;
-                header('Location: ' . $_SERVER['REQUEST_URI']);
+                header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
                 exit;
             }
         }
@@ -228,14 +228,14 @@ class QuizController
                 } else {
                     unset($_POST['create']);
                     $_SESSION['bouton'] = true;
-                    header('Location: ' . $_SERVER['REQUEST_URI']);
+                    header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
                     exit;
                 }
             } else {
                 $_SESSION['erreur'] = true;
                 unset($_POST['create']);
                 $_SESSION['bouton'] = true;
-                header('Location: ' . $_SERVER['REQUEST_URI']);
+                header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
                 exit;
             }
         }
@@ -373,7 +373,7 @@ class QuizController
         if (isset($_POST['categories']) && !empty($_POST['categories'])) {
             $this->model->updateCategoriesQuiz($idQuiz, $_POST['categories']);
             unset($_POST['categories']);
-            header('Location: ' . $_SERVER['REQUEST_URI']);
+            header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
             exit;
         }
         if (isset($_POST['appliquerDispo'])) {
@@ -383,7 +383,7 @@ class QuizController
             unset($_POST['appliquerDispo']);
             unset($_POST['disponibilite']);
             unset($_POST['amiDispo']);
-            header('Location: ' . $_SERVER['REQUEST_URI']);
+            header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
             exit;
         }
         if (isset($_POST['applyModif'])) {
@@ -403,7 +403,7 @@ class QuizController
             unset($_POST['question' . $iQuestion]);
             unset($_POST['reponse' . $iQuestion]);
             unset($_POST['checkbox' . $iQuestion]);
-            header('Location: ' . $_SERVER['REQUEST_URI']);
+            header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
             exit;
         }
         if (isset($_POST['appliquerParam'])) {
@@ -417,7 +417,7 @@ class QuizController
             unset($_POST['appliquerParam']);
             unset($_POST['params']);
             unset($_POST['timerValue']);
-            header('Location: ' . $_SERVER['REQUEST_URI']);
+            header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
             exit;
         }
         if (isset($_POST['changerGenre'])) {
@@ -425,7 +425,7 @@ class QuizController
             $this->model->updateGenreQuiz($idQuiz, $genre);
             unset($_POST['changerGenre']);
             unset($_POST['genre']);
-            header('Location: ' . $_SERVER['REQUEST_URI']);
+            header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
             exit;
         }
         if (isset($_POST['appliquerResum'])) {
@@ -439,19 +439,19 @@ class QuizController
             unset($_POST['appliquerResum']);
             unset($_POST['QuizTitle']);
             unset($_POST['QuizDescription']);
-            header('Location: ' . $_SERVER['REQUEST_URI']);
+            header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
             exit;
         }
         if (isset($_POST['DelQuestion'])) {
             $iQuestion = (int)$_POST['DelQuestion'];
             $this->model->deleteQuestionFromQuiz($idQuiz, $iQuestion + 1);
             unset($_POST['DelQuestion']);
-            header('Location: ' . $_SERVER['REQUEST_URI']);
+            header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
             exit;
         }
         if (isset($_POST['Annuler'])) {
             unset($_POST);
-            header('Location: ' . $_SERVER['REQUEST_URI']);
+            header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
             exit;
         }
 
