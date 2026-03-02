@@ -115,6 +115,7 @@ class FlashcardController
             header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
             exit;
         }
+        var_dump($_SERVER);
 
         if (isset($_POST['DelCard']) && $_POST['DelCard'] !== '') {
             if ($_SESSION['nbCartes'] > 1) {
@@ -129,7 +130,6 @@ class FlashcardController
 
                 $last = $oldNbParts - 1;
             }
-
             unset($_POST['cardQuestion' . $last]);
             unset($_POST['cardReponse' . $last]);
 
