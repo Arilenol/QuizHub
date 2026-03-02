@@ -123,6 +123,7 @@ class LessonController
             $_SESSION['nbExemple'][$_SESSION['nbParts'] - 1] = 0;
             $this->contentFusionSessionPost();
             $_SESSION['bouton'] = true;
+            session_write_close();
             header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
             exit;
         }
@@ -131,6 +132,7 @@ class LessonController
             $_SESSION['nbExemple'][(int)$_POST['addExemple']]++;
             $this->contentFusionSessionPost();
             $_SESSION['bouton'] = true;
+            session_write_close();
             header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
             exit;
         }
@@ -164,6 +166,7 @@ class LessonController
             $_SESSION['nbParts']--;
             $this->contentFusionSessionPost();
             $_SESSION['bouton'] = true;
+            session_write_close();
             header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
             exit;
         }
@@ -181,6 +184,7 @@ class LessonController
                     unset($_POST['reponse' . $_SESSION['nbExemple'][$i] . '-part' . $i]);
                     $this->contentFusionSessionPost();
                     $_SESSION['bouton'] = true;
+                    session_write_close();
                     header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
                     exit;
                 }
@@ -247,6 +251,7 @@ class LessonController
                 } else {
                     unset($_POST['create']);
                     $_SESSION['bouton'] = true;
+                    session_write_close();
                     header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
                     exit;
                 }
@@ -254,6 +259,7 @@ class LessonController
                 $_SESSION['erreur'] = true;
                 unset($_POST['create']);
                 $_SESSION['bouton'] = true;
+                session_write_close();
                 header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
                 exit;
             }
