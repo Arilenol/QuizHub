@@ -1,4 +1,4 @@
-FROM php:latest
+FROM php:8.2.30-zts-trixie
 COPY . /usr/src/quizhub
 COPY config/php.ini /usr/local/etc/php/php.ini 
 RUN chmod +x /usr/src/quizhub/entrypoint.sh
