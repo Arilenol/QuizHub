@@ -166,6 +166,9 @@ class ProfileModel
      */
     public function saveUsername(string $username, string|int $id): bool
     {
+        if (empty($username)) {
+            return false;
+        }
         $stmt = $this->db->prepare("UPDATE users SET username = ? WHERE id = ?");
         return $stmt->execute([trim($username), $id]);
     }
