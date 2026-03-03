@@ -295,6 +295,7 @@ p.fin {
     font-size: 1.4rem;
     padding: 20px;
     min-height: 100px;
+    height: 100%;
   }
 
   div.actions-fin {
