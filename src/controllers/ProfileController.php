@@ -20,12 +20,12 @@ class ProfileController
     public function showProfile(?string $option = null, ?string $optionSuccess = null, ?string $optionError = null)
     {
         $guest = false;
-        if (isset($_SESSION['id']) && $option==="creatorProfil" && $_SESSION['id'] == $_POST['creatorId']){
+        if (isset($_SESSION['id']) && $option === "creatorProfil" && $_SESSION['id'] == $_POST['creatorId']) {
             header("Location: ?page=profil");
             exit;
         }
-        
-        if (isset($_SESSION['id']) && $option!=="creatorProfil") {
+
+        if (isset($_SESSION['id']) && $option !== "creatorProfil") {
             $infosUser = $this->model->getCredentials($_SESSION['id']);
             $creation = $this->model->getQuizCreated($_SESSION['id']);
             $played = $this->model->getGamesNumber($_SESSION['id']);
@@ -86,7 +86,7 @@ class ProfileController
                 $creation = $this->model->getQuizCreated($creatorId);
                 $played = $this->model->getGamesNumber($creatorId);
                 $lessonCreated = $this->model->getLessonsCreated($creatorId);
-                if (isset($_SESSION['id'])){
+                if (isset($_SESSION['id'])) {
                     require_once ROOT . '/src/models/NotificationModel.php';
                     $modelNotification = new NotificationModel($this->db);
                     $alreadyFriend = $modelNotification->hasFriend($creatorId);
@@ -117,42 +117,57 @@ class ProfileController
     public function saveNewInfo()
     {
         $infosUser = $this->model->getCredentials($_SESSION['id']);
+
         $saver = [];
         $error = [];
         $messageSuccess = '';
         $messageError = '';
-        if ($infosUser['username'] !== $_POST['username']) {
-            $success = $this->model->saveUsername($_POST['username'], $_SESSION['id']);
+
+        // Nettoyage des données
+        $username = htmlspecialchars(trim($_POST['username'] ?? ''), ENT_QUOTES, 'UTF-8');
+        $description = htmlspecialchars(trim($_POST['description'] ?? ''), ENT_QUOTES, 'UTF-8');
+        $email = htmlspecialchars(trim($_POST['email'] ?? ''), ENT_QUOTES, 'UTF-8');
+        $password = trim($_POST['password'] ?? '');
+        $passwordVerif = trim($_POST['passwordVerif'] ?? '');
+
+        if ($infosUser['username'] !== $username) {
+            $success = $this->model->saveUsername($username, $_SESSION['id']);
             if ($success) {
                 $saver[] = "Nom d'utilisateur";
             } else {
                 $error[] = "Nom d'utilisateur";
             }
         }
-        if ($infosUser['description'] !== $_POST['description']) {
-            $success = $this->model->saveDescription($_POST['description'], $_SESSION['id']);
+
+        if ($infosUser['description'] !== $description) {
+            $success = $this->model->saveDescription($description, $_SESSION['id']);
             if ($success) {
                 $saver[] = 'Description';
             } else {
                 $error[] = "Description";
             }
         }
-        if ($infosUser['email'] !== $_POST['email']) {
-            $success = $this->model->saveEmail($_POST['email'], $_SESSION['id']);
+
+        if ($infosUser['email'] !== $email) {
+            if (empty($email)) {
+                $success = false;
+            } else {
+                $success = $this->model->saveEmail($email, $_SESSION['id']);
+            }
             if ($success) {
                 $saver[] = 'Email';
             } else {
                 $error[] = "Email";
             }
         }
-        if (!empty($_POST['password'])) {
-            if ($_POST['passwordVerif'] === $_POST['password']) {
+        if (!empty($password)) {
+            if ($passwordVerif === $password) {
                 $pattern = '/^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/';
-                $password = $_POST['password'] ?? '';
+
                 if (!preg_match($pattern, $password)) {
                     $error[] = "Le mot de passe doit contenir au moins 8 caractères, un caractère spécial, une lettre et un chiffre";
                 } else {
-                    $success = $this->model->savePassword($_POST['password'], $_SESSION['id']);
+                    $success = $this->model->savePassword($password, $_SESSION['id']);
                     if ($success) {
                         $saver[] = 'Mot de passe';
                     } else {
@@ -160,7 +175,7 @@ class ProfileController
                     }
                 }
             } else {
-                $error[] = "Vous avez donné différents mot de passe";
+                $error[] = "Vous avez donné différents mots de passe";
             }
         }
         if (!empty($saver)) {

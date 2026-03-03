@@ -253,7 +253,7 @@ require_once 'partials/header.php';
                                 <div class="form-group">
                                     <label for="email">Email</label>
                                     <input type="email" name="email" id="email"
-                                        value="<?= htmlspecialchars($infosUser['email']) ?>">
+                                        value="<?= htmlspecialchars($infosUser['email']) ?>" required>
                                 </div>
 
                                 <div class="form-group">
