@@ -1,6 +1,6 @@
 FROM php:latest
 COPY . /usr/src/quizhub
-COPY config/php.ini /usr/local/etc/php/php.ini
+COPY config/php.ini /usr/local/etc/php/php.ini 
 RUN chmod +x /usr/src/quizhub/entrypoint.sh
 WORKDIR /usr/src/quizhub
 ENTRYPOINT ["./entrypoint.sh"]
