@@ -77,7 +77,10 @@ class NotificationController
     }
     public function addFriendRequest(string|int $id): void
     {
-        $this->model->addFriend($id);
+        $success = $this->model->addFriend($id);
+        if ($success) {
+            $this->model->createNotification($id, "DemandeAmi", "Votre demande d'ami a été acceptée");
+        }
         header('Location: ?page=notification');
         exit;
     }

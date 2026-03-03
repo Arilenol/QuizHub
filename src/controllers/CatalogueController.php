@@ -17,14 +17,12 @@ class CatalogueController
 
         $cats = $this->model->getCategories();
 
-        if (session_status() === PHP_SESSION_NONE || !isset($_SESSION['id']) || $_SESSION['id']===null) {
+        if (session_status() === PHP_SESSION_NONE || !isset($_SESSION['id']) || $_SESSION['id'] === null) {
             $options = [
                 'date_desc' => 'Date (nouveau → ancien)',
                 'date_asc' => 'Date (ancien → nouveau)',
                 'title_asc' => 'Titre (A → Z)',
                 'title_desc' => 'Titre (Z → A)',
-                'difficulty_asc' => 'Difficulté (faible → élevé)',
-                'difficulty_desc' => 'Difficulté (élevé → faible)',
                 'author_asc' => "Auteur (A → Z)",
                 'author_desc' => "Auteur (Z → A)",
                 'genre_asc' => 'Genre (A → Z)',
@@ -38,8 +36,6 @@ class CatalogueController
                 'date_asc' => 'Date (ancien → nouveau)',
                 'title_asc' => 'Titre (A → Z)',
                 'title_desc' => 'Titre (Z → A)',
-                'difficulty_asc' => 'Difficulté (faible → élevé)',
-                'difficulty_desc' => 'Difficulté (élevé → faible)',
                 'author_asc' => "Auteur (A → Z)",
                 'author_desc' => "Auteur (Z → A)",
                 'genre_asc' => 'Genre (A → Z)',
