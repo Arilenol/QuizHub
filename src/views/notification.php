@@ -62,8 +62,10 @@ include 'partials/header.php';
                     </div>
                 </div>
                 <div class="request-buttons">
-                    <button class="toggle-message" data-date="<?= $signal['date_creation'] ?>" data-message="<?= $signal["message"] ?>" data-type="<?= $signal["type"] ?>">Voir plus</button>
-                    <button class="reject" onclick='deleteSignal(<?= $signal["id"] ?>)' title="Supprimer">✕</button>
+                    <?php if (!$signal['type'] === "Demande d'ami"): ?>
+                        <button class="toggle-message" data-date="<?= $signal['date_creation'] ?>" data-message="<?= $signal["message"] ?>" data-type="<?= $signal["type"] ?>">Voir plus</button>
+                    <?php endif; ?>
+                    <button class="reject" onclick='deleteNotification(<?= $signal["id"] ?>)' title="Supprimer">✕</button>
                 </div>
             </div>
         <?php endforeach; ?>

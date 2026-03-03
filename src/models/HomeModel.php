@@ -127,10 +127,10 @@ class HomeModel
         $sql = "
             SELECT 
                 q.id,
-                q.genre,
+                'quiz' AS genre,
+                q.user_id AS creatorId,
                 q.date,
                 u.username AS user_name,
-                q.disponibilite,
                 (
                     SELECT GROUP_CONCAT(DISTINCT c.categorieName)
                     FROM categorie_quiz cq
@@ -144,25 +144,54 @@ class HomeModel
                 (SELECT COUNT(*) FROM dislikes d WHERE d.quiz_id = q.id) AS nbjaimepas
             FROM quiz q
             JOIN users u ON u.id = q.user_id
-            JOIN amiDisponibilite ad ON ad.quiz_id = q.id
-            WHERE q.disponibilite = 'ami'
-            AND q.user_id != :me
-            AND (
-                ad.ami_id = :me
-                OR (
-                    ad.ami_id = 0
-                    AND EXISTS (
-                        SELECT 1
-                        FROM amis a
-                        WHERE 
-                            (a.user1_id = :me AND a.user2_id = q.user_id)
-                            OR
-                            (a.user2_id = :me AND a.user1_id = q.user_id)
-                    )
-                )
+            LEFT JOIN amiDisponibilite ad ON ad.quiz_id = q.id
+            WHERE q.user_id != :me
+            AND EXISTS (
+                SELECT 1 FROM amis a
+                WHERE (a.user1_id = :me AND a.user2_id = q.user_id)
+                OR (a.user2_id = :me AND a.user1_id = q.user_id)
             )
-            ORDER BY nbjaime DESC
-        ";
+            AND (
+                q.disponibilite = 'public'
+                OR (q.disponibilite = 'ami' AND (ad.ami_id = :me OR ad.ami_id = 0))
+            )
+
+            UNION ALL
+
+            -- Leçons de tes amis
+            SELECT 
+                l.id,
+                'leçon' AS genre,
+                l.user_id AS creatorId,
+                l.date,
+                u.username AS user_name,
+                (
+                    SELECT GROUP_CONCAT(DISTINCT c.categorieName)
+                    FROM categorie_lecon cq
+                    JOIN categories c ON c.id = cq.category_id
+                    WHERE cq.lesson_id = l.id
+                ) AS categories,
+                l.title,
+                NULL AS difficulty,
+                l.description,
+                (SELECT COUNT(*) FROM likeslecon li WHERE li.lecon_id = l.id) AS nbjaime,
+                (SELECT COUNT(*) FROM dislikeslecon d WHERE d.lecon_id = l.id) AS nbjaimepas
+            FROM lecon l
+            JOIN users u ON u.id = l.user_id
+            LEFT JOIN amiDisponibilite ad ON ad.lesson_id = l.id
+            WHERE l.user_id != :me
+            AND EXISTS (
+                SELECT 1 FROM amis a
+                WHERE (a.user1_id = :me AND a.user2_id = l.user_id)
+                OR (a.user2_id = :me AND a.user1_id = l.user_id)
+            )
+            AND (
+                l.disponibilite = 'public' 
+                OR l.disponibilite IS NULL
+                OR (l.disponibilite = 'ami' AND (ad.ami_id = :me OR ad.ami_id = 0))
+            )
+            ORDER BY nbjaime DESC;
+";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute(['me' => $userId]);
@@ -174,7 +203,6 @@ class HomeModel
                 ? explode(',', $row['categories'])
                 : [];
         }
-
         return $results;
     }
 
@@ -222,7 +250,7 @@ class HomeModel
 
                     SELECT 
                         l.id,
-                        'leçon' AS genre,
+                        'lecon' AS genre,
                         l.date,
                         u.username AS user_name,
                         u.id AS creatorId,

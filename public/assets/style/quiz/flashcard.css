@@ -1,7 +1,7 @@
 .container {
   display: grid;
   gap: 20px;
-  width: 100vw;
+  width: 100%;
   max-width: 1500px;
   margin-top: 1%;
   grid-template-columns: repeat(7, 1fr);
@@ -22,6 +22,7 @@
   text-align: center;
   transition: transform 0.8s;
   transform-style: preserve-3d;
+  overflow-wrap: break-word;
 }
 
 .card h2 {
@@ -230,12 +231,19 @@ p.fin {
 
 @media (max-width: 1000px) {
   .container {
-    display: flex;
     flex-direction: column;
     align-items: center;
+    width: auto;
+    gap: 0px;
   }
+
+  .card{
+    height: 80%;
+    width: 80%;
+  }
+
   .card h2 {
-    font-size: 1rem;
+    font-size: 1.5rem;
   }
 }
 
@@ -247,6 +255,6 @@ p.fin {
 
 @media (max-width: 400px) {
   .card h2 {
-    font-size: 0.5rem;
+    font-size: 1.1rem;
   }
 }

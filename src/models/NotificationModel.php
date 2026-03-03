@@ -185,7 +185,7 @@ class NotificationModel
      *
      * @return bool  True si la notification a été créée, false sinon
      */
-    public function createNotification(int|string $user_id, string $type, string $message, int|string $contenu_id = null, string $contenu_type = null): bool
+    public function createNotification(int|string $user_id, string $type, string $message, int|string|null $contenu_id = null, string|null $contenu_type = null): bool
     {
         $stmt = $this->db->prepare("
         INSERT INTO notifications (user_id, type, message, contenu_id, contenu_type)

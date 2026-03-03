@@ -131,11 +131,20 @@ class ProfileController
         $passwordVerif = trim($_POST['passwordVerif'] ?? '');
 
         if ($infosUser['username'] !== $username) {
-            $success = $this->model->saveUsername($username, $_SESSION['id']);
+            if (strlen($username) > 30) {
+                $tooLong = true;
+                $success = false;
+            } else {
+                $success = $this->model->saveUsername($username, $_SESSION['id']);
+            }
             if ($success) {
                 $saver[] = "Nom d'utilisateur";
             } else {
-                $error[] = "Nom d'utilisateur";
+                if ($tooLong) {
+                    $error[] = "Nom d'utilisateur trop long";
+                } else {
+                    $error[] = "Nom d'utilisateur";
+                }
             }
         }
 
@@ -149,7 +158,7 @@ class ProfileController
         }
 
         if ($infosUser['email'] !== $email) {
-            if (empty($email)) {
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $success = false;
             } else {
                 $success = $this->model->saveEmail($email, $_SESSION['id']);

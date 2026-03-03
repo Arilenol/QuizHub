@@ -29,7 +29,6 @@ class HomeController
             $streak = $this->myUpdateStreak($_SESSION['id']);
             $_SESSION['streak'] = $streak;
             $_SESSION['highestStreak'] = $this->model->getLongestStreak($_SESSION['id']);
-
             $friendQuiz = $this->model->getAllCreationsByFriends($_SESSION['id']);
             $quizNextPart = $this->model->getAllCreationsByUser($_SESSION['id']);
             $lessonsByUser = $modelLesson->getAllInfoLessonsByUser($_SESSION['id']);

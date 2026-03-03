@@ -41,7 +41,7 @@ class CRUDLessonController {
                     
                     // Envoyer une notification à l'auteur
                     $this->notificationModel->createNotification(
-                        $lesson['user_id'],
+                        $lesson['id'],
                         'disponibilite_change',
                         "La disponibilité de la leçon '{$lesson['title']}' a été modifiée en: {$disponibilite}",
                         $lesson_id,

@@ -40,6 +40,22 @@ class LogModel
     }
 
     /**
+     * Récupère un utilisateur via son id.
+     *
+     * @param string $id L’id de l’utilisateur recherché.
+     * 
+     * @return array|false Un tableau associatif contenant les informations de l’utilisateur
+     *                     (id, username, email, password, etc.) ou false si aucun
+     *                     utilisateur ne correspond.
+     */
+    public function getUserById(string|int $id): array|false
+    {
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    /**
      * Vérifie qu'un mot de passe correspond à l'utilisateur donné.
      * 
      * @param string $email L'adresse email de l'utilisateur.

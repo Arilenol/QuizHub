@@ -1,9 +1,9 @@
 <?php
-    $title = 'Quiz';
-    $style = './assets/style/pageInterQuiz.css';
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
-    require __DIR__ . '/../partials/header.php';
+$title = 'Quiz';
+$style = './assets/style/pageInterQuiz.css';
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+require __DIR__ . '/../partials/header.php';
 ?>
 
 <div class="inter-quiz-container">
@@ -23,7 +23,7 @@
         </div>
 
         <h1><?= htmlspecialchars($quizInfo['title'] ?? 'Quiz') ?></h1>
-        
+
         <div class="quiz-description">
             <p><?= htmlspecialchars($quizInfo['description'] ?? 'Pas de description disponible') ?></p>
         </div>
@@ -37,14 +37,14 @@
     <?php if ($userId !== null): ?>
         <div class="friends-leaderboard">
             <h2>🏆 Classement de vos amis</h2>
-            
+
             <?php if (!empty($friendsLeaderboard)): ?>
                 <table class="leaderboard-table">
                     <thead>
                         <tr>
                             <th>Rang</th>
                             <th>Ami(e)</th>
-                            <th>Meilleur score</th>
+                            <th>Dernier score</th>
                             <th>Temps pris</th>
                             <th>Dernière réalisation</th>
                         </tr>
@@ -53,7 +53,7 @@
                         <?php foreach ($friendsLeaderboard as $index => $friend): ?>
                             <tr>
                                 <td class="rang"><?= $index + 1 ?></td>
-                                <td class="nom"><?= htmlspecialchars( $friend['username']) ?></td>
+                                <td class="nom"><?= htmlspecialchars($friend['username']) ?></td>
                                 <td class="score"><?= $friend['meilleur_score'] ? round($friend['meilleur_score']) . '%' : '-' ?></td>
                                 <td class="temps"><?= $friend['tempsPris'] ? $friend['tempsPris'] : '-' ?></td>
                                 <td class="date"><?= $friend['dateRealisation'] ? date('d/m/Y', strtotime($friend['dateRealisation'])) : '-' ?></td>

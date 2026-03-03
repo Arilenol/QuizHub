@@ -208,8 +208,8 @@ if (isset($_SESSION['id'])) {
                     </div>
                     <div class="quiz-footer">
                         <form action="?page=profil&action=creatorProfil" method="POST">
-                            <input type="hidden" name="creatorId" value="<?= $quiz[$i]['creatorId'] ?>">
-                            <p class="quiz-auteur">Par : <button type="submit" style="background:none;border:none;color:blue;text-decoration:underline;cursor:pointer;font-size:large;"> <?= htmlspecialchars($quiz[$i]['user_name'] ?? '') ?> </button></p>
+                            <input type="hidden" name="creatorId" value="<?= $friendQuiz[$i]['creatorId'] ?>">
+                            <p class="quiz-auteur">Par : <button type="submit" style="background:none;border:none;color:blue;text-decoration:underline;cursor:pointer;font-size:large;"> <?= htmlspecialchars($friendQuiz[$i]['user_name'] ?? '') ?> </button></p>
                         </form>
                         <p class="quiz-date">Publié le : <?= htmlspecialchars($friendQuiz[$i]['date'] ?? '') ?></p>
                         <div class="quiz-reactions">
@@ -229,6 +229,9 @@ if (isset($_SESSION['id'])) {
 <h1 id="2">Entraînements populaires</h1>
 
 <div class="newCreations">
+    <?php if (count($quiz) === 0): ?>
+        <p class="no-content">Aucun entraînement n'a été créé.</p>
+    <?php endif; ?>
     <?php for ($i = 0; $i < count($quiz) && $i < 5; $i++): ?>
         <article onclick="window.location.href='./?page=<?= $quiz[$i]['genre'] == 'test' ? 'pageInterQuiz' : $quiz[$i]['genre'] ?>&id=<?= $quiz[$i]['id'] ?> <?= $quiz[$i]['genre'] == 'flashcard' ? '&action=start' : '' ?> <?= $quiz[$i]['genre'] == 'standard' ? '&type=standard' : '' ?> <?= $quiz[$i]['genre'] == 'test' ? '&type=test' : '' ?>'" class="quiz">
             <div class="quiz-header">
@@ -283,6 +286,9 @@ if (isset($_SESSION['id'])) {
 <h1 id="3">Leçons populaires</h1>
 
 <div class="newCreations">
+    <?php if (count($lessons) === 0): ?>
+        <p class="no-content">Aucune leçon n'a été créée.</p>
+    <?php endif; ?>
     <?php for ($i = 0; $i < count($lessons) && $i < 5; $i++): ?>
         <article onclick="window.location.href='./?page=lesson&categorie=view&id=<?= $lessons[$i]['lecon_id'] ?>'" class="quiz">
             <div class="quiz-header">

@@ -58,8 +58,8 @@ require_once '../src/views/partials/header.php';
                         <button onclick="window.location.href='?page=pageInterQuiz&id=<?= $quizId ?>&type=standard'">
                             Recommencer le quiz
                         </button>
-                        <button onclick="window.location.href='?page=catalogue'">
-                            Voir d’autres quiz
+                        <button onclick="window.location.href='?page=catalogue&numPage=&searchAuthor=&categorie=&tri=&genre=standard'">
+                            Voir d’autres quiz standards
                         </button>
                         <button onclick="window.location.href='?page=home'">
                             Retour à l’accueil

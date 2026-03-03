@@ -157,8 +157,6 @@ class CatalogueModel
                 'date_asc' => 'Requete.date ASC',
                 'title_asc' => 'Requete.title ASC',
                 'title_desc' => 'Requete.title DESC',
-                'difficulty_asc' => 'Requete.difficulty ASC',
-                'difficulty_desc' => 'Requete.difficulty DESC',
                 'author_asc' => 'Requete.username ASC',
                 'author_desc' => 'Requete.username DESC',
                 'genre_asc' => 'Requete.genre ASC',

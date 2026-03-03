@@ -36,6 +36,13 @@ class LogController
             return;
         }
 
+        // le pseudo ne doit pas contenir plus de 30 caractères
+        if (strlen($username) > 30) {
+            $error = "Votre pseudo doit contenir moins de 30 caractères";
+            require ROOT . '/src/views/log/register.php';
+            return;
+        }
+
         // Vérification du mail
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $error = "Format d’email invalide.";
