@@ -34,7 +34,11 @@ require_once '../src/views/partials/header.php';
         </span>
     </p>
 </div>
-<?php $this->saveScore($_SESSION['id'], $quizId, $_SESSION['rightAnswers'] . '/' . count($_SESSION['answers'])) ?>
+<?php if (isset($_SESSION['id'])) {
+
+    $this->saveScore($_SESSION['id'], $quizId, $_SESSION['rightAnswers'] . '/' . count($_SESSION['answers']));
+}
+?>
 
 <div class="actions-fin">
     <button class="button" onclick="window.location.href='?page=test&id=<?= $quizId ?>'">
