@@ -115,7 +115,6 @@ class FlashcardController
             header('Location: ' . $_SERVER['REQUEST_URI'] . '&t=' . time());
             exit;
         }
-        var_dump($_SERVER);
 
         if (isset($_POST['DelCard']) && $_POST['DelCard'] !== '') {
             if ($_SESSION['nbCartes'] > 1) {

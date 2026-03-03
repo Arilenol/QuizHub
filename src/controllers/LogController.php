@@ -24,10 +24,10 @@ class LogController
             return;
         }
         // Récupération + nettoyage
-        $email    = trim($_POST['email'] ?? '');
-        $username = trim($_POST['username'] ?? '');
-        $password = trim($_POST['password'] ?? '');
-        $passwordVerif = trim($_POST['passwordVerif'] ?? '');
+        $email    = htmlspecialchars(trim($_POST['email']) ?? '');
+        $username = htmlspecialchars(trim($_POST['username']) ?? '');
+        $password = htmlspecialchars(trim($_POST['password']) ?? '');
+        $passwordVerif = htmlspecialchars(trim($_POST['passwordVerif']) ?? '');
 
         // Vérification des champs obligatoires
         if ($email === '' || $username === '' || $password === '' || $passwordVerif === '') {

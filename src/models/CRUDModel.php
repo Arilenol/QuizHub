@@ -400,6 +400,10 @@ class CRUDModel
      */
     public function deleteAuthor(int $author_id): bool
     {
+        // Vérouiller l'admin
+        if (isAdminUser()) {
+            return false;
+        }
         try {
             $sql = $this->db->prepare("DELETE FROM users WHERE id = ?");
             $sql->bindParam(1, $author_id);
