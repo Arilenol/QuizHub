@@ -79,12 +79,14 @@ class NotificationController
     {
         $success = $this->model->addFriend($id);
         if ($success) {
-            $this->model->createNotification($id, "DemandeAmi", "Votre demande d'ami a été acceptée");
+            $modelLog = new LogModel(getDbConnection());
+            $username = $modelLog->getUserById($_SESSION['id'])['username'];
+            $message = $username . " a accepté votre demande d'ami";
+            $this->model->createNotification($id, "Demande d'ami", $message);
         }
         header('Location: ?page=notification');
         exit;
     }
-
     public function deleteFriendRequest(string|int $id): void
     {
         $this->model->deleteFriendRequest($id);

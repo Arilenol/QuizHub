@@ -109,51 +109,63 @@ require_once '../src/views/partials/header.php';
 
             <!-- Résultats: Quizzes -->
             <div class="quiz-affichage" id="quiz-affichage">
-                <?php
-                foreach ($quizzes as $quiz) {
-                    echo '<div class="quiz" style="cursor:pointer;" onclick="window.location.href=\'index.php?page=CRUDquiz&id=' . $quiz['id'] . '\'">
-                <article >
-                    <div class="quiz-cat">';
-                    if (!empty($quiz['categories']) && is_array($quiz['categories'])) {
-                        foreach ($quiz['categories'] as $cat) {
-
-                            $catName = $cat['categorieName'] ?? $cat['CategorieName'] ?? $cat['name'] ?? '';
-                            echo '<span class="category">' . htmlspecialchars($catName) . '</span>';
-                        }
-                    }
-                    echo '</div>
-                    <p class="quiz-genre">' . htmlspecialchars($quiz['genre'] ?? '') . '</p>
-                    <br><p class="quiz-title">' . htmlspecialchars($quiz['title'] ?? '') . '</p>
-                    <br><p class="quiz-description">' . htmlspecialchars($quiz['description'] ?? '') . '</p>
-                    <br><p class="quiz-auteur">Par : ' . htmlspecialchars($quiz['nom_auteur'] ?? '') . '</p>
-                    
-                    <div class="quiz-footer">
-                        <p class="quiz-date">publié le : ' . htmlspecialchars($quiz['date'] ?? '') . '</p>
-                        <div class="quiz-reactions">
-                            <span class="reaction like">👍 ' . htmlspecialchars($quiz['nbjaime'] ?? 0) . '</span>
-                            <span class="reaction dislike">👎 ' . htmlspecialchars($quiz['nbjaimepas'] ?? 0) . '</span>
-                        </div>
-                    </div>
-                </article>
-            </div>';
-                }
+                <?php foreach ($quizzes as $quiz):
+                    $url = "index.php?page=CRUDquiz&id=" . $quiz['id'];
                 ?>
-            </div>
+                    <article onclick="window.location.href='<?= $url ?>'" class="quiz">
 
-            <!-- Résultats: Leçons -->
-            <div class="quiz-affichage" id="lesson-affichage">
-                <?php
-                foreach ($lessons as $lesson) {
-                    echo '<div class="quiz" onclick="window.location.href=\'index.php?page=CRUDlesson&id=' . $lesson['id'] . '\'">
+                        <div class="quiz-header">
+                            <div class="quiz-cat">
+                                <?php if (!empty($quiz['categories']) && is_array($quiz['categories'])): ?>
+                                    <?php foreach ($quiz['categories'] as $cat):
+                                        $catName = $cat['categorieName'] ?? $cat['CategorieName'] ?? $cat['name'] ?? '';
+                                    ?>
+                                        <span class="category"><?= htmlspecialchars($catName) ?></span>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+
+                        <div class="quiz-content">
+                            <p class="quiz-genre"><?= htmlspecialchars($quiz['genre'] ?? '') ?></p>
+                            <p class="quiz-title"><?= htmlspecialchars($quiz['title'] ?? '') ?></p>
+                            <p class="quiz-description"><?= htmlspecialchars($quiz['description'] ?? '') ?></p>
+                        </div>
+
+                        <div class="quiz-footer">
+
+                            <p class="quiz-auteur">
+                                Par :
+                                    <?= $quiz['nom_auteur'] ?? '' ?>
+                            </p>
+
+                            <p class="quiz-date">Publié le : <?= htmlspecialchars($quiz['date'] ?? '') ?></p>
+
+                            <div class="quiz-reactions">
+                                <span class="reaction like">👍 <?= htmlspecialchars($quiz['nbjaime'] ?? 0) ?></span>
+                                <span class="reaction dislike">👎 <?= htmlspecialchars($quiz['nbjaimepas'] ?? 0) ?></span>
+                            </div>
+
+                        </div>
+
+                    </article>
+                <?php endforeach; ?>
+
+                <!-- Résultats: Leçons -->
+                <?php if (count($lessons) !== 0) : ?>
+                    <div class="quiz-affichage" id="lesson-affichage">
+                        <?php
+                        foreach ($lessons as $lesson) {
+                            echo '<div class="quiz" onclick="window.location.href=\'index.php?page=CRUDlesson&id=' . $lesson['id'] . '\'">
                 <article>
                     <div class="quiz-cat">';
-                    if (!empty($lesson['categories']) && is_array($lesson['categories'])) {
-                        foreach ($lesson['categories'] as $cat) {
-                            $catName = $cat['categorieName'] ?? $cat['CategorieName'] ?? $cat['name'] ?? '';
-                            echo '<span class="category">' . htmlspecialchars($catName) . '</span>';
-                        }
-                    }
-                    echo '</div>
+                            if (!empty($lesson['categories']) && is_array($lesson['categories'])) {
+                                foreach ($lesson['categories'] as $cat) {
+                                    $catName = $cat['categorieName'] ?? $cat['CategorieName'] ?? $cat['name'] ?? '';
+                                    echo '<span class="category">' . htmlspecialchars($catName) . '</span>';
+                                }
+                            }
+                            echo '</div>
                     <p class="quiz-genre">leçon</p>
                     <br><p class="quiz-title">' . htmlspecialchars($lesson['title'] ?? '') . '</p>
                     <br><p class="quiz-description">' . htmlspecialchars($lesson['description'] ?? '') . '</p>
@@ -168,10 +180,11 @@ require_once '../src/views/partials/header.php';
                     </div>
                 </article>
             </div>';
-                }
-                ?>
+                        }
+                        ?>
+                    </div>
             </div>
-        </div>
+        <?php endif; ?>
 
 </body>
 

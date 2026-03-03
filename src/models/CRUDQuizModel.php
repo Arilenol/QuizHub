@@ -235,6 +235,9 @@ class CRUDQuizModel
             $sql->bindParam(1, $quiz_id, PDO::PARAM_INT);
             $sql->execute();
 
+            $sql = $this->db->prepare("UPDATE lecon SET quiz_id = null WHERE quiz_id = ? ");
+            $sql->execute([$quiz_id]);
+
             return $sql->rowCount() > 0;
         } catch (PDOException $e) {
             die("Deleting quiz failed: " . $e->getMessage());

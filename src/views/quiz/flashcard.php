@@ -73,8 +73,8 @@ require_once '../src/views/partials/header.php';
 			<h2>🎉 Félicitations !</h2>
 			<p class="fin">Vous avez terminé la flashcard.</p>
 			<div class="actions-fin">
-				<button class="valider" onclick="window.location.href='?page=flashcard&id=<?= $quizId ?>&action=start'">Recommencer le quiz</button>
-				<button class="valider" onclick="window.location.href='?page=catalogue'">Voir d’autres quiz</button>
+				<button class="valider" onclick="window.location.href='?page=flashcard&id=<?= $quizId ?>&action=start'">Recommencer cette flahcard</button>
+				<button class="valider" onclick="window.location.href='?page=catalogue&numPage=&searchAuthor=&categorie=&tri=&genre=flashcard'">Voir d’autres flashcards</button>
 				<button class="valider" onclick="window.location.href='?page=home'">Retour à l’accueil</button>
 			</div>
 		</div>

@@ -86,13 +86,14 @@ require_once '../src/views/partials/header.php';
                 <?php endif; ?>
 
             <?php endforeach; ?>
-
+            <?php if($lesson['quiz_id']!==null): ?>
             <div class="info">
                 <p>
                     Cette leçon offre un quiz pour vérifier ses connaissances
                 </p>
                 <a href="?page=<?= $lesson['genre'] ?>&id=<?= $lesson['quiz_id'] ?> <?= $lesson['genre'] === "flashcard" ? "&action=start" : "" ?>">Cliquez-ici pour commencer</a>
             </div>
+            <?php endif; ?>
         </main>
     </div>
 

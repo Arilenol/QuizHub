@@ -109,10 +109,9 @@
   box-shadow: 0 15px 0 #d62828;
 }
 
-
 .quiz-réalisation button {
   border-radius: 75px;
-  background-color: #0AB1BD;
+  background-color: #0ab1bd;
   color: white;
   border: none;
   padding: 21px 36px;
@@ -121,7 +120,7 @@
 }
 
 /* Effet click (checkbox cachée) */
-.réponse input[type='checkbox']:checked+label {
+.réponse input[type='checkbox']:checked + label {
   transform: translateY(9px);
   background-color: #067178;
   box-shadow: 0 4.5px 0 #0cabb7;
@@ -168,6 +167,12 @@ button.submit {
   border-style: none;
   border-color: initial;
   border-image: initial;
+}
+
+.fin-quiz button:hover {
+  color: #087b86;
+  background-color: #fff;
+  box-shadow: 0px 8px 2px #cacacabf;
 }
 
 div.actions-fin {
@@ -251,9 +256,7 @@ p.fin {
 }
 
 .progress-container::-webkit-progress-value {
-  background: linear-gradient(90deg,
-      #0ab1bd,
-      #5ad7df);
+  background: linear-gradient(90deg, #0ab1bd, #5ad7df);
 }
 
 .progression {
@@ -264,7 +267,7 @@ p.fin {
   font-weight: bold;
 }
 
-.progression>p {
+.progression > p {
   text-align: center;
 }
 
