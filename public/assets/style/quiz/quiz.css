@@ -91,12 +91,20 @@
   border: 2px solid #3cb43c;
 }
 
+.réponse label.correct:hover {
+  box-shadow: 0 15px 0 rgba(8, 134, 27, 0.9);
+}
+
 .réponse label.incorrect {
   cursor: auto;
   box-shadow: none;
   transform: none;
   background-color: #ffb3b3;
   border: 2px solid #d62828;
+}
+
+.réponse label.incorrect:hover {
+  box-shadow: 0 15px 0 #d62828;
 }
 
 
@@ -140,10 +148,32 @@ button.submit {
   margin-bottom: 4%;
 }
 
+.fin-quiz {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fin-quiz button {
+  box-shadow: 0 12px 0 #087b86;
+  background-color: rgb(10, 177, 189);
+  color: white;
+  font-size: 1.575rem;
+  min-height: 69px;
+  cursor: pointer;
+  border-radius: 75px;
+  border-width: initial;
+  border-style: none;
+  border-color: initial;
+  border-image: initial;
+}
+
 div.actions-fin {
-  display: grid;
-  grid-template-columns: auto auto auto;
-  gap: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  width: 100%;
+  align-items: stretch;
 }
 
 p.fin {
