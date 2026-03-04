@@ -127,7 +127,7 @@ class HomeModel
         $sql = "
             SELECT 
                 q.id,
-                'quiz' AS genre,
+                q.genre AS genre,
                 q.user_id AS creatorId,
                 q.date,
                 u.username AS user_name,
