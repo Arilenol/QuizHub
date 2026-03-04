@@ -9,7 +9,8 @@ require 'partials/header.php';
 <div class="catalogue">
     <button onclick="window.location.href='index.php?page=home'" class="button" type="submit">
         <span></span>
-        <p>< Retour</p>
+        <p>
+            < Retour</p>
     </button>
     <form method="GET" action="index.php">
         <input type="hidden" name="page" value="catalogue">
@@ -67,16 +68,16 @@ require 'partials/header.php';
         <?php else: ?>
             <?php foreach ($quizzes as $quiz): ?>
                 <?php
-                    $url = '';
-                    if ($quiz['genre'] === 'flashcard') {
-                        $url = "index.php?page=flashcard&action=start&id=" . $quiz['id'];
-                    } elseif ($quiz['genre'] === 'standard') {
-                        $url = "index.php?page=standard&id=" . $quiz['id'];
-                    } elseif ($quiz['genre'] === 'test') {
-                        $url = "index.php?page=pageInterQuiz&type=test&id=" . $quiz['id'];
-                    } elseif ($quiz['genre'] === 'leçon') {
-                        $url = "index.php?page=lesson&categorie=view&id=" . $quiz['id'];
-                    }
+                $url = '';
+                if ($quiz['genre'] === 'flashcard') {
+                    $url = "index.php?page=flashcard&action=start&id=" . $quiz['id'];
+                } elseif ($quiz['genre'] === 'standard') {
+                    $url = "index.php?page=standard&id=" . $quiz['id'];
+                } elseif ($quiz['genre'] === 'test') {
+                    $url = "index.php?page=pageInterQuiz&type=test&id=" . $quiz['id'];
+                } elseif ($quiz['genre'] === 'leçon') {
+                    $url = "index.php?page=lesson&categorie=view&id=" . $quiz['id'];
+                }
                 ?>
                 <div class="quiz" onclick="window.location.href='<?= $url ?>'">
                     <article>
@@ -89,11 +90,11 @@ require 'partials/header.php';
                                     <?php endforeach; ?>
                                 <?php endif; ?>
                             </div>
-                            <?php if($quiz['genre'] == "flashcard"): ?>
+                            <?php if ($quiz['genre'] == "flashcard"): ?>
                                 <button type="button" class="button download-button" value="<?= $quiz['id'] ?>">
                                     <span></span>
                                     <svg class="download-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                        <path fill="white" d="M13 8V2H7v6H2l8 8l8-8h-5zM0 18h20v2H0v-2z"/>
+                                        <path fill="white" d="M13 8V2H7v6H2l8 8l8-8h-5zM0 18h20v2H0v-2z" />
                                     </svg>
                                 </button>
                             <?php endif; ?>
@@ -102,7 +103,10 @@ require 'partials/header.php';
                             <p class="quiz-genre"><?= htmlspecialchars($quiz['genre'] ?? '') ?></p>
                             <p class="quiz-title"><?= htmlspecialchars($quiz['title'] ?? '') ?></p>
                             <p class="quiz-description"><?= htmlspecialchars($quiz['description'] ?? '') ?></p>
-                            <p class="quiz-auteur">Par : <?= htmlspecialchars($quiz['username'] ?? '') ?></p>
+                            <form action="?page=profil&action=creatorProfil" method="POST">
+                                <input type="hidden" name="creatorId" value="<?= $quiz['creatorId'] ?>">
+                                <p class="quiz-auteur">Par : <button type="submit" style="background:none;border:none;color:blue;text-decoration:underline;cursor:pointer;font-size:large;"> <?= htmlspecialchars($quiz['username'] ?? '') ?> </button></p>
+                            </form>
                         </div>
                         <div class="quiz-footer">
                             <p class="quiz-date">publié le : <?= htmlspecialchars($quiz['date'] ?? '') ?></p>

@@ -122,7 +122,7 @@ class CatalogueModel
 
         try {
             $baseSql = "SELECT * FROM 
-            (SELECT DISTINCT quiz.id, title, quiz.description, difficulty, users.username, date, genre,
+            (SELECT DISTINCT quiz.id, title, quiz.description, difficulty, users.username, date, genre, quiz.user_id AS creatorId,
             (SELECT COUNT(like_id) FROM likes WHERE quiz_id = quiz.id) AS likes,
             (SELECT COUNT(dislike_id) FROM dislikes WHERE quiz_id = quiz.id) AS dislikes
             FROM quiz 
@@ -136,7 +136,7 @@ class CatalogueModel
             OR quiz.user_id = ? )
             AND (categories.id = ? OR ? IS NULL) AND (quiz.title LIKE ? OR quiz.description LIKE ?) AND users.username LIKE ?
             UNION
-            SELECT DISTINCT lesson.id, title, lesson.description, NULL AS difficulty, users.username, date, 'leçon' AS genre,
+            SELECT DISTINCT lesson.id, title, lesson.description, NULL AS difficulty, users.username, date, 'leçon' AS genre, lesson.user_id AS creatorId,
             (SELECT COUNT(like_id) FROM likesLecon WHERE lecon_id = lesson.id) AS likes,
             (SELECT COUNT(dislike_id) FROM dislikesLecon WHERE lecon_id = lesson.id) AS dislikes
             FROM Lecon AS lesson
