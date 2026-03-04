@@ -1,8 +1,12 @@
-async function save () {
+async function save() {
   const lecon = document.querySelector('.lesson-page')
   const buttons = document.querySelectorAll('.button, .buttonAction')
+  const fin = document.querySelectorAll(".fin")
+  const reaction = document.querySelectorAll(".quiz-reactions")
 
-  // cacher boutons
+  // cacher boutons et reactions
+  reaction.forEach(b => (b.style.display = 'none'))
+  fin.forEach(b => (b.style.display = 'none'))
   buttons.forEach(b => (b.style.display = 'none'))
 
   // sauvegarder styles
@@ -49,4 +53,6 @@ async function save () {
   lecon.style.background = oldStyle.background
   lecon.style.boxSizing = oldStyle.boxSizing
   buttons.forEach(b => (b.style.display = ''))
+  reaction.forEach(b => (b.style.display = ''))
+  fin.forEach(b => (b.style.display = ''))
 }
