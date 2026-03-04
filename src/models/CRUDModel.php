@@ -401,7 +401,10 @@ class CRUDModel
     public function deleteAuthor(int $author_id): bool
     {
         // Vérouiller l'admin
-        if (isAdminUser()) {
+        $sql = $this->db->prepare("SELECT id FROM users WHERE id = ? and admin = 1");
+        $sql->execute([$author_id]);
+        $user = $sql->fetch(PDO::FETCH_ASSOC);
+        if (!empty($user)) {
             return false;
         }
         try {
