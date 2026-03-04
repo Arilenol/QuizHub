@@ -225,12 +225,13 @@ p.fin {
     padding: 20px;
     border-radius: 0;
     margin: 0;
+    margin-top: 20px;
   }
 
   .buttonAction {
-    flex-direction: column;
     gap: 15px;
     align-items: center;
+    width: auto;
   }
 
   .lesson-header h1 {
